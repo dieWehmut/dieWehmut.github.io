@@ -17,7 +17,7 @@
             </el-tag>
           </template>
         </div>
-        <span class="separator">·</span>
+        <span class="separator"></span>
         <a
           class="link"
           :href="version.url"
@@ -29,7 +29,7 @@
           <span>{{ version.log }}</span>
         </a>
         <template v-if="repoUrl && gameName">
-          <span class="separator">·</span>
+          <span class="separator"></span>
           <a
             class="repo-link"
             :href="repoUrl"
@@ -38,7 +38,7 @@
             @click.stop
           >
             <el-icon class="repo-icon"><Link /></el-icon>
-            <span>Repository</span>
+            <span>Repo</span>
           </a>
         </template>
       </div>

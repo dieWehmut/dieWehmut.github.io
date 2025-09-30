@@ -16,59 +16,35 @@ const props = defineProps({
 const pages = ref([
   {
     name: "kotobahitomi",
-    repoUrl: "https://github.com/dieWehmut/myFirstAIWebApp",
+    repoUrl: "https://github.com/dieWehmut/kotoba-hitomi",
     versions: [
       {
         date: "2025-06-03",
-        log: "Project initialization",
-        url: "https://diesehnsucht0.github.io/kotobahitomi/#/",
-      },
-    ],
-  },
-  {
-    name: "chatto",
-    repoUrl: "https://github.com/dieWehmut/chatto",
-    versions: [
-      {
-        date: "2025-08-28",
-        log: "Project initialization",
-        url: "https://diewehmut.github.io/chatto1.0.0/#/",
+        log: "nihongo AI web app",
+        url: "https://diewehmut.github.io/kotoba-hitomi",
       },
     ],
   },
 
   {
-    name: "HCBlog",
-    repoUrl: "https://github.com/diewehmut/myBlog",
+    name: "blog",
+    repoUrl: "https://github.com/diewehmut/Blog",
     versions: [
       {
         date: "2025-08-20",
-        log: "Project initialization",
-        url: "https://diewehmut.github.io/HCBlog/",
+        log: "personal blog",
+        url: "https://diewehmut.github.io/Blog/",
       },
     ],
   },
   {
-    name: "HCPWP",
-    repoUrl: "https://github.com/diewehmut/myPWP",
+    name: "profile",
+    repoUrl: "https://github.com/diewehmut/profile",
     versions: [
       {
-        version: "v1.1.1",
-        date: "2025-08-24",
-        log: "Optimized the page styles",
-        url: "https://diewehmut.github.io/dieSWPWP1.1.1/#/",
-      },
-      {
-        version: "v1.1.0",
-        date: "2025-08-20",
-        log: "Added Notes",
-        url: "https://diewehmut.github.io/dieSWPWP1.1/#/",
-      },
-      {
-        version: "v1.0.0",
         date: "2025-08-15",
-        log: "Project initialization",
-        url: "https://diewehmut.github.io/dieSWPWP/",
+        log: "profile page",
+        url: "https://diewehmut.github.io/profile/",
       },
     ],
   },
@@ -78,37 +54,37 @@ const pages = ref([
 const games = ref([
   {
     name: "PhantomGenesis",
-    repoUrl: "https://git.nju.edu.cn/dieSehnsucht/mygame0",
+    repoUrl: "https://diewehmut.github.io/PhantomGenesis/",
     versions: [
       {
         version: "v1.3",
         date: "2025-06-30",
-        log: "Third game release",
-        url: "https://github.com/dieWehmut/projectRelease/releases/download/PhantomGenesis/PhantomGenesis1.3.zip",
+        log: "modified game",
+        url: "https://github.com/dieWehmut/showcase/releases/download/PhantomGenesis/PhantomGenesis1.3.zip",
       },
       {
         version: "v1.2",
         date: "2025-06-30",
-        log: "Second game release",
-        url: "https://github.com/dieWehmut/projectRelease/releases/download/PhantomGenesis/PhantomGenesis1.2.zip",
+        log: "first game",
+        url: "https://github.com/dieWehmut/showcase/releases/download/PhantomGenesis/PhantomGenesis1.2.zip",
       },
     ],
   },
   {
     name: "SugisarishiKage",
-    repoUrl: "https://github.com/dieWehmut/projectRelease/releases/tag/SugisarishiKage",
+    repoUrl: "https://github.com/dieWehmut/showcase/releases/tag/SugisarishiKage",
     versions: [
       {
         version: "v1.0",
         date: "2025-09-11",
-        log: "My first VN--Windows",
-        url: "https://github.com/dieWehmut/projectRelease/releases/download/SugisarishiKage/SugisarishiKage_win.7z",
+        log: "first VN--Windows",
+        url: "https://github.com/dieWehmut/showcase/releases/download/SugisarishiKage/SugisarishiKage_win.7z",
       },
       {
         version: "v1.0",
         date: "2025-09-11",
-        log: "My first VN--Android",
-        url: "https://github.com/dieWehmut/projectRelease/releases/download/SugisarishiKage/SugisarishiKage_android.apk.1",
+        log: "first VN--Android",
+        url: "https://github.com/dieWehmut/showcase/releases/download/SugisarishiKage/SugisarishiKage_android.apk",
       },
     ],
   },
@@ -118,25 +94,25 @@ const games = ref([
 const apps = ref([
   {
     name: "kotobahitomi_android",
-    repoUrl: "https://github.com/dieWehmut/myFirstAIWebApp",
+    repoUrl: "https://github.com/dieWehmut/kotoba-hitomi",
     versions: [
       {
         version: "v1.0.0",
         date: "2025-06-03",
         log: "First app release",
-        url: "https://github.com/dieWehmut/projectRelease/releases/download/kotobahitomi/kotobahitomi.apk",
+        url: "https://github.com/dieWehmut/showcase/releases/download/kotobahitomi/kotobahitomi.apk",
       },
     ],
   },
     {
     name: "SugisarishiKage_android",
-    repoUrl: "https://github.com/dieWehmut/projectRelease/releases/tag/SugisarishiKage",
+    repoUrl: "https://github.com/dieWehmut/showcase/releases/tag/SugisarishiKage",
     versions: [
       {
         version: "v1.0",
         date: "2025-09-11",
-        log: "My first VN--Android",
-        url: "https://github.com/dieWehmut/projectRelease/releases/download/SugisarishiKage/SugisarishiKage_android.apk.1",
+        log: "first VN--Android",
+        url: "https://github.com/dieWehmut/showcase/releases/download/SugisarishiKage/SugisarishiKage_android.apk",
       },
     ],
   },
@@ -145,8 +121,8 @@ const apps = ref([
 // Files data (只有仓库链接)
 const files = ref([
   {
-    name: "My High School Notes",
-    repoUrl: "https://github.com/dieWehmut/myHighSchoolNotes",
+    name: "High School Notes",
+    repoUrl: "https://git.nju.edu.cn/dieSehnsucht/learningmaterials/-/tree/main/HighSchoolNotes?ref_type=heads",
     description: "Math, Physics and Chemistry, etc.",
   },
 ]);
@@ -338,7 +314,7 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card v-if="filteredPages.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header">
-          <span>My Pages</span>
+          <span>Pages</span>
           <el-text size="small" type="info">
             Total {{ totalCount }} items
             <template v-if="query">
@@ -376,7 +352,7 @@ defineExpose({ openFirstResult, copyFirstResult });
                     @click.stop
                   >
                     <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>Repository</span>
+                    <span>Repo</span>
                   </a>
                 </div>
               </template>
@@ -397,7 +373,7 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card v-if="filteredGames.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header">
-          <span>My Games</span>
+          <span>Games</span>
           <el-text size="small" type="info">
             Total {{ totalGamesCount }} items
             <template v-if="query">
@@ -434,7 +410,7 @@ defineExpose({ openFirstResult, copyFirstResult });
                     @click.stop
                   >
                     <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>Repository</span>
+                    <span>Repo</span>
                   </a>
                 </div>
               </template>
@@ -455,7 +431,7 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card v-if="filteredApps.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header">
-          <span>My Apps</span>
+          <span>Apps</span>
           <el-text size="small" type="info">
             Total {{ totalAppsCount }} items
             <template v-if="query">
@@ -492,7 +468,7 @@ defineExpose({ openFirstResult, copyFirstResult });
                     @click.stop
                   >
                     <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>Repository</span>
+                    <span>Repo</span>
                   </a>
                 </div>
               </template>
@@ -513,7 +489,7 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card v-if="filteredFiles.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header">
-          <span>My Files</span>
+          <span>Files</span>
           <el-text size="small" type="info">
             Total {{ totalFilesCount }} items
             <template v-if="query">

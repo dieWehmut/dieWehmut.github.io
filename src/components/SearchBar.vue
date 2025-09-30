@@ -41,7 +41,7 @@ watch(() => props.modelValue, v => (innerValue.value = v))
 watch(innerValue, v => emit('update:modelValue', v))
 
 const placeholderText = computed(
-  () => 'Search pages, versions, or logs...'
+  () => 'Search ...'
 )
 
 const inputRef = ref(null)

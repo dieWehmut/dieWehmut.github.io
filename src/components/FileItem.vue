@@ -9,7 +9,7 @@
         <div class="file-item__actions">
           <a class="repo-link" :href="repoUrl" target="_blank" rel="noopener">
             <el-icon><Link /></el-icon>
-            <span>Repository</span>
+            <span>Repo</span>
           </a>
         </div>
       </div>
