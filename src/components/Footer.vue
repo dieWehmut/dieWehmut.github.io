@@ -52,7 +52,7 @@
       </a>
     </div>
 
-    <div class="copyright">© 2025 dieSW</div>
+    <div class="copyright">© 2025 hc-dsw</div>
   </div>
 </template>
 
