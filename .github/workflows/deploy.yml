@@ -26,6 +26,7 @@ jobs:
       - run: npm ci
 
       - run: npm run build --if-present
+      - run: cp CNAME dist/CNAME
 
       - name: Show built files
         run: ls -la ./dist || true
