@@ -8,11 +8,7 @@
       <span class="time-number">{{ time.seconds }}</span> s 🕒
     </div>
 
-    <!-- Visitors count (来自 CountAPI，公开且无需后端) -->
-    <div class="visitors">
-      Visitors:
-      <span class="visitor-number">{{ visitors }}</span>
-    </div>
+    <!-- Visitors count removed -->
 
     <div class="hub-buttons">
       <a
@@ -63,7 +59,7 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, reactive, ref } from "vue";
+import { onMounted, onBeforeUnmount, reactive } from "vue";
 
 // 设置建站起始时间（按需修改）
 const startAt = new Date("2025-08-24T22:00:00+08:00").getTime();
@@ -74,44 +70,6 @@ const time = reactive({
   minutes: "00",
   seconds: "00",
 });
-
-// visitors from CountAPI (public, no backend required)
-const visitors = ref("--");
-let visitorsTimer = null;
-
-// Example namespace/key on CountAPI: change if you already created one.
-// Format: https://api.countapi.xyz/hit/{namespace}/{key}
-const COUNTAPI_NAMESPACE = "dieWehmut-github-io";
-const COUNTAPI_KEY = "visitors";
-
-async function fetchVisitors() {
-  try {
-    const res = await fetch(
-      `https://api.countapi.xyz/get/${COUNTAPI_NAMESPACE}/${COUNTAPI_KEY}`
-    );
-    if (!res.ok) throw new Error("network response was not ok");
-    const json = await res.json();
-    visitors.value = String(json.value ?? "0");
-  } catch (e) {
-    // keep previous value and silently fail
-    console.error("fetchVisitors error:", e);
-  }
-}
-
-// increment counter (call on first load)
-async function incrementVisitors() {
-  try {
-    const res = await fetch(
-      `https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${COUNTAPI_KEY}`,
-      { method: "GET" }
-    );
-    if (!res.ok) throw new Error("network response was not ok");
-    const json = await res.json();
-    visitors.value = String(json.value ?? "0");
-  } catch (e) {
-    console.error("incrementVisitors error:", e);
-  }
-}
 
 let timer = null;
 function tick() {
@@ -134,14 +92,9 @@ function tick() {
 onMounted(() => {
   tick();
   timer = setInterval(tick, 1000);
-  // increment once and then periodically refresh the displayed count
-  incrementVisitors();
-  // refresh every 30s
-  visitorsTimer = setInterval(fetchVisitors, 30 * 1000);
 });
 onBeforeUnmount(() => {
   if (timer) clearInterval(timer);
-  if (visitorsTimer) clearInterval(visitorsTimer);
 });
 </script>
 
