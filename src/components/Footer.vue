@@ -8,7 +8,6 @@
       <span class="time-number">{{ time.seconds }}</span> s 🕒
     </div>
 
-    <!-- Visitors count removed -->
 
     <div class="hub-buttons">
       <a
@@ -112,16 +111,6 @@ onBeforeUnmount(() => {
 .time-number {
   font-weight: 700;
   padding: 0 4px;
-}
-.visitors {
-  margin-bottom: 8px; /* slightly tighter spacing before hub-buttons */
-  font-size: 18px;
-  color: #444;
-}
-.visitor-number {
-  font-weight: 700;
-  padding: 0 6px;
-  margin-left: 6px;
 }
 .hub-buttons {
   display: flex;

@@ -44,7 +44,7 @@ const pages = ref([
       {
         date: "2025-08-15",
         log: "profile page",
-        url: "https://diewehmut.github.io/profile/",
+        url: "https://diewehmut.github.io/Profile/",
       },
     ],
   },
