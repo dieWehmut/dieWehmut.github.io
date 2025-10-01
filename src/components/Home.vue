@@ -27,18 +27,18 @@ const pages = ref([
   },
 
   {
-    name: "blog",
-    repoUrl: "https://github.com/diewehmut/Blog",
+    name: "Notes",
+    repoUrl: "https://github.com/diewehmut/Notes",
     versions: [
       {
         date: "2025-08-20",
-        log: "personal blog",
-        url: "https://diewehmut.github.io/Blog/",
+        log: "personal notes",
+        url: "https://diewehmut.github.io/Notes/",
       },
     ],
   },
   {
-    name: "profile",
+    name: "Profile",
     repoUrl: "https://github.com/diewehmut/Profile",
     versions: [
       {

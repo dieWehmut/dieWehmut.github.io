@@ -42,6 +42,10 @@
                     <el-icon><FolderOpened /></el-icon>
                     View
                   </el-button>
+                  <el-button size="small" @click="downloadRawFile(f.raw_url)">
+                    <el-icon><Download /></el-icon>
+                    Download
+                  </el-button>
                   <el-button size="small" @click="copyRawLink(f.raw_url)">
                     <el-icon><CopyDocument /></el-icon>
                     Copy Link
@@ -72,6 +76,7 @@ import {
   Link,
   FolderOpened,
   CopyDocument,
+  Download,
 } from "@element-plus/icons-vue";
 import { ArrowDown, ArrowUp } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
@@ -169,6 +174,34 @@ function copyRawLink(url) {
   navigator.clipboard.writeText(url).then(() => {
     ElMessage.success("Raw file link copied");
   });
+}
+
+function withInlineFalse(url) {
+  if (!url) return url;
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.set("inline", "false");
+    return parsed.toString();
+  } catch (e) {
+    const hasQuery = url.includes("?");
+    const inlinePattern = /([?&])inline=[^&#]*/;
+    if (inlinePattern.test(url)) {
+      return url.replace(inlinePattern, "$1inline=false");
+    }
+    return `${url}${hasQuery ? "&" : "?"}inline=false`;
+  }
+}
+
+function downloadRawFile(url) {
+  const downloadUrl = withInlineFalse(url);
+  if (!downloadUrl) return;
+  const link = document.createElement("a");
+  link.href = downloadUrl;
+  link.download = "";
+  link.rel = "noopener";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 </script>
 
