@@ -70,24 +70,10 @@ const games = ref([
       },
     ],
   },
-  {
-    name: "SugisarishiKage",
-    repoUrl: "https://github.com/dieWehmut/SugisarishiKage",
-    versions: [
-      {
-        version: "v1.0",
-        date: "2025-09-11",
-        log: "first VN--Windows",
-        url: "https://github.com/dieWehmut/showcase/releases/download/SugisarishiKage/SugisarishiKage_win.7z",
-      },
-      {
-        version: "v1.0",
-        date: "2025-09-11",
-        log: "first VN--Android",
-        url: "https://github.com/dieWehmut/showcase/releases/download/SugisarishiKage/SugisarishiKage_android.apk",
-      },
-    ],
-  },
+
+  
+
+
 ]);
 
 // Apps data
@@ -104,18 +90,7 @@ const apps = ref([
       },
     ],
   },
-    {
-    name: "SugisarishiKage_android",
-    repoUrl: "https://github.com/dieWehmut/showcase/releases/tag/SugisarishiKage",
-    versions: [
-      {
-        version: "v1.0",
-        date: "2025-09-11",
-        log: "first VN--Android",
-        url: "https://github.com/dieWehmut/showcase/releases/download/SugisarishiKage/SugisarishiKage_android.apk",
-      },
-    ],
-  },
+
 ]);
 
 // Files data 
