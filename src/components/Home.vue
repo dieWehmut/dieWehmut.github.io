@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
 import PageItem from "./PageItem.vue";
 import GameItem from "./GameItem.vue";
@@ -39,7 +39,7 @@ const pages = ref([
   },
   {
     name: "profile",
-    repoUrl: "https://github.com/diewehmut/profile",
+    repoUrl: "https://github.com/diewehmut/Profile",
     versions: [
       {
         date: "2025-08-15",
@@ -54,7 +54,7 @@ const pages = ref([
 const games = ref([
   {
     name: "PhantomGenesis",
-    repoUrl: "https://diewehmut.github.io/PhantomGenesis/",
+    repoUrl: "https://github.com/dieWehmut/PhantomGenesis/",
     versions: [
       {
         version: "v1.3",
@@ -72,7 +72,7 @@ const games = ref([
   },
   {
     name: "SugisarishiKage",
-    repoUrl: "https://github.com/dieWehmut/showcase/releases/tag/SugisarishiKage",
+    repoUrl: "https://github.com/dieWehmut/SugisarishiKage",
     versions: [
       {
         version: "v1.0",
@@ -118,7 +118,7 @@ const apps = ref([
   },
 ]);
 
-// Files data (只有仓库链接)
+// Files data 
 const files = ref([
   {
     name: "High School Notes",
@@ -256,6 +256,47 @@ const activeApps = ref(
   filteredApps.value.filter((a) => a.versions.length > 1).map((a) => a.name)
 );
 
+// UI: section visibility toggles (collapsed by default = true -> show)
+const showPages = ref(true);
+const showGames = ref(true);
+const showApps = ref(true);
+const showFiles = ref(true);
+
+// Listen for external requests to open a section (from SideBar)
+function handleOpenSection(e) {
+  const name = e?.detail;
+  if (!name) return;
+  if (name === 'pages') showPages.value = true;
+  if (name === 'games') showGames.value = true;
+  if (name === 'apps') showApps.value = true;
+  if (name === 'files') showFiles.value = true;
+}
+
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('open-section', handleOpenSection);
+}
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined' && window.removeEventListener) {
+    window.removeEventListener('open-section', handleOpenSection);
+  }
+});
+
+// When searching, auto-expand all sections so matches are visible
+watch(normalizedQuery, (q) => {
+  try {
+    if (q && q.length > 0) {
+      showPages.value = true;
+      showGames.value = true;
+      showApps.value = true;
+      showFiles.value = true;
+    }
+    // If query becomes empty, do not force collapse; keep prior user state
+  } catch (e) {
+    // ignore
+  }
+});
+
 function openPage(url) {
   if (url) window.open(url, "_blank", "noopener");
 }
@@ -311,9 +352,9 @@ defineExpose({ openFirstResult, copyFirstResult });
 
 <template>
   <div class="home">
-    <el-card v-if="filteredPages.length > 0" shadow="never" class="home__card">
+    <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
       <template #header>
-        <div class="card-header">
+        <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
           <span>Pages</span>
           <el-text size="small" type="info">
             Total {{ totalCount }} items
@@ -322,10 +363,17 @@ defineExpose({ openFirstResult, copyFirstResult });
               <el-text type="primary">{{ matchedCount }}</el-text> items
             </template>
           </el-text>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showPages" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
         </div>
       </template>
 
-      <div>
+      <transition name="section-toggle">
+        <div v-show="showPages" class="section-body">
         <template v-for="page in filteredPages" :key="page.name">
           <!-- 统一用 PageItem 渲染每个版本 -->
           <template v-if="page.versions.length === 1">
@@ -366,13 +414,14 @@ defineExpose({ openFirstResult, copyFirstResult });
             </el-collapse-item>
           </el-collapse>
         </template>
-      </div>
+        </div>
+      </transition>
     </el-card>
 
     <!-- My Games Section -->
-    <el-card v-if="filteredGames.length > 0" shadow="never" class="home__card">
+  <el-card id="section-games" v-if="filteredGames.length > 0" shadow="never" class="home__card">
       <template #header>
-        <div class="card-header">
+        <div class="card-header" @click="showGames = !showGames" style="cursor: pointer;">
           <span>Games</span>
           <el-text size="small" type="info">
             Total {{ totalGamesCount }} items
@@ -381,10 +430,17 @@ defineExpose({ openFirstResult, copyFirstResult });
               <el-text type="primary">{{ matchedGamesCount }}</el-text> items
             </template>
           </el-text>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showGames" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
         </div>
       </template>
 
-      <div>
+      <transition name="section-toggle">
+        <div v-show="showGames" class="section-body">
         <template v-for="game in filteredGames" :key="game.name">
           <template v-if="game.versions.length === 1">
             <GameItem
@@ -424,13 +480,14 @@ defineExpose({ openFirstResult, copyFirstResult });
             </el-collapse-item>
           </el-collapse>
         </template>
-      </div>
+        </div>
+      </transition>
     </el-card>
 
     <!-- My Apps Section -->
-    <el-card v-if="filteredApps.length > 0" shadow="never" class="home__card">
+  <el-card id="section-apps" v-if="filteredApps.length > 0" shadow="never" class="home__card">
       <template #header>
-        <div class="card-header">
+        <div class="card-header" @click="showApps = !showApps" style="cursor: pointer;">
           <span>Apps</span>
           <el-text size="small" type="info">
             Total {{ totalAppsCount }} items
@@ -439,10 +496,17 @@ defineExpose({ openFirstResult, copyFirstResult });
               <el-text type="primary">{{ matchedAppsCount }}</el-text> items
             </template>
           </el-text>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showApps" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
         </div>
       </template>
 
-      <div>
+      <transition name="section-toggle">
+        <div v-show="showApps" class="section-body">
         <template v-for="app in filteredApps" :key="app.name">
           <template v-if="app.versions.length === 1">
             <AppItem
@@ -482,13 +546,14 @@ defineExpose({ openFirstResult, copyFirstResult });
             </el-collapse-item>
           </el-collapse>
         </template>
-      </div>
+        </div>
+      </transition>
     </el-card>
 
     <!-- My Files Section -->
-    <el-card v-if="filteredFiles.length > 0" shadow="never" class="home__card">
+  <el-card id="section-files" v-if="filteredFiles.length > 0" shadow="never" class="home__card">
       <template #header>
-        <div class="card-header">
+        <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
           <span>Files</span>
           <el-text size="small" type="info">
             Total {{ totalFilesCount }} items
@@ -497,10 +562,17 @@ defineExpose({ openFirstResult, copyFirstResult });
               <el-text type="primary">{{ matchedFilesCount }}</el-text> items
             </template>
           </el-text>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showFiles" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
         </div>
       </template>
 
-      <div>
+      <transition name="section-toggle">
+        <div v-show="showFiles" class="section-body">
         <FileItem
           v-for="file in filteredFiles"
           :key="file.name"
@@ -508,7 +580,8 @@ defineExpose({ openFirstResult, copyFirstResult });
           :repo-url="file.repoUrl"
           :description="file.description"
         />
-      </div>
+        </div>
+      </transition>
     </el-card>
 
     <!-- Show message when no results found -->
@@ -616,5 +689,27 @@ defineExpose({ openFirstResult, copyFirstResult });
   border-color: rgba(144, 147, 153, 1) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* smooth expand/collapse for section body */
+.section-body {
+  overflow: hidden;
+}
+
+.section-toggle-enter-from,
+.section-toggle-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.section-toggle-enter-active,
+.section-toggle-leave-active {
+  transition: max-height 300ms ease, opacity 250ms ease;
+}
+
+.section-toggle-enter-to,
+.section-toggle-leave-from {
+  max-height: 1200px; /* large enough to accommodate content */
+  opacity: 1;
 }
 </style>

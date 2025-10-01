@@ -10,6 +10,8 @@
         />
       </el-header>
 
+      <SideBar />
+
       <el-main class="app__main">
         <Home
           ref="homeRef"
@@ -29,6 +31,7 @@ import { onMounted, onBeforeUnmount, ref } from 'vue'
 import SearchBar from './components/SearchBar.vue'
 import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
+import SideBar from './components/SideBar.vue'
 
 const query = ref('')
 const searchBarRef = ref(null)

@@ -25,7 +25,7 @@
           rel="noopener"
           @click.stop
         >
-          <el-icon class="link-icon"><Link /></el-icon>
+          <el-icon class="link-icon"><Promotion /></el-icon>
           <span>{{ version.log }}</span>
         </a>
         <template v-if="repoUrl && pageName">
@@ -37,7 +37,7 @@
             rel="noopener"
             @click.stop
           >
-            <el-icon class="repo-icon"><Link /></el-icon>
+            <el-icon class="repo-icon"><Link/></el-icon>
             <span>Repo</span>
           </a>
         </template>
@@ -60,7 +60,7 @@
 
 <script setup>
 import { ElMessage } from "element-plus";
-import { DocumentCopy, Calendar, Link } from "@element-plus/icons-vue";
+import { DocumentCopy, Calendar, Link, Promotion } from "@element-plus/icons-vue";
 
 const props = defineProps({
   pageName: { type: String, required: false },
