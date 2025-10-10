@@ -53,7 +53,7 @@ const pages = ref([
     repoUrl: "https://github.com/diewehmut/Showcase",
     versions: [
       {
-        date: "2025-08-15",
+        date: "2025-10-01",
         log: "showcase page",
         url: "https://showcase.hc-dsw-nexus.me/",
       },
