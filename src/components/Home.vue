@@ -21,7 +21,7 @@ const pages = ref([
       {
         date: "2025-06-03",
         log: "nihongo AI web app",
-        url: "https://diewehmut.github.io/kotoba-hitomi",
+        url: "https://kotoba-hitomi.hc-dsw-nexus.me/",
       },
     ],
   },
@@ -33,7 +33,7 @@ const pages = ref([
       {
         date: "2025-08-20",
         log: "personal notes",
-        url: "https://diewehmut.github.io/Notes/",
+        url: "https://notes.hc-dsw-nexus.me/",
       },
     ],
   },
@@ -44,7 +44,18 @@ const pages = ref([
       {
         date: "2025-08-15",
         log: "profile page",
-        url: "https://diewehmut.github.io/Profile/",
+        url: "https://profile.hc-dsw-nexus.me/",
+      },
+    ],
+  },
+  {
+    name: "Showcase",
+    repoUrl: "https://github.com/diewehmut/Showcase",
+    versions: [
+      {
+        date: "2025-08-15",
+        log: "showcase page",
+        url: "https://showcase.hc-dsw-nexus.me/",
       },
     ],
   },
