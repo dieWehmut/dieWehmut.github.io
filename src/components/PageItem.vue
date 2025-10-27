@@ -4,7 +4,7 @@
       <div class="item__line">
         <template v-if="pageName">
           <span class="page-info">
-            <span class="page-emoji">{{ emoji || "📄" }}</span>
+            <el-icon class="page-icon"><Document /></el-icon>
             <span class="page-name">{{ pageName }}</span>
           </span>
         </template>
@@ -18,41 +18,39 @@
           </template>
         </div>
         <span class="separator"></span>
+      </div>
+    </div>
+    <div class="item__actions">
+      <a
+        class="action-btn link-button"
+        :href="version.url"
+        target="_blank"
+        rel="noopener"
+        @click.stop
+      >
+        <el-icon class="action-icon"><Promotion /></el-icon>
+        <span class="action-text">Open</span>
+      </a>
+      <template v-if="repoUrl && pageName">
         <a
-          class="link"
-          :href="version.url"
+          class="action-btn repo-button"
+          :href="repoUrl"
           target="_blank"
           rel="noopener"
           @click.stop
         >
-          <el-icon class="link-icon"><Promotion /></el-icon>
-          <span>{{ version.log }}</span>
+          <el-icon class="action-icon"><Link/></el-icon>
+          <span class="action-text">Repo</span>
         </a>
-        <template v-if="repoUrl && pageName">
-          <span class="separator"></span>
-          <a
-            class="repo-link"
-            :href="repoUrl"
-            target="_blank"
-            rel="noopener"
-            @click.stop
-          >
-            <el-icon class="repo-icon"><Link/></el-icon>
-            <span>Repo</span>
-          </a>
-        </template>
-      </div>
-    </div>
-    <div class="item__actions">
+      </template>
       <el-button
         size="small"
-        type="default"
+        type="text"
         @click.stop="copyLink"
-        class="copy-btn"
-        text
+        class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">Copy Link</span>
+        <span class="btn-text">Copy</span>
       </el-button>
     </div>
   </div>
@@ -60,7 +58,7 @@
 
 <script setup>
 import { ElMessage } from "element-plus";
-import { DocumentCopy, Calendar, Link, Promotion } from "@element-plus/icons-vue";
+import { DocumentCopy, Document, Calendar, Link, Promotion } from "@element-plus/icons-vue";
 
 const props = defineProps({
   pageName: { type: String, required: false },
@@ -157,8 +155,9 @@ function formatDate(d) {
   border: 1px solid #e8ecf0;
 }
 
-.page-emoji {
-  font-size: 16px;
+.page-icon {
+  font-size: 18px;
+  color: #2b2b2b; /* 统一为黑白风格 */
 }
 
 .page-name {
@@ -243,30 +242,32 @@ function formatDate(d) {
 
 .item__actions {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-shrink: 0;
   align-self: center;
 }
 
-.copy-btn {
-  border: 1px solid #e8ecf0;
-  background: #fefefe;
-  color: #7a7a7a;
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
   border-radius: 8px;
-  padding: 6px 12px;
-  transition: all 0.2s ease;
-  font-size: 12px;
+  text-decoration: none;
+  color: #4a4a4a;
+  border: 1px solid transparent;
 }
-
-.copy-btn:hover {
-  background: #f0f7ff;
-  border-color: #b8d4f0;
-  color: #4a90e2;
-  transform: translateY(-1px);
+.action-btn:hover {
+  background: #f5f7fa;
+  border-color: #e8ecf0;
 }
-
-.copy-btn :deep(.el-icon) {
+.action-icon {
+  font-size: 14px;
+  color: #2b2b2b;
+}
+.action-text {
   font-size: 13px;
+  font-weight: 600;
 }
 
 .btn-text {

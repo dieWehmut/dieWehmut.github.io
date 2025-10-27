@@ -18,41 +18,39 @@
           </template>
         </div>
         <span class="separator"></span>
+      </div>
+    </div>
+    <div class="app-item__actions">
+      <a
+        class="action-btn link-button"
+        :href="version.url"
+        target="_blank"
+        rel="noopener"
+        @click.stop
+      >
+        <el-icon class="action-icon"><Download /></el-icon>
+        <span class="action-text">Download</span>
+      </a>
+      <template v-if="repoUrl && appName">
         <a
-          class="link"
-          :href="version.url"
+          class="action-btn repo-button"
+          :href="repoUrl"
           target="_blank"
           rel="noopener"
           @click.stop
         >
-          <el-icon class="link-icon"><Download /></el-icon>
-          <span>{{ version.log }}</span>
+          <el-icon class="action-icon"><Link /></el-icon>
+          <span class="action-text">Repo</span>
         </a>
-        <template v-if="repoUrl && appName">
-          <span class="separator"></span>
-          <a
-            class="repo-link"
-            :href="repoUrl"
-            target="_blank"
-            rel="noopener"
-            @click.stop
-          >
-            <el-icon class="repo-icon"><Link /></el-icon>
-            <span>Repo</span>
-          </a>
-        </template>
-      </div>
-    </div>
-    <div class="app-item__actions">
+      </template>
       <el-button
         size="small"
-        type="default"
+        type="text"
         @click.stop="copyLink"
-        class="copy-btn"
-        text
+        class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">Copy Link</span>
+        <span class="btn-text">Copy</span>
       </el-button>
     </div>
   </div>
@@ -172,8 +170,8 @@ function formatDate(d) {
 }
 
 .app-icon {
-  font-size: 16px;
-  color: #67c23a;
+  font-size: 18px;
+  color: #2b2b2b; /* 统一为黑白风格 */
 }
 
 .app-name {
@@ -248,18 +246,31 @@ function formatDate(d) {
 
 .app-item__actions {
   margin-left: 12px;
+  display: flex;
+  gap: 12px;
 }
 
-.copy-btn {
-  color: #666;
-  font-size: 12px;
-  padding: 4px 8px;
-  height: auto;
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #2c2c2c;
+  border: 1px solid transparent;
 }
-
-.copy-btn:hover {
-  color: #409eff;
-  background: rgba(64, 158, 255, 0.1);
+.action-btn:hover {
+  background: #f5f7fa;
+  border-color: #e8ecf0;
+}
+.action-icon {
+  font-size: 14px;
+  color: #2b2b2b;
+}
+.action-text {
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .btn-text {

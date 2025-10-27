@@ -1,0 +1,238 @@
+/* Global Styles */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #333;
+  background-color: #fafafa;
+
+  /* Color Variables */
+  --primary-color: #409eff;
+  --secondary-color: #666;
+  --border-color: #e8e8e8;
+  --bg-light: #fafafa;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #fafafa;
+  color: #333;
+}
+
+a {
+  color: #409eff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #66b1ff;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Unified action button styles for cards */
+.action-btn,
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px; /* larger, consistent size */
+  min-height: 36px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #333 !important;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  transition: all 0.12s ease;
+}
+.action-btn .el-icon,
+.copy-btn .el-icon,
+.action-btn > svg,
+.copy-btn > svg {
+  width: 18px;
+  height: 18px;
+  fill: #2b2b2b !important;
+}
+
+/* Stronger overrides for anchors/icons that still appear blue due to other styles */
+/* Target component-local action areas and general anchor.action-btn to ensure consistency */
+.item__actions a.action-btn,
+.game-item__actions a.action-btn,
+.app-item__actions a.action-btn,
+.file-item__actions a.action-btn,
+.file-item__header .repo-link.action-btn,
+a.action-btn {
+  color: #333 !important;
+  text-decoration: none !important;
+}
+
+.action-btn svg,
+.action-btn .el-icon,
+.action-btn .el-icon svg,
+.copy-btn svg,
+.copy-btn .el-icon,
+.copy-btn .el-icon svg {
+  fill: #2b2b2b !important;
+  stroke: #2b2b2b !important;
+  color: #2b2b2b !important;
+}
+
+/* In case some frameworks add a more specific link color, force background/border too */
+.item__actions a.action-btn:hover,
+.game-item__actions a.action-btn:hover,
+.app-item__actions a.action-btn:hover,
+.file-item__actions a.action-btn:hover,
+.file-item__header .repo-link.action-btn:hover,
+a.action-btn:hover {
+  background: #f5f7fa !important;
+  border-color: #e8ecf0 !important;
+}
+.action-btn:hover,
+.copy-btn:hover {
+  background: #f5f7fa;
+  border-color: #e8ecf0;
+  transform: translateY(-1px) scale(1.01);
+}
+.action-text,
+.btn-text {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Ensure consistent gap in action areas */
+.item__actions,
+.game-item__actions,
+.app-item__actions,
+.file-list__actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Broad overrides for repo-link variants (scoped selectors may include data-v- hashes).
+   These rules are intentionally placed last to win against component-scoped attribute selectors
+   that target `.repo-link[data-v-xxxxx]`. They are high-specificity and use !important
+   so the UI stays visually consistent across components. */
+.repo-link,
+.repo-link.action-btn,
+.game-item__actions .repo-link,
+.file-item__header .repo-link,
+.item__actions .repo-link,
+a.repo-link {
+  /* Match the main action button visual contract */
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #333 !important;
+  border: 1px solid var(--border-color) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  /* Prevent repo buttons from stretching to container height */
+  align-self: center !important;
+  height: auto !important;
+  vertical-align: middle !important;
+  line-height: 1.2 !important;
+}
+.repo-link .el-icon,
+.repo-link svg,
+.repo-link .icon,
+.repo-link .action-icon {
+  width: 18px !important;
+  height: 18px !important;
+  fill: #2b2b2b !important;
+  stroke: #2b2b2b !important;
+  color: #2b2b2b !important;
+}
+.repo-link .action-text,
+.repo-link .btn-text,
+.repo-link span {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+.repo-link:hover,
+.repo-link.action-btn:hover,
+.game-item__actions .repo-link:hover,
+.file-item__header .repo-link:hover {
+  background: #f5f7fa !important;
+  border-color: #e8ecf0 !important;
+  transform: translateY(-1px) scale(1.01) !important;
+}
+
+/* Target a common pattern where component-scoped selectors attach a data-v attribute.
+   This gives a bit more specificity against `.repo-link[data-v-xxxx]` rules. */
+.repo-link[data-v-08e32229],
+.game-item__actions a.repo-link[data-v-08e32229],
+.file-item__header a.repo-link[data-v-08e32229] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #333 !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Normalize card text color to a deep black so all cards look consistent */
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card {
+  color: #111417 !important;
+}
+
+/* Ensure textual children inherit the card color, but preserve icon fills which are set elsewhere */
+.game-item *,
+.app-item *,
+.page-item *,
+.file-item *,
+.card *,
+.page-card *,
+.item-card * {
+  color: inherit !important;
+}
+
+/* Normalize version tag (el-tag) across components to black/white style */
+.version-tag,
+.item .version-tag,
+.game-item .version-tag,
+.page-item .version-tag,
+.file-item .version-tag,
+.version-info .version-tag,
+.version-info el-tag {
+  background: #fff !important;
+  border-color: var(--border-color) !important;
+  color: #111417 !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+}
