@@ -18,41 +18,39 @@
           </template>
         </div>
         <span class="separator"></span>
+      </div>
+    </div>
+    <div class="game-item__actions">
+      <a
+        class="action-btn link-button"
+        :href="version.url"
+        target="_blank"
+        rel="noopener"
+        @click.stop
+      >
+        <el-icon class="action-icon"><Download /></el-icon>
+        <span class="action-text">Download</span>
+      </a>
+      <template v-if="repoUrl && gameName">
         <a
-          class="link"
-          :href="version.url"
+          class="action-btn repo-button"
+          :href="repoUrl"
           target="_blank"
           rel="noopener"
           @click.stop
         >
-          <el-icon class="link-icon"><Download /></el-icon>
-          <span>{{ version.log }}</span>
-        </a>
-        <template v-if="repoUrl && gameName">
-          <span class="separator"></span>
-          <a
-            class="repo-link"
-            :href="repoUrl"
-            target="_blank"
-            rel="noopener"
-            @click.stop
-          >
-            <el-icon class="repo-icon"><Link /></el-icon>
-            <span>Repo</span>
-          </a>
-        </template>
-      </div>
-    </div>
-    <div class="game-item__actions">
+          <el-icon class="action-icon"><Link /></el-icon>
+          <span class="action-text">Repo</span>
+        </a>  
+      </template>
       <el-button
         size="small"
-        type="default"
+        type="text"
         @click.stop="copyLink"
-        class="copy-btn"
-        text
+        class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">Copy Link</span>
+        <span class="btn-text">Copy</span>
       </el-button>
     </div>
   </div>
@@ -172,8 +170,8 @@ function formatDate(d) {
 }
 
 .game-icon {
-  font-size: 16px;
-  color: #409eff;
+  font-size: 18px;
+  color: #2b2b2b; /* 统一为黑白风格 */
 }
 
 .game-name {
@@ -208,7 +206,7 @@ function formatDate(d) {
 }
 
 .link {
-  color: #409eff;
+  color: #111417;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -218,7 +216,7 @@ function formatDate(d) {
 }
 
 .link:hover {
-  color: #337ecc;
+  color: #c1cad4;
   text-decoration: underline;
 }
 
@@ -227,19 +225,18 @@ function formatDate(d) {
 }
 
 .repo-link {
-  color: #6ba3f5;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  color: #2b2b2b;
 }
 
 .repo-link:hover {
-  color: #4a90e2;
-  text-decoration: underline;
+  color: #2b2b2b;
+  text-decoration: none;
 }
 
 .repo-icon {
@@ -248,18 +245,66 @@ function formatDate(d) {
 
 .game-item__actions {
   margin-left: 12px;
+  display: flex;
+  gap: 12px;
 }
 
-.copy-btn {
-  color: #666;
-  font-size: 12px;
-  padding: 4px 8px;
-  height: auto;
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px; /* match global */
+  min-height: 36px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #2c2c2c;
+  border: 1px solid var(--border-color);
+}
+.action-btn:hover {
+  background: #f5f7fa;
+  border-color: #e8ecf0;
+}
+.action-icon {
+  font-size: 14px;
+  color: #2b2b2b;
+}
+.action-text {
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.copy-btn:hover {
-  color: #409eff;
-  background: rgba(64, 158, 255, 0.1);
+/* Ensure repo-button and link-button get the same visual treatment when present */
+.game-item__actions a.repo-button,
+.game-item__actions a.link-button {
+  padding: 8px 12px;
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+  color: #333;
+}
+.game-item__actions a.repo-button:hover,
+.game-item__actions a.link-button:hover {
+  background: #f5f7fa;
+  border-color: #e8ecf0;
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* Component-scoped override to ensure repo links in this component are not blue */
+.repo-button,
+.repo-link,
+.link-button {
+  color: #333 !important;
+}
+.repo-button.action-btn,
+.link-button.action-btn {
+  background: #fff !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* More specific override for repo buttons in actions */
+.game-item__actions .repo-button {
+  color: #333 !important;
 }
 
 .btn-text {

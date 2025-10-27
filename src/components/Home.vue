@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watch, onBeforeUnmount } from "vue";
+import { computed, ref, watch, onBeforeUnmount, onMounted } from "vue";
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
-import PageItem from "./PageItem.vue";
-import GameItem from "./GameItem.vue";
-import AppItem from "./AppItem.vue";
-import FileItem from "./FileItem.vue";
+import PageItem from "../components/PageItem.vue";
+import GameItem from "../components/GameItem.vue";
+import AppItem from "../components/AppItem.vue";
+import FileItem from "../components/FileItem.vue";
 import { ElMessage } from "element-plus";
 
 const props = defineProps({
@@ -13,6 +13,7 @@ const props = defineProps({
     default: "",
   },
 });
+
 const pages = ref([
   {
     name: "kotobahitomi",
@@ -26,42 +27,97 @@ const pages = ref([
     ],
   },
 
-  {
-    name: "Notes",
-    repoUrl: "https://github.com/diewehmut/Notes",
-    versions: [
-      {
-        date: "2025-08-20",
-        log: "personal notes",
-        url: "https://notes.hc-dsw-nexus.me/",
-      },
-    ],
-  },
-  {
-    name: "Profile",
-    repoUrl: "https://github.com/diewehmut/Profile",
-    versions: [
-      {
-        date: "2025-08-15",
-        log: "profile page",
-        url: "https://profile.hc-dsw-nexus.me/",
-      },
-    ],
-  },
-  {
-    name: "Showcase",
-    repoUrl: "https://github.com/diewehmut/Showcase",
-    versions: [
-      {
-        date: "2025-10-01",
-        log: "showcase page",
-        url: "https://showcase.hc-dsw-nexus.me/",
-      },
-    ],
-  },
 ]);
 
-// Games data
+// GitHub profile for Home (show more GitHub info)
+const ghProfile = ref({});
+
+async function fetchGitHubProfile() {
+  try {
+    const res = await fetch('https://api.github.com/users/dieWehmut');
+    if (!res.ok) return;
+    const data = await res.json();
+    ghProfile.value = data;
+  } catch (e) {
+    // ignore
+  }
+}
+
+onMounted(() => {
+  fetchGitHubProfile();
+});
+
+// additional GitHub data: recent public events
+const recentActivity = ref({
+  monthLabel: null,
+  commitsCount: 0,
+  commitReposCount: 0,
+  createdReposCount: 0,
+  createdRepos: [],
+});
+
+// official SVG load state for dev proxy fallback
+const officialFailed = ref(false);
+function onOfficialError() {
+  officialFailed.value = true;
+}
+// trophy load state
+const trophyFailed = ref(false);
+function onTrophyError() {
+  trophyFailed.value = true;
+}
+
+
+async function fetchRecentEvents() {
+  try {
+    const res = await fetch('https://api.github.com/users/dieWehmut/events/public');
+    if (!res.ok) return;
+    const events = await res.json();
+    if (!Array.isArray(events) || events.length === 0) return;
+
+    const firstDate = new Date(events[0].created_at);
+    const month = firstDate.toLocaleString(undefined, { month: 'long' });
+    const year = firstDate.getFullYear();
+    const monthLabel = `${month} ${year}`;
+
+    const eventsThisMonth = events.filter((ev) => {
+      const d = new Date(ev.created_at);
+      return d.getFullYear() === firstDate.getFullYear() && d.getMonth() === firstDate.getMonth();
+    });
+
+    let commitsCount = 0;
+    const commitRepos = new Set();
+    let createdReposCount = 0;
+    const createdRepos = [];
+
+    eventsThisMonth.forEach((ev) => {
+      if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits)) {
+        commitsCount += ev.payload.commits.length;
+        if (ev.repo && ev.repo.name) commitRepos.add(ev.repo.name.split('/').pop());
+      }
+      if (ev.type === 'CreateEvent' && ev.payload && ev.payload.ref_type === 'repository') {
+        createdReposCount += 1;
+        if (ev.repo && ev.repo.name) createdRepos.push(ev.repo.name.split('/').pop());
+      }
+    });
+
+    recentActivity.value = {
+      monthLabel,
+      commitsCount,
+      commitReposCount: commitRepos.size,
+      createdReposCount,
+      createdRepos,
+    };
+  } catch (e) {
+    // ignore
+  }
+}
+
+onMounted(() => {
+  // fetch additional GitHub info in parallel
+  fetchRecentEvents();
+});
+
 const games = ref([
   {
     name: "PhantomGenesis",
@@ -81,13 +137,8 @@ const games = ref([
       },
     ],
   },
-
-  
-
-
 ]);
 
-// Apps data
 const apps = ref([
   {
     name: "kotobahitomi_android",
@@ -101,15 +152,18 @@ const apps = ref([
       },
     ],
   },
-
 ]);
 
-// Files data 
 const files = ref([
   {
     name: "High School Notes",
     repoUrl: "https://git.nju.edu.cn/dieSehnsucht/learningmaterials/-/tree/main/HighSchoolNotes?ref_type=heads",
     description: "Math, Physics and Chemistry, etc.",
+  },
+  {
+    name: "Learning Notes",
+    repoUrl: "https://git.nju.edu.cn/dieWehmut/learningmaterials/-/tree/main/Blog",
+    description: "Personal notes and learning materials from GitLab",
   },
 ]);
 
@@ -152,8 +206,6 @@ const filteredPages = computed(() => {
       }))
       .filter((p) => p.versions.length > 0);
   }
-
-  // 按页面名称字母顺序排序
   return result.sort((a, b) =>
     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   );
@@ -174,7 +226,6 @@ const filteredGames = computed(() => {
       }))
       .filter((g) => g.versions.length > 0);
   }
-
   return result.sort((a, b) =>
     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   );
@@ -195,7 +246,6 @@ const filteredApps = computed(() => {
       }))
       .filter((a) => a.versions.length > 0);
   }
-
   return result.sort((a, b) =>
     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   );
@@ -206,7 +256,6 @@ const filteredFiles = computed(() => {
   if (!q) {
     return files.value;
   }
-
   return files.value
     .filter(
       (f) =>
@@ -242,13 +291,11 @@ const activeApps = ref(
   filteredApps.value.filter((a) => a.versions.length > 1).map((a) => a.name)
 );
 
-// UI: section visibility toggles (collapsed by default = true -> show)
 const showPages = ref(true);
 const showGames = ref(true);
 const showApps = ref(true);
 const showFiles = ref(true);
 
-// Listen for external requests to open a section (from SideBar)
 function handleOpenSection(e) {
   const name = e?.detail;
   if (!name) return;
@@ -268,7 +315,6 @@ onBeforeUnmount(() => {
   }
 });
 
-// When searching, auto-expand all sections so matches are visible
 watch(normalizedQuery, (q) => {
   try {
     if (q && q.length > 0) {
@@ -277,7 +323,6 @@ watch(normalizedQuery, (q) => {
       showApps.value = true;
       showFiles.value = true;
     }
-    // If query becomes empty, do not force collapse; keep prior user state
   } catch (e) {
     // ignore
   }
@@ -287,7 +332,6 @@ function openPage(url) {
   if (url) window.open(url, "_blank", "noopener");
 }
 
-// Expose for parent (not used now)
 function openFirstResult() {
   const first = firstVersion();
   if (first) {
@@ -296,6 +340,7 @@ function openFirstResult() {
     ElMessage.info("No result to open");
   }
 }
+
 function copyFirstResult() {
   const first = firstVersion();
   if (first) {
@@ -338,6 +383,46 @@ defineExpose({ openFirstResult, copyFirstResult });
 
 <template>
   <div class="home">
+
+    <el-card shadow="never" class="home__card github-card">
+      <template #header>
+        <div class="card-header">GitHub Activity</div>
+      </template>
+              <div class="github-stats">
+          <div>Repos: <strong>{{ ghProfile.public_repos ?? 0 }}</strong></div>
+          <div>Followers: <strong>{{ ghProfile.followers ?? 0 }}</strong></div>
+        </div>
+      <div class="github-body">
+        <div class="github-widgets" style="text-align:center">
+          <p class="widgets-row" align="center">
+            <img height="160" src="https://github-readme-stats.vercel.app/api?username=dieWehmut&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" alt="github-stats" />
+            <img height="160" src="https://github-readme-stats.vercel.app/api/top-langs/?username=dieWehmut&layout=compact&theme=tokyonight&hide_border=true" alt="top-langs" />
+          </p>
+
+          <p align="center" style="margin-top:8px">
+            <img v-if="!trophyFailed" :src="'/api/trophy'" alt="trophy" @error="onTrophyError" />
+            
+          </p>
+        </div>
+
+        <div class="github-contrib">
+          <!-- Third-party activity graph (recent activity window, usually ~30 days) -->
+          
+          <img class="contrib-img" src="https://github-readme-activity-graph.vercel.app/graph?username=dieWehmut&theme=tokyo-night" alt="Contributions calendar" />
+
+          <!-- Official contributions SVG (past year). In local dev this will be fetched via /api/contributions proxy.
+               If loading fails (blocked by network/CSP), we show a small note and keep the third-party image as fallback. -->
+          <div class="contrib-official">
+            <img v-if="!officialFailed" class="contrib-img" :src="'/api/contributions'" alt="Official contributions (past year)" @error="onOfficialError" />
+            
+          </div>
+        </div>
+
+        <!-- Contribution activity section removed as requested -->
+      </div>
+    </el-card>
+
+
     <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
@@ -361,7 +446,6 @@ defineExpose({ openFirstResult, copyFirstResult });
       <transition name="section-toggle">
         <div v-show="showPages" class="section-body">
         <template v-for="page in filteredPages" :key="page.name">
-          <!-- 统一用 PageItem 渲染每个版本 -->
           <template v-if="page.versions.length === 1">
             <PageItem
               :page-name="page.name"
@@ -404,8 +488,7 @@ defineExpose({ openFirstResult, copyFirstResult });
       </transition>
     </el-card>
 
-    <!-- My Games Section -->
-  <el-card id="section-games" v-if="filteredGames.length > 0" shadow="never" class="home__card">
+    <el-card id="section-games" v-if="filteredGames.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showGames = !showGames" style="cursor: pointer;">
           <span>Games</span>
@@ -470,8 +553,7 @@ defineExpose({ openFirstResult, copyFirstResult });
       </transition>
     </el-card>
 
-    <!-- My Apps Section -->
-  <el-card id="section-apps" v-if="filteredApps.length > 0" shadow="never" class="home__card">
+    <el-card id="section-apps" v-if="filteredApps.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showApps = !showApps" style="cursor: pointer;">
           <span>Apps</span>
@@ -536,8 +618,7 @@ defineExpose({ openFirstResult, copyFirstResult });
       </transition>
     </el-card>
 
-    <!-- My Files Section -->
-  <el-card id="section-files" v-if="filteredFiles.length > 0" shadow="never" class="home__card">
+    <el-card id="section-files" v-if="filteredFiles.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
           <span>Files</span>
@@ -570,7 +651,6 @@ defineExpose({ openFirstResult, copyFirstResult });
       </transition>
     </el-card>
 
-    <!-- Show message when no results found -->
     <el-card
       v-if="
         query &&
@@ -585,7 +665,6 @@ defineExpose({ openFirstResult, copyFirstResult });
       <el-empty description="No matching content found" />
     </el-card>
 
-    <!-- Back to Top Button -->
     <el-button
       class="back-to-top"
       type="info"
@@ -600,12 +679,92 @@ defineExpose({ openFirstResult, copyFirstResult });
 
 <style scoped>
 .home {
-  padding: 12px 0 24px;
+  /* remove top padding so the first card lines up with sidebar top (below header/layout padding) */
+  padding: 0 0 0px;
+  /* 保证主内容左右不带额外间距，与侧边栏无缝衔接 */
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
+
+.github-card .github-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.github-stats {
+  display: flex;
+  gap: 1px;
+  font-size: 13px;
+  color: #444;
+}
+.contrib-img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.github-widgets img {
+  max-width: 100%;
+  height: auto;
+}
+
+.widgets-row {
+  display: inline-flex;
+  gap: 60px;
+  align-items: center;
+}
+
+.contrib-count {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.contrib-note {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 6px;
+}
+.contrib-official {
+  margin-top: 8px;
+}
+.activity-section {
+  margin-top: 12px;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+.activity-month {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+}
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.activity-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.activity-icon {
+  color: #409eff;
+  margin-top: 3px;
+}
+.activity-text {
+  color: #333;
+}
+.created-list a {
+  display: block;
+  color: #409eff;
+  text-decoration: none;
+}
+
 .home__card {
   border-radius: 10px;
   border: 1px solid #eee;
 }
+
 .card-header {
   display: flex;
   align-items: baseline;
@@ -677,7 +836,6 @@ defineExpose({ openFirstResult, copyFirstResult });
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* smooth expand/collapse for section body */
 .section-body {
   overflow: hidden;
 }
@@ -695,7 +853,7 @@ defineExpose({ openFirstResult, copyFirstResult });
 
 .section-toggle-enter-to,
 .section-toggle-leave-from {
-  max-height: 1200px; /* large enough to accommodate content */
+  max-height: 1200px;
   opacity: 1;
 }
 </style>

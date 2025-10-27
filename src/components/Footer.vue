@@ -1,11 +1,11 @@
 <template>
   <div class="footer">
     <div class="survival-time">
-      Uptime
-      <span class="time-number">{{ time.days }}</span> d
-      <span class="time-number">{{ time.hours }}</span> h
-      <span class="time-number">{{ time.minutes }}</span> m
-      <span class="time-number">{{ time.seconds }}</span> s 🕒
+      Uptime:
+      <span class="time-number">{{ time.days }}</span>d
+      <span class="time-number">{{ time.hours }}</span>h
+      <span class="time-number">{{ time.minutes }}</span>m
+      <span class="time-number">{{ time.seconds }}</span>s🕒
     </div>
 
 
@@ -23,17 +23,28 @@
           />
         </svg>
       </a>
+
       <a
-        href="https://git.nju.edu.cn/dieWehmut"
+        href="https://www.instagram.com/dieWehmut0"
         target="_blank"
         rel="noopener"
-        class="hub-button gitlab"
-        title="dieWehmut の GitLab"
+        class="hub-button instagram"
+        title="dieWehmut の Instagram"
       >
         <svg viewBox="0 0 24 24" class="social-icon" aria-hidden="true">
-          <path
-            d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"
-          />
+          <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm5 5.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm5.25-.75a1.125 1.125 0 1 1-1.125 1.125A1.125 1.125 0 0 1 17.25 6.75zM12 9.25A2.75 2.75 0 1 0 14.75 12 2.75 2.75 0 0 0 12 9.25z"/>
+        </svg>
+      </a>
+
+      <a
+        href="https://x.com/DSehnsucht82356"
+        target="_blank"
+        rel="noopener"
+        class="hub-button x"
+        title="dieWehmut の X"
+      >
+        <svg viewBox="0 0 24 24" class="social-icon" aria-hidden="true">
+          <path d="M18.3 5.71a1 1 0 0 0-1.42-1.42L12 9.17 7.12 4.29a1 1 0 0 0-1.42 1.42L10.59 10.6 5.7 15.49a1 1 0 1 0 1.42 1.42L12 12.02l4.88 4.89a1 1 0 0 0 1.42-1.42L13.41 10.6l4.89-4.89z"/>
         </svg>
       </a>
 
@@ -108,9 +119,9 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
 }
 .hub-button {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -129,18 +140,31 @@ onBeforeUnmount(() => {
 .hub-button.github:hover .social-icon {
   fill: #fff;
 }
-.hub-button.gitlab:hover {
-  background-color: #fc6d26;
-  border-color: #fc6d26;
+.hub-button.instagram:hover {
+  background-color: #e4405f;
+  border-color: #e4405f;
 }
-.hub-button.gitlab:hover .social-icon {
+.hub-button.instagram:hover .social-icon {
+  fill: #fff;
+}
+.hub-button.x:hover {
+  background-color: #1da1f2;
+  border-color: #1da1f2;
+}
+.hub-button.x:hover .social-icon {
   fill: #fff;
 }
 .social-icon {
-  width: 18px;
-  height: 18px;
+  width: 24px; /* 固定更明显尺寸 */
+  height: 24px;
+  max-width: 28px;
+  max-height: 28px;
   fill: #333;
-  transition: fill 0.2s ease;
+  transition: fill 0.2s ease, transform 0.12s ease;
+  display: block;
+}
+.hub-button:hover .social-icon {
+  transform: translateY(-1px) scale(1.05);
 }
 .copyright {
   font-size: 12px;
