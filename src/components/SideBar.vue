@@ -20,18 +20,24 @@
             </a>
 
             <div class="follow-row">
-              <span class="icon">👥</span>
+              <svg class="icon icon--people" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-1.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.95 1.97 3.45V20h6v-1.5C23 14.17 18.33 13 16 13z" />
+              </svg>
               <span class="follow-text">{{ profile.followers ?? 0 }} followers</span>
             </div>
 
 
             <div class="contact-meta">
               <div class="meta-item">
-                <span class="icon">📍</span>
+                <svg class="icon icon--pin" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
+                </svg>
                 <span>Suzhou, China</span>
               </div>
               <div class="meta-item">
-                <span class="icon">✉️</span>
+                <svg class="icon icon--mail" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
                 <a class="email-link" href="mailto:diesehnsucht0@gmail.com">diesehnsucht0@gmail.com</a>
               </div>
             </div>
@@ -39,7 +45,8 @@
       </div>
     </div>
 
-    <nav class="nav-list" aria-label="sections">
+    <!-- Navigation buttons are moved into a reusable component. Show in sidebar only on desktop. -->
+    <nav class="nav-list" aria-label="sections" v-if="!isMobile">
       <ul>
         <li><button class="nav-btn" @click="go('pages')">Pages</button></li>
         <li><button class="nav-btn" @click="go('games')">Games</button></li>
@@ -96,21 +103,33 @@ async function fetchGitHub() {
 onMounted(() => {
   fetchGitHub();
 });
+
+// responsive flag: hide nav buttons in sidebar on mobile (match CSS breakpoint)
+const isMobile = ref(false);
+onMounted(() => {
+  const mq = window.matchMedia('(max-width: 1000px)');
+  const update = () => (isMobile.value = mq.matches);
+  update();
+  if (mq.addEventListener) mq.addEventListener('change', update);
+  else mq.addListener(update);
+});
 </script>
 
 <style scoped>
 .sidebar {
   /* participate in layout (sticky) so left+main(+right) align as a group */
   position: sticky;
-  /* align so sidebar top sits below the header and layout padding (header + layout padding-top) */
-  top: calc(var(--header-height, 80px) + 20px);
+  /* align so sidebar top sits below the header and layout padding (header + layout padding-top)
+    use a shared variable so changes to layout padding keep both columns aligned */
+  top: calc(var(--header-height, 80px) + var(--layout-padding-top, 20px));
   width: 300px; /* increased width for bigger avatar */
-  background: rgba(255,255,255,0.98);
-  border: 1px solid #eee;
+  /* fully transparent background so dynamic video shows through */
+  background: transparent !important;
+  border: none !important;
   border-radius: 14px;
   padding: 18px;
   /* push shadow to left only so right edge appears flush with main content */
-  box-shadow: -8px 10px 24px rgba(0,0,0,0.04);
+  box-shadow: none !important;
   z-index: 1100;
   /* pull the sidebar flush to the left edge of the page, compensating for .app padding */
   margin-left: calc(-1 * var(--sidebar-left-gap, 32px));
@@ -140,8 +159,18 @@ onMounted(() => {
   width: 270px;
   height: 270px;
   border-radius: 50%;
-  border: 1px solid #409eff;
   box-shadow: 0 8px 20px rgba(64,158,255,0.12);
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms ease, filter 260ms ease;
+  will-change: transform, box-shadow;
+}
+
+/* 悬浮时有轻微抬起、放大和光泽效果（仅对支持悬浮的设备） */
+@media (hover: hover) {
+  .avatar:hover {
+    transform: translateY(-8px) scale(1.03) rotate(-0.6deg);
+    box-shadow: 0 18px 42px rgba(20,40,80,0.38);
+    filter: saturate(1.05) contrast(1.03);
+  }
 }
 
 .about-content {
@@ -155,13 +184,13 @@ onMounted(() => {
 .name {
   font-size: 28px;
   font-weight: 700;
-  color: #222;
+  color: rgba(255,255,255,0.96);
   margin: 8px 0 6px 0;
 }
 
 .bio {
   font-size: 13px;
-  color: #666;
+  color: rgba(255,255,255,0.88);
   line-height: 1.45;
   margin-bottom: 12px;
   max-width: 240px;
@@ -221,7 +250,7 @@ onMounted(() => {
 }
 .nav-btn:hover,
 .nav-btn:focus {
-  background: rgba(64,158,255,0.08);
+  background: transparent !important;
   outline: none;
 }
 .nav-btn:focus-visible {
@@ -235,12 +264,13 @@ onMounted(() => {
   flex-direction: column;
   gap: 8px;
 }
-.github-btn {
+  .github-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center; /* center content inside button */
   gap: 3px;
-  background: #000; /* black button */
+  /* make button background transparent so nothing blocks video */
+  background: transparent !important;
   color: #fff;
   padding: 7px 12px;
   border-radius: 8px;
@@ -255,7 +285,7 @@ onMounted(() => {
 }
 .github-btn .follower {
   margin-left: auto;
-  background: rgba(255,255,255,0.15);
+  background: transparent !important;
   padding: 2px 6px;
   border-radius: 999px;
   font-weight: 600;
@@ -264,18 +294,18 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #666;
+  color: rgba(255,255,255,0.86);
   font-size: 13px;
 }
 .follow-text {
-  color: #666;
+  color: rgba(255,255,255,0.86);
 }
 .contact-meta {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: #666;
+  color: rgba(255,255,255,0.86);
 }
 .meta-item {
   display: flex;
@@ -285,5 +315,52 @@ onMounted(() => {
 .email-link {
   color: inherit;
   text-decoration: underline;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: rgba(255,255,255,0.88);
+  flex: 0 0 18px;
+  display: inline-block;
+}
+.icon--people,
+.icon--pin,
+.icon--mail {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive overrides for sidebar on small screens */
+@media (max-width: 1000px) {
+  .sidebar {
+    position: static; /* participate in normal flow so it stacks above main */
+    top: auto;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-right: 1px solid #eee;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  }
+
+  .avatar {
+    /* reduce avatar size on small screens so it doesn't dominate layout */
+    width: 140px;
+    height: 140px;
+  }
+
+  .about-content {
+    max-width: none;
+    padding: 0 8px;
+  }
+
+  .nav-list ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }
 </style>

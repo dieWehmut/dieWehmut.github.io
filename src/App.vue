@@ -1,5 +1,18 @@
 <template>
   <el-config-provider :button="{ autoInsertSpace: true }">
+        <DynamicBackground @ready="onBackgroundReady" />
+        <!-- Entry splash overlay -->
+        <div v-if="showIntro" class="entry-splash" @click="skipIntro" role="dialog" aria-label="Entry animation">
+          <div class="splash-inner">
+            <div class="splash-logo">Welcome!</div>
+            <div class="splash-sub">dieWehmut's Nexus</div>
+            <div class="splash-loader" aria-hidden="true" :class="{ ready: backgroundReady }">
+              <div class="dot" />
+              <div class="dot" />
+              <div class="dot" />
+            </div>
+          </div>
+        </div>
     <el-container class="app">
       <el-header class="app__header" height="80px">
         <SearchBar
@@ -11,7 +24,7 @@
       </el-header>
 
       <div class="layout">
-        <SideBar />
+        <SideBar v-if="!(isMobile && query.trim())" />
 
         <el-main>
           <Home
@@ -33,6 +46,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import SearchBar from './components/SearchBar.vue'
+import DynamicBackground from './components/DynamicBackground.vue'
 import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
 import SideBar from './components/SideBar.vue'
@@ -76,8 +90,71 @@ onMounted(() => {
   window.addEventListener('keydown', handleGlobalHotkeys)
 })
 
+// mobile detection: used to hide sidebar on small screens when searching
+const isMobile = ref(false)
+let _mq = null
+
+// Intro splash state
+const showIntro = ref(true)
+function hideIntro() {
+  showIntro.value = false
+  // clear any pending fallback timer
+  try { if (introFallbackTimer) { clearTimeout(introFallbackTimer); introFallbackTimer = null } } catch (e) {}
+}
+function skipIntro() {
+  // allow users to click to skip immediate
+  hideIntro()
+}
+
+// track whether background signaled ready and provide a max fallback
+const backgroundReady = ref(false)
+let introFallbackTimer = null
+
+function onBackgroundReady() {
+  backgroundReady.value = true
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const exitDelay = prefersReduced ? 120 : 420
+  // short delay to allow the background crossfade to settle, then hide
+  setTimeout(() => hideIntro(), exitDelay)
+  if (introFallbackTimer) { clearTimeout(introFallbackTimer); introFallbackTimer = null }
+}
+
+// Max fallback: if background doesn't signal ready in time, hide the splash anyway
+onMounted(() => {
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const maxWait = prefersReduced ? 800 : 5000
+  introFallbackTimer = setTimeout(() => {
+    if (!backgroundReady.value) hideIntro()
+  }, maxWait)
+})
+
+function handleMqChange(e) {
+  isMobile.value = e.matches
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleGlobalHotkeys)
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    _mq = window.matchMedia('(max-width: 1000px)')
+    isMobile.value = _mq.matches
+    try {
+      _mq.addEventListener('change', handleMqChange)
+    } catch (e) {
+      // fallback for older browsers
+      _mq.addListener(handleMqChange)
+    }
+  }
+})
+
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleGlobalHotkeys)
+  if (_mq) {
+    try {
+      _mq.removeEventListener('change', handleMqChange)
+    } catch (e) {
+      _mq.removeListener(handleMqChange)
+    }
+  }
 })
 </script>
 
@@ -86,21 +163,94 @@ onBeforeUnmount(() => {
   /* reserve space for left/right fixed sidebars so they don't overlap main content */
   --sidebar-left-gap: 32px; /* left sidebar occupied width + gap */
   --sidebar-right-gap: 32px; /* placeholder for a right sidebar if present */
+    /* layout padding-top used by sidebar sticky offset to align with main content */
+    --layout-padding-top: 20px;
   /* header height (used by sidebar sticky offset) */
   --header-height: 80px;
   min-height: 100vh;
-  background: #fafafa;
+  background: transparent;
   color: #2c2c2c;
   padding-left: var(--sidebar-left-gap);
   padding-right: var(--sidebar-right-gap);
+}
+
+/* Entry splash overlay */
+.entry-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 6000; /* above other UI */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.35));
+  backdrop-filter: blur(6px);
+}
+.splash-inner {
+  text-align: center;
+  color: #fff;
+  transform-origin: center center;
+  animation: splashIn 700ms cubic-bezier(.2,.9,.2,1) both;
+}
+.splash-logo {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+}
+.splash-sub {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.splash-loader {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+.splash-loader .dot {
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.88);
+  border-radius: 50%;
+  opacity: 0.9;
+  transform: translateY(0);
+  animation: loaderBounce 900ms infinite cubic-bezier(.2,.9,.2,1);
+}
+.splash-loader .dot:nth-child(2) { animation-delay: 140ms }
+.splash-loader .dot:nth-child(3) { animation-delay: 280ms }
+.splash-loader.ready .dot { animation-play-state: paused; opacity: 0.6; transform: scale(0.9); }
+
+@keyframes loaderBounce {
+  0% { transform: translateY(0); opacity: 0.85 }
+  50% { transform: translateY(-8px); opacity: 1 }
+  100% { transform: translateY(0); opacity: 0.85 }
+}
+
+@keyframes splashIn {
+  0% { opacity: 0; transform: scale(0.96) translateY(6px); }
+  60% { opacity: 1; transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* when overlay is removed, allow CSS transition on opacity for smooth disappearance (handled via v-if -> unmount)
+   For users who prefer reduced motion, keep it short and subtle */
+@media (prefers-reduced-motion: reduce) {
+  .splash-inner { animation-duration: 200ms !important; }
 }
 
 .app__header {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  border-bottom: 1px solid #eee;
+  /* 固定在页面顶部，不随滚动移动 */
+  position: sticky;
+  top: 0;
+  z-index: 2200;
+  /* 保持透明以展示视频背景，但保留轻微内边距以分隔内容 */
+  background: transparent;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .app__main {
@@ -120,13 +270,15 @@ onBeforeUnmount(() => {
   gap: 0px;
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 0;
+  padding: var(--layout-padding-top, 20px) 0;
 }
 
 /* ensure the main column does not add extra left padding so it can sit flush against the sidebar */
 .layout .el-main {
   padding-left: 0;
   margin-left: 0;
+  /* ensure main column does not introduce top spacing so cards align with sidebar */
+  padding-top: 0;
   /* ensure el-main occupies remaining space and has no internal left padding that would create a gap */
   box-sizing: border-box;
   /* pull the main area to the right edge by compensating for the app's right gap */
@@ -151,10 +303,20 @@ onBeforeUnmount(() => {
   }
   /* also make the fixed sidebars collapse/stack via their own CSS (they check window width)
      so the main area can take full width on small devices */
+
+  /* Stack layout vertically on small screens so sidebar doesn't push main content off-screen */
+  .layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: calc(var(--layout-padding-top, 20px) / 2) 0; /* slightly reduce vertical padding */
+  }
+
+  .layout .el-main {
+    margin-right: 0; /* remove negative compensation so main occupies full width */
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
 
-.app__footer {
-  background: #ffffff;
-  border-top: 1px solid #eee;
-}
 </style>
