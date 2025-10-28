@@ -5,6 +5,7 @@
   "search": { "hint": "検索 ..." },
   "sidebar": {
     "bio": "南京大学（蘇州キャンパス）知能科学技術 学士",
+    "lastUpdated": "最終更新：",
     "followers": "{count} フォロワー",
     "location": "中国 蘇州"
   },
@@ -16,6 +17,8 @@
   },
   "common": {
     "totalFormat": "合計 {count} 件",
+    "totalFiles": "合計 {count} ファイル",
+    "versionsCount": "{count} バージョン",
     "matchedFormat": "一致 {count} 件"
   },
   "action": {
@@ -35,5 +38,12 @@
     "en": "English",
     "ja": "日本語",
     "de": "Deutsch"
+  }
+  ,
+  "githubActivity": "GitHub アクティビティ"
+,
+  "intro": {
+    "title": "ようこそ！",
+    "subtitle": "dieWehmut の Nexus"
   }
 }

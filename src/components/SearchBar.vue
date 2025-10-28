@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search" :class="{ 'entering': enterReady }">
     <el-input
       id="global-search-input"
       ref="inputRef"
@@ -36,6 +36,10 @@ const props = defineProps({
   modelValue: {
     type: String,
     default: ''
+  },
+  enterReady: {
+    type: Boolean,
+    default: true,
   }
 })
 const emit = defineEmits(['update:modelValue', 'submit', 'clear'])
@@ -75,7 +79,10 @@ defineExpose({ focusInput })
 .search {
   width: min(960px, 92vw);
   margin: 0 auto;
-  padding: 0 8px;
+  padding: 6px 8px;
+  /* make the search container sit on a dark translucent header for legibility */
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
 }
 
 .search-input :deep(.el-input__wrapper) {
@@ -146,5 +153,21 @@ defineExpose({ focusInput })
 
 .search-input :deep(.el-input__clear:hover) {
   color: #9a9a9a;
+}
+
+/* entry animation for search bar */
+.search {
+  transition: opacity 420ms cubic-bezier(.16,.9,.2,1), transform 420ms cubic-bezier(.16,.9,.2,1);
+  will-change: opacity, transform;
+}
+.search:not(.entering) {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+.search.entering {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 </style>

@@ -16,6 +16,7 @@
               {{ version.version }}
             </el-tag>
           </template>
+          <span v-if="version.log" class="version-log">{{ version.log }}</span>
         </div>
         <span class="separator"></span>
       </div>
@@ -143,7 +144,8 @@ function formatDate(d) {
   cursor: pointer;
   min-height: 50px;
   border: none !important;
-  background: transparent !important;
+  background: #111; /* default dark */
+  color: #f5f5f5;
 }
 
 .game-item:focus {
@@ -185,12 +187,12 @@ function formatDate(d) {
   align-items: center;
   gap: 6px;
   font-weight: 600;
-  color: #2c2c2c;
+  color: #f5f5f5;
 }
 
 .game-icon {
   font-size: 18px;
-  color: #2b2b2b; /* 统一为黑白风格 */
+  color: #ffffff;
 }
 
 .game-name {
@@ -201,7 +203,13 @@ function formatDate(d) {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #666;
+  color: #d0d0d0;
+}
+
+.version-log {
+  color: #d0d0d0;
+  margin-left: 8px;
+  font-size: 13px;
 }
 
 .calendar-icon {
@@ -225,7 +233,7 @@ function formatDate(d) {
 }
 
 .link {
-  color: #111417;
+  color: #d7e9ff;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -267,6 +275,19 @@ function formatDate(d) {
   gap: 12px;
 }
 
+/* Ensure repo button is visually transparent by default (fix white background when not hovered) */
+.game-item__actions a.repo-button {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+.game-item__actions a.repo-button .el-icon,
+.game-item__actions a.repo-button svg {
+  background: transparent !important;
+}
+
 /* Mobile: stack actions under content */
 @media (max-width: 768px) {
   .game-item {
@@ -291,13 +312,13 @@ function formatDate(d) {
   min-height: 36px;
   border-radius: 10px;
   text-decoration: none;
-  color: #2c2c2c;
+  color: #f5f5f5;
   border: 1px solid var(--border-color);
 }
 
 .action-icon {
   font-size: 14px;
-  color: #2b2b2b;
+  color: #ffffff;
 }
 .action-text {
   font-size: 13px;
@@ -352,5 +373,19 @@ function formatDate(d) {
 
 .btn-text {
   margin-left: 4px;
+}
+
+/* Hover: transparent background and switch to dark text/icons to match pages */
+.game-item:hover,
+.game-item:focus {
+  color: inherit;
+}
+.game-item:hover .game-info,
+.game-item:hover .game-name,
+.game-item:hover .game-icon,
+.game-item:hover .action-btn,
+.game-item:hover .action-icon,
+.game-item:hover .version-info {
+  color: #2b2b2b !important;
 }
 </style>

@@ -29,7 +29,7 @@
       <div v-else class="file-item__footer">
         <div class="file-list">
           <div class="file-list__header">
-            <el-text size="small" type="info">Total {{ files.length }} files</el-text>
+            <el-text size="small" type="info">{{ t('common.totalFiles', { count: files.length }) }}</el-text>
             <el-button class="action-btn" type="text" size="small" @click="isOpen = !isOpen">
               <el-icon v-if="!isOpen"><ArrowDown /></el-icon>
               <el-icon v-else><ArrowUp /></el-icon>
@@ -41,16 +41,16 @@
             <div v-if="isOpen" class="file-list__content">
               <div
                 class="file-list__item"
+                :class="{ 'has-view': isViewable(file) }"
                 v-for="file in files"
                 :key="file.name"
               >
-                <div class="file-info">
-                        <el-icon class="file-list-icon"><Document /></el-icon>
-                        <span class="file-name-text">{{ file.displayName }}</span>
-                  <span class="file-type">{{ file.extension }}</span>
-                </div>
+    <div class="file-info">
+      <el-icon class="file-list-icon"><Document /></el-icon>
+      <span class="file-name-text">{{ file.name }}</span>
+    </div>
                 <div class="file-list__actions">
-                  <el-button class="action-btn" type="primary" size="small" @click="openFile(file.rawUrl)">
+                  <el-button v-if="isViewable(file)" class="action-btn" type="primary" size="small" @click="openFile(file.rawUrl)">
                     <el-icon><View /></el-icon>
                     {{ t('action.view') }}
                   </el-button>
@@ -146,7 +146,8 @@ async function loadFiles() {
 
     const data = await response.json();
 
-    files.value = data
+    // Map blobs to file objects (initially without lastModified)
+    const mapped = data
       .filter(item => item.type === 'blob')
       .map(item => {
         const encodedName = encodeURIComponent(item.name);
@@ -157,10 +158,41 @@ async function loadFiles() {
           path: item.path,
           rawUrl: raw,
           downloadUrl: `${raw}?inline=false`,
-          extension: getFileExtension(item.name)
+          extension: getFileExtension(item.name),
+          lastModified: null,
         };
+      });
+
+    // Fetch the latest commit for each file to get its last modified time (may be many requests)
+    const withDates = await Promise.all(
+      mapped.map(async (f) => {
+        try {
+          const commitsUrl = `${url.origin}/api/v4/projects/${encodeURIComponent(projectPath)}/repository/commits?path=${encodeURIComponent(
+            f.path
+          )}&per_page=1&ref_name=${encodeURIComponent(ref || 'main')}`;
+          const commitResp = await fetch(commitsUrl);
+          if (commitResp.ok) {
+            const commits = await commitResp.json();
+            if (Array.isArray(commits) && commits.length > 0) {
+              f.lastModified = commits[0].committed_date;
+            }
+          }
+        } catch (e) {
+          // ignore per-file failures
+        }
+        return f;
       })
-      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+    );
+
+    // Sort by lastModified desc (newest first). Fallback to name ordering when missing.
+    files.value = withDates.sort((a, b) => {
+      if (a.lastModified && b.lastModified) {
+        return new Date(b.lastModified) - new Date(a.lastModified);
+      }
+      if (a.lastModified) return -1;
+      if (b.lastModified) return 1;
+      return a.displayName.localeCompare(b.displayName);
+    });
 
   } catch (err) {
     console.error('Failed to load files:', err);
@@ -177,6 +209,15 @@ function getDisplayName(filename) {
 function getFileExtension(filename) {
   const ext = filename.split('.').pop().toUpperCase();
   return ext || 'FILE';
+}
+
+// Which extensions we treat as viewable in-browser
+const viewableExts = new Set(["PDF","MD","TXT","PNG","JPG","JPEG","SVG","HTML","HTM","GIF"]);
+
+function isViewable(file) {
+  if (!file) return false;
+  const ext = (file.extension || '').toString().toUpperCase();
+  return viewableExts.has(ext);
 }
 
 function openFile(url) {
@@ -220,8 +261,9 @@ onMounted(() => {
 
 .file-item__content {
   padding: 16px;
-  /* fully transparent card so background shows through */
+  /* outer container is transparent by default */
   background: transparent !important;
+  color: inherit;
   border-radius: 8px;
   border: none !important;
   transition: transform 0.14s ease, box-shadow 0.18s ease;
@@ -253,13 +295,13 @@ onMounted(() => {
 
 .file-list-icon {
   font-size: 18px;
-  color: #2b2b2b; /* 单色 */
+  color: #2b2b2b; /* default dark icon */
   margin-right: 8px;
 }
 
 .file-name-text {
   font-size: 14px;
-  color: #333;
+  color: #2b2b2b;
   font-weight: 500;
 }
 
@@ -282,36 +324,21 @@ onMounted(() => {
 
 /* When repo-link is used as a button, ensure it matches the global action-btn appearance */
 .repo-link.action-btn {
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: none !important;
-  background: transparent !important;
-  color: #333;
-}
-.repo-link.action-btn:hover {
-  background: transparent !important;
-  border-color: transparent !important;
-  transform: none;
-}
-
-/* Scoped override to ensure repo-link used as action-btn inside this component
-   wins over other scoped/global rules that set it blue. */
-.repo-link.action-btn {
-  color: #333 !important;
-  background: transparent !important;
-  border: none !important;
   padding: 8px 12px !important;
   border-radius: 10px !important;
+  border: none !important;
+  background: transparent !important;
   margin-left: auto;
+  color: inherit !important;
 }
 .repo-link.action-btn:hover {
   background: transparent !important;
-  border-color: transparent !important;
 }
 
 .file-item__description {
   margin-bottom: 12px;
   font-size: 14px;
+  color: #6b6b6b;
 }
 
 .loading-state,
@@ -343,7 +370,22 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 6px; /* separate items to avoid visual overlap */
+}
+
+.file-list__item.has-view {
+  /* only items with a view link show a subtle dark translucent background by default */
+  background: rgba(0,0,0,0.12);
+  color: #f5f5f5;
+}
+
+.file-list__item.has-view:hover {
+  /* hover makes the item transparent and switch text to dark to match pages behavior */
+  background: transparent !important;
+  /* keep text white as requested */
+  color: #f5f5f5 !important;
 }
 
 .file-list__item:last-child {
@@ -359,7 +401,7 @@ onMounted(() => {
 
 .file-name {
   font-size: 14px;
-  color: #333;
+  color: #2b2b2b;
   font-weight: 500;
 }
 
@@ -368,7 +410,7 @@ onMounted(() => {
 
   border-radius: 4px;
   font-size: 12px;
-  color: #666;
+  color: #7a7a7a;
   font-weight: 500;
 }
 
@@ -395,7 +437,19 @@ onMounted(() => {
   .file-list__actions .action-btn,
   .repo-link.action-btn {
     width: auto;
+    color: inherit;
   }
+}
+
+/* Only inner expanded file list items change color on hover (not entire card) */
+.file-list__item:hover .file-list-icon,
+.file-list__item:hover .file-name-text,
+.file-list__item:hover .repo-link,
+.file-list__item:hover .file-name,
+.file-list__item:hover .file-type,
+.file-list__item:hover .action-btn {
+  /* do not force black; inherit current color so white remains when desired */
+  color: inherit !important;
 }
 
 .download-link {

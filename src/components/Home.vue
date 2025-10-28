@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, onBeforeUnmount, onMounted } from "vue";
+import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { useI18n } from 'vue-i18n';
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
 import FloatButton from "./FloatButton.vue";
@@ -7,6 +7,7 @@ import PageItem from "../components/PageItem.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
 import FileItem from "../components/FileItem.vue";
+import GithubActivity from "../components/GithubActivity.vue";
 import { ElMessage } from "element-plus";
 
 const props = defineProps({
@@ -14,161 +15,40 @@ const props = defineProps({
     type: String,
     default: "",
   },
-});
-
-const pages = ref([
-  {
-    name: "kotobahitomi",
-    repoUrl: "https://github.com/dieWehmut/kotoba-hitomi",
-    versions: [
-      {
-        version: "v1.4",
-        date: "2025-06-03",
-        log: "nihongo AI web app",
-        url: "https://kotoba-hitomi.hc-dsw-nexus.me/",
-      },
-    ],
+  enterReady: {
+    type: Boolean,
+    default: true,
   },
+});
+import { useContent } from "../data/content";
 
-]);
+const { pages, games, apps, files } = useContent();
 
-// GitHub profile for Home (show more GitHub info)
-const ghProfile = ref({});
-
-async function fetchGitHubProfile() {
+// helpers: parse dates and get latest version date for an item
+function parseDateSafe(d) {
   try {
-    const res = await fetch('https://api.github.com/users/dieWehmut');
-    if (!res.ok) return;
-    const data = await res.json();
-    ghProfile.value = data;
-  } catch (e) {
-    // ignore
+    const dt = new Date(d);
+    return isNaN(dt.valueOf()) ? null : dt;
+  } catch {
+    return null;
   }
 }
 
-onMounted(() => {
-  fetchGitHubProfile();
-});
-
-// additional GitHub data: recent public events
-const recentActivity = ref({
-  monthLabel: null,
-  commitsCount: 0,
-  commitReposCount: 0,
-  createdReposCount: 0,
-  createdRepos: [],
-});
-
-// official SVG load state for dev proxy fallback
-const officialFailed = ref(false);
-function onOfficialError() {
-  officialFailed.value = true;
-}
-// trophy load state
-const trophyFailed = ref(false);
-function onTrophyError() {
-  trophyFailed.value = true;
+function latestVersionDate(item) {
+  if (!item || !Array.isArray(item.versions) || item.versions.length === 0) return new Date(0);
+  let max = 0;
+  item.versions.forEach((v) => {
+    const dt = parseDateSafe(v.date);
+    if (dt) {
+      const t = dt.valueOf();
+      if (t > max) max = t;
+    }
+  });
+  return new Date(max || 0);
 }
 
+// GitHub activity moved into GithubActivity.vue component
 
-async function fetchRecentEvents() {
-  try {
-    const res = await fetch('https://api.github.com/users/dieWehmut/events/public');
-    if (!res.ok) return;
-    const events = await res.json();
-    if (!Array.isArray(events) || events.length === 0) return;
-
-    const firstDate = new Date(events[0].created_at);
-    const month = firstDate.toLocaleString(undefined, { month: 'long' });
-    const year = firstDate.getFullYear();
-    const monthLabel = `${month} ${year}`;
-
-    const eventsThisMonth = events.filter((ev) => {
-      const d = new Date(ev.created_at);
-      return d.getFullYear() === firstDate.getFullYear() && d.getMonth() === firstDate.getMonth();
-    });
-
-    let commitsCount = 0;
-    const commitRepos = new Set();
-    let createdReposCount = 0;
-    const createdRepos = [];
-
-    eventsThisMonth.forEach((ev) => {
-      if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits)) {
-        commitsCount += ev.payload.commits.length;
-        if (ev.repo && ev.repo.name) commitRepos.add(ev.repo.name.split('/').pop());
-      }
-      if (ev.type === 'CreateEvent' && ev.payload && ev.payload.ref_type === 'repository') {
-        createdReposCount += 1;
-        if (ev.repo && ev.repo.name) createdRepos.push(ev.repo.name.split('/').pop());
-      }
-    });
-
-    recentActivity.value = {
-      monthLabel,
-      commitsCount,
-      commitReposCount: commitRepos.size,
-      createdReposCount,
-      createdRepos,
-    };
-  } catch (e) {
-    // ignore
-  }
-}
-
-onMounted(() => {
-  // fetch additional GitHub info in parallel
-  fetchRecentEvents();
-});
-
-const games = ref([
-  {
-    name: "PhantomGenesis",
-    repoUrl: "https://github.com/dieWehmut/PhantomGenesis/",
-    versions: [
-      {
-        version: "v1.3",
-        date: "2025-06-30",
-        log: "modified game",
-        url: "https://github.com/dieWehmut/showcase/releases/download/PhantomGenesis/PhantomGenesis1.3.zip",
-      },
-      {
-        version: "v1.2",
-        date: "2025-06-30",
-        log: "first version release",
-        url: "https://github.com/dieWehmut/showcase/releases/download/PhantomGenesis/PhantomGenesis1.2.zip",
-      },
-    ],
-  },
-]);
-
-const apps = ref([
-  {
-    name: "kotobahitomi_android",
-    repoUrl: "https://github.com/dieWehmut/kotoba-hitomi",
-    versions: [
-      {
-        version: "v1.0.0",
-        date: "2025-06-03",
-        log: "First app release",
-        url: "https://github.com/dieWehmut/showcase/releases/download/kotobahitomi/kotobahitomi.apk",
-      },
-    ],
-  },
-]);
-
-const files = ref([
-  {
-    name: "High School Notes",
-    repoUrl: "https://git.nju.edu.cn/dieSehnsucht/learningmaterials/-/tree/main/HighSchoolNotes?ref_type=heads",
-    description: "Math, Physics and Chemistry, etc.",
-  },
-  {
-    name: "Learning Notes",
-    repoUrl: "https://git.nju.edu.cn/dieWehmut/learningmaterials/-/tree/main/Blog",
-    description: "Personal notes and learning materials",
-  },
-]);
 
 const totalCount = computed(() =>
   pages.value.reduce((sum, p) => sum + p.versions.length, 0)
@@ -186,8 +66,7 @@ const totalFilesCount = computed(() => files.value.length);
 
 const normalizedQuery = computed(() => props.query.trim().toLowerCase());
 
-// control whether the GitHub activity card is expanded
-const showGitCard = ref(true);
+// (GitHub card state moved into GithubActivity.vue)
 
 function matchVersion(v, q) {
   return (
@@ -201,60 +80,62 @@ const filteredPages = computed(() => {
   const q = normalizedQuery.value;
   let result;
   if (!q) {
-    result = pages.value;
+    // clone and sort versions (newest first)
+    result = pages.value.map((p) => ({
+      ...p,
+      versions: (p.versions || []).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
+    }));
   } else {
     result = pages.value
       .map((p) => ({
         ...p,
-        versions: p.versions.filter(
-          (v) => matchVersion(v, q) || p.name.toLowerCase().includes(q)
-        ),
+        versions: (p.versions || []).filter((v) => matchVersion(v, q) || p.name.toLowerCase().includes(q)).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
       }))
       .filter((p) => p.versions.length > 0);
   }
-  return result.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  );
+
+  // sort items by their latest version date (newest first)
+  return result.sort((a, b) => latestVersionDate(b) - latestVersionDate(a));
 });
 
 const filteredGames = computed(() => {
   const q = normalizedQuery.value;
   let result;
   if (!q) {
-    result = games.value;
+    result = games.value.map((g) => ({
+      ...g,
+      versions: (g.versions || []).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
+    }));
   } else {
     result = games.value
       .map((g) => ({
         ...g,
-        versions: g.versions.filter(
-          (v) => matchVersion(v, q) || g.name.toLowerCase().includes(q)
-        ),
+        versions: (g.versions || []).filter((v) => matchVersion(v, q) || g.name.toLowerCase().includes(q)).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
       }))
       .filter((g) => g.versions.length > 0);
   }
-  return result.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  );
+
+  return result.sort((a, b) => latestVersionDate(b) - latestVersionDate(a));
 });
 
 const filteredApps = computed(() => {
   const q = normalizedQuery.value;
   let result;
   if (!q) {
-    result = apps.value;
+    result = apps.value.map((a) => ({
+      ...a,
+      versions: (a.versions || []).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
+    }));
   } else {
     result = apps.value
       .map((a) => ({
         ...a,
-        versions: a.versions.filter(
-          (v) => matchVersion(v, q) || a.name.toLowerCase().includes(q)
-        ),
+        versions: (a.versions || []).filter((v) => matchVersion(v, q) || a.name.toLowerCase().includes(q)).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
       }))
       .filter((a) => a.versions.length > 0);
   }
-  return result.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  );
+
+  return result.sort((a, b) => latestVersionDate(b) - latestVersionDate(a));
 });
 
 const filteredFiles = computed(() => {
@@ -391,51 +272,9 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <div class="home">
+  <div class="home" :class="{ 'entering': enterReady }">
 
-  <el-card v-if="!normalizedQuery" shadow="never" class="home__card github-card">
-      <template #header>
-        <div class="card-header">
-      <span>GitHub Activity</span>
-          <el-button type="text" size="small" @click="showGitCard = !showGitCard" style="margin-left:8px">
-            <el-icon>
-              <ArrowUp v-if="showGitCard" />
-              <Collection v-else />
-            </el-icon>
-          </el-button>
-        </div>
-      </template>
-      <transition name="section-toggle">
-        <div v-show="showGitCard" class="github-body">
-        <div class="github-widgets" style="text-align:center">
-          <p class="widgets-row" align="center">
-            <img height="160" src="https://github-readme-stats.vercel.app/api?username=dieWehmut&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" alt="github-stats" />
-            <img height="160" src="https://github-readme-stats.vercel.app/api/top-langs/?username=dieWehmut&layout=compact&theme=tokyonight&hide_border=true" alt="top-langs" />
-          </p>
-
-          <p align="center" style="margin-top:8px">
-            <img v-if="!trophyFailed" :src="'/api/trophy'" alt="trophy" @error="onTrophyError" />
-            
-          </p>
-        </div>
-
-        <div class="github-contrib">
-          <!-- Third-party activity graph (recent activity window, usually ~30 days) -->
-          
-          <img class="contrib-img" src="https://github-readme-activity-graph.vercel.app/graph?username=dieWehmut&theme=tokyo-night" alt="Contributions calendar" />
-
-          <!-- Official contributions SVG (past year). In local dev this will be fetched via /api/contributions proxy.
-               If loading fails (blocked by network/CSP), we show a small note and keep the third-party image as fallback. -->
-          <div class="contrib-official">
-            <img v-if="!officialFailed" class="contrib-img" :src="'/api/contributions'" alt="Official contributions (past year)" @error="onOfficialError" />
-            
-          </div>
-        </div>
-
-        <!-- Contribution activity section removed as requested -->
-        </div>
-      </transition>
-    </el-card>
+  <GithubActivity v-if="!normalizedQuery" />
 
 
     <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
@@ -476,7 +315,7 @@ const { t } = useI18n();
                   <el-icon><Collection /></el-icon>
                   <span>{{ page.name }}</span>
                   <el-tag size="small" effect="plain"
-                    >{{ page.versions.length }} versions</el-tag
+                    >{{ t('common.versionsCount', { count: page.versions.length }) }}</el-tag
                   >
                   <a
                     class="repo-link"
@@ -542,7 +381,7 @@ const { t } = useI18n();
                   <el-icon><Collection /></el-icon>
                   <span>{{ game.name }}</span>
                   <el-tag size="small" effect="plain"
-                    >{{ game.versions.length }} versions</el-tag
+                    >{{ t('common.versionsCount', { count: game.versions.length }) }}</el-tag
                   >
                   <a
                     class="repo-link"
@@ -608,7 +447,7 @@ const { t } = useI18n();
                   <el-icon><Collection /></el-icon>
                   <span>{{ app.name }}</span>
                   <el-tag size="small" effect="plain"
-                    >{{ app.versions.length }} versions</el-tag
+                    >{{ t('common.versionsCount', { count: app.versions.length }) }}</el-tag
                   >
                   <a
                     class="repo-link"
@@ -642,7 +481,7 @@ const { t } = useI18n();
             <div class="card-header-left">
             <span>{{ t('nav.files') }}</span>
             <el-text size="small" type="info">
-              {{ t('common.totalFormat', { count: totalFilesCount }) }}
+              {{ t('common.totalFiles', { count: totalFilesCount }) }}
               <template v-if="query">
                 , {{ t('common.matchedFormat', { count: matchedFilesCount }) }}
               </template>
@@ -827,19 +666,41 @@ const { t } = useI18n();
 
 }
 
-/* 轻微玻璃感：半透明背景 + 背景模糊，兼顾不支持 backdrop-filter 的回退 */
-.home__card {
-  background: rgba(255,255,255,0.03); /* very subtle light overlay for dark background */
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  backdrop-filter: blur(8px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+/* entry animation for main content when intro finishes */
+.home {
+  transition: opacity 520ms cubic-bezier(.16,.9,.2,1), transform 520ms cubic-bezier(.16,.9,.2,1);
+  will-change: opacity, transform;
 }
+.home:not(.entering) {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+.home.entering {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.home__card { transition: opacity 420ms ease, transform 420ms cubic-bezier(.16,.9,.2,1); }
+.home:not(.entering) .home__card { opacity: 0; transform: translateY(8px); }
+.home.entering .home__card:nth-of-type(1) { transition-delay: 120ms }
+.home.entering .home__card:nth-of-type(2) { transition-delay: 200ms }
+.home.entering .home__card:nth-of-type(3) { transition-delay: 260ms }
+.home.entering .home__card:nth-of-type(4) { transition-delay: 320ms }
+.home.entering .home__card:nth-of-type(5) { transition-delay: 380ms }
+.home.entering .home__card:nth-of-type(6) { transition-delay: 440ms }
 
 .card-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+}
+
+/* Make the header area clearly clickable and span the full width (especially for GitHub activity card) */
+.github-card .card-header {
+  cursor: pointer;
+  width: 100%;
+  padding: 10px 0;
 }
 .card-header-left {
   display: flex;

@@ -41,7 +41,7 @@
 
       <!-- Facebook last (replaces GitHub) -->
       <a
-        href="https://www.facebook.com/dieWehmut"
+        href="https://www.facebook.com/profile.php?id=61582116135158"
         target="_blank"
         rel="noopener"
         class="hub-button facebook"
@@ -133,20 +133,15 @@ onBeforeUnmount(() => {
   margin: 0 auto;
   padding: 18px 12px 28px;
   text-align: center;
-}
-
-/* 玻璃风格：半透明背景 + 背景模糊，兼顾不支持 backdrop-filter 的回退 */
-.footer {
-  background: rgba(255,255,255,0.03);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  backdrop-filter: blur(8px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 8px 24px rgba(2,6,23,0.4);
-  border-radius: 12px;
+  /* translucent background for footer (lightened) to improve readability without heavy darkness */
+  background: rgba(0,0,0,0.30) !important;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04) !important;
 }
 .survival-time {
   margin-bottom: 6px;
-  color: rgba(255,255,255,0.92);
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
 }
 .time-number {
   font-weight: 700;
@@ -168,9 +163,11 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.04);
 }
 .hub-button:hover {
-  border-color: #dcdcdc;
+  border-color: rgba(255,255,255,0.12);
   transform: translateY(-1px);
 }
 .hub-button.instagram:hover {
@@ -178,28 +175,28 @@ onBeforeUnmount(() => {
   border-color: #e4405f;
 }
 .hub-button.instagram:hover .social-icon {
-  fill: #fff;
+  fill: #fff !important;
 }
 .hub-button.x:hover {
   background-color: #000; /* black for X on hover as requested */
   border-color: #000;
 }
 .hub-button.x:hover .social-icon {
-  fill: #fff;
+  fill: #fff !important;
 }
 .hub-button.facebook:hover {
   background-color: #1877f2; /* Facebook blue */
   border-color: #1877f2;
 }
 .hub-button.facebook:hover .social-icon {
-  fill: #fff;
+  fill: #fff !important;
 }
 .social-icon {
   width: 32px; /* 增大图标尺寸以提升占比 */
   height: 32px;
   max-width: 36px;
   max-height: 36px;
-  fill: rgba(255,255,255,0.94);
+  fill: rgba(255,255,255,0.95) !important;
   transition: fill 0.2s ease, transform 0.12s ease;
   display: block;
 }
@@ -209,7 +206,7 @@ onBeforeUnmount(() => {
 .uptime-icon {
   width: 16px;
   height: 16px;
-  fill: #333;
+  fill: rgba(255,255,255,0.95) !important;
   vertical-align: middle;
   margin-left: 6px;
   transition: transform 0.12s ease;

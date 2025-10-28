@@ -24,21 +24,27 @@
       preload="none"
       :class="{ visible: videoVisible }"
       aria-hidden="true"
-    ></video>
+    >
+      <template v-if="started">
+        <source v-for="s in sources" :key="s.src" :src="s.src" :type="s.type" />
+      </template>
+    </video>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import bgUrl from '../assets/bg.mp4'
+import bgMp4 from '../assets/bg.mp4'
+import bgWebm from '../assets/bg.webm'
 
 // states
 const posterSrc = ref('')
 const videoVisible = ref(false)
 const container = ref(null)
 const videoEl = ref(null)
+const started = ref(false) // reactive so template can render <source> only when starting
+const sources = ref([])
 let io = null
-let started = false
 
 function extractFirstFrame(videoUrl) {
   return new Promise((resolve, reject) => {
@@ -82,24 +88,34 @@ function extractFirstFrame(videoUrl) {
 const emit = defineEmits(['ready'])
 
 async function startLoading() {
-  if (started) return
-  started = true
+  if (started.value) return
 
-  // 1) try to extract first frame to use as poster
+  // 1) try to extract first frame to use as poster (try mp4 first, fallback to webm)
   try {
-    const dataUrl = await extractFirstFrame(bgUrl)
+    let dataUrl = ''
+    try {
+      dataUrl = await extractFirstFrame(bgMp4)
+    } catch (e) {
+      // try webm if mp4 extraction fails
+      try { dataUrl = await extractFirstFrame(bgWebm) } catch (e2) { dataUrl = '' }
+    }
     posterSrc.value = dataUrl
   } catch (e) {
-    // fail silently: leave poster empty (CSS fallback will show)
     posterSrc.value = ''
   }
 
-  // 2) attach video src and begin loading/playing when ready
+  // 2) attach video sources and begin loading/playing when ready
   const v = videoEl.value
   if (!v) return
+  // prepare sources (webm first, then mp4) and render them
+  sources.value = []
+  if (bgWebm) sources.value.push({ src: bgWebm, type: 'video/webm' })
+  if (bgMp4) sources.value.push({ src: bgMp4, type: 'video/mp4' })
+  started.value = true
   // set attributes for loading now
   v.preload = 'auto'
-  v.src = bgUrl
+  // call load so browser will parse the added <source> elements
+  try { v.load() } catch (e) {}
 
   // Ensure can autoplay: muted + playsinline already set in template
   // But also explicitly set a few runtime flags for better cross-browser behavior

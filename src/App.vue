@@ -2,17 +2,7 @@
   <el-config-provider :button="{ autoInsertSpace: true }">
         <DynamicBackground @ready="onBackgroundReady" />
         <!-- Entry splash overlay -->
-        <div v-if="showIntro" class="entry-splash" @click="skipIntro" role="dialog" aria-label="Entry animation">
-          <div class="splash-inner">
-            <div class="splash-logo">Welcome!</div>
-            <div class="splash-sub">dieWehmut's Nexus</div>
-            <div class="splash-loader" aria-hidden="true" :class="{ ready: backgroundReady }">
-              <div class="dot" />
-              <div class="dot" />
-              <div class="dot" />
-            </div>
-          </div>
-        </div>
+        <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
     <el-container class="app">
       <el-header class="app__header" height="80px">
         <SearchBar
@@ -20,17 +10,19 @@
           v-model="query"
           @submit="openFirst"
           @clear="onClear"
+          :enter-ready="!showIntro"
         />
       </el-header>
 
       <div class="layout">
-        <SideBar v-if="!(isMobile && query.trim())" />
+  <SideBar v-if="!(isMobile && query.trim())" :enter-ready="!showIntro" />
 
         <el-main>
           <Home
-            ref="homeRef"
-            :query="query"
-          />
+              ref="homeRef"
+              :query="query"
+              :enter-ready="!showIntro"
+            />
         </el-main>
 
         <!-- right column placeholder (if you add a RightBar, place it here) -->
@@ -50,6 +42,7 @@ import DynamicBackground from './components/DynamicBackground.vue'
 import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
 import SideBar from './components/SideBar.vue'
+import IntroSplash from './components/IntroSplash.vue'
 
 const query = ref('')
 const searchBarRef = ref(null)
@@ -175,63 +168,7 @@ onBeforeUnmount(() => {
 }
 
 /* Entry splash overlay */
-.entry-splash {
-  position: fixed;
-  inset: 0;
-  z-index: 6000; /* above other UI */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.35));
-  backdrop-filter: blur(6px);
-}
-.splash-inner {
-  text-align: center;
-  color: #fff;
-  transform-origin: center center;
-  animation: splashIn 700ms cubic-bezier(.2,.9,.2,1) both;
-}
-.splash-logo {
-  font-size: 42px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  margin-bottom: 8px;
-}
-.splash-sub {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.splash-loader {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 14px;
-}
-.splash-loader .dot {
-  width: 8px;
-  height: 8px;
-  background: rgba(255,255,255,0.88);
-  border-radius: 50%;
-  opacity: 0.9;
-  transform: translateY(0);
-  animation: loaderBounce 900ms infinite cubic-bezier(.2,.9,.2,1);
-}
-.splash-loader .dot:nth-child(2) { animation-delay: 140ms }
-.splash-loader .dot:nth-child(3) { animation-delay: 280ms }
-.splash-loader.ready .dot { animation-play-state: paused; opacity: 0.6; transform: scale(0.9); }
-
-@keyframes loaderBounce {
-  0% { transform: translateY(0); opacity: 0.85 }
-  50% { transform: translateY(-8px); opacity: 1 }
-  100% { transform: translateY(0); opacity: 0.85 }
-}
-
-@keyframes splashIn {
-  0% { opacity: 0; transform: scale(0.96) translateY(6px); }
-  60% { opacity: 1; transform: scale(1.02) translateY(-2px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
+/* intro splash moved into IntroSplash.vue */
 
 /* when overlay is removed, allow CSS transition on opacity for smooth disappearance (handled via v-if -> unmount)
    For users who prefer reduced motion, keep it short and subtle */
@@ -247,10 +184,13 @@ onBeforeUnmount(() => {
   position: sticky;
   top: 0;
   z-index: 2200;
-  /* 保持透明以展示视频背景，但保留轻微内边距以分隔内容 */
-  background: transparent;
+  /* 半透明浅色背景以提升头部可读性（仍允许背后视频透出），减轻整体黑色感 */
+  background: rgba(0,0,0,0.12) !important;
+  backdrop-filter: blur(6px) saturate(1.05);
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
   padding-top: 10px;
   padding-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
 }
 
 .app__main {
