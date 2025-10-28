@@ -28,8 +28,8 @@
         rel="noopener"
         @click.stop
       >
-        <el-icon class="action-icon"><Download /></el-icon>
-        <span class="action-text">{{ t('action.download') }}</span>
+  <el-icon class="action-icon"><Download /></el-icon>
+  <span class="action-text">{{ $t('action.download') }}</span>
       </a>
       <template v-if="repoUrl && gameName">
         <a
@@ -40,7 +40,7 @@
           @click.stop
         >
           <el-icon class="action-icon"><Link /></el-icon>
-          <span class="action-text">{{ t('action.repo') }}</span>
+            <span class="action-text">{{ $t('action.repo') }}</span>
         </a>  
       </template>
       <el-button
@@ -50,7 +50,7 @@
         class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">{{ copied ? t('action.copied') : t('action.copy') }}</span>
+  <span class="btn-text">{{ copied ? $t('action.copied') : $t('action.copy') }}</span>
       </el-button>
     </div>
   </div>
@@ -336,6 +336,18 @@ function formatDate(d) {
 /* More specific override for repo buttons in actions */
 .game-item__actions .repo-button {
   color: #333 !important;
+}
+
+/* Force repo button default appearance (prevent accidental white text from global overrides) */
+.game-item__actions a.repo-button {
+  color: #333 !important;
+  background: transparent !important;
+}
+.game-item__actions a.repo-button .action-text,
+.game-item__actions a.repo-button .el-icon,
+.game-item__actions a.repo-button svg {
+  color: inherit !important;
+  fill: currentColor !important;
 }
 
 .btn-text {
