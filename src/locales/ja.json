@@ -1,0 +1,39 @@
+{
+  "backToTop": "トップへ戻る",
+  "settings": "設定",
+  "language": "言語",
+  "search": { "hint": "検索 ..." },
+  "sidebar": {
+    "bio": "南京大学（蘇州キャンパス）知能科学技術 学士",
+    "followers": "{count} フォロワー",
+    "location": "中国 蘇州"
+  },
+  "nav": {
+    "pages": "ページ",
+    "games": "ゲーム",
+    "apps": "アプリ",
+    "files": "ファイル"
+  },
+  "common": {
+    "totalFormat": "合計 {count} 件",
+    "matchedFormat": "一致 {count} 件"
+  },
+  "action": {
+    "open": "開く",
+    "copy": "コピー",
+    "copied": "コピー済み",
+    "download": "ダウンロード",
+    "repo": "リポジトリ",
+    "view": "表示",
+    "expand": "展開",
+    "collapse": "折りたたむ"
+  },
+  "footer": { "uptime": "稼働時間" },
+  "languages": {
+    "zh": "中文",
+    "zh_tw": "繁體",
+    "en": "English",
+    "ja": "日本語",
+    "de": "Deutsch"
+  }
+}

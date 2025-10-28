@@ -6,8 +6,8 @@
         <img :src="avatarUrl" alt="Avatar" class="avatar" />
       </div>
       <div class="about-content">
-        <h3 class="name">dieWehmut</h3>
-          <p class="bio">Undergraduate in Intelligent Science and Technology, Nanjing University, Suzhou Campus</p>
+            <h3 class="name">dieWehmut</h3>
+              <p class="bio">{{ t('sidebar.bio') }}</p>
 
           <!-- Contact / GitHub block -->
           <div class="contact">
@@ -23,7 +23,7 @@
               <svg class="icon icon--people" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-1.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.95 1.97 3.45V20h6v-1.5C23 14.17 18.33 13 16 13z" />
               </svg>
-              <span class="follow-text">{{ profile.followers ?? 0 }} followers</span>
+              <span class="follow-text">{{ t('sidebar.followers', { count: profile.followers ?? 0 }) }}</span>
             </div>
 
 
@@ -32,7 +32,7 @@
                 <svg class="icon icon--pin" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
                 </svg>
-                <span>Suzhou, China</span>
+                <span>{{ t('sidebar.location') }}</span>
               </div>
               <div class="meta-item">
                 <svg class="icon icon--mail" viewBox="0 0 24 24" aria-hidden="true">
@@ -48,10 +48,10 @@
     <!-- Navigation buttons are moved into a reusable component. Show in sidebar only on desktop. -->
     <nav class="nav-list" aria-label="sections" v-if="!isMobile">
       <ul>
-        <li><button class="nav-btn" @click="go('pages')">Pages</button></li>
-        <li><button class="nav-btn" @click="go('games')">Games</button></li>
-        <li><button class="nav-btn" @click="go('apps')">Apps</button></li>
-        <li><button class="nav-btn" @click="go('files')">Files</button></li>
+  <li><button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button></li>
+  <li><button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button></li>
+  <li><button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button></li>
+  <li><button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button></li>
       </ul>
     </nav>
   </nav>
@@ -59,6 +59,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const avatarUrl = ref('https://github.com/dieWehmut.png');
 const profile = ref({});
@@ -103,6 +104,8 @@ async function fetchGitHub() {
 onMounted(() => {
   fetchGitHub();
 });
+
+const { t } = useI18n();
 
 // responsive flag: hide nav buttons in sidebar on mobile (match CSS breakpoint)
 const isMobile = ref(false);

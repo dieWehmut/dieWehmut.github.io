@@ -28,6 +28,7 @@
 
 <script setup>
 import { computed, ref, watch, nextTick, defineExpose, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Search } from '@element-plus/icons-vue'
 import NavButtons from './NavButtons.vue'
 
@@ -43,9 +44,8 @@ const innerValue = ref(props.modelValue)
 watch(() => props.modelValue, v => (innerValue.value = v))
 watch(innerValue, v => emit('update:modelValue', v))
 
-const placeholderText = computed(
-  () => 'Search ...'
-)
+const { t } = useI18n()
+const placeholderText = computed(() => t('search.hint'))
 
 const inputRef = ref(null)
 function focusInput() {

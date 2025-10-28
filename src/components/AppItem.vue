@@ -29,10 +29,10 @@
         @click.stop
       >
         <el-icon class="action-icon"><Download /></el-icon>
-        <span class="action-text">Download</span>
+        <span class="action-text">{{ t('action.download') }}</span>
       </a>
       <template v-if="repoUrl && appName">
-        <a
+          <a
           class="action-btn repo-button"
           :href="repoUrl"
           target="_blank"
@@ -40,7 +40,7 @@
           @click.stop
         >
           <el-icon class="action-icon"><Link /></el-icon>
-          <span class="action-text">Repo</span>
+            <span class="action-text">{{ t('action.repo') }}</span>
         </a>
       </template>
       <el-button
@@ -50,7 +50,7 @@
         class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">{{ copied ? 'Copied' : 'Copy' }}</span>
+        <span class="btn-text">{{ copied ? t('action.copied') : t('action.copy') }}</span>
       </el-button>
     </div>
   </div>
@@ -66,6 +66,9 @@ import {
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   appName: {
@@ -264,6 +267,22 @@ function formatDate(d) {
   margin-left: 12px;
   display: flex;
   gap: 12px;
+}
+
+/* Mobile: place actions below main content (stacked) */
+@media (max-width: 768px) {
+  .app-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .app-item__actions {
+    margin-left: 0;
+    align-self: stretch;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }
 
 .action-btn {

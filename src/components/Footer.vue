@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="survival-time">
-      Uptime:
+      {{ t('footer.uptime') }}:
       <span class="time-number">{{ time.days }}</span>d
       <span class="time-number">{{ time.hours }}</span>h
       <span class="time-number">{{ time.minutes }}</span>m
@@ -60,6 +60,9 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount, reactive, ref, computed } from "vue";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 // 设置建站起始时间（按需修改）
 const startAt = new Date("2025-08-24T22:00:00+08:00").getTime();
