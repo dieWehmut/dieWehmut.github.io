@@ -1,7 +1,8 @@
 <script setup>
 import { computed, ref, watch, onBeforeUnmount, onMounted } from "vue";
+import { useI18n } from 'vue-i18n';
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
-import BackToTop from "../components/BackToTop.vue";
+import FloatButton from "./FloatButton.vue";
 import PageItem from "../components/PageItem.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
@@ -384,6 +385,9 @@ function scrollToTop() {
 }
 
 defineExpose({ openFirstResult, copyFirstResult });
+
+// i18n helper for template
+const { t } = useI18n();
 </script>
 
 <template>
@@ -392,7 +396,7 @@ defineExpose({ openFirstResult, copyFirstResult });
   <el-card v-if="!normalizedQuery" shadow="never" class="home__card github-card">
       <template #header>
         <div class="card-header">
-          <span>GitHub Activity</span>
+      <span>GitHub Activity</span>
           <el-button type="text" size="small" @click="showGitCard = !showGitCard" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showGitCard" />
@@ -437,13 +441,12 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
-          <div class="card-header-left">
-            <span>Pages</span>
+            <div class="card-header-left">
+            <span>{{ t('nav.pages') }}</span>
             <el-text size="small" type="info">
-              Total {{ totalCount }} items
+              {{ t('common.totalFormat', { count: totalCount }) }}
               <template v-if="query">
-                , matched
-                <el-text type="primary">{{ matchedCount }}</el-text> items
+                , {{ t('common.matchedFormat', { count: matchedCount }) }}
               </template>
             </el-text>
           </div>
@@ -504,13 +507,12 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-games" v-if="filteredGames.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showGames = !showGames" style="cursor: pointer;">
-          <div class="card-header-left">
-            <span>Games</span>
+            <div class="card-header-left">
+            <span>{{ t('nav.games') }}</span>
             <el-text size="small" type="info">
-              Total {{ totalGamesCount }} items
+              {{ t('common.totalFormat', { count: totalGamesCount }) }}
               <template v-if="query">
-                , matched
-                <el-text type="primary">{{ matchedGamesCount }}</el-text> items
+                , {{ t('common.matchedFormat', { count: matchedGamesCount }) }}
               </template>
             </el-text>
           </div>
@@ -571,13 +573,12 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-apps" v-if="filteredApps.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showApps = !showApps" style="cursor: pointer;">
-          <div class="card-header-left">
-            <span>Apps</span>
+            <div class="card-header-left">
+            <span>{{ t('nav.apps') }}</span>
             <el-text size="small" type="info">
-              Total {{ totalAppsCount }} items
+              {{ t('common.totalFormat', { count: totalAppsCount }) }}
               <template v-if="query">
-                , matched
-                <el-text type="primary">{{ matchedAppsCount }}</el-text> items
+                , {{ t('common.matchedFormat', { count: matchedAppsCount }) }}
               </template>
             </el-text>
           </div>
@@ -638,13 +639,12 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-files" v-if="filteredFiles.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
-          <div class="card-header-left">
-            <span>Files</span>
+            <div class="card-header-left">
+            <span>{{ t('nav.files') }}</span>
             <el-text size="small" type="info">
-              Total {{ totalFilesCount }} items
+              {{ t('common.totalFormat', { count: totalFilesCount }) }}
               <template v-if="query">
-                , matched
-                <el-text type="primary">{{ matchedFilesCount }}</el-text> items
+                , {{ t('common.matchedFormat', { count: matchedFilesCount }) }}
               </template>
             </el-text>
           </div>
@@ -684,7 +684,7 @@ defineExpose({ openFirstResult, copyFirstResult });
       <el-empty description="No matching content found" />
     </el-card>
 
-    <BackToTop />
+  <FloatButton />
   </div>
 </template>
 

@@ -1,0 +1,39 @@
+{
+  "backToTop": "Nach oben",
+  "settings": "Einstellungen",
+  "language": "Sprache",
+  "search": { "hint": "Suche ..." },
+  "sidebar": {
+    "bio": "Bachelor in Intelligent Science and Technology, Nanjing University, Suzhou Campus",
+    "followers": "{count} Follower",
+    "location": "Suzhou, China"
+  },
+  "nav": {
+    "pages": "Seiten",
+    "games": "Spiele",
+    "apps": "Apps",
+    "files": "Dateien"
+  },
+  "common": {
+    "totalFormat": "Insgesamt {count} Elemente",
+    "matchedFormat": "Gefunden {count} Elemente"
+  },
+  "action": {
+    "open": "Öffnen",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "download": "Herunterladen",
+    "repo": "Repo",
+    "view": "Anzeigen",
+    "expand": "Erweitern",
+    "collapse": "Einklappen"
+  },
+  "footer": { "uptime": "Betriebszeit" },
+  "languages": {
+    "zh": "中文",
+    "zh_tw": "繁體",
+    "en": "English",
+    "ja": "日本語",
+    "de": "Deutsch"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "backToTop": "回到顶部",
+  "settings": "设置",
+  "language": "语言",
+  "search": { "hint": "搜索 ..." },
+  "sidebar": {
+    "bio": "南京大学（苏州校区）智能科学与技术 本科生",
+    "followers": "{count} 个关注者",
+    "location": "中国 苏州"
+  },
+  "nav": {
+    "pages": "页面",
+    "games": "游戏",
+    "apps": "应用",
+    "files": "文件"
+  },
+  "common": {
+    "totalFormat": "共 {count} 项",
+    "matchedFormat": "匹配 {count} 项"
+  },
+  "action": {
+    "open": "打开",
+    "copy": "复制",
+    "copied": "已复制",
+    "download": "下载",
+    "repo": "仓库",
+    "view": "浏览",
+    "expand": "展开",
+    "collapse": "收起"
+  },
+  "footer": { "uptime": "运行时间" },
+  "languages": {
+    "zh": "中文",
+    "zh_tw": "繁體",
+    "en": "英语",
+    "ja": "日本語",
+    "de": "Deutsch"
+  }
+}

@@ -9,7 +9,7 @@
         <div class="file-item__actions">
           <a class="repo-link action-btn" :href="repoUrl" target="_blank" rel="noopener">
             <el-icon><Link /></el-icon>
-            <span>Repo</span>
+            <span>{{ t('action.repo') }}</span>
           </a>
         </div>
       </div>
@@ -33,7 +33,7 @@
             <el-button class="action-btn" type="text" size="small" @click="isOpen = !isOpen">
               <el-icon v-if="!isOpen"><ArrowDown /></el-icon>
               <el-icon v-else><ArrowUp /></el-icon>
-              <span>{{ isOpen ? 'Collapse' : 'Expand' }}</span>
+              <span>{{ isOpen ? t('action.collapse') : t('action.expand') }}</span>
             </el-button>
           </div>
           
@@ -52,17 +52,17 @@
                 <div class="file-list__actions">
                   <el-button class="action-btn" type="primary" size="small" @click="openFile(file.rawUrl)">
                     <el-icon><View /></el-icon>
-                    View
+                    {{ t('action.view') }}
                   </el-button>
                   <a :href="file.downloadUrl" target="_blank" rel="noopener" class="download-link">
                     <el-button class="action-btn" size="small">
                       <el-icon><Download /></el-icon>
-                      Download
+                      {{ t('action.download') }}
                     </el-button>
                   </a>
                   <el-button class="action-btn" size="small" @click="copyLink(file.rawUrl)">
                     <el-icon><CopyDocument /></el-icon>
-                    <span class="btn-text">{{ copiedFiles[file.rawUrl] ? 'Copied' : 'Copy' }}</span>
+                    <span class="btn-text">{{ copiedFiles[file.rawUrl] ? t('action.copied') : t('action.copy') }}</span>
                   </el-button>
                 </div>
               </div>
@@ -87,6 +87,9 @@ import {
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { ref, reactive, onMounted } from "vue";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   fileName: {
@@ -373,6 +376,26 @@ onMounted(() => {
   display: flex;
   gap: 12px;
   align-items: center;
+}
+
+/* Mobile: stack file item actions under the file info */
+@media (max-width: 768px) {
+  .file-list__item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .file-list__actions {
+    justify-content: flex-start;
+    align-self: stretch;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .download-link .action-btn,
+  .file-list__actions .action-btn,
+  .repo-link.action-btn {
+    width: auto;
+  }
 }
 
 .download-link {

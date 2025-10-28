@@ -29,10 +29,10 @@
         @click.stop
       >
         <el-icon class="action-icon"><Promotion /></el-icon>
-        <span class="action-text">Open</span>
+        <span class="action-text">{{ t('action.open') }}</span>
       </a>
       <template v-if="repoUrl && pageName">
-        <a
+          <a
           class="action-btn repo-button"
           :href="repoUrl"
           target="_blank"
@@ -40,7 +40,7 @@
           @click.stop
         >
           <el-icon class="action-icon"><Link/></el-icon>
-          <span class="action-text">Repo</span>
+            <span class="action-text">{{ t('action.repo') }}</span>
         </a>
       </template>
       <el-button
@@ -50,7 +50,7 @@
         class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">{{ copied ? 'Copied' : 'Copy' }}</span>
+        <span class="btn-text">{{ copied ? t('action.copied') : t('action.copy') }}</span>
       </el-button>
     </div>
   </div>
@@ -59,6 +59,9 @@
 <script setup>
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 import { DocumentCopy, Document, Calendar, Link, Promotion } from "@element-plus/icons-vue";
 
 const props = defineProps({
@@ -310,7 +313,10 @@ function formatDate(d) {
   }
 
   .item__actions {
-    align-self: flex-end;
+    align-self: stretch;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }
 </style>
