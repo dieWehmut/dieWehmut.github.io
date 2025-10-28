@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch, onBeforeUnmount, onMounted } from "vue";
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
+import BackToTop from "../components/BackToTop.vue";
 import PageItem from "../components/PageItem.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
@@ -20,6 +21,7 @@ const pages = ref([
     repoUrl: "https://github.com/dieWehmut/kotoba-hitomi",
     versions: [
       {
+        version: "v1.4",
         date: "2025-06-03",
         log: "nihongo AI web app",
         url: "https://kotoba-hitomi.hc-dsw-nexus.me/",
@@ -132,7 +134,7 @@ const games = ref([
       {
         version: "v1.2",
         date: "2025-06-30",
-        log: "first game",
+        log: "first version release",
         url: "https://github.com/dieWehmut/showcase/releases/download/PhantomGenesis/PhantomGenesis1.2.zip",
       },
     ],
@@ -163,7 +165,7 @@ const files = ref([
   {
     name: "Learning Notes",
     repoUrl: "https://git.nju.edu.cn/dieWehmut/learningmaterials/-/tree/main/Blog",
-    description: "Personal notes and learning materials from GitLab",
+    description: "Personal notes and learning materials",
   },
 ]);
 
@@ -182,6 +184,9 @@ const totalAppsCount = computed(() =>
 const totalFilesCount = computed(() => files.value.length);
 
 const normalizedQuery = computed(() => props.query.trim().toLowerCase());
+
+// control whether the GitHub activity card is expanded
+const showGitCard = ref(true);
 
 function matchVersion(v, q) {
   return (
@@ -384,15 +389,20 @@ defineExpose({ openFirstResult, copyFirstResult });
 <template>
   <div class="home">
 
-    <el-card shadow="never" class="home__card github-card">
+  <el-card v-if="!normalizedQuery" shadow="never" class="home__card github-card">
       <template #header>
-        <div class="card-header">GitHub Activity</div>
-      </template>
-              <div class="github-stats">
-          <div>Repos: <strong>{{ ghProfile.public_repos ?? 0 }}</strong></div>
-          <div>Followers: <strong>{{ ghProfile.followers ?? 0 }}</strong></div>
+        <div class="card-header">
+          <span>GitHub Activity</span>
+          <el-button type="text" size="small" @click="showGitCard = !showGitCard" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showGitCard" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
         </div>
-      <div class="github-body">
+      </template>
+      <transition name="section-toggle">
+        <div v-show="showGitCard" class="github-body">
         <div class="github-widgets" style="text-align:center">
           <p class="widgets-row" align="center">
             <img height="160" src="https://github-readme-stats.vercel.app/api?username=dieWehmut&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" alt="github-stats" />
@@ -419,21 +429,24 @@ defineExpose({ openFirstResult, copyFirstResult });
         </div>
 
         <!-- Contribution activity section removed as requested -->
-      </div>
+        </div>
+      </transition>
     </el-card>
 
 
     <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
-          <span>Pages</span>
-          <el-text size="small" type="info">
-            Total {{ totalCount }} items
-            <template v-if="query">
-              , matched
-              <el-text type="primary">{{ matchedCount }}</el-text> items
-            </template>
-          </el-text>
+          <div class="card-header-left">
+            <span>Pages</span>
+            <el-text size="small" type="info">
+              Total {{ totalCount }} items
+              <template v-if="query">
+                , matched
+                <el-text type="primary">{{ matchedCount }}</el-text> items
+              </template>
+            </el-text>
+          </div>
           <el-button type="text" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showPages" />
@@ -491,14 +504,16 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-games" v-if="filteredGames.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showGames = !showGames" style="cursor: pointer;">
-          <span>Games</span>
-          <el-text size="small" type="info">
-            Total {{ totalGamesCount }} items
-            <template v-if="query">
-              , matched
-              <el-text type="primary">{{ matchedGamesCount }}</el-text> items
-            </template>
-          </el-text>
+          <div class="card-header-left">
+            <span>Games</span>
+            <el-text size="small" type="info">
+              Total {{ totalGamesCount }} items
+              <template v-if="query">
+                , matched
+                <el-text type="primary">{{ matchedGamesCount }}</el-text> items
+              </template>
+            </el-text>
+          </div>
           <el-button type="text" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showGames" />
@@ -556,14 +571,16 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-apps" v-if="filteredApps.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showApps = !showApps" style="cursor: pointer;">
-          <span>Apps</span>
-          <el-text size="small" type="info">
-            Total {{ totalAppsCount }} items
-            <template v-if="query">
-              , matched
-              <el-text type="primary">{{ matchedAppsCount }}</el-text> items
-            </template>
-          </el-text>
+          <div class="card-header-left">
+            <span>Apps</span>
+            <el-text size="small" type="info">
+              Total {{ totalAppsCount }} items
+              <template v-if="query">
+                , matched
+                <el-text type="primary">{{ matchedAppsCount }}</el-text> items
+              </template>
+            </el-text>
+          </div>
           <el-button type="text" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showApps" />
@@ -621,14 +638,16 @@ defineExpose({ openFirstResult, copyFirstResult });
     <el-card id="section-files" v-if="filteredFiles.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
-          <span>Files</span>
-          <el-text size="small" type="info">
-            Total {{ totalFilesCount }} items
-            <template v-if="query">
-              , matched
-              <el-text type="primary">{{ matchedFilesCount }}</el-text> items
-            </template>
-          </el-text>
+          <div class="card-header-left">
+            <span>Files</span>
+            <el-text size="small" type="info">
+              Total {{ totalFilesCount }} items
+              <template v-if="query">
+                , matched
+                <el-text type="primary">{{ matchedFilesCount }}</el-text> items
+              </template>
+            </el-text>
+          </div>
           <el-button type="text" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showFiles" />
@@ -665,15 +684,7 @@ defineExpose({ openFirstResult, copyFirstResult });
       <el-empty description="No matching content found" />
     </el-card>
 
-    <el-button
-      class="back-to-top"
-      type="info"
-      :icon="ArrowUp"
-      size="small"
-      circle
-      @click="scrollToTop"
-      title="回到顶部"
-    />
+    <BackToTop />
   </div>
 </template>
 
@@ -691,6 +702,57 @@ defineExpose({ openFirstResult, copyFirstResult });
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.github-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* align content to the left */
+  padding: 12px 14px; /* tighten internal padding a bit */
+}
+.github-card .card-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* place header title on the left */
+  padding-bottom: 6px;
+}
+.github-card .github-body {
+  width: 100%;
+  max-width: 760px; /* constrain large images/cards so the layout looks tidy */
+  margin: 0; /* align to left of the card */
+  align-items: flex-start;
+}
+.github-stats {
+  justify-content: flex-start;
+  gap: 12px;
+}
+.github-widgets .widgets-row {
+  gap: 24px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.contrib-img {
+  width: 100%;
+  height: auto;
+  max-width: 480px; /* avoid extremely wide images */
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+/* Narrow screens: stack widgets vertically and tighten spacing */
+@media (max-width: 600px) {
+  .github-card {
+    padding: 10px;
+  }
+  .github-widgets .widgets-row {
+    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .contrib-img {
+    max-width: 360px;
+  }
 }
 .github-stats {
   display: flex;
@@ -762,13 +824,18 @@ defineExpose({ openFirstResult, copyFirstResult });
 
 .home__card {
   border-radius: 10px;
-  border: 1px solid #eee;
+
 }
 
 .card-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+}
+.card-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
 .page-title {
   display: flex;
@@ -792,7 +859,7 @@ defineExpose({ openFirstResult, copyFirstResult });
 }
 .repo-link:hover {
   color: #4a90e2;
-  background: rgba(106, 163, 245, 0.1);
+  background: transparent !important;
 }
 .repo-icon {
   font-size: 12px;
@@ -809,32 +876,12 @@ defineExpose({ openFirstResult, copyFirstResult });
   font-size: 13px;
 }
 .single-log {
-  color: #409eff;
+  color: #2f3235;
   margin-left: 8px;
   font-size: 13px;
 }
 
-.back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 6px !important;
-  background-color: rgba(144, 147, 153, 0.8) !important;
-  border-color: rgba(144, 147, 153, 0.8) !important;
-  color: white !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
 
-.back-to-top:hover {
-  background-color: rgba(144, 147, 153, 1) !important;
-  border-color: rgba(144, 147, 153, 1) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
 
 .section-body {
   overflow: hidden;
@@ -855,5 +902,18 @@ defineExpose({ openFirstResult, copyFirstResult });
 .section-toggle-leave-from {
   max-height: 1200px;
   opacity: 1;
+}
+
+/* Hover elevation for home cards (only on devices that support hover) */
+@media (hover: hover) {
+  .home__card {
+    transition: transform 0.14s ease, box-shadow 0.18s ease;
+    will-change: transform, box-shadow;
+  }
+
+  .home__card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.28);
+  }
 }
 </style>

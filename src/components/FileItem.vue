@@ -54,16 +54,16 @@
                     <el-icon><View /></el-icon>
                     View
                   </el-button>
-                  <el-button class="action-btn" size="small" @click="copyLink(file.rawUrl)">
-                    <el-icon><CopyDocument /></el-icon>
-                    Copy
-                  </el-button>
                   <a :href="file.downloadUrl" target="_blank" rel="noopener" class="download-link">
                     <el-button class="action-btn" size="small">
                       <el-icon><Download /></el-icon>
                       Download
                     </el-button>
                   </a>
+                  <el-button class="action-btn" size="small" @click="copyLink(file.rawUrl)">
+                    <el-icon><CopyDocument /></el-icon>
+                    <span class="btn-text">{{ copiedFiles[file.rawUrl] ? 'Copied' : 'Copy' }}</span>
+                  </el-button>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@ import {
   Document
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { ref, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 
 const props = defineProps({
   fileName: {
@@ -107,6 +107,7 @@ const files = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const isOpen = ref(false);
+const copiedFiles = reactive({});
 
 async function loadFiles() {
   try {
@@ -182,10 +183,25 @@ function openFile(url) {
 async function copyLink(url) {
   try {
     await navigator.clipboard.writeText(url);
-    ElMessage.success('Link copied to clipboard');
+    copiedFiles[url] = true;
+  ElMessage({ message: 'Link copied', type: 'success', customClass: 'bw-message', duration: 3000 });
+    setTimeout(() => delete copiedFiles[url], 3000);
   } catch (err) {
     console.error('Copy failed:', err);
-    ElMessage.error('Failed to copy link');
+    // fallback to input copy
+    try {
+      const input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      copiedFiles[url] = true;
+  ElMessage({ message: 'Link copied', type: 'success', customClass: 'bw-message', duration: 3000 });
+      setTimeout(() => delete copiedFiles[url], 3000);
+      document.body.removeChild(input);
+    } catch (e) {
+      ElMessage({ message: 'Failed to copy link', type: 'error', customClass: 'bw-message', duration: 3000 });
+    }
   }
 }
 
@@ -201,15 +217,20 @@ onMounted(() => {
 
 .file-item__content {
   padding: 16px;
-  background: #fff;
+  /* fully transparent card so background shows through */
+  background: transparent !important;
   border-radius: 8px;
-  border: 1px solid #e8e8e8;
-  transition: all 0.3s ease;
+  border: none !important;
+  transition: transform 0.14s ease, box-shadow 0.18s ease;
+  will-change: transform, box-shadow;
 }
 
-.file-item__content:hover {
-  border-color: #409eff;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.1);
+@media (hover: hover) {
+  .file-item__content:hover {
+    border-color: transparent !important;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+  }
 }
 
 .file-item__header {
@@ -260,29 +281,29 @@ onMounted(() => {
 .repo-link.action-btn {
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: #fff;
+  border: none !important;
+  background: transparent !important;
   color: #333;
 }
 .repo-link.action-btn:hover {
-  background: #f5f7fa;
-  border-color: #e8ecf0;
-  transform: translateY(-1px) scale(1.01);
+  background: transparent !important;
+  border-color: transparent !important;
+  transform: none;
 }
 
 /* Scoped override to ensure repo-link used as action-btn inside this component
    wins over other scoped/global rules that set it blue. */
 .repo-link.action-btn {
   color: #333 !important;
-  background: #fff !important;
-  border: 1px solid var(--border-color) !important;
+  background: transparent !important;
+  border: none !important;
   padding: 8px 12px !important;
   border-radius: 10px !important;
   margin-left: auto;
 }
 .repo-link.action-btn:hover {
-  background: #f5f7fa !important;
-  border-color: #e8ecf0 !important;
+  background: transparent !important;
+  border-color: transparent !important;
 }
 
 .file-item__description {
@@ -308,7 +329,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #eee;
+
 }
 
 .file-list__content {
@@ -320,7 +341,6 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px dashed #f0f0f0;
 }
 
 .file-list__item:last-child {
@@ -342,7 +362,7 @@ onMounted(() => {
 
 .file-type {
   padding: 2px 8px;
-  background: #f0f0f0;
+
   border-radius: 4px;
   font-size: 12px;
   color: #666;
@@ -370,5 +390,19 @@ onMounted(() => {
 .expand-leave-to {
   max-height: 0;
   opacity: 0;
+}
+
+/* Hover elevation for individual file rows */
+@media (hover: hover) {
+  .file-list__item {
+    transition: transform 0.14s ease, box-shadow 0.18s ease;
+    will-change: transform, box-shadow;
+    padding: 10px 0;
+  }
+
+  .file-list__item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  }
 }
 </style>

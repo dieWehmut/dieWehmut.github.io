@@ -5,8 +5,6 @@
   font-weight: 400;
 
   color-scheme: light;
-  color: #333;
-  background-color: #fafafa;
 
   /* Color Variables */
   --primary-color: #409eff;
@@ -29,8 +27,6 @@
 body {
   margin: 0;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  background-color: #fafafa;
-  color: #333;
 }
 
 a {
@@ -50,7 +46,9 @@ html {
 
 /* Unified action button styles for cards */
 .action-btn,
-.copy-btn {
+.copy-btn,
+.repo-button,
+.link-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -66,8 +64,12 @@ html {
 }
 .action-btn .el-icon,
 .copy-btn .el-icon,
+.repo-button .el-icon,
+.link-button .el-icon,
 .action-btn > svg,
-.copy-btn > svg {
+.copy-btn > svg,
+.repo-button > svg,
+.link-button > svg {
   width: 18px;
   height: 18px;
   fill: #2b2b2b !important;
@@ -76,10 +78,19 @@ html {
 /* Stronger overrides for anchors/icons that still appear blue due to other styles */
 /* Target component-local action areas and general anchor.action-btn to ensure consistency */
 .item__actions a.action-btn,
+.item__actions a.repo-button,
+.item__actions a.link-button,
 .game-item__actions a.action-btn,
+.game-item__actions a.repo-button,
+.game-item__actions a.link-button,
 .app-item__actions a.action-btn,
+.app-item__actions a.repo-button,
+.app-item__actions a.link-button,
 .file-item__actions a.action-btn,
+.file-item__actions a.repo-button,
 .file-item__header .repo-link.action-btn,
+.file-item__header a.repo-button,
+.file-item__header a.link-button,
 a.action-btn {
   color: #333 !important;
   text-decoration: none !important;
@@ -98,18 +109,31 @@ a.action-btn {
 
 /* In case some frameworks add a more specific link color, force background/border too */
 .item__actions a.action-btn:hover,
+.item__actions a.repo-button:hover,
+.item__actions a.link-button:hover,
 .game-item__actions a.action-btn:hover,
+.game-item__actions a.repo-button:hover,
+.game-item__actions a.link-button:hover,
 .app-item__actions a.action-btn:hover,
+.app-item__actions a.repo-button:hover,
+.app-item__actions a.link-button:hover,
 .file-item__actions a.action-btn:hover,
+.file-item__actions a.repo-button:hover,
 .file-item__header .repo-link.action-btn:hover,
-a.action-btn:hover {
-  background: #f5f7fa !important;
-  border-color: #e8ecf0 !important;
+.file-item__header a.repo-button:hover,
+.file-item__header a.link-button:hover,
+.a.action-btn:hover,
+.a.repo-button:hover,
+.a.link-button:hover {
+  background: transparent !important;
+  border-color: transparent !important;
 }
 .action-btn:hover,
-.copy-btn:hover {
-  background: #f5f7fa;
-  border-color: #e8ecf0;
+.copy-btn:hover,
+.repo-button:hover,
+.link-button:hover {
+  background: transparent;
+  border-color: transparent;
   transform: translateY(-1px) scale(1.01);
 }
 .action-text,
@@ -177,8 +201,8 @@ a.repo-link {
 .repo-link.action-btn:hover,
 .game-item__actions .repo-link:hover,
 .file-item__header .repo-link:hover {
-  background: #f5f7fa !important;
-  border-color: #e8ecf0 !important;
+  background: transparent !important;
+  border-color: transparent !important;
   transform: translateY(-1px) scale(1.01) !important;
 }
 
@@ -228,11 +252,248 @@ a.repo-link {
 .file-item .version-tag,
 .version-info .version-tag,
 .version-info el-tag {
-  background: #fff !important;
-  border-color: var(--border-color) !important;
-  color: #111417 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  color: inherit !important;
   font-weight: 600 !important;
   border-radius: 8px !important;
   font-size: 11px !important;
   padding: 2px 8px !important;
 }
+
+/* Remove any glass/translucent styling: force full transparency for main cards and related elements */
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card,
+.file-item__header,
+.item-card > .card-body,
+.app-item__actions,
+.file-item__actions {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Reduce contrasts for elements that earlier forced white background: make them transparent */
+.repo-link,
+.action-btn,
+.copy-btn {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* For very small screens keep transparency */
+@media (max-width: 1000px) {
+  .game-item,
+  .app-item,
+  .page-item,
+  .file-item,
+  .card,
+  .page-card,
+  .item-card {
+    background: transparent !important;
+    border: none !important;
+  }
+}
+
+/* Strong final overrides: force full transparency for cards, sidebar, search and action buttons
+   Place at the end to maximize specificity and take precedence over other rules. */
+.app-item,
+.game-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card,
+.file-item__content,
+.item,
+.app-item__actions,
+.game-item__actions,
+.file-list__item,
+.sidebar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.action-btn,
+.repo-link,
+.repo-link.action-btn,
+.game-item__actions a.repo-button,
+.game-item__actions a.link-button,
+.app-item__actions a.repo-button,
+.app-item__actions a.link-button,
+.file-item__actions .repo-link,
+.repo-link[data-v-08e32229] {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ensure search input inner fallbacks stay transparent */
+.search-input :deep(.el-input__wrapper),
+.search-input :deep(.el-input__inner) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Element Plus card overrides: force el-card backgrounds transparent */
+.el-card,
+.el-card__body,
+.home__card,
+.home__card .el-card__body,
+.el-card .el-card__body {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Extra aggressive overrides for home cards: remove any remaining white backgrounds applied by component or library styles */
+.home__card,
+.home__card *,
+.home__card .el-card__header,
+.home__card .el-card__body,
+.home__card .el-card__content,
+.home__card .card-header,
+.home__card .card-header-left {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* If some components still set inline white via specific classes, ensure their most common class names are cleared */
+.github-card,
+.github-card * {
+  background: transparent !important;
+}
+
+/* Readability improvements for transparent UI over video background */
+/* Keep backgrounds transparent but make text/iconography more legible */
+.sidebar {
+  color: #ffffff !important;
+}
+.sidebar .name,
+.sidebar .nav-btn,
+.sidebar .follow-text,
+.sidebar .bio,
+.sidebar .about-content,
+.sidebar .meta-item,
+.sidebar .email-link {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+}
+.sidebar .icon,
+.sidebar svg {
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.6));
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+.github-btn {
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+.home,
+.home * {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55) !important;
+}
+
+/* Emphasize titles and names on home page */
+.home .card-header span,
+.home .page-title,
+.game-name,
+.app-name,
+.file-name-text,
+.single-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65) !important;
+}
+
+/* Slightly dim secondary metadata so primary text pops */
+.home .version-info,
+.home .date,
+.home .single-date,
+.home .activity-text,
+.sidebar .meta-item span {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* Repo/link buttons: make text bright and add subtle outline for visibility */
+.repo-link,
+.action-btn,
+.copy-btn {
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Keep back-to-top button visible but less intrusive (optional) */
+.back-to-top {
+  background-color: rgba(0,0,0,0.5) !important;
+  border-color: rgba(0,0,0,0.5) !important;
+}
+
+/* Restore clear hover/focus affordance for buttons without reintroducing heavy glass backgrounds */
+.action-btn,
+.repo-link,
+.repo-button,
+.link-button,
+.copy-btn,
+.nav-btn,
+.github-btn,
+.el-button[type="text"] {
+  transition: transform 0.12s ease, box-shadow 0.18s ease, color 0.12s ease;
+}
+
+.action-btn:hover,
+.repo-link:hover,
+.repo-button:hover,
+.link-button:hover,
+.copy-btn:hover,
+.github-btn:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+  color: #ffffff !important;
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.28) !important;
+  background: transparent !important; /* subtle highlight removed, keep shadow */
+  color: #ffffff !important;
+}
+
+/* focus accessibility for keyboard users */
+.action-btn:focus,
+.repo-link:focus,
+.repo-button:focus,
+.link-button:focus,
+.nav-btn:focus,
+.github-btn:focus,
+.el-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(64,158,255,0.12) !important;
+}
+
+/* Black & white message style for copy notifications */
+.el-message.bw-message {
+  background: #0b0b0b !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
+}
+.el-message.bw-message .el-message__content {
+  color: #ffffff !important;
+}
+.el-message.bw-message .el-message__icon svg,
+.el-message.bw-message .el-message__icon i {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+

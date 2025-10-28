@@ -21,12 +21,15 @@
         </div>
       </template>
     </el-input>
+    <!-- On mobile show the nav buttons beneath the search when input is empty -->
+    <NavButtons v-if="isMobile && !innerValue" class="mobile-nav" />
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick, defineExpose } from 'vue'
+import { computed, ref, watch, nextTick, defineExpose, onMounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
+import NavButtons from './NavButtons.vue'
 
 const props = defineProps({
   modelValue: {
@@ -51,6 +54,16 @@ function focusInput() {
   })
 }
 
+// responsive flag - show nav buttons under search only on mobile
+const isMobile = ref(false)
+onMounted(() => {
+  const mq = window.matchMedia('(max-width: 1000px)')
+  const update = () => (isMobile.value = mq.matches)
+  update()
+  if (mq.addEventListener) mq.addEventListener('change', update)
+  else mq.addListener(update)
+})
+
 function onInput() {
   emit('update:modelValue', innerValue.value)
 }
@@ -67,36 +80,42 @@ defineExpose({ focusInput })
 
 .search-input :deep(.el-input__wrapper) {
   border-radius: 16px;
-  border: 2px solid #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  background: #fefefe;
-  transition: all 0.3s ease;
+  /* make fully transparent to expose background video */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
   padding: 8px 16px;
 }
 
 .search-input :deep(.el-input__wrapper):hover {
-  border-color: #e0e8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .search-input :deep(.el-input__wrapper.is-focus) {
-  border-color: #b8d4f0;
-  box-shadow: 0 0 0 3px rgba(123, 179, 240, 0.1);
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
+/* Ensure actual input inner background is transparent too (Element Plus may add white background) */
+
 .search-input :deep(.el-input__inner) {
-  color: #4a4a4a;
+  background: transparent !important;
+  /* 强制白色文本，便于在深色/动态背景上可读 */
+  color: rgba(255,255,255,0.96) !important;
   font-size: 15px;
   border: none;
   outline: none;
 }
 
 .search-input :deep(.el-input__inner::placeholder) {
-  color: #a0a0a0;
+  /* placeholder 更柔和的白色 */
+  color: rgba(255,255,255,0.7) !important;
 }
 
 .search-icon {
-  color: #9a9a9a;
+  color: rgba(255,255,255,0.85);
   font-size: 16px;
 }
 
@@ -106,12 +125,12 @@ defineExpose({ focusInput })
 
 .hint {
   font-size: 11px;
-  color: #b8b8b8;
-  border: 1px solid #e8e8e8;
+  color: rgba(255,255,255,0.88);
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 2px 6px;
   border-radius: 6px;
   user-select: none;
-  background: #f8f8f8;
+  background: transparent !important;
   font-weight: 500;
 }
 
@@ -121,7 +140,7 @@ defineExpose({ focusInput })
 }
 
 .search-input :deep(.el-input__clear) {
-  color: #c0c0c0;
+  color: #b0a2a2;
   transition: color 0.2s ease;
 }
 

@@ -50,7 +50,7 @@
         class="action-btn copy-btn"
       >
         <el-icon><DocumentCopy /></el-icon>
-        <span class="btn-text">Copy</span>
+        <span class="btn-text">{{ copied ? 'Copied' : 'Copy' }}</span>
       </el-button>
     </div>
   </div>
@@ -65,6 +65,7 @@ import {
   Calendar,
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { ref } from "vue";
 
 const props = defineProps({
   appName: {
@@ -81,17 +82,21 @@ const props = defineProps({
   },
 });
 
+const copied = ref(false);
+
 function copyLink() {
   const url = props.version?.url ?? "";
   if (!url) {
-    ElMessage.warning("🔗 No link available");
+    ElMessage({ message: "🔗 No link available", type: 'warning', customClass: 'bw-message' });
     return;
   }
 
   navigator.clipboard
     .writeText(url)
     .then(() => {
-      ElMessage.success("📋 Link copied to clipboard");
+  copied.value = true;
+  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
+      setTimeout(() => (copied.value = false), 3000);
     })
     .catch(() => {
       const input = document.createElement("input");
@@ -100,9 +105,11 @@ function copyLink() {
       input.select();
       try {
         document.execCommand("copy");
-        ElMessage.success("📋 Link copied to clipboard");
+  copied.value = true;
+  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
+        setTimeout(() => (copied.value = false), 3000);
       } catch {
-        ElMessage.error("❌ Copy failed");
+        ElMessage({ message: "❌ Copy failed", type: 'error', customClass: 'bw-message', duration: 3000 });
       }
       document.body.removeChild(input);
     });
@@ -132,19 +139,28 @@ function formatDate(d) {
   transition: all 0.2s ease;
   cursor: pointer;
   min-height: 50px;
-  border: 1px solid transparent;
-  background: #fafafa;
-}
-
-.app-item:hover {
-  background: #f0f9ff;
-  border-color: #e1f5fe;
+  border: none !important;
+  background: transparent !important;
 }
 
 .app-item:focus {
   outline: none;
-  border-color: #409eff;
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (hover: hover) {
+  .app-item {
+    transition: transform 0.14s ease, box-shadow 0.18s ease;
+    will-change: transform, box-shadow;
+  }
+
+  .app-item:hover {
+    background: transparent !important;
+    border-color: transparent !important;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+  }
 }
 
 .app-item__main {
@@ -200,7 +216,7 @@ function formatDate(d) {
 }
 
 .separator {
-  color: #ccc;
+
   font-weight: bold;
   margin: 0 2px;
 }
@@ -261,8 +277,8 @@ function formatDate(d) {
   border: 1px solid transparent;
 }
 .action-btn:hover {
-  background: #f5f7fa;
-  border-color: #e8ecf0;
+  background: transparent !important;
+  border-color: transparent !important;
 }
 .action-icon {
   font-size: 14px;
