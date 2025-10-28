@@ -16,6 +16,7 @@
               {{ version.version }}
             </el-tag>
           </template>
+          <span v-if="version.log" class="version-log">{{ version.log }}</span>
         </div>
         <span class="separator"></span>
       </div>
@@ -143,7 +144,8 @@ function formatDate(d) {
   cursor: pointer;
   min-height: 50px;
   border: none !important;
-  background: transparent !important;
+  background: #111; /* default: dark (黑) */
+  color: #f5f5f5;
 }
 
 .app-item:focus {
@@ -185,12 +187,12 @@ function formatDate(d) {
   align-items: center;
   gap: 6px;
   font-weight: 600;
-  color: #2c2c2c;
+  color: #f5f5f5; /* default light on dark bg */
 }
 
 .app-icon {
   font-size: 18px;
-  color: #2b2b2b; /* 统一为黑白风格 */
+  color: #ffffff; /* icon on dark bg */
 }
 
 .app-name {
@@ -201,7 +203,13 @@ function formatDate(d) {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #666;
+  color: #d0d0d0;
+}
+
+.version-log {
+  color: #d0d0d0;
+  margin-left: 8px;
+  font-size: 13px;
 }
 
 .calendar-icon {
@@ -225,7 +233,7 @@ function formatDate(d) {
 }
 
 .link {
-  color: #409eff;
+  color: #d7e9ff;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -292,7 +300,7 @@ function formatDate(d) {
   padding: 6px 8px;
   border-radius: 8px;
   text-decoration: none;
-  color: #2c2c2c;
+  color: #f5f5f5;
   border: 1px solid transparent;
 }
 .action-btn:hover {
@@ -301,7 +309,7 @@ function formatDate(d) {
 }
 .action-icon {
   font-size: 14px;
-  color: #2b2b2b;
+  color: #ffffff;
 }
 .action-text {
   font-size: 13px;
@@ -311,4 +319,6 @@ function formatDate(d) {
 .btn-text {
   margin-left: 4px;
 }
+
+/* Note: keep text/icon colors unchanged on hover for App items (user preference) */
 </style>

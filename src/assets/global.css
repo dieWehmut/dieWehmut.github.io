@@ -398,6 +398,74 @@ a.repo-link {
   border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
+/* === Legibility improvements ===
+   Make text easier to read over dynamic/transparent backgrounds.
+   - Force higher-contrast text color for main content
+   - Add subtle text-shadow for separation from busy video/bg
+   - Give cards a translucent dark backing to improve readability while keeping the design transparent
+*/
+body,
+.home,
+.home *,
+.card,
+.home__card,
+.item,
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.repo-link,
+.action-text,
+.btn-text,
+.page-title,
+.card-header,
+.github-body {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7) !important;
+}
+
+/* translucent dark backdrop for cards and item rows to increase contrast
+   Reduced darkness so the UI isn't too heavy over bright backgrounds */
+.home__card,
+.item,
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card {
+  background: rgba(0,0,0,0.30) !important;
+  border-radius: 10px !important;
+  padding: 10px !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+
+/* Make action button text/icons visible on dark translucent background */
+.action-btn,
+.repo-link,
+.copy-btn,
+.link-button {
+  background: rgba(255,255,255,0.06) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Increase base legibility: slightly bolder body text and spacing */
+body {
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Reduce icon harshness by using semi-transparent white where appropriate */
+.repo-link .el-icon,
+.action-btn .el-icon,
+.game-item .el-icon,
+.app-item .el-icon {
+  fill: rgba(255,255,255,0.95) !important;
+  color: rgba(255,255,255,0.95) !important;
+}
+
 .home,
 .home * {
   color: #ffffff !important;

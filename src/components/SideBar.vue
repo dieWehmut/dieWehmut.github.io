@@ -1,5 +1,5 @@
 <template>
-  <nav class="sidebar" aria-label="目录">
+  <nav class="sidebar" :class="{ 'entering': enterReady }" aria-label="目录">
     <!-- About Me Section -->
     <div class="about-me">
       <div class="avatar-container">
@@ -40,6 +40,12 @@
                 </svg>
                 <a class="email-link" href="mailto:diesehnsucht0@gmail.com">diesehnsucht0@gmail.com</a>
               </div>
+              <div class="meta-item last-updated-row" v-if="lastUpdated">
+                <svg class="icon icon--clock" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
+                </svg>
+                <span class="last-updated">{{ t('sidebar.lastUpdated') }}{{ lastUpdated }}</span>
+              </div>
             </div>
           </div>
       </div>
@@ -59,10 +65,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+const props = defineProps({ enterReady: { type: Boolean, default: true } });
 import { useI18n } from 'vue-i18n';
 
 const avatarUrl = ref('https://github.com/dieWehmut.png');
 const profile = ref({});
+const lastUpdated = ref('');
 
 function scrollToSection(id) {
   const el = document.getElementById(id);
@@ -105,6 +113,44 @@ onMounted(() => {
   fetchGitHub();
 });
 
+async function fetchLatestCommit() {
+  try {
+    // Repo: dieWehmut/dieWehmut.github.io (site repo)
+    const res = await fetch('https://api.github.com/repos/dieWehmut/dieWehmut.github.io/commits?per_page=1');
+    if (!res.ok) return;
+    const commits = await res.json();
+    if (Array.isArray(commits) && commits.length > 0) {
+      const c = commits[0];
+      const dateStr = c?.commit?.committer?.date || c?.commit?.author?.date;
+      if (dateStr) {
+        lastUpdated.value = formatDateTime(dateStr);
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+function formatDateTime(d) {
+  try {
+    const dt = new Date(d);
+    if (isNaN(dt.valueOf())) return d;
+    // format: YYYY-MM-DD HH:MM
+    const Y = dt.getFullYear();
+    const M = String(dt.getMonth() + 1).padStart(2, '0');
+    const D = String(dt.getDate()).padStart(2, '0');
+    const hh = String(dt.getHours()).padStart(2, '0');
+    const mm = String(dt.getMinutes()).padStart(2, '0');
+    return `${Y}-${M}-${D} ${hh}:${mm}`;
+  } catch {
+    return d;
+  }
+}
+
+onMounted(() => {
+  fetchLatestCommit();
+});
+
 const { t } = useI18n();
 
 // responsive flag: hide nav buttons in sidebar on mobile (match CSS breakpoint)
@@ -119,6 +165,24 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* entry animation: hidden until .entering is applied */
+.sidebar {
+  transition: opacity 460ms cubic-bezier(.16,.9,.2,1), transform 460ms cubic-bezier(.16,.9,.2,1);
+  will-change: opacity, transform;
+}
+
+.sidebar:not(.entering) {
+  opacity: 0;
+  transform: translateX(-12px);
+  pointer-events: none;
+}
+
+.sidebar.entering {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
 .sidebar {
   /* participate in layout (sticky) so left+main(+right) align as a group */
   position: sticky;
@@ -126,9 +190,9 @@ onMounted(() => {
     use a shared variable so changes to layout padding keep both columns aligned */
   top: calc(var(--header-height, 80px) + var(--layout-padding-top, 20px));
   width: 300px; /* increased width for bigger avatar */
-  /* fully transparent background so dynamic video shows through */
-  background: transparent !important;
-  border: none !important;
+  /* translucent background (lightened) to improve legibility over video without being too dark */
+  background: rgba(0,0,0,0.30) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
   border-radius: 14px;
   padding: 18px;
   /* push shadow to left only so right edge appears flush with main content */
@@ -143,15 +207,6 @@ onMounted(() => {
   border-right: none;
   /* ensure no extra gap on the right */
   margin-right: 0;
-}
-
-/* 侧边栏玻璃效果：半透明背景 + 模糊，保留与视频背景的穿透感 */
-.sidebar {
-  background: rgba(255,255,255,0.04) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
-  backdrop-filter: blur(10px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.06) !important;
-  box-shadow: 0 10px 30px rgba(2,6,23,0.45) !important;
 }
 
 .about-me {
@@ -196,13 +251,13 @@ onMounted(() => {
 .name {
   font-size: 28px;
   font-weight: 700;
-  color: rgba(255,255,255,0.96);
+  color: #ffffff !important;
   margin: 8px 0 6px 0;
 }
 
 .bio {
   font-size: 13px;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.92) !important;
   line-height: 1.45;
   margin-bottom: 12px;
   max-width: 240px;
@@ -257,12 +312,12 @@ onMounted(() => {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
-  color: #2c2c2c;
+  color: #ffffff !important;
   text-align: left;
 }
 .nav-btn:hover,
 .nav-btn:focus {
-  background: transparent !important;
+  background: rgba(255,255,255,0.04) !important;
   outline: none;
 }
 .nav-btn:focus-visible {
@@ -281,9 +336,9 @@ onMounted(() => {
   align-items: center;
   justify-content: center; /* center content inside button */
   gap: 3px;
-  /* make button background transparent so nothing blocks video */
-  background: transparent !important;
-  color: #fff;
+  /* subtle translucent button that reads on dark sidebar */
+  background: rgba(255,255,255,0.04) !important;
+  color: #ffffff !important;
   padding: 7px 12px;
   border-radius: 8px;
   text-decoration: none;
@@ -306,18 +361,18 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(255,255,255,0.86);
+  color: rgba(255,255,255,0.92) !important;
   font-size: 13px;
 }
 .follow-text {
-  color: rgba(255,255,255,0.86);
+  color: rgba(255,255,255,0.92) !important;
 }
 .contact-meta {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: rgba(255,255,255,0.86);
+  color: rgba(255,255,255,0.92) !important;
 }
 .meta-item {
   display: flex;
@@ -329,10 +384,24 @@ onMounted(() => {
   text-decoration: underline;
 }
 
+.last-updated-row {
+  margin-top: 4px;
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 13px;
+}
+.last-updated-row .icon--clock {
+  width: 16px;
+  height: 16px;
+  fill: rgba(255,255,255,0.85) !important;
+}
+.last-updated {
+  margin-left: 6px;
+}
+
 .icon {
   width: 18px;
   height: 18px;
-  fill: rgba(255,255,255,0.88);
+  fill: rgba(255,255,255,0.95) !important;
   flex: 0 0 18px;
   display: inline-block;
 }

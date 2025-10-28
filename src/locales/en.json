@@ -5,6 +5,7 @@
   "search": { "hint": "Search ..." },
   "sidebar": {
     "bio": "Undergraduate in Intelligent Science and Technology, Nanjing University, Suzhou Campus",
+    "lastUpdated": "Last updated: ",
     "followers": "{count} followers",
     "location": "Suzhou, China"
   },
@@ -16,6 +17,8 @@
   },
   "common": {
     "totalFormat": "Total {count} items",
+    "totalFiles": "Total {count} files",
+    "versionsCount": "{count} versions",
     "matchedFormat": "matched {count} items"
   },
   "action": {
@@ -35,5 +38,12 @@
     "en": "English",
     "ja": "日本語",
     "de": "Deutsch"
+  }
+  ,
+  "githubActivity": "GitHub Activity"
+  ,
+  "intro": {
+    "title": "Welcome!",
+    "subtitle": "dieWehmut's Nexus"
   }
 }

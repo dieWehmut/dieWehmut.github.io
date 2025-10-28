@@ -16,6 +16,7 @@
               {{ version.version }}
             </el-tag>
           </template>
+          <span v-if="version.log" class="version-log">{{ version.log }}</span>
         </div>
         <span class="separator"></span>
       </div>
@@ -195,6 +196,12 @@ function formatDate(d) {
   align-items: center;
   gap: 6px;
   color: #7a7a7a;
+}
+
+.version-log {
+  color: #2f3235;
+  margin-left: 8px;
+  font-size: 13px;
 }
 
 .calendar-icon {

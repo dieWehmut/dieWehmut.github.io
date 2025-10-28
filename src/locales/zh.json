@@ -5,6 +5,7 @@
   "search": { "hint": "搜索 ..." },
   "sidebar": {
     "bio": "南京大学（苏州校区）智能科学与技术 本科生",
+    "lastUpdated": "最后更新：",
     "followers": "{count} 个关注者",
     "location": "中国 苏州"
   },
@@ -16,6 +17,8 @@
   },
   "common": {
     "totalFormat": "共 {count} 项",
+    "totalFiles": "共 {count} 个文件",
+    "versionsCount": "{count} 个版本",
     "matchedFormat": "匹配 {count} 项"
   },
   "action": {
@@ -35,5 +38,10 @@
     "en": "英语",
     "ja": "日本語",
     "de": "Deutsch"
+  },
+  "githubActivity": "GitHub 活动",
+  "intro": {
+    "title": "欢迎！",
+    "subtitle": "dieWehmut 的 Nexus"
   }
 }
