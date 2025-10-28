@@ -145,6 +145,15 @@ onMounted(() => {
   margin-right: 0;
 }
 
+/* 侧边栏玻璃效果：半透明背景 + 模糊，保留与视频背景的穿透感 */
+.sidebar {
+  background: rgba(255,255,255,0.04) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.45) !important;
+}
+
 .about-me {
   margin-bottom: 18px;
   /* 左对齐文字内容 */

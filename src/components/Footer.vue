@@ -134,9 +134,19 @@ onBeforeUnmount(() => {
   padding: 18px 12px 28px;
   text-align: center;
 }
+
+/* 玻璃风格：半透明背景 + 背景模糊，兼顾不支持 backdrop-filter 的回退 */
+.footer {
+  background: rgba(255,255,255,0.03);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 24px rgba(2,6,23,0.4);
+  border-radius: 12px;
+}
 .survival-time {
   margin-bottom: 6px;
-  color: #333;
+  color: rgba(255,255,255,0.92);
 }
 .time-number {
   font-weight: 700;
@@ -189,7 +199,7 @@ onBeforeUnmount(() => {
   height: 32px;
   max-width: 36px;
   max-height: 36px;
-  fill: #333;
+  fill: rgba(255,255,255,0.94);
   transition: fill 0.2s ease, transform 0.12s ease;
   display: block;
 }

@@ -16,6 +16,11 @@
       muted
       loop
       playsinline
+      webkit-playsinline
+      x5-playsinline
+      disablepictureinpicture
+      disableremoteplayback
+      tabindex="-1"
       preload="none"
       :class="{ visible: videoVisible }"
       aria-hidden="true"
@@ -41,7 +46,7 @@ function extractFirstFrame(videoUrl) {
     v.preload = 'metadata'
     v.muted = true
     v.playsInline = true
-    v.crossOrigin = 'anonymous'
+  // 不为临时 video 设置 crossOrigin，避免在同源但未返回 CORS 头时污染 canvas
     v.src = videoUrl
 
     const cleanup = () => {
@@ -97,6 +102,20 @@ async function startLoading() {
   v.src = bgUrl
 
   // Ensure can autoplay: muted + playsinline already set in template
+  // But also explicitly set a few runtime flags for better cross-browser behavior
+  try {
+    v.playsInline = true
+    v.setAttribute('webkit-playsinline', '')
+    v.setAttribute('x5-playsinline', '')
+
+    v.muted = true
+    v.setAttribute('muted', '')
+
+    try { v.disablePictureInPicture = true } catch (e) {}
+    v.setAttribute('disablePictureInPicture', '')
+    try { v.disableRemotePlayback = true } catch (e) {}
+    v.setAttribute('disableRemotePlayback', '')
+  } catch (e) {}
   const onCanPlay = () => {
     // crossfade: give poster a little time then show video
     requestAnimationFrame(() => {
@@ -117,6 +136,12 @@ async function startLoading() {
 
   // try to play (browsers allow autoplay only when muted)
   try { v.play().catch(() => {}) } catch (e) {}
+
+  // If autoplay is blocked on some browsers despite muted, allow first user interaction to kickstart
+  const onUserInteraction = () => {
+    try { v.play().catch(() => {}) } catch (err) {}
+  }
+  document.addEventListener('click', onUserInteraction, { once: true, passive: true })
 }
 
 onMounted(() => {

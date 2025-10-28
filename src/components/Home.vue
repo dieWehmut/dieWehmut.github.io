@@ -486,7 +486,7 @@ const { t } = useI18n();
                     @click.stop
                   >
                     <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>Repo</span>
+                    <span>{{ $t('action.repo') }}</span>
                   </a>
                 </div>
               </template>
@@ -552,7 +552,7 @@ const { t } = useI18n();
                     @click.stop
                   >
                     <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>Repo</span>
+                    <span>{{ $t('action.repo') }}</span>
                   </a>
                 </div>
               </template>
@@ -618,7 +618,7 @@ const { t } = useI18n();
                     @click.stop
                   >
                     <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>Repo</span>
+                    <span>{{ $t('action.repo') }}</span>
                   </a>
                 </div>
               </template>
@@ -825,6 +825,15 @@ const { t } = useI18n();
 .home__card {
   border-radius: 10px;
 
+}
+
+/* 轻微玻璃感：半透明背景 + 背景模糊，兼顾不支持 backdrop-filter 的回退 */
+.home__card {
+  background: rgba(255,255,255,0.03); /* very subtle light overlay for dark background */
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
 }
 
 .card-header {
