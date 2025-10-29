@@ -35,6 +35,7 @@ import { ref, onMounted, reactive } from 'vue'
 import { Folder, Download, Link, CopyDocument } from "@element-plus/icons-vue";
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
+import { fetchWithCache } from '../utils/apiCache'
 
 const tools = ref([])
 const loading = ref(true)
@@ -48,13 +49,8 @@ function buildFolderHtmlUrl(name) {
 async function fetchTools() {
   loading.value = true
   try {
-    const res = await fetch('https://api.github.com/repos/dieWehmut/Gajetto/contents')
-    if (!res.ok) {
-      tools.value = []
-      loading.value = false
-      return
-    }
-    const data = await res.json()
+    // cache folder listing for 15 minutes
+    const data = await fetchWithCache('https://api.github.com/repos/dieWehmut/Gajetto/contents', {}, 1000 * 60 * 15)
     if (!Array.isArray(data)) {
       tools.value = []
       loading.value = false
@@ -69,12 +65,14 @@ async function fetchTools() {
     // For each directory, try to fetch the latest commit touching that path so we can show a date
     const withDates = await Promise.all(dirs.map(async (dir) => {
       try {
-        const commitsRes = await fetch(`https://api.github.com/repos/dieWehmut/Gajetto/commits?path=${encodeURIComponent(dir.name)}&per_page=1`)
-        if (commitsRes.ok) {
-          const commits = await commitsRes.json()
-          if (Array.isArray(commits) && commits.length > 0) {
-            dir.lastModified = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
-          }
+        // cache commits per-path for 6 hours to avoid repeated per-dir calls
+        const commits = await fetchWithCache(
+          `https://api.github.com/repos/dieWehmut/Gajetto/commits?path=${encodeURIComponent(dir.name)}&per_page=1`,
+          {},
+          1000 * 60 * 60 * 6
+        )
+        if (Array.isArray(commits) && commits.length > 0) {
+          dir.lastModified = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
         }
       } catch (e) {
         // ignore per-dir failures
