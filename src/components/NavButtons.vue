@@ -50,6 +50,7 @@ onMounted(() => {})
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  justify-content: center; /* center the nav buttons horizontally */
 }
 .nav-btn {
   background: rgba(255,255,255,0.06);
