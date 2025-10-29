@@ -7,7 +7,9 @@ import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
 import FileItem from "../components/FileItem.vue";
 import GithubActivity from "../components/GithubActivity.vue";
+import Tools from "../components/Tools.vue";
 import { ElMessage } from "element-plus";
+import { showCenteredToast } from '../utils/centerToast'
 
 const props = defineProps({
   query: {
@@ -165,6 +167,17 @@ const matchedAppsCount = computed(() =>
 
 const matchedFilesCount = computed(() => filteredFiles.value.length);
 
+// Tools: read child component (Tools.vue) exposed data via ref
+const toolsRef = ref(null)
+const toolsList = computed(() => toolsRef.value?.tools || [])
+const filteredTools = computed(() => {
+  const q = normalizedQuery.value
+  if (!q) return toolsList.value
+  return (toolsList.value || []).filter((t) => t.name.toLowerCase().includes(q))
+})
+const totalToolsCount = computed(() => (toolsList.value || []).length)
+const matchedToolsCount = computed(() => (filteredTools.value || []).length)
+
 const activePages = ref(
   filteredPages.value.filter((p) => p.versions.length > 1).map((p) => p.name)
 );
@@ -181,6 +194,7 @@ const showPages = ref(true);
 const showGames = ref(true);
 const showApps = ref(true);
 const showFiles = ref(true);
+const showTools = ref(true);
 
 function handleOpenSection(e) {
   const name = e?.detail;
@@ -189,6 +203,7 @@ function handleOpenSection(e) {
   if (name === 'games') showGames.value = true;
   if (name === 'apps') showApps.value = true;
   if (name === 'files') showFiles.value = true;
+  if (name === 'tools') showTools.value = true;
 }
 
 if (typeof window !== 'undefined' && window.addEventListener) {
@@ -208,6 +223,7 @@ watch(normalizedQuery, (q) => {
       showGames.value = true;
       showApps.value = true;
       showFiles.value = true;
+      showTools.value = true;
     }
   } catch (e) {
     // ignore
@@ -230,8 +246,8 @@ function openFirstResult() {
 function copyFirstResult() {
   const first = firstVersion();
   if (first) {
-    navigator.clipboard.writeText(first.url).then(() => {
-      ElMessage.success("First result link copied");
+      navigator.clipboard.writeText(first.url).then(() => {
+      showCenteredToast('action.first_result_copied', { type: 'success', duration: 2500 });
     });
   } else {
     ElMessage.info("No result to copy");
@@ -338,6 +354,34 @@ const { t } = useI18n();
             </el-collapse-item>
           </el-collapse>
         </template>
+        </div>
+      </transition>
+    </el-card>
+
+    <el-card id="section-tools" shadow="never" class="home__card">
+      <template #header>
+        <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
+            <div class="card-header-left">
+            <span>{{ t('nav.tools') }}</span>
+            <el-text size="small" type="info">
+              {{ t('common.totalFormat', { count: totalToolsCount }) }}
+              <template v-if="query">
+                , {{ t('common.matchedFormat', { count: matchedToolsCount }) }}
+              </template>
+            </el-text>
+          </div>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showTools" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
+        </div>
+      </template>
+
+      <transition name="section-toggle">
+        <div v-show="showTools" class="section-body">
+          <Tools ref="toolsRef" />
         </div>
       </transition>
     </el-card>
@@ -508,13 +552,16 @@ const { t } = useI18n();
       </transition>
     </el-card>
 
+  
+
     <el-card
       v-if="
         query &&
         filteredPages.length === 0 &&
         filteredGames.length === 0 &&
         filteredApps.length === 0 &&
-        filteredFiles.length === 0
+        filteredFiles.length === 0 &&
+        filteredTools.length === 0
       "
       shadow="never"
       class="home__card"
@@ -688,6 +735,13 @@ const { t } = useI18n();
 .home.entering .home__card:nth-of-type(4) { transition-delay: 320ms }
 .home.entering .home__card:nth-of-type(5) { transition-delay: 380ms }
 .home.entering .home__card:nth-of-type(6) { transition-delay: 440ms }
+
+/* Make the Tools card body transparent so the card itself is colorless; individual rows manage their own backgrounds */
+#section-tools :deep(.el-card__body) {
+  background: transparent !important;
+  border: none !important;
+  padding: 0; /* allow inner component to control padding */
+}
 
 .card-header {
   display: flex;

@@ -53,13 +53,15 @@
 
     <!-- Navigation buttons are moved into a reusable component. Show in sidebar only on desktop. -->
     <nav class="nav-list" aria-label="sections" v-if="!isMobile">
-      <ul>
-  <li><button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button></li>
-  <li><button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button></li>
-  <li><button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button></li>
-  <li><button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button></li>
-      </ul>
-    </nav>
+        <ul>
+    <li><button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button></li>
+    <li><button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button></li>
+    <li><button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button></li>
+    <li><button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button></li>
+    <li><button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button></li>
+
+        </ul>
+      </nav>
   </nav>
 </template>
 
@@ -87,6 +89,7 @@ function go(name) {
     pages: 'section-pages',
     games: 'section-games',
     apps: 'section-apps',
+    tools: 'section-tools',
     files: 'section-files',
   };
   const id = map[name];
@@ -295,10 +298,11 @@ onMounted(() => {
   flex-direction: row; /* horizontal buttons */
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap; /* allow buttons to wrap to next line when space is limited */
 }
 .nav-list li {
   width: auto;
-  flex: 1; /* distribute evenly */
+  flex: 0 0 auto; /* keep natural button width and allow wrapping */
 }
 .nav-btn {
   display: flex;

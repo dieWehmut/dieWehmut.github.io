@@ -13,7 +13,8 @@
     "pages": "ページ",
     "games": "ゲーム",
     "apps": "アプリ",
-    "files": "ファイル"
+    "files": "ファイル",
+    "tools": "ツール"
   },
   "common": {
     "totalFormat": "合計 {count} 件",
@@ -25,6 +26,8 @@
     "open": "開く",
     "copy": "コピー",
     "copied": "コピー済み",
+    "first_result_copied": "最初の結果のリンクをコピーしました",
+    "copy_failed": "コピーに失敗しました",
     "download": "ダウンロード",
     "repo": "リポジトリ",
     "view": "表示",

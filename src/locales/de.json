@@ -13,7 +13,8 @@
     "pages": "Seiten",
     "games": "Spiele",
     "apps": "Apps",
-    "files": "Dateien"
+    "files": "Dateien",
+    "tools": "Werkzeuge"
   },
   "common": {
     "totalFormat": "Insgesamt {count} Elemente",
@@ -25,6 +26,8 @@
     "open": "Öffnen",
     "copy": "Kopieren",
     "copied": "Kopiert",
+    "first_result_copied": "Link des ersten Ergebnisses kopiert",
+    "copy_failed": "Kopieren fehlgeschlagen",
     "download": "Herunterladen",
     "repo": "Repo",
     "view": "Anzeigen",

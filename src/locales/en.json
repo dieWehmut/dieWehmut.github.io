@@ -13,7 +13,8 @@
     "pages": "Pages",
     "games": "Games",
     "apps": "Apps",
-    "files": "Files"
+    "files": "Files",
+    "tools": "Tools"
   },
   "common": {
     "totalFormat": "Total {count} items",
@@ -25,6 +26,8 @@
     "open": "Open",
     "copy": "Copy",
     "copied": "Copied",
+    "first_result_copied": "First result link copied",
+    "copy_failed": "Copy failed",
     "download": "Download",
     "repo": "Repo",
     "view": "View",

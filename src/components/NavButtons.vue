@@ -1,14 +1,18 @@
 <template>
   <div class="nav-buttons">
-    <button class="nav-btn" @click="go('pages')">Pages</button>
-    <button class="nav-btn" @click="go('games')">Games</button>
-    <button class="nav-btn" @click="go('apps')">Apps</button>
-    <button class="nav-btn" @click="go('files')">Files</button>
+  <button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button>
+  <button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button>
+  <button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button>
+  <button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button>
+  <button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button>
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 function scrollToSection(id) {
   const el = document.getElementById(id)
@@ -26,6 +30,7 @@ function go(name) {
     games: 'section-games',
     apps: 'section-apps',
     files: 'section-files',
+    tools: 'section-tools',
   }
   const id = map[name]
   if (!id) return

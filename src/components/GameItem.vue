@@ -66,6 +66,7 @@ import {
   Calendar,
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { showCenteredToast } from '../utils/centerToast'
 import { ref } from "vue";
 import { useI18n } from 'vue-i18n';
 
@@ -88,35 +89,32 @@ const props = defineProps({
 
 const copied = ref(false);
 
-function copyLink() {
+async function copyLink() {
   const url = props.version?.url ?? "";
   if (!url) {
     ElMessage({ message: "🔗 No link available", type: 'warning', customClass: 'bw-message' });
     return;
   }
-
-  navigator.clipboard
-    .writeText(url)
-    .then(() => {
+  try {
+    await navigator.clipboard.writeText(url);
   copied.value = true;
-  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
+    setTimeout(() => (copied.value = false), 3000);
+  } catch (e) {
+    const input = document.createElement("input");
+    input.value = url;
+    document.body.appendChild(input);
+    input.select();
+    try {
+      document.execCommand("copy");
+  copied.value = true;
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
       setTimeout(() => (copied.value = false), 3000);
-    })
-    .catch(() => {
-      const input = document.createElement("input");
-      input.value = url;
-      document.body.appendChild(input);
-      input.select();
-      try {
-        document.execCommand("copy");
-  copied.value = true;
-  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
-        setTimeout(() => (copied.value = false), 3000);
-      } catch {
-        ElMessage({ message: "❌ Copy failed", type: 'error', customClass: 'bw-message', duration: 3000 });
-      }
-      document.body.removeChild(input);
-    });
+    } catch (err) {
+  showCenteredToast('action.copy_failed', { type: 'error', duration: 3000 });
+    }
+    document.body.removeChild(input);
+  }
 }
 
 function formatDate(d) {
@@ -409,5 +407,28 @@ function formatDate(d) {
 .game-item:hover .action-icon,
 .game-item:hover .version-info {
   color: #2b2b2b !important;
+}
+
+/* Strong override to ensure repo icon/button is fully transparent on deployed site.
+   Targets the anchor button, the Element Plus icon wrapper and the inner SVG/path.
+   Using high-specificity selectors and !important to defeat global theme overrides. */
+.game-item__actions a.repo-button,
+.game-item__actions a.repo-button .el-icon,
+.game-item__actions a.repo-button .repo-icon,
+.game-item__actions a.repo-button svg,
+.game-item__actions a.repo-button svg path {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  fill: currentColor !important;
+}
+
+/* Also ensure the icon wrapper does not force padding/background from global styles */
+.game-item__actions a.repo-button .el-icon {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
 }
 </style>

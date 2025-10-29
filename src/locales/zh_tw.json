@@ -13,7 +13,8 @@
     "pages": "頁面",
     "games": "遊戲",
     "apps": "應用",
-    "files": "文件"
+    "files": "文件",
+    "tools": "工具"
   },
   "common": {
     "totalFormat": "共 {count} 項",
@@ -25,6 +26,8 @@
     "open": "打開",
     "copy": "複製",
     "copied": "已複製",
+    "first_result_copied": "已複製第一個結果的連結",
+    "copy_failed": "複製失敗",
     "download": "下載",
     "repo": "倉庫",
     "view": "瀏覽",
