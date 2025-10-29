@@ -132,4 +132,25 @@ const { t } = useI18n();
 .toggle-btn { margin-left: 0; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); }
 .github-body { width:100%; max-width:760px; margin:0; align-items:flex-start }
 .contrib-img { width:100%; height:auto; max-width:480px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.04) }
+
+/* Transition for expand/collapse of the card body. Uses max-height so the
+   content can smoothly expand while also fading in/out. The max-height value
+   is intentionally large to accommodate the content; it's clipped by overflow.
+   Scoped to this component via `scoped` attribute. */
+.section-toggle-enter-active,
+.section-toggle-leave-active {
+  transition: max-height 320ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease;
+  overflow: hidden;
+}
+.section-toggle-enter-from,
+.section-toggle-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+.section-toggle-enter-to,
+.section-toggle-leave-from {
+  /* large enough to contain the content; keeps the transition simple */
+  max-height: 900px;
+  opacity: 1;
+}
 </style>

@@ -1,0 +1,51 @@
+{
+  "backToTop": "Ad summum",
+  "settings": "Optiones",
+  "language": "Lingua",
+  "search": { "hint": "Quaere ..." },
+  "sidebar": {
+    "bio": "Studens baccalaurei in Scientia Intelligentiae et Technologia, Universitas Nanjing, Campus Suzhou",
+    "lastUpdated": "Ultima renovatio: ",
+    "followers": "{count} sequaces",
+    "location": "Suzhou, Sinarum"
+  },
+  "nav": {
+    "pages": "Paginae",
+    "games": "Ludi",
+    "apps": "Applicationes",
+    "files": "Fasciculi"
+  },
+  "common": {
+    "totalFormat": "Total {count} elementa",
+    "totalFiles": "Tot {count} fasciculi",
+    "versionsCount": "{count} versiones",
+    "matchedFormat": "Inveniuntur {count} elementa"
+  },
+  "action": {
+    "open": "Aperire",
+    "copy": "Copia",
+    "copied": "Exscriptum",
+    "download": "Download",
+    "repo": "Repo",
+    "view": "Vide",
+    "expand": "Expandere",
+    "collapse": "Contrahere"
+  },
+  "footer": { "uptime": "Tempus online" },
+  "languages": {
+    "zh": "中文",
+    "zh_tw": "繁體",
+    "en": "English",
+    "ja": "日本語",
+    "de": "Deutsch",
+    "la": "Latina"
+  },
+  "githubActivity": "Activitas GitHub",
+  "intro": {
+    "title": "Salve!",
+    "subtitle": "Nexus dieWehmut"
+  },
+  "float": {
+    "cleanMode": "Muta modum mundum"
+  }
+}
