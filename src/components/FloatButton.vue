@@ -59,11 +59,14 @@ onMounted(() => {
 });
 
 const langs = [
-	{ code: 'en', label: '英' },
+	// Order is arranged so that when buttons expand to the left,
+	// visual left-to-right sequence becomes: 拉, 德, 日, 英, 繁, 简
 	{ code: 'zh', label: '简' },
 	{ code: 'zh_tw', label: '繁' },
+	{ code: 'en', label: '英' },
 	{ code: 'ja', label: '日' },
-	{ code: 'de', label: '德' }
+	{ code: 'de', label: '德' },
+	{ code: 'la', label: '拉' }
 ];
 </script>
 

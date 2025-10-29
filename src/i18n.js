@@ -4,6 +4,7 @@ import zh from './locales/zh.json';
 import zh_tw from './locales/zh_tw.json';
 import ja from './locales/ja.json';
 import de from './locales/de.json';
+import la from './locales/la.json';
 
 const messages = {
   en,
@@ -11,6 +12,7 @@ const messages = {
   zh_tw,
   ja,
   de,
+  la,
 };
 
 const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('locale') : null;
