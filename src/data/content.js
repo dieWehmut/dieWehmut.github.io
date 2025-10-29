@@ -103,9 +103,9 @@ export function useContent() {
       description: "Math, Physics and Chemistry, etc.",
     },
     {
-      name: "Learning Notes",
+      name: "Personal Articles",
       repoUrl: "https://git.nju.edu.cn/dieWehmut/learningmaterials/-/tree/main/Blog",
-      description: "Personal notes and learning materials",
+      description: "My personal blog articles.",
     },
   ]);
 

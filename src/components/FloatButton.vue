@@ -18,8 +18,12 @@ onMounted(() => window.addEventListener('keyup', handleKey));
 onBeforeUnmount(() => window.removeEventListener('keyup', handleKey));
 
 // UI state
+
+// UI state
 const settingsOpen = ref(false);
 const langPanelOpen = ref(false);
+// clean background mode: hide main UI, leaving only FloatButton visible
+const cleanMode = ref(false);
 
 function toggleSettings() {
 	settingsOpen.value = !settingsOpen.value;
@@ -33,10 +37,26 @@ function toggleLangPanel() {
 function selectLang(code) {
 	locale.value = code;
 	try { localStorage.setItem('locale', code); } catch (e) {}
-	// close panels for nicer UX
-	langPanelOpen.value = false;
-	settingsOpen.value = false;
+	// keep panels open per user's preference
 }
+
+function toggleCleanMode() {
+	cleanMode.value = !cleanMode.value;
+	try {
+		document.documentElement.classList.toggle('clean-mode', cleanMode.value);
+		localStorage.setItem('cleanMode', cleanMode.value ? '1' : '0');
+	} catch (e) {}
+}
+
+onMounted(() => {
+  try {
+    const stored = localStorage.getItem('cleanMode');
+    if (stored === '1') {
+      cleanMode.value = true;
+      document.documentElement.classList.add('clean-mode');
+    }
+  } catch (e) {}
+});
 
 const langs = [
 	{ code: 'en', label: '英' },
@@ -65,11 +85,26 @@ const langs = [
 			</button>
 		</div>
 
+		<!-- clean-mode toggle (appears when settings open) -->
+			<button
+			class="btt-button clean-toggle"
+			:class="{ visible: settingsOpen, active: cleanMode }"
+			@click="toggleCleanMode"
+			:title="t('float.cleanMode')"
+			aria-label="Toggle clean background"
+			>
+				<!-- simple eye/eye-off icon: uses a circle to represent visibility -->
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+					<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2"/>
+				</svg>
+			</button>
+
 		<!-- language toggle button (appears above settings) -->
 			<button
-				class="btt-button lang-toggle"
-				:class="{ visible: settingsOpen }"
-				@click="toggleLangPanel"
+			class="btt-button lang-toggle"
+			:class="{ visible: settingsOpen }"
+			@click="toggleLangPanel"
 			:title="t('language')"
 				aria-label="Language toggle"
 			>
@@ -117,7 +152,7 @@ const langs = [
 	position: fixed;
 	bottom: 20px;
 	right: 20px;
-	z-index: 1200;
+	z-index: 99999 !important; /* ensure float controls always sit above other UI */
 	width: 64px; /* allow horizontal space for slide-out */
 	height: auto;
 }
@@ -143,8 +178,8 @@ const langs = [
 .btt-button svg path { stroke: currentColor !important; }
 
 /* ensure correct stacking so language buttons are not obscured */
-.float-container { z-index: 1200; }
-.btt-button { z-index: 1201; }
+.float-container { z-index: 99999 !important; }
+.btt-button { z-index: 100000 !important; }
 .settings-button { z-index: 1202; }
 .lang-toggle { z-index: 1203; }
 .lang-options { z-index: 1204; }
@@ -170,9 +205,26 @@ const langs = [
 	pointer-events: auto;
 }
 
+/* keep clean-toggle hidden until settings are opened (same behavior as lang-toggle) */
+.clean-toggle {
+	opacity: 0;
+	transform: translateY(8px) scale(0.92);
+	transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	pointer-events: none;
+}
+.clean-toggle.visible {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	pointer-events: auto;
+}
+
 .back-button { bottom: 0; }
 .settings-button { bottom: 56px; }
 .lang-toggle { bottom: 112px; }
+
+/* clean-mode toggle placed between settings and language toggle */
+.clean-toggle { bottom: 168px; }
+.clean-toggle.active { background: rgba(255,255,255,0.06); }
 
 @media (hover: hover) {
 	.btt-button:hover, .btt-button:focus {

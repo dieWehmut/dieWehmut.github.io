@@ -398,6 +398,45 @@ a.repo-link {
   border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
+/* Clean background mode: animate hiding/showing of main UI regions while keeping floating controls visible
+   Use opacity/transform transitions instead of display:none so we get a smooth exit/enter animation. */
+/* Provide transition presets for the main structural elements */
+.sidebar,
+.home,
+.app__footer,
+.app__header,
+.home__card,
+.layout,
+.el-main {
+  transition: opacity 360ms cubic-bezier(.2,.9,.2,1), transform 360ms cubic-bezier(.2,.9,.2,1);
+  will-change: opacity, transform;
+}
+
+/* When clean-mode is active, fade and slide the primary regions out and disable pointer events */
+.clean-mode .sidebar,
+.clean-mode .home,
+.clean-mode .app__footer,
+.clean-mode .app__header,
+.clean-mode .home__card,
+.clean-mode .layout,
+.clean-mode .el-main {
+  opacity: 0 !important;
+  transform: translateY(10px) !important;
+  pointer-events: none !important;
+}
+
+/* Keep FloatButton visible above everything (do not force-display children) */
+.clean-mode .float-container {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure the page background remains and body doesn't collapse height */
+.clean-mode body, .clean-mode html {
+  height: 100%;
+}
+
 /* === Legibility improvements ===
    Make text easier to read over dynamic/transparent backgrounds.
    - Force higher-contrast text color for main content

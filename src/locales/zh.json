@@ -44,4 +44,8 @@
     "title": "欢迎！",
     "subtitle": "dieWehmut 的 Nexus"
   }
+  ,
+  "float": {
+    "cleanMode": "切换纯净模式"
+  }
 }

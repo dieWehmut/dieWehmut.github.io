@@ -30,9 +30,9 @@
 
       <el-footer class="app__footer" height="auto">
         <Footer />
-        <!-- global float button (fixed to viewport bottom-right) -->
-        <FloatButton />
       </el-footer>
+    <!-- global float button (fixed to viewport bottom-right) -->
+    <FloatButton />
     </el-container>
   </el-config-provider>
 </template>

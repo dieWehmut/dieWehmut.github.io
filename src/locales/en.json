@@ -46,4 +46,8 @@
     "title": "Welcome!",
     "subtitle": "dieWehmut's Nexus"
   }
+  ,
+  "float": {
+    "cleanMode": "Toggle clean mode"
+  }
 }
