@@ -41,11 +41,17 @@
                 <a class="email-link" href="mailto:diesehnsucht0@gmail.com">diesehnsucht0@gmail.com</a>
               </div>
               <div class="meta-item last-updated-row" v-if="lastUpdated">
-                <svg class="icon icon--clock" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
-                </svg>
-                <span class="last-updated">{{ t('sidebar.lastUpdated') }}{{ lastUpdated }}</span>
-              </div>
+                  <svg class="icon icon--clock" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
+                  </svg>
+                  <!-- Wrap label and time into a single content container so grid can align
+                       the text column; this ensures when the time wraps it aligns with the
+                       label's left edge (not with the icon). -->
+                  <div class="last-updated-content">
+                    <span class="last-updated-label">{{ t('sidebar.lastUpdated') }}</span>
+                    <span class="last-updated">{{ lastUpdated }}</span>
+                  </div>
+                </div>
             </div>
           </div>
       </div>
@@ -403,14 +409,32 @@ onMounted(() => {
   margin-top: 4px;
   color: rgba(255,255,255,0.85) !important;
   font-size: 13px;
+  /* Use grid so icon occupies left column and text occupies right column.
+     When the text wraps to a new line it will align under the text column (not the icon). */
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  column-gap: 8px;
+  align-items: center;
+  /* allow the text column to wrap internally */
 }
 .last-updated-row .icon--clock {
   width: 16px;
   height: 16px;
   fill: rgba(255,255,255,0.85) !important;
 }
+.last-updated-content {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap; /* let label and timestamp wrap as a unit inside the text column */
+}
 .last-updated {
-  margin-left: 6px;
+  /* keep the timestamp as a single non-breaking unit so it never splits across lines */
+  white-space: nowrap;
+}
+.last-updated-label {
+  /* label may wrap or truncate normally */
+  flex: 0 1 auto;
 }
 
 .icon {

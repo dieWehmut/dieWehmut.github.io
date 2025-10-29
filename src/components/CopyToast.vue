@@ -4,7 +4,7 @@
     :class="typeClass"
     role="status"
     aria-live="polite"
-    :style="{ opacity: visible ? 1 : 0, transform: visible ? 'translate(-50%, -50%)' : 'translate(-50%, -48%)' }"
+    :style="{ opacity: visible ? 1 : 0, transform: visible ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -48%) scale(0.98)' }"
   >
     <div class="toast-inner">{{ text }}</div>
     <!-- small white SVG icon on the right: check for success, x for error -->
@@ -53,24 +53,30 @@ onMounted(() => {
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  padding: 10px 14px;
-  border-radius: 8px;
-  z-index: 99999;
+  transform: translate(-50%, -50%) scale(1);
+  padding: 12px 18px;
+  border-radius: 10px;
+  z-index: 2147483647; /* max z to ensure visibility */
   color: #fff;
-  background: rgba(0,0,0,0.78);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.9);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 18px 48px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.28);
   opacity: 0.0;
-  transition: opacity 160ms ease, transform 160ms ease;
+  transition: opacity 180ms cubic-bezier(.2,.9,.2,1), transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease;
   pointer-events: none;
-  max-width: 80%;
+  max-width: 84%;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding-right: 12px;
+  gap: 10px;
+  padding-right: 14px;
 }
-.copy-toast .toast-inner { font-size: 14px; line-height: 1; }
-.copy-toast--error { background: rgba(220,53,69,0.95) }
+.copy-toast .toast-inner { font-size: 15px; line-height: 1; font-weight: 700; letter-spacing: 0.2px; }
+.copy-toast--error { background: rgba(220,53,69,0.98); border-color: rgba(255,255,255,0.06); }
 .toast-icon { display: inline-flex; align-items: center; justify-content: center; color: #ffffff; }
-.toast-icon svg { width: 16px; height: 16px; display: block; color: inherit; }
+.toast-icon svg { width: 18px; height: 18px; display: block; color: inherit; }
+
+/* Slight pop effect when visible */
+.copy-toast[style*="scale(1)"] {
+  box-shadow: 0 22px 56px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.32);
+}
 </style>

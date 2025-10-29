@@ -398,6 +398,100 @@ a.repo-link {
   border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
+/* --- Tools row specific override: ensure black translucent background for .tool-row ---
+   Placed at the end to take precedence over other global rules that enforce transparency.
+   This restores the intended visual of Tools.vue rows (rgba black translucent) while
+   keeping hover elevation/transparent behavior. */
+.tools-list .tool-row,
+.tools-list[data-v] .tool-row,
+.tools-list .tool-row[data-v],
+.tools-list[data-v] .tool-row[data-v] {
+  background: rgba(0,0,0,0.30) !important;
+  border-radius: 10px !important;
+  transition: transform 0.14s ease, box-shadow 0.18s ease, color 0.12s ease !important;
+  will-change: transform, box-shadow !important;
+  cursor: pointer !important;
+  color: #ffffff !important;
+}
+
+@media (hover: hover) {
+  .tools-list .tool-row:hover,
+  .tools-list[data-v] .tool-row:hover {
+    background: transparent !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+  }
+}
+
+/* Ensure icons and titles inside tool-row stay white */
+.tools-list .tool-row .single-title,
+.tools-list .tool-row .page-icon,
+.tools-list .tool-row .action-icon {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Keep action buttons visually flat but white colored inside tool rows */
+.tools-list .tool-row .action-btn,
+.tools-list .tool-row .action-btn .btn-text {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+/* Final, aggressive override for repo-link variants to ensure transparent background in deployment
+   This lives at the end of global.css so it wins over component-scoped selectors and third-party rules. */
+.repo-link,
+.repo-link.action-btn,
+.game-item__actions .repo-link,
+.file-item__header .repo-link,
+.item__actions .repo-link,
+a.repo-link,
+[class*="repo-link"],
+[class*="repo-link"] [class*="action"],
+[class*="repo-link"][data-v-] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border-radius: 10px !important;
+  /* transparent background */
+  background: rgba(255,255,255,0) !important;
+  background-color: transparent !important;
+  /* text color: keep dark text but allow components to override if needed */
+  color: #333 !important;
+  /* transparent border */
+  border: 1px solid rgba(232,232,232,0) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  align-self: center !important;
+  height: auto !important;
+  vertical-align: middle !important;
+  line-height: 1.2 !important;
+}
+
+.repo-link .el-icon,
+.repo-link svg,
+.repo-link .icon,
+.repo-link .action-icon {
+  width: 18px !important;
+  height: 18px !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  color: inherit !important;
+}
+
+.repo-link:hover,
+.repo-link.action-btn:hover,
+.game-item__actions .repo-link:hover,
+.file-item__header .repo-link:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  transform: none !important;
+}
+
 /* Clean background mode: animate hiding/showing of main UI regions while keeping floating controls visible
    Use opacity/transform transitions instead of display:none so we get a smooth exit/enter animation. */
 /* Provide transition presets for the main structural elements */

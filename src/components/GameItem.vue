@@ -255,9 +255,6 @@ function formatDate(d) {
   font-size: 13px;
   font-weight: 600;
   color: #2b2b2b;
-  background: #ffffff00 !important;
-  color: #333 !important;
-  border: 1px solid #e8e8e800 !important;
 }
 
 .repo-link:hover {

@@ -6,7 +6,10 @@
       <div v-for="tool in tools" :key="tool.name" class="tool-row">
         <div class="tool-info">
           <el-icon class="page-icon"><Folder /></el-icon>
-          <div class="single-title">{{ tool.name }}</div>
+          <div class="title-date">
+            <div class="single-title">{{ tool.name }}</div>
+            <div class="tool-date" v-if="tool.lastModified">{{ formatDateShort(tool.lastModified) }}</div>
+          </div>
         </div>
         <div class="tool-actions">
           <el-button class="action-btn" type="text" size="small" @click="downloadRepo(tool)">
@@ -59,9 +62,26 @@ async function fetchTools() {
     }
     const dirs = data.filter((i) => i.type === 'dir').map((d) => ({
       name: d.name,
-      html_url: d.html_url || buildFolderHtmlUrl(d.name)
+      html_url: d.html_url || buildFolderHtmlUrl(d.name),
+      lastModified: null
     }))
-    tools.value = dirs
+
+    // For each directory, try to fetch the latest commit touching that path so we can show a date
+    const withDates = await Promise.all(dirs.map(async (dir) => {
+      try {
+        const commitsRes = await fetch(`https://api.github.com/repos/dieWehmut/Gajetto/commits?path=${encodeURIComponent(dir.name)}&per_page=1`)
+        if (commitsRes.ok) {
+          const commits = await commitsRes.json()
+          if (Array.isArray(commits) && commits.length > 0) {
+            dir.lastModified = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
+          }
+        }
+      } catch (e) {
+        // ignore per-dir failures
+      }
+      return dir
+    }))
+    tools.value = withDates
   } catch (e) {
     tools.value = []
   } finally {
@@ -101,6 +121,22 @@ function copyLink(tool) {
   })
 }
 
+function formatDateShort(d) {
+  try {
+    if (!d) return '';
+    const dt = new Date(d);
+    if (isNaN(dt.valueOf())) return d;
+    const Y = dt.getFullYear();
+    const M = String(dt.getMonth() + 1).padStart(2, '0');
+    const D = String(dt.getDate()).padStart(2, '0');
+    const hh = String(dt.getHours()).padStart(2, '0');
+    const mm = String(dt.getMinutes()).padStart(2, '0');
+    return `${Y}-${M}-${D} ${hh}:${mm}`;
+  } catch {
+    return d;
+  }
+}
+
 onMounted(() => {
   fetchTools()
 })
@@ -135,10 +171,31 @@ defineExpose({ tools, loading })
   color: #f5f5f5; /* white text on dark bg */
 }
 .tool-info { display:flex; align-items:center; gap:8px }
+
+.title-date {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0; /* allow truncation */
+}
+.single-title {
+  font-weight: 600;
+  color: #f5f5f5; /* white text on dark bg */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tool-row .page-icon,
 .tool-row .action-icon {
   color: #ffffff;
   fill: #ffffff !important;
+}
+
+.tool-date {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  margin-left: 12px;
+  white-space: nowrap;
 }
 
 /* Hover: remove dark overlay and add elevation to match Pages hover behavior */

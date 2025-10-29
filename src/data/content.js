@@ -96,16 +96,13 @@ export function useContent() {
     },
   ]);
 
+  // Files section no longer needs manual per-file listings.
+  // Provide a single entry pointing to the GitHub repo that will be enumerated dynamically by the FileItem component.
   const files = ref([
     {
-      name: "High School Notes",
-      repoUrl: "https://git.nju.edu.cn/dieSehnsucht/learningmaterials/-/tree/main/HighSchoolNotes?ref_type=heads",
-      description: "Math, Physics and Chemistry, etc.",
-    },
-    {
-      name: "Personal Articles",
-      repoUrl: "https://git.nju.edu.cn/dieWehmut/learningmaterials/-/tree/main/Blog",
-      description: "My personal blog articles.",
+      name: "Files",
+      repoUrl: "https://github.com/dieWehmut/Files",
+      description: "Repository listing (fetched from GitHub)",
     },
   ]);
 
