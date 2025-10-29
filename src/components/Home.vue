@@ -2,7 +2,6 @@
 import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { useI18n } from 'vue-i18n';
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
-import FloatButton from "./FloatButton.vue";
 import PageItem from "../components/PageItem.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
@@ -523,7 +522,7 @@ const { t } = useI18n();
       <el-empty description="No matching content found" />
     </el-card>
 
-  <FloatButton />
+  <!-- FloatButton moved to App.vue to make it global (viewport-fixed) -->
   </div>
 </template>
 

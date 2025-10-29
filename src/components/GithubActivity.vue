@@ -30,7 +30,9 @@
         <div class="github-contrib">
           <img class="contrib-img" src="https://github-readme-activity-graph.vercel.app/graph?username=dieWehmut&theme=tokyo-night" alt="Contributions calendar" />
           <div class="contrib-official">
-            <img v-if="!officialFailed" class="contrib-img" :src="'/api/contributions'" alt="Official contributions (past year)" @error="onOfficialError" />
+            <!-- Prefer direct GitHub contributions SVG to avoid dev-proxy timeouts during development.
+                 If this fails the existing onOfficialError handler will hide the image. -->
+            <img v-if="!officialFailed" class="contrib-img" src="https://github.com/users/dieWehmut/contributions" alt="Official contributions (past year)" @error="onOfficialError" />
           </div>
         </div>
       </div>

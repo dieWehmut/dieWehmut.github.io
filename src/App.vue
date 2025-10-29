@@ -30,6 +30,8 @@
 
       <el-footer class="app__footer" height="auto">
         <Footer />
+        <!-- global float button (fixed to viewport bottom-right) -->
+        <FloatButton />
       </el-footer>
     </el-container>
   </el-config-provider>
@@ -43,6 +45,7 @@ import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
 import SideBar from './components/SideBar.vue'
 import IntroSplash from './components/IntroSplash.vue'
+import FloatButton from './components/FloatButton.vue'
 
 const query = ref('')
 const searchBarRef = ref(null)

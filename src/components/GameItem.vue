@@ -233,7 +233,6 @@ function formatDate(d) {
 }
 
 .link {
-  color: #d7e9ff;
   text-decoration: none;
   display: flex;
   align-items: center;
