@@ -128,6 +128,7 @@ import {
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { showCenteredToast } from '../utils/centerToast'
+import { fetchWithCache } from '../utils/apiCache'
 import { ref, reactive, onMounted } from "vue";
 import { useI18n } from 'vue-i18n';
 
@@ -195,19 +196,22 @@ async function loadContents(path = '') {
   try {
     // Get repo to learn default branch (once)
     if (!defaultBranch) defaultBranch = 'main';
-    const repoResp = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
-    if (repoResp.ok) {
-      const repoData = await repoResp.json();
-      defaultBranch = repoData.default_branch || defaultBranch;
+    // cache repo info and contents to reduce API calls
+    try {
+      const repoData = await fetchWithCache(`https://api.github.com/repos/${owner}/${repo}`, {}, 1000 * 60 * 60);
+      if (repoData && repoData.default_branch) defaultBranch = repoData.default_branch || defaultBranch;
+    } catch (e) {
+      // ignore
     }
 
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-    const resp = await fetch(apiUrl);
-    if (!resp.ok) {
+    let data = null;
+    try {
+      data = await fetchWithCache(apiUrl, {}, 1000 * 60 * 15);
+    } catch (e) {
       error.value = t('error.unable_load') || 'Unable to load files.';
       return;
     }
-    const data = await resp.json();
     // data is array for directories, object for file
     const items = Array.isArray(data) ? data.map(item => ({
       name: item.name,
