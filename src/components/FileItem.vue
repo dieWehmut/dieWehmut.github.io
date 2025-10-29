@@ -86,6 +86,7 @@ import {
   Document
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { showCenteredToast } from '../utils/centerToast'
 import { ref, reactive, onMounted } from "vue";
 import { useI18n } from 'vue-i18n';
 
@@ -226,9 +227,9 @@ function openFile(url) {
 
 async function copyLink(url) {
   try {
-    await navigator.clipboard.writeText(url);
-    copiedFiles[url] = true;
-  ElMessage({ message: 'Link copied', type: 'success', customClass: 'bw-message', duration: 3000 });
+  await navigator.clipboard.writeText(url);
+  copiedFiles[url] = true;
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
     setTimeout(() => delete copiedFiles[url], 3000);
   } catch (err) {
     console.error('Copy failed:', err);
@@ -239,12 +240,12 @@ async function copyLink(url) {
       document.body.appendChild(input);
       input.select();
       document.execCommand('copy');
-      copiedFiles[url] = true;
-  ElMessage({ message: 'Link copied', type: 'success', customClass: 'bw-message', duration: 3000 });
+  copiedFiles[url] = true;
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
       setTimeout(() => delete copiedFiles[url], 3000);
       document.body.removeChild(input);
     } catch (e) {
-      ElMessage({ message: 'Failed to copy link', type: 'error', customClass: 'bw-message', duration: 3000 });
+  showCenteredToast('action.copy_failed', { type: 'error', duration: 3000 });
     }
   }
 }

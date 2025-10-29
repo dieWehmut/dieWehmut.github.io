@@ -13,7 +13,8 @@
     "pages": "页面",
     "games": "游戏",
     "apps": "应用",
-    "files": "文件"
+    "files": "文件",
+    "tools": "工具"
   },
   "common": {
     "totalFormat": "共 {count} 项",
@@ -25,6 +26,8 @@
     "open": "打开",
     "copy": "复制",
     "copied": "已复制",
+    "first_result_copied": "已复制第一个结果的链接",
+    "copy_failed": "复制失败",
     "download": "下载",
     "repo": "仓库",
     "view": "浏览",

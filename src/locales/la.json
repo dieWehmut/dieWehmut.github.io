@@ -13,7 +13,8 @@
     "pages": "Paginae",
     "games": "Ludi",
     "apps": "Applicationes",
-    "files": "Fasciculi"
+    "files": "Fasciculi",
+    "tools": "Instrumenta"
   },
   "common": {
     "totalFormat": "Total {count} elementa",
@@ -25,6 +26,8 @@
     "open": "Aperire",
     "copy": "Copia",
     "copied": "Exscriptum",
+    "first_result_copied": "Primum resultatum nexus copiatus est",
+    "copy_failed": "Copia defecit",
     "download": "Download",
     "repo": "Repo",
     "view": "Vide",

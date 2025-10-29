@@ -66,6 +66,7 @@ import {
   Calendar,
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { showCenteredToast } from '../utils/centerToast'
 import { ref } from "vue";
 import { useI18n } from 'vue-i18n';
 
@@ -99,7 +100,7 @@ function copyLink() {
     .writeText(url)
     .then(() => {
   copied.value = true;
-  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
       setTimeout(() => (copied.value = false), 3000);
     })
     .catch(() => {
@@ -109,11 +110,11 @@ function copyLink() {
       input.select();
       try {
         document.execCommand("copy");
-  copied.value = true;
-  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
+    copied.value = true;
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
         setTimeout(() => (copied.value = false), 3000);
       } catch {
-        ElMessage({ message: "❌ Copy failed", type: 'error', customClass: 'bw-message', duration: 3000 });
+  showCenteredToast('action.copy_failed', { type: 'error', duration: 3000 });
       }
       document.body.removeChild(input);
     });

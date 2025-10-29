@@ -59,6 +59,7 @@
 
 <script setup>
 import { ElMessage } from "element-plus";
+import { showCenteredToast } from '../utils/centerToast'
 import { ref } from "vue";
 import { useI18n } from 'vue-i18n';
 
@@ -86,7 +87,7 @@ async function copyLink() {
   try {
     await navigator.clipboard.writeText(url);
   copied.value = true;
-  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
     setTimeout(() => (copied.value = false), 3000);
   } catch (e) {
     const input = document.createElement("input");
@@ -96,10 +97,10 @@ async function copyLink() {
     try {
       document.execCommand("copy");
   copied.value = true;
-  ElMessage({ message: "Link copied", type: 'success', customClass: 'bw-message', duration: 3000 });
-      setTimeout(() => (copied.value = false), 3000);
+  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
+    setTimeout(() => (copied.value = false), 3000);
     } catch {
-      ElMessage({ message: "❌ Copy failed", type: 'error', customClass: 'bw-message', duration: 3000 });
+  showCenteredToast('action.copy_failed', { type: 'error', duration: 3000 });
     }
     document.body.removeChild(input);
   }
