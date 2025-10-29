@@ -358,7 +358,7 @@ const { t } = useI18n();
       </transition>
     </el-card>
 
-    <el-card id="section-tools" shadow="never" class="home__card">
+  <el-card id="section-tools" v-if="!normalizedQuery || filteredTools.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
             <div class="card-header-left">
@@ -560,8 +560,7 @@ const { t } = useI18n();
         filteredPages.length === 0 &&
         filteredGames.length === 0 &&
         filteredApps.length === 0 &&
-        filteredFiles.length === 0 &&
-        filteredTools.length === 0
+        filteredFiles.length === 0
       "
       shadow="never"
       class="home__card"

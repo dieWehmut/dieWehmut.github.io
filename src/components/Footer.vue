@@ -134,9 +134,8 @@ onBeforeUnmount(() => {
   padding: 18px 12px 28px;
   text-align: center;
   /* translucent background for footer (lightened) to improve readability without heavy darkness */
-  background: rgba(0,0,0,0.30) !important;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.04) !important;
+  background: transparent !important;
+
 }
 .survival-time {
   margin-bottom: 6px;

@@ -57,17 +57,16 @@
       </div>
     </div>
 
-    <!-- Navigation buttons are moved into a reusable component. Show in sidebar only on desktop. -->
-    <nav class="nav-list" aria-label="sections" v-if="!isMobile">
-        <ul>
-    <li><button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button></li>
-    <li><button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button></li>
-    <li><button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button></li>
-    <li><button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button></li>
-    <li><button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button></li>
-
-        </ul>
-      </nav>
+    <!-- Navigation buttons moved to search area; keep markup disabled here to avoid duplication -->
+    <nav class="nav-list" aria-label="sections" v-if="false">
+      <ul>
+        <li><button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button></li>
+        <li><button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button></li>
+        <li><button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button></li>
+        <li><button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button></li>
+        <li><button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button></li>
+      </ul>
+    </nav>
   </nav>
 </template>
 
