@@ -336,8 +336,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center; /* center content inside button */
   gap: 3px;
-  /* subtle translucent button that reads on dark sidebar */
-  background: rgba(255,255,255,0.04) !important;
+  /* 黑色半透明背景，默认在侧边栏上更耐看 */
+  background: rgba(0,0,0,0.36) !important;
   color: #ffffff !important;
   padding: 7px 12px;
   border-radius: 8px;
@@ -345,6 +345,17 @@ onMounted(() => {
   font-weight: 700;
   width: 100%; /* fill container so text centering is visible */
   box-sizing: border-box;
+  transition: background 180ms ease, transform 160ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* 悬浮时变为无色透明，保持图标与文字颜色不变并稍微抬起 */
+@media (hover: hover) {
+  .github-btn:hover,
+  .github-btn:focus {
+    background: transparent !important;
+    transform: translateY(-4px);
+    outline: none;
+  }
 }
 .github-btn .icon {
   display: inline-flex;
