@@ -370,6 +370,26 @@ function formatDate(d) {
   fill: currentColor !important;
 }
 
+/* Stronger, more specific overrides to ensure transparency in all environments (local & deployed).
+   This prevents global or 3rd-party styles from forcing a white background. */
+.game-item .game-item__actions a.repo-button,
+.game-item .game-item__actions a.link-button {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important; /* inherit from .game-item so text/icons match the row color */
+  padding: 8px 12px; /* keep spacing consistent */
+}
+.game-item .game-item__actions a.repo-button .el-icon,
+.game-item .game-item__actions a.link-button .el-icon,
+.game-item .game-item__actions a.repo-button svg,
+.game-item .game-item__actions a.link-button svg {
+  color: inherit !important;
+  fill: currentColor !important;
+  background: transparent !important;
+}
+
 .btn-text {
   margin-left: 4px;
 }

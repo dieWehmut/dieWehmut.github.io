@@ -46,4 +46,8 @@
     "title": "ようこそ！",
     "subtitle": "dieWehmut の Nexus"
   }
+  ,
+  "float": {
+    "cleanMode": "クリーンモードを切り替え"
+  }
 }
