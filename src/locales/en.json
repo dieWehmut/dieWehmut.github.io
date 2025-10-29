@@ -41,15 +41,11 @@
     "en": "English",
     "ja": "日本語",
     "de": "Deutsch"
-  }
-  ,
-  "githubActivity": "GitHub Activity"
-  ,
+  },
   "intro": {
     "title": "Welcome!",
     "subtitle": "dieWehmut's Nexus"
-  }
-  ,
+  },
   "float": {
     "cleanMode": "Toggle clean mode"
   }

@@ -6,7 +6,7 @@ import PageItem from "../components/PageItem.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
 import FileItem from "../components/FileItem.vue";
-import GithubActivity from "../components/GithubActivity.vue";
+
 import Tools from "../components/Tools.vue";
 import { ElMessage } from "element-plus";
 import { showCenteredToast } from '../utils/centerToast'
@@ -48,7 +48,7 @@ function latestVersionDate(item) {
   return new Date(max || 0);
 }
 
-// GitHub activity moved into GithubActivity.vue component
+
 
 
 const totalCount = computed(() =>
@@ -67,7 +67,7 @@ const totalFilesCount = computed(() => files.value.length);
 
 const normalizedQuery = computed(() => props.query.trim().toLowerCase());
 
-// (GitHub card state moved into GithubActivity.vue)
+
 
 function matchVersion(v, q) {
   return (
@@ -289,7 +289,7 @@ const { t } = useI18n();
 <template>
   <div class="home" :class="{ 'entering': enterReady }">
 
-  <GithubActivity v-if="!normalizedQuery" />
+
 
 
     <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
