@@ -29,45 +29,86 @@
       <div v-else class="file-item__footer">
         <div class="file-list">
           <div class="file-list__header">
-            <el-text size="small" type="info">{{ t('common.totalFiles', { count: files.length }) }}</el-text>
-            <el-button class="action-btn" type="text" size="small" @click="isOpen = !isOpen">
-              <el-icon v-if="!isOpen"><ArrowDown /></el-icon>
-              <el-icon v-else><ArrowUp /></el-icon>
-              <span>{{ isOpen ? t('action.collapse') : t('action.expand') }}</span>
-            </el-button>
+            <el-text size="small" type="info">{{ t('common.totalFiles', { count: entriesRoot.length }) }}</el-text>
           </div>
-          
-          <transition name="expand">
-            <div v-if="isOpen" class="file-list__content">
-              <div
-                class="file-list__item"
-                :class="{ 'has-view': isViewable(file) }"
-                v-for="file in files"
-                :key="file.name"
-              >
-    <div class="file-info">
-      <el-icon class="file-list-icon"><Document /></el-icon>
-      <span class="file-name-text">{{ file.name }}</span>
-    </div>
-                <div class="file-list__actions">
-                  <el-button v-if="isViewable(file)" class="action-btn" type="primary" size="small" @click="openFile(file.rawUrl)">
-                    <el-icon><View /></el-icon>
-                    {{ t('action.view') }}
-                  </el-button>
-                  <a :href="file.downloadUrl" target="_blank" rel="noopener" class="download-link">
-                    <el-button class="action-btn" size="small">
-                      <el-icon><Download /></el-icon>
-                      {{ t('action.download') }}
-                    </el-button>
-                  </a>
-                  <el-button class="action-btn" size="small" @click="copyLink(file.rawUrl)">
-                    <el-icon><CopyDocument /></el-icon>
-                    <span class="btn-text">{{ copiedFiles[file.rawUrl] ? t('action.copied') : t('action.copy') }}</span>
-                  </el-button>
+
+          <div class="file-list__content">
+            <div
+              class="file-list__item"
+              v-for="entry in entriesRoot"
+              :key="entry.path"
+              :class="{ 'has-view': entry.type === 'file' && isViewable(entry) }"
+            >
+              <div class="file-info">
+                <el-icon class="file-list-icon">
+                  <Folder v-if="entry.type === 'dir'" />
+                  <Document v-else />
+                </el-icon>
+                <div class="file-meta">
+                  <span class="file-name-text">{{ entry.name }}</span>
                 </div>
               </div>
+
+              <div class="file-list__actions">
+                <el-button v-if="entry.type === 'dir'" class="action-btn" type="text" size="small" @click="toggleDir(entry)">
+                  <el-icon v-if="!openDirs[entry.path]"><ArrowDown /></el-icon>
+                  <el-icon v-else><ArrowUp /></el-icon>
+                  <span>{{ openDirs[entry.path] ? t('action.collapse') : t('action.expand') }}</span>
+                </el-button>
+
+                <el-button v-else-if="isViewable(entry)" class="action-btn" type="primary" size="small" @click="openFile(blobUrlFor(entry))">
+                  <el-icon><View /></el-icon>
+                  {{ t('action.view') }}
+                </el-button>
+
+                <a v-if="entry.type === 'file'" :href="rawUrlFor(entry)" target="_blank" rel="noopener" class="download-link">
+                  <el-button class="action-btn" size="small">
+                    <el-icon><Download /></el-icon>
+                    {{ t('action.download') }}
+                  </el-button>
+                </a>
+
+                <el-button v-if="entry.type === 'file'" class="action-btn" size="small" @click="copyLink(blobUrlFor(entry))">
+                  <el-icon><CopyDocument /></el-icon>
+                  <span class="btn-text">{{ copiedFiles[blobUrlFor(entry)] ? t('action.copied') : t('action.copy') }}</span>
+                </el-button>
+              </div>
+
+              <transition name="expand">
+                <div v-if="openDirs[entry.path]" class="file-list__content nested">
+                  <div
+                    v-for="child in entriesMap[entry.path] || []"
+                    :key="child.path"
+                    class="file-list__item"
+                    :class="{ 'has-view': isViewable(child) }"
+                  >
+                    <div class="file-info">
+                      <el-icon class="file-list-icon"><Document /></el-icon>
+                      <div class="file-meta">
+                        <span class="file-name-text">{{ child.name }}</span>
+                      </div>
+                    </div>
+                    <div class="file-list__actions">
+                      <el-button v-if="isViewable(child)" class="action-btn" type="primary" size="small" @click="openFile(blobUrlFor(child))">
+                        <el-icon><View /></el-icon>
+                        {{ t('action.view') }}
+                      </el-button>
+                      <a :href="rawUrlFor(child)" target="_blank" rel="noopener" class="download-link">
+                        <el-button class="action-btn" size="small">
+                          <el-icon><Download /></el-icon>
+                          {{ t('action.download') }}
+                        </el-button>
+                      </a>
+                      <el-button class="action-btn" size="small" @click="copyLink(blobUrlFor(child))">
+                        <el-icon><CopyDocument /></el-icon>
+                        <span class="btn-text">{{ copiedFiles[blobUrlFor(child)] ? t('action.copied') : t('action.copy') }}</span>
+                      </el-button>
+                    </div>
+                  </div>
+                </div>
+              </transition>
             </div>
-          </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -90,8 +131,24 @@ import { showCenteredToast } from '../utils/centerToast'
 import { ref, reactive, onMounted } from "vue";
 import { useI18n } from 'vue-i18n';
 
+function formatDateShort(d) {
+  try {
+    const dt = new Date(d);
+    if (isNaN(dt.valueOf())) return d;
+    const Y = dt.getFullYear();
+    const M = String(dt.getMonth() + 1).padStart(2, '0');
+    const D = String(dt.getDate()).padStart(2, '0');
+    const hh = String(dt.getHours()).padStart(2, '0');
+    const mm = String(dt.getMinutes()).padStart(2, '0');
+    return `${Y}-${M}-${D} ${hh}:${mm}`;
+  } catch {
+    return d;
+  }
+}
+
 const { t } = useI18n();
 
+// Props: keep name/description but make repoUrl optional (default to dieWehmut/Files)
 const props = defineProps({
   fileName: {
     type: String,
@@ -99,105 +156,83 @@ const props = defineProps({
   },
   repoUrl: {
     type: String,
-    required: true,
+    default: 'https://github.com/dieWehmut/Files',
   },
   description: {
     type: String,
-    default: "",
+    default: '',
   },
 });
 
-const files = ref([]);
+// State
+const entriesRoot = ref([]); // root entries (files + dirs)
+const entriesMap = reactive({}); // path => array of items
+const openDirs = reactive({}); // path => boolean
 const loading = ref(true);
 const error = ref(null);
-const isOpen = ref(false);
 const copiedFiles = reactive({});
+let defaultBranch = 'main';
 
-async function loadFiles() {
+// Determine owner/repo from repoUrl or default
+function parseRepo(urlStr) {
   try {
-    loading.value = true;
-    error.value = null;
+    const url = new URL(urlStr);
+    // path like /owner/repo
+    const parts = url.pathname.replace(/^\//, '').split('/');
+    if (parts.length >= 2) {
+      return { owner: parts[0], repo: parts[1] };
+    }
+  } catch (e) {
+    // ignore
+  }
+  return { owner: 'dieWehmut', repo: 'Files' };
+}
 
-    const url = new URL(props.repoUrl);
-    
-    // Only support git.nju.edu.cn or gitlab style URLs that contain '/-/tree/'
-    if (!url.pathname.includes("/-/tree/")) {
-      throw new Error("Invalid repository URL format");
+async function loadContents(path = '') {
+  loading.value = true;
+  error.value = null;
+  const { owner, repo } = parseRepo(props.repoUrl);
+  try {
+    // Get repo to learn default branch (once)
+    if (!defaultBranch) defaultBranch = 'main';
+    const repoResp = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+    if (repoResp.ok) {
+      const repoData = await repoResp.json();
+      defaultBranch = repoData.default_branch || defaultBranch;
     }
 
-    // Extract namespace/project and path after tree
-    // Example path: /dieSehnsucht/learningmaterials/-/tree/main/HighSchoolNotes
-    const parts = url.pathname.split("/-/tree/");
-    const projectPath = parts[0].slice(1); // remove leading /
-    const treePart = parts[1] || ""; // e.g. main/HighSchoolNotes
-    const [ref, ...pathParts] = treePart.split("/");
-    const dirPath = pathParts.join("/");
-
-    // Construct GitLab API URL
-    const apiUrl = `${url.origin}/api/v4/projects/${encodeURIComponent(projectPath)}/repository/tree?path=${dirPath}&ref=${ref || 'main'}`;
-    
-    // Construct raw base URL
-    const rawBaseUrl = `${url.origin}/${projectPath}/-/raw/${ref || 'main'}/${dirPath}`;
-
-    const response = await fetch(apiUrl);
-    
-    if (!response.ok) {
-      throw new Error(`Failed to load files: ${response.status}`);
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    const resp = await fetch(apiUrl);
+    if (!resp.ok) {
+      error.value = t('error.unable_load') || 'Unable to load files.';
+      return;
     }
+    const data = await resp.json();
+    // data is array for directories, object for file
+    const items = Array.isArray(data) ? data.map(item => ({
+      name: item.name,
+      path: item.path,
+      type: item.type, // 'file' or 'dir'
+      download_url: item.download_url,
+      html_url: item.html_url,
+      sha: item.sha,
+      size: item.size,
+      extension: getFileExtension(item.name),
+    })) : [];
 
-    const data = await response.json();
-
-    // Map blobs to file objects (initially without lastModified)
-    const mapped = data
-      .filter(item => item.type === 'blob')
-      .map(item => {
-        const encodedName = encodeURIComponent(item.name);
-        const raw = `${rawBaseUrl}/${encodedName}`;
-        return {
-          name: item.name,
-          displayName: getDisplayName(item.name),
-          path: item.path,
-          rawUrl: raw,
-          downloadUrl: `${raw}?inline=false`,
-          extension: getFileExtension(item.name),
-          lastModified: null,
-        };
-      });
-
-    // Fetch the latest commit for each file to get its last modified time (may be many requests)
-    const withDates = await Promise.all(
-      mapped.map(async (f) => {
-        try {
-          const commitsUrl = `${url.origin}/api/v4/projects/${encodeURIComponent(projectPath)}/repository/commits?path=${encodeURIComponent(
-            f.path
-          )}&per_page=1&ref_name=${encodeURIComponent(ref || 'main')}`;
-          const commitResp = await fetch(commitsUrl);
-          if (commitResp.ok) {
-            const commits = await commitResp.json();
-            if (Array.isArray(commits) && commits.length > 0) {
-              f.lastModified = commits[0].committed_date;
-            }
-          }
-        } catch (e) {
-          // ignore per-file failures
-        }
-        return f;
-      })
-    );
-
-    // Sort by lastModified desc (newest first). Fallback to name ordering when missing.
-    files.value = withDates.sort((a, b) => {
-      if (a.lastModified && b.lastModified) {
-        return new Date(b.lastModified) - new Date(a.lastModified);
-      }
-      if (a.lastModified) return -1;
-      if (b.lastModified) return 1;
-      return a.displayName.localeCompare(b.displayName);
-    });
-
-  } catch (err) {
-    console.error('Failed to load files:', err);
-    error.value = 'Unable to load files. Please check network connection.';
+    if (!path) {
+      // only list directories at root
+      entriesRoot.value = items
+        .filter(i => i.type === 'dir')
+        .sort((a, b) => a.name.localeCompare(b.name));
+      // keep entriesMap for root empty (not used)
+      entriesMap[''] = [];
+    } else {
+      // when loading a folder, store only files inside it
+      entriesMap[path || ''] = items.filter(i => i.type === 'file');
+    }
+  } catch (e) {
+    error.value = t('error.unable_load') || 'Unable to load files.';
   } finally {
     loading.value = false;
   }
@@ -208,8 +243,9 @@ function getDisplayName(filename) {
 }
 
 function getFileExtension(filename) {
-  const ext = filename.split('.').pop().toUpperCase();
-  return ext || 'FILE';
+  if (!filename || !filename.includes('.')) return 'FILE';
+  const parts = filename.split('.');
+  return parts[parts.length - 1].toUpperCase();
 }
 
 // Which extensions we treat as viewable in-browser
@@ -225,34 +261,58 @@ function openFile(url) {
   window.open(url, '_blank', 'noopener');
 }
 
+// expose formatting to template
+const formatDate = formatDateShort;
+
 async function copyLink(url) {
   try {
-  await navigator.clipboard.writeText(url);
-  copiedFiles[url] = true;
-  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
+    await navigator.clipboard.writeText(url);
+    copiedFiles[url] = true;
+    showCenteredToast(t('action.copied') || 'Copied', { type: 'success', duration: 3000 });
     setTimeout(() => delete copiedFiles[url], 3000);
   } catch (err) {
-    console.error('Copy failed:', err);
-    // fallback to input copy
+    // fallback to input copy (no console logs)
     try {
       const input = document.createElement('input');
       input.value = url;
       document.body.appendChild(input);
       input.select();
       document.execCommand('copy');
-  copiedFiles[url] = true;
-  showCenteredToast('action.copied', { type: 'success', duration: 3000 });
+      copiedFiles[url] = true;
+      showCenteredToast(t('action.copied') || 'Copied', { type: 'success', duration: 3000 });
       setTimeout(() => delete copiedFiles[url], 3000);
       document.body.removeChild(input);
     } catch (e) {
-  showCenteredToast('action.copy_failed', { type: 'error', duration: 3000 });
+      showCenteredToast(t('action.copy_failed') || 'Copy failed', { type: 'error', duration: 3000 });
     }
   }
 }
 
+// load root on mount
 onMounted(() => {
-  loadFiles();
+  loadContents('');
 });
+
+// helper to get raw URL for a file using default branch
+function rawUrlFor(item) {
+  const { owner, repo } = parseRepo(props.repoUrl);
+  return item.download_url || `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/${item.path}`;
+}
+
+// helper to get GitHub blob/html URL for viewing on GitHub
+function blobUrlFor(item) {
+  const { owner, repo } = parseRepo(props.repoUrl);
+  return item.html_url || `https://github.com/${owner}/${repo}/blob/${defaultBranch}/${item.path}`;
+}
+
+// toggle directory open/close and load if needed
+async function toggleDir(item) {
+  const p = item.path || '';
+  openDirs[p] = !openDirs[p];
+  if (openDirs[p] && !entriesMap[p]) {
+    await loadContents(p);
+  }
+}
 </script>
 
 <style scoped>
@@ -304,6 +364,19 @@ onMounted(() => {
   font-size: 14px;
   color: #2b2b2b;
   font-weight: 500;
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-last-modified {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1;
+  white-space: nowrap; /* keep timestamp on same line */
 }
 
 .file-item__actions {
@@ -374,18 +447,15 @@ onMounted(() => {
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 6px; /* separate items to avoid visual overlap */
+  /* Default: subtle black translucent background so each file row reads as a card */
+  background: rgba(0,0,0,0.12) !important;
+  color: #f5f5f5 !important;
+  transition: transform 0.14s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.12s ease;
 }
 
 .file-list__item.has-view {
-  /* only items with a view link show a subtle dark translucent background by default */
-  background: rgba(0,0,0,0.12);
-  color: #f5f5f5;
-}
-
-.file-list__item.has-view:hover {
-  /* hover makes the item transparent and switch text to dark to match pages behavior */
-  background: transparent !important;
-  /* keep text white as requested */
+  /* keep compatibility: has-view keeps same visual as default */
+  background: rgba(0,0,0,0.12) !important;
   color: #f5f5f5 !important;
 }
 
@@ -481,6 +551,10 @@ onMounted(() => {
   .file-list__item:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    /* on hover the background should become transparent (no colored overlay) */
+    background: transparent !important;
+    /* keep text/icon color consistent (white) while hovered */
+    color: #f5f5f5 !important;
   }
 }
 </style>
