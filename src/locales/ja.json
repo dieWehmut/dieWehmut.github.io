@@ -40,7 +40,8 @@
     "zh_tw": "繁體",
     "en": "English",
     "ja": "日本語",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "la": "ラテン語"
   }
   ,
   "intro": {
@@ -49,6 +50,7 @@
   }
   ,
   "float": {
-    "cleanMode": "クリーンモードを切り替え"
+    "cleanMode": "クリーンモードを切り替え",
+    "toggleSidebar": "1列/2列を切り替え"
   }
 }

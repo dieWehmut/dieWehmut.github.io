@@ -40,7 +40,8 @@
     "zh_tw": "繁體",
     "en": "English",
     "ja": "日本語",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "la": "Latein"
   }
   ,
   "intro": {
@@ -49,6 +50,7 @@
   }
   ,
   "float": {
-    "cleanMode": "Clean-Modus umschalten"
+    "cleanMode": "Clean-Modus umschalten",
+    "toggleSidebar": "Spaltenansicht umschalten"
   }
 }

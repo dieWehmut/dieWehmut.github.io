@@ -48,6 +48,7 @@
     "subtitle": "Nexus dieWehmut"
   },
   "float": {
-    "cleanMode": "Muta modum mundum"
+    "cleanMode": "Muta modum mundum",
+    "toggleSidebar": "Commutare columnas"
   }
 }

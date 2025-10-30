@@ -398,6 +398,29 @@ a.repo-link {
   border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
+/* Sidebar collapsed mode: hide left sidebar and visually center main content
+   Note: we keep the root padding variables untouched so header/search bar
+   remain centered. To visually center the main column we translate it left by
+   half the left-gap so it appears symmetric while the header stays put. */
+.sidebar-collapsed .sidebar {
+  display: none !important;
+}
+.sidebar-collapsed .layout {
+  justify-content: center !important;
+}
+.sidebar-collapsed .layout .el-main {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: 1080px;
+  width: 100%;
+  box-sizing: border-box;
+  /* shift left by half the left gap so main appears centered while keeping header centered */
+  transform: translateX(calc(-1 * var(--sidebar-left-gap, 32px) / 2));
+  transition: transform 220ms ease;
+}
+/* Small transition to make the layout change smooth */
+.layout { transition: justify-content 220ms ease; }
+
 /* --- Tools row specific override: ensure black translucent background for .tool-row ---
    Placed at the end to take precedence over other global rules that enforce transparency.
    This restores the intended visual of Tools.vue rows (rgba black translucent) while
