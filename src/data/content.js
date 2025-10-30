@@ -26,6 +26,17 @@ export function useContent() {
       ],
     },
     {
+       name: "ba-network",
+      repoUrl: "https://github.com/dieWehmut/BA-Network/",
+      versions: [
+        {
+          date: "2025-10-30",
+          log: "ba-network demo",
+          url: "https://ba-network.hc-dsw-nexus.me/",
+        },
+      ],
+    }, 
+    {
       name: "notes",
       repoUrl: "https://github.com/dieWehmut/notes/",
       versions: [
