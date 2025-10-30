@@ -68,6 +68,26 @@ const langs = [
 	{ code: 'de', label: '德' },
 	{ code: 'la', label: '拉' }
 ];
+// sidebar collapse state
+const sidebarCollapsed = ref(false);
+
+function toggleSidebar() {
+	sidebarCollapsed.value = !sidebarCollapsed.value;
+ 	try {
+ 		document.documentElement.classList.toggle('sidebar-collapsed', sidebarCollapsed.value);
+ 		localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value ? '1' : '0');
+ 	} catch (e) {}
+}
+
+onMounted(() => {
+	try {
+		const stored = localStorage.getItem('sidebarCollapsed');
+		if (stored === '1') {
+			sidebarCollapsed.value = true;
+			document.documentElement.classList.add('sidebar-collapsed');
+		}
+	} catch (e) {}
+});
 </script>
 
 <template>
@@ -147,6 +167,22 @@ const langs = [
 				<path d="M5 11L12 4L19 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>
 		</button>
+
+		<!-- sidebar collapse toggle (appears just above back-button) -->
+		<button
+			class="btt-button sidebar-toggle"
+			:class="{ active: sidebarCollapsed }"
+			@click="toggleSidebar"
+			:aria-label="t('float.toggleSidebar')"
+			:title="t('float.toggleSidebar')"
+		>
+			<!-- horizontal arrows icon (fa-arrows-alt-h like) -->
+			<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M7 8L3 12l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M17 8l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
 	</div>
 </template>
 
@@ -222,11 +258,15 @@ const langs = [
 }
 
 .back-button { bottom: 0; }
-.settings-button { bottom: 56px; }
-.lang-toggle { bottom: 112px; }
+/* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
+.sidebar-toggle { bottom: 56px; }
+.sidebar-toggle svg { transition: transform 180ms ease; }
+.sidebar-toggle.active svg { transform: rotate(180deg); }
+.settings-button { bottom: 112px; }
+.lang-toggle { bottom: 168px; }
 
-/* clean-mode toggle placed between settings and language toggle */
-.clean-toggle { bottom: 168px; }
+/* clean-mode toggle placed above language toggle */
+.clean-toggle { bottom: 224px; }
 .clean-toggle.active { background: rgba(255,255,255,0.06); }
 
 @media (hover: hover) {
@@ -250,7 +290,7 @@ const langs = [
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* language options container (absolute positioned inside float) */
-.lang-options { position: absolute; right: 0; bottom: 112px; height: 48px; pointer-events: none; }
+.lang-options { position: absolute; right: 0; bottom: 168px; height: 48px; pointer-events: none; }
 .lang-options.open { pointer-events: auto; }
 .lang-options .lang-btn {
 	position: absolute;

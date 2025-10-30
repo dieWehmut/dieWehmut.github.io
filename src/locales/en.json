@@ -40,13 +40,15 @@
     "zh_tw": "繁體",
     "en": "English",
     "ja": "日本語",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "la": "Latin"
   },
   "intro": {
     "title": "Welcome!",
     "subtitle": "dieWehmut's Nexus"
   },
   "float": {
-    "cleanMode": "Toggle clean mode"
+    "cleanMode": "Toggle clean mode",
+    "toggleSidebar": "Toggle columns"
   }
 }

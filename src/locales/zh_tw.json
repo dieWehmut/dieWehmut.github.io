@@ -40,7 +40,8 @@
     "zh_tw": "繁體",
     "en": "English",
     "ja": "日本語",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "la": "拉丁語"
   }
   ,
   "intro": {
@@ -49,6 +50,7 @@
   }
   ,
   "float": {
-    "cleanMode": "切換純淨模式"
+    "cleanMode": "切換純淨模式",
+    "toggleSidebar": "切換單雙欄"
   }
 }

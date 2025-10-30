@@ -40,7 +40,8 @@
     "zh_tw": "繁體",
     "en": "英语",
     "ja": "日本語",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "la": "拉丁語"
   },
   "intro": {
     "title": "欢迎！",
@@ -48,6 +49,7 @@
   }
   ,
   "float": {
-    "cleanMode": "切换纯净模式"
+    "cleanMode": "切换纯净模式",
+    "toggleSidebar": "切换单双栏"
   }
 }
