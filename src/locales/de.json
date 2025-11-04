@@ -20,7 +20,9 @@
     "totalFormat": "Insgesamt {count} Elemente",
     "totalFiles": "Insgesamt {count} Dateien",
     "versionsCount": "{count} Versionen",
-    "matchedFormat": "Gefunden {count} Elemente"
+    "matchedFormat": "Gefunden {count} Elemente",
+    "auto_loaded": "Automatisch von GitHub geladen",
+    "loading": "Wird geladen"
   },
   "action": {
     "open": "Öffnen",
@@ -52,5 +54,8 @@
   "float": {
     "cleanMode": "Clean-Modus umschalten",
     "toggleSidebar": "Spaltenansicht umschalten"
+  },
+  "error": {
+    "unable_load": "Daten konnten nicht geladen werden"
   }
 }

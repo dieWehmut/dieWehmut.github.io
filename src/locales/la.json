@@ -20,7 +20,9 @@
     "totalFormat": "Total {count} elementa",
     "totalFiles": "Tot {count} fasciculi",
     "versionsCount": "{count} versiones",
-    "matchedFormat": "Inveniuntur {count} elementa"
+    "matchedFormat": "Inveniuntur {count} elementa",
+    "auto_loaded": "Automatice ex GitHub onerata",
+    "loading": "Oneratur"
   },
   "action": {
     "open": "Aperire",
@@ -50,5 +52,8 @@
   "float": {
     "cleanMode": "Muta modum mundum",
     "toggleSidebar": "Commutare columnas"
+  },
+  "error": {
+    "unable_load": "Data onerare non potest"
   }
 }
