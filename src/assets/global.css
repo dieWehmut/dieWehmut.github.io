@@ -403,7 +403,34 @@ a.repo-link {
    remain centered. To visually center the main column we translate it left by
    half the left-gap so it appears symmetric while the header stays put. */
 .sidebar-collapsed .sidebar {
+  /* Instead of fully removing the sidebar element, collapse it visually so it
+     occupies less vertical space while keeping the layout stable. Hide large
+     child blocks (avatar, bio, contact) but keep the name visible so the
+     collapsed bar reads like a compact header. */
+  display: block !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  overflow: hidden !important;
+  height: auto !important;
+}
+/* Hide heavy content inside sidebar when collapsed so the visible height
+   matches roughly the height of the .name element */
+.sidebar-collapsed .sidebar .avatar-container,
+.sidebar-collapsed .sidebar .about-content .bio,
+.sidebar-collapsed .sidebar .about-content .contact,
+.sidebar-collapsed .sidebar .nav-list,
+.sidebar-collapsed .sidebar .contact-meta,
+.sidebar-collapsed .sidebar .follow-row,
+.sidebar-collapsed .sidebar .github-btn {
   display: none !important;
+}
+.sidebar-collapsed .sidebar .about-content {
+  padding: 0 8px !important;
+}
+.sidebar-collapsed .sidebar .name {
+  margin: 0 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
 }
 .sidebar-collapsed .layout {
   justify-content: center !important;
@@ -414,8 +441,8 @@ a.repo-link {
   max-width: 1080px;
   width: 100%;
   box-sizing: border-box;
-  /* shift left by half the left gap so main appears centered while keeping header centered */
-  transform: translateX(calc(-1 * var(--sidebar-left-gap, 32px) / 2));
+  /* keep main column horizontally centered when sidebar is collapsed */
+  transform: translateX(0);
   transition: transform 220ms ease;
 }
 /* Small transition to make the layout change smooth */
