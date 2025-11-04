@@ -4,7 +4,14 @@
       <div class="item__line">
         <template v-if="pageName">
           <span class="page-info">
-            <el-icon class="page-icon"><Promotion /></el-icon>
+            <el-icon class="page-icon">
+              <!-- inline globe svg to avoid relying on an unavailable icon export -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12h20" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2c2.2 4 2.2 12 0 16M22 12c-4 2.2-12 2.2-16 0" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </el-icon>
             <span class="page-name">{{ pageName }}</span>
           </span>
         </template>
@@ -64,7 +71,7 @@ import { ref } from "vue";
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-import { DocumentCopy, Document, Calendar, Link, Promotion } from "@element-plus/icons-vue";
+import { DocumentCopy, Calendar, Link, Promotion } from "@element-plus/icons-vue";
 
 const props = defineProps({
   pageName: { type: String, required: false },
@@ -135,12 +142,12 @@ function formatDate(d) {
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding:10px 12px;
   cursor: pointer;
   outline: none;
   border-radius: 10px;
   transition: all 0.2s ease;
-  margin: 4px 0;
+  margin: 0px 0;
   border: 1px solid transparent;
 }
 
@@ -234,6 +241,13 @@ function formatDate(d) {
   font-weight: 600;
   color: #f5f5f5 !important;
   font-size: 14px;
+}
+/* Ensure the icon and name sit centered together horizontally */
+.page-info {
+  display: inline-flex;
+  align-items: center; /* vertical centering between icon and text */
+  justify-content: center; /* center them horizontally within their own box */
+  gap: 8px;
 }
 .separator {
   color: #d0d0d0;
