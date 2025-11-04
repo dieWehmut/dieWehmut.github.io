@@ -14,6 +14,39 @@ export function useContent() {
         },
       ],
     },
+        {
+      name: "inner",
+      repoUrl: "https://github.com/dieSehnsucht/dieSehnsucht.github.io",
+      versions: [
+        {
+          date: "2025-10-10",
+          log: "inner",
+          url: "https://inner.hc-dsw-nexus.me/",
+        },
+      ],
+    },
+        {
+      name: "sugisarishi-kage",
+      repoUrl: "https://github.com/dieSehnsucht/SugisarishiKage",
+      versions: [
+        {
+          date: "2025-10-10",
+          log: "renpy visual novel",
+          url: "https://sugisarishi-kage.hc-dsw-nexus.me/",
+        },
+      ],
+    },
+        {
+      name: "korekushon",
+      repoUrl: "https://github.com/dieSehnsucht/korekushon",
+      versions: [
+        {
+          date: "2025-10-14",
+          log: "korekushon",
+          url: "https://korekushon.hc-dsw-nexus.me/",
+        },
+      ],
+    },
     {
       name: "showcase",
       repoUrl: "https://github.com/dieWehmut/Showcase",
@@ -68,7 +101,18 @@ export function useContent() {
           url: "https://www.hc-dsw-nexus.me/",
         },
       ],
-    }
+    },
+    {
+    name: "leereriss",
+    repoUrl: "https://github.com/dieWehmut/LeereRiss/",
+      versions: [
+        {
+          date: "2025-11-2",
+          log: "Unity 3D game",
+          url: "https://leereriss.hc-dsw-nexus.me/",
+        },
+      ],
+    },
   ]);
 
   const games = ref([
@@ -90,6 +134,29 @@ export function useContent() {
         },
       ],
     },
+        {
+      name: "LeereRiss",
+      repoUrl: "https://github.com/dieWehmut/LeereRiss/",
+      versions: [
+        {
+          version: "v1.0",
+          date: "2025-11-2",
+          log: "Unity 3D game",
+          url: "https://github.com/dieWehmut/Showcase/releases/download/LeereRiss/LeereRiss1.0_win.zip",
+        },
+      ],
+    },
+            {
+      name: "Sugisarishi-Kage",
+      repoUrl: "https://github.com/dieSehnsucht/SugisarishiKage",
+      versions: [
+        {
+          date: "2025-10-10",
+          log: "VN",
+          url: "https://github.com/dieSehnsucht/SugisarishiKage/releases/download/v1.0/SugisarishiKage_win.7z",
+        },
+      ],
+    },
   ]);
 
   const apps = ref([
@@ -102,6 +169,17 @@ export function useContent() {
           date: "2025-06-03",
           log: "First app release",
           url: "https://github.com/dieWehmut/showcase/releases/download/kotobahitomi/kotobahitomi.apk",
+        },
+      ],
+    },
+    {
+      name: "sugisarishi_kage_android",
+      repoUrl: "https://github.com/dieSehnsucht/SugisarishiKage",
+      versions: [
+        {
+          date: "2025-10-10",
+          log: "VN",
+          url: "https://github.com/dieSehnsucht/SugisarishiKage/releases/download/v1.0/SugisarishiKage_android.apk",
         },
       ],
     },

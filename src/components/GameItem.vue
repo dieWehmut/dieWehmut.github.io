@@ -398,12 +398,17 @@ function formatDate(d) {
   color: inherit;
 }
 .game-item:hover .game-info,
-.game-item:hover .game-name,
 .game-item:hover .game-icon,
 .game-item:hover .action-btn,
 .game-item:hover .action-icon,
 .game-item:hover .version-info {
   color: #2b2b2b !important;
+}
+
+/* Ensure the game name stays white on hover (override the rule above) */
+.game-item:hover .game-name,
+.game-item:focus .game-name {
+  color: #f5f5f5 !important;
 }
 
 /* Strong override to ensure repo icon/button is fully transparent on deployed site.
