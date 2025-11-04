@@ -1,5 +1,5 @@
 <template>
-  <div class="game-item" tabindex="0" role="button">
+  <div class="game-item" tabindex="0" role="button" @click="openRepo" @keydown.enter="openRepo">
     <div class="game-item__main">
       <div class="game-item__line">
         <template v-if="gameName">
@@ -89,6 +89,7 @@ const props = defineProps({
 
 const copied = ref(false);
 
+
 async function copyLink() {
   const url = props.version?.url ?? "";
   if (!url) {
@@ -129,6 +130,26 @@ function formatDate(d) {
   } catch {}
   return d;
 }
+
+function resolveRepoUrl() {
+  // prefer explicit prop
+  if (props.repoUrl) return props.repoUrl
+  // try version-level repo_url (some loaders pass this)
+  if (props.version && props.version.repo_url) return props.version.repo_url
+  // try tag fallback
+  const tag = props.version?.tag_name || props.version?.tag
+  if (tag) return `https://github.com/dieWehmut/Showcase/releases/tag/${tag}`
+  return ''
+}
+
+function openRepo() {
+  const url = resolveRepoUrl();
+  if (!url) {
+    ElMessage({ message: t ? t('warning.no_repo') : '🔗 No repo available', type: 'warning', customClass: 'bw-message' });
+    return;
+  }
+  window.open(url, '_blank', 'noopener');
+}
 </script>
 
 <style scoped>
@@ -142,7 +163,7 @@ function formatDate(d) {
   cursor: pointer;
   min-height: 50px;
   border: none !important;
-  background: #111; /* default dark */
+  background: rgba(0,0,0,0.6); /* default: black semi-transparent to match PageItem behavior */
   color: #f5f5f5;
 }
 

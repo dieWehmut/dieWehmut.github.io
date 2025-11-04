@@ -22,13 +22,16 @@
     "versionsCount": "{count} 個版本",
     "matchedFormat": "匹配 {count} 項",
     "auto_loaded": "從 GitHub 自動載入",
-    "loading": "載入中"
+    "loading": "載入中",
+    "no_files": "未找到檔案",
+    "no_match": "沒有匹配的內容"
   },
   "action": {
     "open": "打開",
     "copy": "複製",
     "copied": "已複製",
     "first_result_copied": "已複製第一個結果的連結",
+  "no_result": "未找到匹配結果",
     "copy_failed": "複製失敗",
     "download": "下載",
     "repo": "倉庫",

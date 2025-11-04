@@ -81,8 +81,27 @@ async function fetchWithCache(url, options = {}, ttl = 1000 * 60 * 15) {
     return cached;
   }
 
-  const res = await fetch(url, options);
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      ...options.headers,
+    },
+  });
+  
   if (!res.ok) {
+    // Check GitHub rate limit
+    const remaining = res.headers.get('X-RateLimit-Remaining');
+    const resetTime = res.headers.get('X-RateLimit-Reset');
+    
+    if (res.status === 403 && remaining === '0') {
+      const resetDate = new Date(parseInt(resetTime) * 1000);
+      const err = new Error(`GitHub API rate limit exceeded. Resets at ${resetDate.toLocaleTimeString()}`);
+      err.status = res.status;
+      err.resetTime = resetDate;
+      throw err;
+    }
+    
     const text = await res.text().catch(() => null);
     const err = new Error(`Fetch error ${res.status}`);
     err.status = res.status;

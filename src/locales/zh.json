@@ -22,13 +22,16 @@
     "versionsCount": "{count} 个版本",
     "matchedFormat": "匹配 {count} 项",
     "auto_loaded": "从 GitHub 自动加载",
-    "loading": "加载中"
+    "loading": "加载中",
+    "no_files": "未找到文件",
+    "no_match": "没有匹配的内容"
   },
   "action": {
     "open": "打开",
     "copy": "复制",
     "copied": "已复制",
     "first_result_copied": "已复制第一个结果的链接",
+    "no_result": "未找到匹配结果",
     "copy_failed": "复制失败",
     "download": "下载",
     "repo": "仓库",

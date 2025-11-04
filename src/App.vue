@@ -75,11 +75,7 @@ function handleGlobalHotkeys(e) {
     return
   }
 
-  // Enter 在搜索框中 -> 打开首个结果
-  if (e.key === 'Enter' && document.activeElement?.id === 'global-search-input') {
-    e.preventDefault()
-    openFirst()
-  }
+  // (Enter key handling for opening first result removed - no Enter-required behavior)
 }
 
 onMounted(() => {

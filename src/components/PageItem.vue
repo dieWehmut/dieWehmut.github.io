@@ -1,10 +1,10 @@
 <template>
-  <div class="item" tabindex="0" role="button">
+  <div class="item" tabindex="0" role="button" @click="openPage">
     <div class="item__main">
       <div class="item__line">
         <template v-if="pageName">
           <span class="page-info">
-            <el-icon class="page-icon"><Document /></el-icon>
+            <el-icon class="page-icon"><Promotion /></el-icon>
             <span class="page-name">{{ pageName }}</span>
           </span>
         </template>
@@ -78,6 +78,15 @@ const props = defineProps({
 
 const copied = ref(false);
 
+function openPage() {
+  const url = props.version?.url ?? "";
+  if (!url) {
+    ElMessage({ message: "🔗 No link available", type: 'warning', customClass: 'bw-message' });
+    return;
+  }
+  window.open(url, '_blank', 'noopener');
+}
+
 async function copyLink() {
   const url = props.version?.url ?? "";
   if (!url) {
@@ -124,7 +133,7 @@ function formatDate(d) {
 .item {
   display: flex;
   gap: 16px;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
   cursor: pointer;
@@ -133,6 +142,12 @@ function formatDate(d) {
   transition: all 0.2s ease;
   margin: 4px 0;
   border: 1px solid transparent;
+}
+
+.item {
+  background: rgba(0,0,0,0.6) !important;
+  color: #f5f5f5 !important;
+  align-items: center;
 }
 
 .item:focus {
@@ -154,6 +169,10 @@ function formatDate(d) {
     transform: translateY(-4px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
   }
+
+  .item:not(:hover) {
+    background: rgba(0,0,0,0.6) !important;
+  }
 }
 
 .item__main {
@@ -166,19 +185,19 @@ function formatDate(d) {
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: #4a4a4a;
+  color: inherit;
   flex-wrap: wrap;
   line-height: 1.5;
 }
 
-.page-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent !important;
-  padding: 4px 12px;
-  border-radius: 12px;
-  border: none !important;
+.page-icon {
+  font-size: 18px;
+  color: #ffffff !important; /* white on dark bg */
+}
+.page-name {
+  font-weight: 600;
+  color: #f5f5f5 !important;
+  font-size: 14px;
 }
 
 .page-icon {
@@ -196,7 +215,7 @@ function formatDate(d) {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #7a7a7a;
+  color: #d0d0d0;
 }
 
 .version-log {
@@ -205,26 +224,17 @@ function formatDate(d) {
   font-size: 13px;
 }
 
-.calendar-icon {
-  color: #a8c8ec;
+.page-icon {
+  font-size: 18px;
+  color: #ffffff !important; /* white on dark bg */
+  display: inline-flex;
+  align-items: center;
+}
+.page-name {
+  font-weight: 600;
+  color: #f5f5f5 !important;
   font-size: 14px;
 }
-
-.date {
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.version-tag {
-  background: transparent !important;
-  border-color: transparent !important;
-  color: inherit !important;
-  font-weight: 600;
-  border-radius: 8px;
-  font-size: 11px;
-  padding: 2px 8px;
-}
-
 .separator {
   color: #d0d0d0;
   font-weight: bold;
@@ -286,7 +296,7 @@ function formatDate(d) {
   padding: 6px 8px;
   border-radius: 8px;
   text-decoration: none;
-  color: #4a4a4a;
+  color: #f5f5f5 !important;
   border: 1px solid transparent;
 }
 .action-btn:hover {
