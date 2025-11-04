@@ -20,7 +20,9 @@
     "totalFormat": "Total {count} items",
     "totalFiles": "Total {count} files",
     "versionsCount": "{count} versions",
-    "matchedFormat": "matched {count} items"
+    "matchedFormat": "matched {count} items",
+    "auto_loaded": "Auto-loaded from GitHub",
+    "loading": "Loading"
   },
   "action": {
     "open": "Open",
@@ -50,5 +52,8 @@
   "float": {
     "cleanMode": "Toggle clean mode",
     "toggleSidebar": "Toggle columns"
+  },
+  "error": {
+    "unable_load": "Unable to load data"
   }
 }

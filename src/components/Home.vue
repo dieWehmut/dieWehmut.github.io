@@ -3,6 +3,7 @@ import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { useI18n } from 'vue-i18n';
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
 import PageItem from "../components/PageItem.vue";
+import PagesAutoLoader from "../components/PagesAutoLoader.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
 import FileItem from "../components/FileItem.vue";
@@ -23,7 +24,7 @@ const props = defineProps({
 });
 import { useContent } from "../data/content";
 
-const { pages, games, apps, files } = useContent();
+const { games, apps, files } = useContent();
 
 // helpers: parse dates and get latest version date for an item
 function parseDateSafe(d) {
@@ -51,10 +52,6 @@ function latestVersionDate(item) {
 
 
 
-const totalCount = computed(() =>
-  pages.value.reduce((sum, p) => sum + p.versions.length, 0)
-);
-
 const totalGamesCount = computed(() =>
   games.value.reduce((sum, g) => sum + g.versions.length, 0)
 );
@@ -76,28 +73,6 @@ function matchVersion(v, q) {
     (v.date || "").toLowerCase().includes(q)
   );
 }
-
-const filteredPages = computed(() => {
-  const q = normalizedQuery.value;
-  let result;
-  if (!q) {
-    // clone and sort versions (newest first)
-    result = pages.value.map((p) => ({
-      ...p,
-      versions: (p.versions || []).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
-    }));
-  } else {
-    result = pages.value
-      .map((p) => ({
-        ...p,
-        versions: (p.versions || []).filter((v) => matchVersion(v, q) || p.name.toLowerCase().includes(q)).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
-      }))
-      .filter((p) => p.versions.length > 0);
-  }
-
-  // sort items by their latest version date (newest first)
-  return result.sort((a, b) => latestVersionDate(b) - latestVersionDate(a));
-});
 
 const filteredGames = computed(() => {
   const q = normalizedQuery.value;
@@ -153,10 +128,6 @@ const filteredFiles = computed(() => {
     .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 });
 
-const matchedCount = computed(() =>
-  filteredPages.value.reduce((sum, p) => sum + p.versions.length, 0)
-);
-
 const matchedGamesCount = computed(() =>
   filteredGames.value.reduce((sum, g) => sum + g.versions.length, 0)
 );
@@ -178,9 +149,9 @@ const filteredTools = computed(() => {
 const totalToolsCount = computed(() => (toolsList.value || []).length)
 const matchedToolsCount = computed(() => (filteredTools.value || []).length)
 
-const activePages = ref(
-  filteredPages.value.filter((p) => p.versions.length > 1).map((p) => p.name)
-);
+// Pages: read PagesAutoLoader exposed data
+const pagesAutoLoaderRef = ref(null)
+const totalPagesCount = computed(() => pagesAutoLoaderRef.value?.pagesCount || 0)
 
 const activeGames = ref(
   filteredGames.value.filter((g) => g.versions.length > 1).map((g) => g.name)
@@ -255,9 +226,17 @@ function copyFirstResult() {
 }
 
 function firstVersion() {
-  const p = filteredPages.value[0];
-  if (!p) return null;
-  return p.versions[0] || null;
+  // Check games first
+  const g = filteredGames.value[0];
+  if (g && g.versions && g.versions[0]) {
+    return g.versions[0];
+  }
+  // Then apps
+  const a = filteredApps.value[0];
+  if (a && a.versions && a.versions[0]) {
+    return a.versions[0];
+  }
+  return null;
 }
 
 function formatDate(d) {
@@ -292,16 +271,13 @@ const { t } = useI18n();
 
 
 
-    <el-card id="section-pages" v-if="filteredPages.length > 0" shadow="never" class="home__card">
+    <el-card id="section-pages" v-if="!query || showPages" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
             <div class="card-header-left">
             <span>{{ t('nav.pages') }}</span>
             <el-text size="small" type="info">
-              {{ t('common.totalFormat', { count: totalCount }) }}
-              <template v-if="query">
-                , {{ t('common.matchedFormat', { count: matchedCount }) }}
-              </template>
+              {{ t('common.totalFormat', { count: totalPagesCount }) }}
             </el-text>
           </div>
           <el-button type="text" size="small" style="margin-left:8px">
@@ -315,45 +291,7 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showPages" class="section-body">
-        <template v-for="page in filteredPages" :key="page.name">
-          <template v-if="page.versions.length === 1">
-            <PageItem
-              :page-name="page.name"
-              :version="page.versions[0]"
-              :repo-url="page.repoUrl"
-            />
-          </template>
-          <el-collapse v-else v-model="activePages" class="collapse" accordion>
-            <el-collapse-item :name="page.name">
-              <template #title>
-                <div class="page-title">
-                  <el-icon><Collection /></el-icon>
-                  <span>{{ page.name }}</span>
-                  <el-tag size="small" effect="plain"
-                    >{{ t('common.versionsCount', { count: page.versions.length }) }}</el-tag
-                  >
-                  <a
-                    class="repo-link"
-                    :href="page.repoUrl"
-                    target="_blank"
-                    rel="noopener"
-                    @click.stop
-                  >
-                    <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>{{ $t('action.repo') }}</span>
-                  </a>
-                </div>
-              </template>
-              <div>
-                <PageItem
-                  v-for="ver in page.versions"
-                  :key="page.name + '@' + (ver.version || ver.date)"
-                  :version="ver"
-                />
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+          <PagesAutoLoader ref="pagesAutoLoaderRef" />
         </div>
       </transition>
     </el-card>
@@ -557,7 +495,6 @@ const { t } = useI18n();
     <el-card
       v-if="
         query &&
-        filteredPages.length === 0 &&
         filteredGames.length === 0 &&
         filteredApps.length === 0 &&
         filteredFiles.length === 0

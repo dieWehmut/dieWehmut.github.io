@@ -20,7 +20,9 @@
     "totalFormat": "合計 {count} 件",
     "totalFiles": "合計 {count} ファイル",
     "versionsCount": "{count} バージョン",
-    "matchedFormat": "一致 {count} 件"
+    "matchedFormat": "一致 {count} 件",
+    "auto_loaded": "GitHubから自動読み込み",
+    "loading": "読み込み中"
   },
   "action": {
     "open": "開く",
@@ -52,5 +54,8 @@
   "float": {
     "cleanMode": "クリーンモードを切り替え",
     "toggleSidebar": "1列/2列を切り替え"
+  },
+  "error": {
+    "unable_load": "データを読み込めません"
   }
 }

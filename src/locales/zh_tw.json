@@ -20,7 +20,9 @@
     "totalFormat": "共 {count} 項",
     "totalFiles": "共 {count} 個檔案",
     "versionsCount": "{count} 個版本",
-    "matchedFormat": "匹配 {count} 項"
+    "matchedFormat": "匹配 {count} 項",
+    "auto_loaded": "從 GitHub 自動載入",
+    "loading": "載入中"
   },
   "action": {
     "open": "打開",
@@ -52,5 +54,8 @@
   "float": {
     "cleanMode": "切換純淨模式",
     "toggleSidebar": "切換單雙欄"
+  },
+  "error": {
+    "unable_load": "無法載入資料"
   }
 }
