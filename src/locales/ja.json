@@ -17,18 +17,21 @@
     "tools": "ツール"
   },
   "common": {
-    "totalFormat": "合計 {count} 件",
+    "totalFormat": "合計 {count} 項目",
     "totalFiles": "合計 {count} ファイル",
     "versionsCount": "{count} バージョン",
-    "matchedFormat": "一致 {count} 件",
-    "auto_loaded": "GitHubから自動読み込み",
-    "loading": "読み込み中"
+    "matchedFormat": "{count} 項目が一致",
+    "auto_loaded": "GitHub から自動読み込み",
+    "loading": "読み込み中",
+    "no_files": "ファイルが見つかりません",
+    "no_match": "一致するコンテンツがありません"
   },
   "action": {
     "open": "開く",
     "copy": "コピー",
     "copied": "コピー済み",
     "first_result_copied": "最初の結果のリンクをコピーしました",
+  "no_result": "一致する結果が見つかりませんでした",
     "copy_failed": "コピーに失敗しました",
     "download": "ダウンロード",
     "repo": "リポジトリ",

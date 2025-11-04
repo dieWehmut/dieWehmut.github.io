@@ -22,13 +22,16 @@
     "versionsCount": "{count} versions",
     "matchedFormat": "matched {count} items",
     "auto_loaded": "Auto-loaded from GitHub",
-    "loading": "Loading"
+    "loading": "Loading",
+    "no_files": "No files found",
+    "no_match": "No matching content"
   },
   "action": {
     "open": "Open",
     "copy": "Copy",
     "copied": "Copied",
     "first_result_copied": "First result link copied",
+    "no_result": "No result found",
     "copy_failed": "Copy failed",
     "download": "Download",
     "repo": "Repo",

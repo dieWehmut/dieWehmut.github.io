@@ -22,7 +22,9 @@
     "versionsCount": "{count} versiones",
     "matchedFormat": "Inveniuntur {count} elementa",
     "auto_loaded": "Automatice ex GitHub onerata",
-    "loading": "Oneratur"
+    "loading": "Oneratur",
+    "no_files": "Nulli fasciculi inventi",
+    "no_match": "Nulla contenta congruentia"
   },
   "action": {
     "open": "Aperire",
@@ -31,6 +33,7 @@
     "first_result_copied": "Primum resultatum nexus copiatus est",
     "copy_failed": "Copia defecit",
     "download": "Download",
+  "no_result": "Nulla inventa",
     "repo": "Repo",
     "view": "Vide",
     "expand": "Expandere",

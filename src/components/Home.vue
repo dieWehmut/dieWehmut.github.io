@@ -4,13 +4,12 @@ import { useI18n } from 'vue-i18n';
 import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
 import PageItem from "../components/PageItem.vue";
 import PagesAutoLoader from "../components/PagesAutoLoader.vue";
+import ReleasesAutoLoader from "../components/ReleasesAutoLoader.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
 import FileItem from "../components/FileItem.vue";
 
 import Tools from "../components/Tools.vue";
-import { ElMessage } from "element-plus";
-import { showCenteredToast } from '../utils/centerToast'
 
 const props = defineProps({
   query: {
@@ -49,69 +48,17 @@ function latestVersionDate(item) {
   return new Date(max || 0);
 }
 
-
-
-
-const totalGamesCount = computed(() =>
-  games.value.reduce((sum, g) => sum + g.versions.length, 0)
-);
-
-const totalAppsCount = computed(() =>
-  apps.value.reduce((sum, a) => sum + a.versions.length, 0)
-);
-
-const totalFilesCount = computed(() => files.value.length);
-
 const normalizedQuery = computed(() => props.query.trim().toLowerCase());
-
-
-
-function matchVersion(v, q) {
-  return (
-    (v.version || "").toLowerCase().includes(q) ||
-    (v.log || "").toLowerCase().includes(q) ||
-    (v.date || "").toLowerCase().includes(q)
-  );
-}
+const hasQuery = computed(() => normalizedQuery.value.length > 0);
 
 const filteredGames = computed(() => {
-  const q = normalizedQuery.value;
-  let result;
-  if (!q) {
-    result = games.value.map((g) => ({
-      ...g,
-      versions: (g.versions || []).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
-    }));
-  } else {
-    result = games.value
-      .map((g) => ({
-        ...g,
-        versions: (g.versions || []).filter((v) => matchVersion(v, q) || g.name.toLowerCase().includes(q)).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
-      }))
-      .filter((g) => g.versions.length > 0);
-  }
-
-  return result.sort((a, b) => latestVersionDate(b) - latestVersionDate(a));
+  const exposed = releasesAutoLoaderRef.value?.filteredGames;
+  return exposed || [];
 });
 
 const filteredApps = computed(() => {
-  const q = normalizedQuery.value;
-  let result;
-  if (!q) {
-    result = apps.value.map((a) => ({
-      ...a,
-      versions: (a.versions || []).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
-    }));
-  } else {
-    result = apps.value
-      .map((a) => ({
-        ...a,
-        versions: (a.versions || []).filter((v) => matchVersion(v, q) || a.name.toLowerCase().includes(q)).slice().sort((x, y) => new Date(y.date) - new Date(x.date)),
-      }))
-      .filter((a) => a.versions.length > 0);
-  }
-
-  return result.sort((a, b) => latestVersionDate(b) - latestVersionDate(a));
+  const exposed = appsReleasesAutoLoaderRef.value?.filteredApps;
+  return exposed || [];
 });
 
 const filteredFiles = computed(() => {
@@ -128,38 +75,46 @@ const filteredFiles = computed(() => {
     .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 });
 
-const matchedGamesCount = computed(() =>
-  filteredGames.value.reduce((sum, g) => sum + g.versions.length, 0)
-);
-
-const matchedAppsCount = computed(() =>
-  filteredApps.value.reduce((sum, a) => sum + a.versions.length, 0)
-);
-
-const matchedFilesCount = computed(() => filteredFiles.value.length);
+const matchedFilesCount = computed(() => {
+  // Use FileItem's exposed matchedFilesCount if available
+  const fileItemCount = fileItemRef.value?.matchedFilesCount?.value;
+  if (fileItemCount !== undefined && fileItemCount !== null) {
+    return fileItemCount;
+  }
+  return filteredFiles.value.length;
+});
 
 // Tools: read child component (Tools.vue) exposed data via ref
 const toolsRef = ref(null)
 const toolsList = computed(() => toolsRef.value?.tools || [])
-const filteredTools = computed(() => {
-  const q = normalizedQuery.value
-  if (!q) return toolsList.value
-  return (toolsList.value || []).filter((t) => t.name.toLowerCase().includes(q))
-})
-const totalToolsCount = computed(() => (toolsList.value || []).length)
-const matchedToolsCount = computed(() => (filteredTools.value || []).length)
+const filteredTools = computed(() => toolsRef.value?.displayedTools || [])
+const totalToolsCount = computed(() => toolsList.value.length)
+const matchedToolsCount = computed(() => filteredTools.value.length)
 
 // Pages: read PagesAutoLoader exposed data
 const pagesAutoLoaderRef = ref(null)
-const totalPagesCount = computed(() => pagesAutoLoaderRef.value?.pagesCount || 0)
+const totalPagesCount = computed(() => pagesAutoLoaderRef.value?.pagesCount ?? 0)
+const matchedPagesCount = computed(() => pagesAutoLoaderRef.value?.matchedCount ?? 0)
 
-const activeGames = ref(
-  filteredGames.value.filter((g) => g.versions.length > 1).map((g) => g.name)
-);
+// Releases: read ReleasesAutoLoader exposed data
+const releasesAutoLoaderRef = ref(null)
+const appsReleasesAutoLoaderRef = ref(null)
+const totalGamesCount = computed(() => releasesAutoLoaderRef.value?.games?.length || 0)
+const totalAppsCount = computed(() => appsReleasesAutoLoaderRef.value?.apps?.length || 0)
+const gamesAutoLoadEnabled = computed(() => games.value.length > 0 && !!games.value[0]?.autoLoad)
+const appsAutoLoadEnabled = computed(() => apps.value.length > 0 && !!apps.value[0]?.autoLoad)
 
-const activeApps = ref(
-  filteredApps.value.filter((a) => a.versions.length > 1).map((a) => a.name)
-);
+const matchedGamesCount = computed(() => {
+  return releasesAutoLoaderRef.value?.filteredGames?.length || 0
+})
+
+const matchedAppsCount = computed(() => {
+  return appsReleasesAutoLoaderRef.value?.filteredApps?.length || 0
+})
+
+// Files: read FileItem exposed data
+const fileItemRef = ref(null)
+const totalFilesCount = computed(() => fileItemRef.value?.filesCount ?? 0)
 
 const showPages = ref(true);
 const showGames = ref(true);
@@ -210,7 +165,7 @@ function openFirstResult() {
   if (first) {
     window.open(first.url, "_blank", "noopener");
   } else {
-    ElMessage.info("No result to open");
+    // no-op when no first result; Enter-trigger behavior removed per requirements
   }
 }
 
@@ -218,23 +173,25 @@ function copyFirstResult() {
   const first = firstVersion();
   if (first) {
       navigator.clipboard.writeText(first.url).then(() => {
-      showCenteredToast('action.first_result_copied', { type: 'success', duration: 2500 });
+      // copied first result (silent)
     });
   } else {
-    ElMessage.info("No result to copy");
+    // no-op when no first result; no popup required
   }
 }
 
 function firstVersion() {
   // Check games first
   const g = filteredGames.value[0];
-  if (g && g.versions && g.versions[0]) {
-    return g.versions[0];
+  if (g) {
+    const url = g.url || g.html_url || g.repo_url;
+    if (url) return { url };
   }
   // Then apps
   const a = filteredApps.value[0];
-  if (a && a.versions && a.versions[0]) {
-    return a.versions[0];
+  if (a) {
+    const url = a.url || a.html_url || a.repo_url;
+    if (url) return { url };
   }
   return null;
 }
@@ -268,16 +225,24 @@ const { t } = useI18n();
 <template>
   <div class="home" :class="{ 'entering': enterReady }">
 
-
-
-
-    <el-card id="section-pages" v-if="!query || showPages" shadow="never" class="home__card">
+    <el-card id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
             <div class="card-header-left">
             <span>{{ t('nav.pages') }}</span>
             <el-text size="small" type="info">
-              {{ t('common.totalFormat', { count: totalPagesCount }) }}
+              <template v-if="pagesAutoLoaderRef?.loading?.value">
+                {{ t('common.loading') }}...
+              </template>
+              <template v-else-if="pagesAutoLoaderRef?.error?.value">
+                {{ t('error.unable_load') }}
+              </template>
+              <template v-else>
+                {{ t('common.totalFormat', { count: totalPagesCount }) }}
+                <template v-if="hasQuery">
+                  , {{ t('common.matchedFormat', { count: matchedPagesCount }) }}
+                </template>
+              </template>
             </el-text>
           </div>
           <el-button type="text" size="small" style="margin-left:8px">
@@ -291,19 +256,19 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showPages" class="section-body">
-          <PagesAutoLoader ref="pagesAutoLoaderRef" />
+          <PagesAutoLoader ref="pagesAutoLoaderRef" :filter-query="normalizedQuery" />
         </div>
       </transition>
     </el-card>
 
-  <el-card id="section-tools" v-if="!normalizedQuery || filteredTools.length > 0" shadow="never" class="home__card">
+  <el-card id="section-tools" v-if="!hasQuery || filteredTools.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
             <div class="card-header-left">
             <span>{{ t('nav.tools') }}</span>
             <el-text size="small" type="info">
               {{ t('common.totalFormat', { count: totalToolsCount }) }}
-              <template v-if="query">
+              <template v-if="hasQuery">
                 , {{ t('common.matchedFormat', { count: matchedToolsCount }) }}
               </template>
             </el-text>
@@ -319,19 +284,19 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showTools" class="section-body">
-          <Tools ref="toolsRef" />
+          <Tools ref="toolsRef" :filter-query="normalizedQuery" />
         </div>
       </transition>
     </el-card>
 
-    <el-card id="section-games" v-if="filteredGames.length > 0" shadow="never" class="home__card">
+  <el-card id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showGames = !showGames" style="cursor: pointer;">
             <div class="card-header-left">
             <span>{{ t('nav.games') }}</span>
             <el-text size="small" type="info">
               {{ t('common.totalFormat', { count: totalGamesCount }) }}
-              <template v-if="query">
+              <template v-if="hasQuery">
                 , {{ t('common.matchedFormat', { count: matchedGamesCount }) }}
               </template>
             </el-text>
@@ -347,57 +312,19 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showGames" class="section-body">
-        <template v-for="game in filteredGames" :key="game.name">
-          <template v-if="game.versions.length === 1">
-            <GameItem
-              :game-name="game.name"
-              :version="game.versions[0]"
-              :repo-url="game.repoUrl"
-            />
-          </template>
-          <el-collapse v-else v-model="activeGames" class="collapse" accordion>
-            <el-collapse-item :name="game.name">
-              <template #title>
-                <div class="page-title">
-                  <el-icon><Collection /></el-icon>
-                  <span>{{ game.name }}</span>
-                  <el-tag size="small" effect="plain"
-                    >{{ t('common.versionsCount', { count: game.versions.length }) }}</el-tag
-                  >
-                  <a
-                    class="repo-link"
-                    :href="game.repoUrl"
-                    target="_blank"
-                    rel="noopener"
-                    @click.stop
-                  >
-                    <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>{{ $t('action.repo') }}</span>
-                  </a>
-                </div>
-              </template>
-              <div>
-                <GameItem
-                  v-for="ver in game.versions"
-                  :key="game.name + '@' + (ver.version || ver.date)"
-                  :version="ver"
-                />
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+          <ReleasesAutoLoader ref="releasesAutoLoaderRef" type="games" :filter-query="normalizedQuery" />
         </div>
       </transition>
     </el-card>
 
-    <el-card id="section-apps" v-if="filteredApps.length > 0" shadow="never" class="home__card">
+  <el-card id="section-apps" v-if="(!hasQuery && appsAutoLoadEnabled) || (hasQuery && filteredApps.length > 0)" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showApps = !showApps" style="cursor: pointer;">
             <div class="card-header-left">
             <span>{{ t('nav.apps') }}</span>
             <el-text size="small" type="info">
               {{ t('common.totalFormat', { count: totalAppsCount }) }}
-              <template v-if="query">
+              <template v-if="hasQuery">
                 , {{ t('common.matchedFormat', { count: matchedAppsCount }) }}
               </template>
             </el-text>
@@ -413,58 +340,28 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showApps" class="section-body">
-        <template v-for="app in filteredApps" :key="app.name">
-          <template v-if="app.versions.length === 1">
-            <AppItem
-              :app-name="app.name"
-              :version="app.versions[0]"
-              :repo-url="app.repoUrl"
-            />
-          </template>
-          <el-collapse v-else v-model="activeApps" class="collapse" accordion>
-            <el-collapse-item :name="app.name">
-              <template #title>
-                <div class="page-title">
-                  <el-icon><Collection /></el-icon>
-                  <span>{{ app.name }}</span>
-                  <el-tag size="small" effect="plain"
-                    >{{ t('common.versionsCount', { count: app.versions.length }) }}</el-tag
-                  >
-                  <a
-                    class="repo-link"
-                    :href="app.repoUrl"
-                    target="_blank"
-                    rel="noopener"
-                    @click.stop
-                  >
-                    <el-icon class="repo-icon"><Link /></el-icon>
-                    <span>{{ $t('action.repo') }}</span>
-                  </a>
-                </div>
-              </template>
-              <div>
-                <AppItem
-                  v-for="ver in app.versions"
-                  :key="app.name + '@' + (ver.version || ver.date)"
-                  :version="ver"
-                />
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+          <ReleasesAutoLoader ref="appsReleasesAutoLoaderRef" type="apps" :filter-query="normalizedQuery" />
         </div>
       </transition>
     </el-card>
 
-    <el-card id="section-files" v-if="filteredFiles.length > 0" shadow="never" class="home__card">
+  <el-card id="section-files" v-if="!hasQuery || matchedFilesCount > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
             <div class="card-header-left">
             <span>{{ t('nav.files') }}</span>
             <el-text size="small" type="info">
-              {{ t('common.totalFiles', { count: totalFilesCount }) }}
-              <template v-if="query">
-                , {{ t('common.matchedFormat', { count: matchedFilesCount }) }}
+              <template v-if="fileItemRef?.loading?.value">
+                {{ t('common.loading') }}...
+              </template>
+              <template v-else-if="fileItemRef?.error?.value">
+                {{ t('error.unable_load') }}
+              </template>
+              <template v-else>
+                {{ t('common.totalFormat', { count: totalFilesCount }) }}
+                <template v-if="hasQuery">
+                  , {{ t('common.matchedFormat', { count: matchedFilesCount }) }}
+                </template>
               </template>
             </el-text>
           </div>
@@ -479,26 +376,14 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showFiles" class="section-body">
-        <FileItem
-          v-for="file in filteredFiles"
-          :key="file.name"
-          :file-name="file.name"
-          :repo-url="file.repoUrl"
-          :description="file.description"
-        />
+          <FileItem ref="fileItemRef" :filter-query="normalizedQuery" />
         </div>
       </transition>
     </el-card>
 
   
 
-    <el-card
-      v-if="
-        query &&
-        filteredGames.length === 0 &&
-        filteredApps.length === 0 &&
-        filteredFiles.length === 0
-      "
+    <el-card v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && filteredTools.length === 0" 
       shadow="never"
       class="home__card"
     >

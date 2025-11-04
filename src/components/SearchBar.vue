@@ -8,8 +8,7 @@
       clearable
       :placeholder="placeholderText"
       @clear="$emit('clear')"
-      @input="onInput"
-      @keydown.enter.prevent
+  @input="onInput"
       class="search-input"
     >
       <template #prefix>

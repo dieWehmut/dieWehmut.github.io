@@ -1,115 +1,83 @@
 <template>
-  <div class="file-item">
-    <div class="file-item__content">
-        <div class="file-item__header">
-        <div class="file-item__title">
-          <el-icon><Folder /></el-icon>
-          <span>{{ fileName }}</span>
-        </div>
-        <div class="file-item__actions">
-          <a class="repo-link action-btn" :href="repoUrl" target="_blank" rel="noopener">
-            <el-icon><Link /></el-icon>
-            <span>{{ t('action.repo') }}</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="file-item__description">
-        <el-text type="info">{{ description || "File repository" }}</el-text>
-      </div>
-
-      <div v-if="loading" class="loading-state">
-        <el-text type="info">Loading files... ⏳</el-text>
+  <div class="files-list">
+    <div v-if="loading" class="loading-state">
+      <el-text type="info">{{ t('common.loading') }}... ⏳</el-text>
+    </div>
+    
+    <div v-else-if="error" class="error-state">
+      <el-text type="danger">{{ error }}</el-text>
+    </div>
+    
+    <div v-else>
+      <div v-if="filteredEntriesRoot.length === 0" class="empty-state">
+        <el-text type="info">{{ normalizedQuery ? t('common.no_match') : t('common.no_files') }}</el-text>
       </div>
       
-      <div v-else-if="error" class="error-state">
-        <el-text type="danger">{{ error }}</el-text>
-      </div>
-
-      <div v-else class="file-item__footer">
-        <div class="file-list">
-          <div class="file-list__header">
-            <el-text size="small" type="info">{{ t('common.totalFiles', { count: entriesRoot.length }) }}</el-text>
-          </div>
-
-          <div class="file-list__content">
-            <div
-              class="file-list__item"
-              v-for="entry in entriesRoot"
-              :key="entry.path"
-              :class="{ 'has-view': entry.type === 'file' && isViewable(entry) }"
-            >
-              <div class="file-info">
-                <el-icon class="file-list-icon">
-                  <Folder v-if="entry.type === 'dir'" />
-                  <Document v-else />
-                </el-icon>
-                <div class="file-meta">
-                  <span class="file-name-text">{{ entry.name }}</span>
-                </div>
-              </div>
-
-              <div class="file-list__actions">
-                <el-button v-if="entry.type === 'dir'" class="action-btn" type="text" size="small" @click="toggleDir(entry)">
-                  <el-icon v-if="!openDirs[entry.path]"><ArrowDown /></el-icon>
-                  <el-icon v-else><ArrowUp /></el-icon>
-                  <span>{{ openDirs[entry.path] ? t('action.collapse') : t('action.expand') }}</span>
-                </el-button>
-
-                <el-button v-else-if="isViewable(entry)" class="action-btn" type="primary" size="small" @click="openFile(blobUrlFor(entry))">
-                  <el-icon><View /></el-icon>
-                  {{ t('action.view') }}
-                </el-button>
-
-                <a v-if="entry.type === 'file'" :href="rawUrlFor(entry)" target="_blank" rel="noopener" class="download-link">
-                  <el-button class="action-btn" size="small">
-                    <el-icon><Download /></el-icon>
-                    {{ t('action.download') }}
-                  </el-button>
-                </a>
-
-                <el-button v-if="entry.type === 'file'" class="action-btn" size="small" @click="copyLink(blobUrlFor(entry))">
-                  <el-icon><CopyDocument /></el-icon>
-                  <span class="btn-text">{{ copiedFiles[blobUrlFor(entry)] ? t('action.copied') : t('action.copy') }}</span>
-                </el-button>
-              </div>
-
-              <transition name="expand">
-                <div v-if="openDirs[entry.path]" class="file-list__content nested">
-                  <div
-                    v-for="child in entriesMap[entry.path] || []"
-                    :key="child.path"
-                    class="file-list__item"
-                    :class="{ 'has-view': isViewable(child) }"
-                  >
-                    <div class="file-info">
-                      <el-icon class="file-list-icon"><Document /></el-icon>
-                      <div class="file-meta">
-                        <span class="file-name-text">{{ child.name }}</span>
-                      </div>
-                    </div>
-                    <div class="file-list__actions">
-                      <el-button v-if="isViewable(child)" class="action-btn" type="primary" size="small" @click="openFile(blobUrlFor(child))">
-                        <el-icon><View /></el-icon>
-                        {{ t('action.view') }}
-                      </el-button>
-                      <a :href="rawUrlFor(child)" target="_blank" rel="noopener" class="download-link">
-                        <el-button class="action-btn" size="small">
-                          <el-icon><Download /></el-icon>
-                          {{ t('action.download') }}
-                        </el-button>
-                      </a>
-                      <el-button class="action-btn" size="small" @click="copyLink(blobUrlFor(child))">
-                        <el-icon><CopyDocument /></el-icon>
-                        <span class="btn-text">{{ copiedFiles[blobUrlFor(child)] ? t('action.copied') : t('action.copy') }}</span>
-                      </el-button>
-                    </div>
-                  </div>
-                </div>
-              </transition>
+      <div v-for="entry in filteredEntriesRoot" :key="entry.path" class="folder-container">
+        <div class="file-row" @click="toggleDir(entry)">
+          <div class="file-info">
+            <el-icon class="page-icon"><Folder /></el-icon>
+            <div class="title-container">
+              <div class="single-title">{{ entry.name }}</div>
             </div>
           </div>
+          
+          <div class="file-actions" @click.stop>
+            <el-button class="action-btn" type="text" size="small" @click="toggleDir(entry)">
+              <el-icon v-if="!openDirs[entry.path]"><ArrowDown /></el-icon>
+              <el-icon v-else><ArrowUp /></el-icon>
+              <span class="btn-text">{{ openDirs[entry.path] ? t('action.collapse') : t('action.expand') }}</span>
+            </el-button>
+            
+            <a :href="getFolderUrl(entry)" target="_blank" rel="noopener" class="download-link">
+              <el-button class="action-btn" type="text" size="small">
+                <el-icon class="action-icon"><Link /></el-icon>
+                <span class="btn-text">{{ t('action.repo') }}</span>
+              </el-button>
+            </a>
+            
+            <el-button class="action-btn copy-btn" type="text" size="small" @click="copyLink(getFolderUrl(entry))">
+              <el-icon class="action-icon"><CopyDocument /></el-icon>
+              <span class="btn-text">{{ copiedFiles[getFolderUrl(entry)] ? t('action.copied') : t('action.copy') }}</span>
+            </el-button>
+          </div>
         </div>
+        
+        <transition name="expand">
+          <div v-if="openDirs[entry.path]" class="nested-files">
+            <div
+              v-for="child in getFilteredFilesForFolder(entry.path)"
+              :key="child.path"
+              class="nested-file-item"
+              :class="{ 'clickable': isViewable(child) }"
+              @click="isViewable(child) ? openFile(blobUrlFor(child)) : null"
+            >
+              <div class="nested-file-info">
+                <el-icon class="file-icon"><Document /></el-icon>
+                <span class="file-name-text">{{ child.name }}</span>
+              </div>
+              
+              <div class="nested-file-actions" @click.stop>
+                <el-button v-if="isViewable(child)" class="action-btn" type="primary" size="small" @click="openFile(blobUrlFor(child))">
+                  <el-icon><View /></el-icon>
+                  <span class="btn-text">{{ t('action.view') }}</span>
+                </el-button>
+                
+                <a :href="rawUrlFor(child)" target="_blank" rel="noopener" class="download-link">
+                  <el-button class="action-btn" size="small">
+                    <el-icon><Download /></el-icon>
+                    <span class="btn-text">{{ t('action.download') }}</span>
+                  </el-button>
+                </a>
+                
+                <el-button class="action-btn" size="small" @click="copyLink(blobUrlFor(child))">
+                  <el-icon><CopyDocument /></el-icon>
+                  <span class="btn-text">{{ copiedFiles[blobUrlFor(child)] ? t('action.copied') : t('action.copy') }}</span>
+                </el-button>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -129,7 +97,8 @@ import {
 import { ElMessage } from "element-plus";
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
-import { ref, reactive, onMounted } from "vue";
+import { getGitHubHeaders } from '../utils/github'
+import { ref, reactive, onMounted, computed, defineExpose, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 
 function formatDateShort(d) {
@@ -153,13 +122,18 @@ const { t } = useI18n();
 const props = defineProps({
   fileName: {
     type: String,
-    required: true,
+    required: false,
+    default: 'Files',
   },
   repoUrl: {
     type: String,
     default: 'https://github.com/dieWehmut/Files',
   },
   description: {
+    type: String,
+    default: '',
+  },
+  filterQuery: {
     type: String,
     default: '',
   },
@@ -173,6 +147,51 @@ const loading = ref(true);
 const error = ref(null);
 const copiedFiles = reactive({});
 let defaultBranch = 'main';
+
+// Filter logic
+const normalizedQuery = computed(() => (props.filterQuery || '').trim().toLowerCase());
+
+// Filter root entries (folders) based on search query
+const filteredEntriesRoot = computed(() => {
+  if (!normalizedQuery.value) return entriesRoot.value;
+  
+  return entriesRoot.value.filter(folder => {
+    // Check if folder name matches
+    if (folder.name.toLowerCase().includes(normalizedQuery.value)) return true;
+    
+    // Check if any file in this folder matches
+    const filesInFolder = entriesMap[folder.path] || [];
+    return filesInFolder.some(file => 
+      file.name.toLowerCase().includes(normalizedQuery.value)
+    );
+  });
+});
+
+// Get filtered files for a specific folder
+function getFilteredFilesForFolder(folderPath) {
+  const files = entriesMap[folderPath] || [];
+  if (!normalizedQuery.value) return files;
+  
+  return files.filter(file => 
+    file.name.toLowerCase().includes(normalizedQuery.value)
+  );
+}
+
+// Count total matched files across all folders
+const matchedFilesCount = computed(() => {
+  if (!normalizedQuery.value) return entriesRoot.value.length;
+  
+  let count = 0;
+  filteredEntriesRoot.value.forEach(folder => {
+    const filtered = getFilteredFilesForFolder(folder.path);
+    count += filtered.length;
+  });
+  return count;
+});
+
+// 暴露文件夹数量和匹配数量给父组件
+const filesCount = computed(() => entriesRoot.value.length);
+defineExpose({ filesCount: computed(() => entriesRoot.value.length), matchedFilesCount, loading, error });
 
 // Determine owner/repo from repoUrl or default
 function parseRepo(urlStr) {
@@ -198,7 +217,11 @@ async function loadContents(path = '') {
     if (!defaultBranch) defaultBranch = 'main';
     // cache repo info and contents to reduce API calls
     try {
-      const repoData = await fetchWithCache(`https://api.github.com/repos/${owner}/${repo}`, {}, 1000 * 60 * 60);
+      const repoData = await fetchWithCache(
+        `https://api.github.com/repos/${owner}/${repo}`,
+        { headers: getGitHubHeaders() },
+        1000 * 60 * 60
+      );
       if (repoData && repoData.default_branch) defaultBranch = repoData.default_branch || defaultBranch;
     } catch (e) {
       // ignore
@@ -207,7 +230,7 @@ async function loadContents(path = '') {
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
     let data = null;
     try {
-      data = await fetchWithCache(apiUrl, {}, 1000 * 60 * 15);
+      data = await fetchWithCache(apiUrl, { headers: getGitHubHeaders() }, 1000 * 60 * 15);
     } catch (e) {
       error.value = t('error.unable_load') || 'Unable to load files.';
       return;
@@ -297,6 +320,24 @@ onMounted(() => {
   loadContents('');
 });
 
+// Watch for search query changes and auto-expand matching folders
+watch(normalizedQuery, async (newQuery) => {
+  if (newQuery) {
+    // When searching, expand folders that have matching files
+    for (const folder of filteredEntriesRoot.value) {
+      // Load folder contents if not already loaded
+      if (!entriesMap[folder.path]) {
+        await loadContents(folder.path);
+      }
+      // Check if this folder has matching files
+      const matchingFiles = getFilteredFilesForFolder(folder.path);
+      if (matchingFiles.length > 0) {
+        openDirs[folder.path] = true;
+      }
+    }
+  }
+});
+
 // helper to get raw URL for a file using default branch
 function rawUrlFor(item) {
   const { owner, repo } = parseRepo(props.repoUrl);
@@ -307,6 +348,12 @@ function rawUrlFor(item) {
 function blobUrlFor(item) {
   const { owner, repo } = parseRepo(props.repoUrl);
   return item.html_url || `https://github.com/${owner}/${repo}/blob/${defaultBranch}/${item.path}`;
+}
+
+// helper to get folder URL on GitHub
+function getFolderUrl(item) {
+  const { owner, repo } = parseRepo(props.repoUrl);
+  return item.html_url || `https://github.com/${owner}/${repo}/tree/${defaultBranch}/${item.path}`;
 }
 
 // toggle directory open/close and load if needed
@@ -320,54 +367,174 @@ async function toggleDir(item) {
 </script>
 
 <style scoped>
-.file-item {
-  margin-bottom: 12px;
+.files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.file-item__content {
-  padding: 16px;
-  /* outer container is transparent by default */
-  background: transparent !important;
-  color: inherit;
-  border-radius: 8px;
-  border: none !important;
-  transition: transform 0.14s ease, box-shadow 0.18s ease;
-  will-change: transform, box-shadow;
+.loading-state,
+.error-state,
+.empty-state {
+  padding: 24px;
+  text-align: center;
+}
+
+.folder-container {
+  margin: 4px 0;
+}
+
+.file-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  outline: none;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  margin: 4px 0;
+  border: 1px solid transparent;
+}
+
+.file-row:focus {
+  outline: none;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 @media (hover: hover) {
-  .file-item__content:hover {
+  .file-row {
+    transition: transform 0.14s ease, box-shadow 0.18s ease;
+    will-change: transform, box-shadow;
+  }
+
+  .file-row {
+    background: rgba(0,0,0,0.6) !important;
+    color: #f5f5f5 !important;
+  }
+
+  .file-row:hover {
+    background: transparent !important;
     border-color: transparent !important;
     transform: translateY(-4px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
   }
+
+  .file-row:not(:hover) {
+    background: rgba(0,0,0,0.6) !important;
+  }
 }
 
-.file-item__header {
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+  .page-icon {
+  font-size: 18px;
+  color: #ffffff !important;
+  flex-shrink: 0;
+}
+
+.title-container {
+  flex: 1;
+  min-width: 0;
+}
+
+  .single-title {
+  font-weight: 600;
+  color: #f5f5f5 !important;
+  font-size: 14px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+  .action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #f5f5f5 !important;
+  border: 1px solid transparent;
+}
+
+.action-btn:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.action-icon {
+  font-size: 14px;
+  color: #2b2b2b;
+}
+
+.btn-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.download-link {
+  text-decoration: none;
+}
+
+/* 嵌套文件列表 */
+.nested-files {
+  margin-top: 12px;
+  padding-left: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+  .nested-file-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.6) !important;
+  color: #f5f5f5 !important;
+  transition: all 0.2s ease;
+  gap: 24px;
 }
 
-.file-item__title {
+  .nested-file-item:hover {
+  background: transparent !important;
+  transform: translateX(4px);
+}
+
+  .nested-file-item:not(:hover) {
+    background: rgba(0,0,0,0.6) !important;
+  }
+
+.nested-file-item.clickable {
+  cursor: pointer;
+}
+
+.nested-file-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 600;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+  .file-icon {
   font-size: 16px;
-}
-
-.file-list-icon {
-  font-size: 18px;
-  color: #2b2b2b; /* default dark icon */
-  margin-right: 8px;
-}
-
-.file-name-text {
-  font-size: 14px;
-  color: #2b2b2b;
-  font-weight: 500;
+  color: #ffffff !important;
+  flex-shrink: 0;
 }
 
 .file-meta {
@@ -376,161 +543,20 @@ async function toggleDir(item) {
   gap: 8px;
 }
 
-.file-last-modified {
-  font-size: 12px;
-  color: rgba(255,255,255,0.75);
-  line-height: 1;
-  white-space: nowrap; /* keep timestamp on same line */
-}
-
-.file-item__actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.repo-link {
-  /* keep semantic link styles minimal; when used with .action-btn it will adopt unified button styles */
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  .file-name-text {
   font-size: 13px;
-  font-weight: 600;
-  color: #2b2b2b;
-}
-
-/* When repo-link is used as a button, ensure it matches the global action-btn appearance */
-.repo-link.action-btn {
-  padding: 8px 12px !important;
-  border-radius: 10px !important;
-  border: none !important;
-  background: transparent !important;
-  margin-left: auto;
-  color: inherit !important;
-}
-.repo-link.action-btn:hover {
-  background: transparent !important;
-}
-
-.file-item__description {
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: #6b6b6b;
-}
-
-.loading-state,
-.error-state {
-  padding: 12px 0;
-}
-
-.file-item__footer {
-  margin-top: 12px;
-}
-
-.file-list {
-  width: 100%;
-}
-
-.file-list__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-
-}
-
-.file-list__content {
-  margin-top: 8px;
-}
-
-.file-list__item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 6px; /* separate items to avoid visual overlap */
-  /* Default: subtle black translucent background so each file row reads as a card */
-  background: rgba(0,0,0,0.12) !important;
   color: #f5f5f5 !important;
-  transition: transform 0.14s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.12s ease;
-}
-
-.file-list__item.has-view {
-  /* keep compatibility: has-view keeps same visual as default */
-  background: rgba(0,0,0,0.12) !important;
-  color: #f5f5f5 !important;
-}
-
-.file-list__item:last-child {
-  border-bottom: none;
-}
-
-.file-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-}
-
-.file-name {
-  font-size: 14px;
-  color: #2b2b2b;
   font-weight: 500;
 }
 
-.file-type {
-  padding: 2px 8px;
-
-  border-radius: 4px;
-  font-size: 12px;
-  color: #7a7a7a;
-  font-weight: 500;
-}
-
-.file-list__actions {
+.nested-file-actions {
   display: flex;
   gap: 12px;
+  flex-shrink: 0;
   align-items: center;
 }
 
-/* Mobile: stack file item actions under the file info */
-@media (max-width: 768px) {
-  .file-list__item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-  .file-list__actions {
-    justify-content: flex-start;
-    align-self: stretch;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .download-link .action-btn,
-  .file-list__actions .action-btn,
-  .repo-link.action-btn {
-    width: auto;
-    color: inherit;
-  }
-}
-
-/* Only inner expanded file list items change color on hover (not entire card) */
-.file-list__item:hover .file-list-icon,
-.file-list__item:hover .file-name-text,
-.file-list__item:hover .repo-link,
-.file-list__item:hover .file-name,
-.file-list__item:hover .file-type,
-.file-list__item:hover .action-btn {
-  /* do not force black; inherit current color so white remains when desired */
-  color: inherit !important;
-}
-
-.download-link {
-  text-decoration: none;
-}
-
+/* 展开/收起动画 */
 .expand-enter-active,
 .expand-leave-active {
   transition: all 0.3s ease;
@@ -544,21 +570,40 @@ async function toggleDir(item) {
   opacity: 0;
 }
 
-/* Hover elevation for individual file rows */
-@media (hover: hover) {
-  .file-list__item {
-    transition: transform 0.14s ease, box-shadow 0.18s ease;
-    will-change: transform, box-shadow;
-    padding: 10px 0;
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .file-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
   }
 
-  .file-list__item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-    /* on hover the background should become transparent (no colored overlay) */
-    background: transparent !important;
-    /* keep text/icon color consistent (white) while hovered */
-    color: #f5f5f5 !important;
+  .file-actions {
+    align-self: stretch;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nested-files {
+    padding-left: 24px;
+  }
+
+  .nested-file-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .nested-file-info {
+    width: 100%;
+  }
+
+  .nested-file-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }
 </style>

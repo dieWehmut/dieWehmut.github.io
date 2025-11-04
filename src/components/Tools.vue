@@ -2,8 +2,8 @@
   <div class="tools-list">
     <div v-if="loading">Loading tools...</div>
     <div v-else>
-      <div v-if="tools.length === 0">No tools found</div>
-      <div v-for="tool in tools" :key="tool.name" class="tool-row">
+  <div v-if="displayedTools.length === 0">No tools found</div>
+  <div v-for="tool in displayedTools" :key="tool.name" class="tool-row" @click="openRepo(tool)">
         <div class="tool-info">
           <el-icon class="page-icon"><Folder /></el-icon>
           <div class="title-date">
@@ -31,15 +31,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed, defineExpose } from 'vue'
 import { Folder, Download, Link, CopyDocument } from "@element-plus/icons-vue";
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
+import { getGitHubHeaders } from '../utils/github'
 
 const tools = ref([])
 const loading = ref(true)
 const { t } = useI18n()
+
+const props = defineProps({
+  filterQuery: {
+    type: String,
+    default: ''
+  }
+})
+
+const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
+const displayedTools = computed(() => {
+  const q = normalizedFilter.value
+  if (!q) return tools.value
+  return tools.value.filter((tool) => (tool.name || '').toLowerCase().includes(q))
+})
 
 function buildFolderHtmlUrl(name) {
   // Prefer direct html_url if available from API results; fallback to tree URL
@@ -50,7 +65,11 @@ async function fetchTools() {
   loading.value = true
   try {
     // cache folder listing for 15 minutes
-    const data = await fetchWithCache('https://api.github.com/repos/dieWehmut/Gajetto/contents', {}, 1000 * 60 * 15)
+    const data = await fetchWithCache(
+      'https://api.github.com/repos/dieWehmut/Gajetto/contents',
+      { headers: getGitHubHeaders() },
+      1000 * 60 * 15
+    )
     if (!Array.isArray(data)) {
       tools.value = []
       loading.value = false
@@ -68,7 +87,7 @@ async function fetchTools() {
         // cache commits per-path for 6 hours to avoid repeated per-dir calls
         const commits = await fetchWithCache(
           `https://api.github.com/repos/dieWehmut/Gajetto/commits?path=${encodeURIComponent(dir.name)}&per_page=1`,
-          {},
+          { headers: getGitHubHeaders() },
           1000 * 60 * 60 * 6
         )
         if (Array.isArray(commits) && commits.length > 0) {
@@ -140,7 +159,7 @@ onMounted(() => {
 })
 
 // expose tools array so parent can read counts and filter
-defineExpose({ tools, loading })
+defineExpose({ tools, displayedTools, loading })
 </script>
 
 <style scoped>
@@ -155,7 +174,7 @@ defineExpose({ tools, loading })
   justify-content: space-between;
   padding: 12px 14px;
   border-radius: 10px;
-  background: rgba(0,0,0,0.30); /* black translucent by default */
+  background: rgba(0,0,0,0.6) !important; /* black translucent by default */
   transition: transform 0.14s ease, box-shadow 0.18s ease, color 0.12s ease;
   will-change: transform, box-shadow;
   cursor: pointer;
@@ -204,6 +223,10 @@ defineExpose({ tools, loading })
     box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
   }
   /* keep text and icons color unchanged on hover (remain white) */
+}
+
+.tool-row:not(:hover) {
+  background: rgba(0,0,0,0.6) !important;
 }
 
 /* ensure text and icons stay white and buttons remain visually flat */

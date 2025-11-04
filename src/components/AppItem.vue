@@ -1,5 +1,5 @@
 <template>
-  <div class="app-item" tabindex="0" role="button">
+  <div class="app-item" tabindex="0" role="button" @click="openRepo" @keydown.enter="openRepo">
     <div class="app-item__main">
       <div class="app-item__line">
         <template v-if="appName">
@@ -89,6 +89,26 @@ const props = defineProps({
 
 const copied = ref(false);
 
+function openRepo() {
+  // prefer explicit prop
+  if (props.repoUrl) {
+    window.open(props.repoUrl, '_blank', 'noopener');
+    return
+  }
+  // try version-level repo_url
+  if (props.version && props.version.repo_url) {
+    window.open(props.version.repo_url, '_blank', 'noopener');
+    return
+  }
+  // fallback to tag
+  const tag = props.version?.tag_name || props.version?.tag
+  if (tag) {
+    window.open(`https://github.com/dieWehmut/Showcase/releases/tag/${tag}`, '_blank', 'noopener')
+    return
+  }
+  ElMessage({ message: t ? t('warning.no_repo') : '🔗 No repo available', type: 'warning', customClass: 'bw-message' });
+}
+
 function copyLink() {
   const url = props.version?.url ?? "";
   if (!url) {
@@ -145,7 +165,7 @@ function formatDate(d) {
   cursor: pointer;
   min-height: 50px;
   border: none !important;
-  background: #111; /* default: dark (黑) */
+  background: rgba(0,0,0,0.6); /* default: black semi-transparent to match PageItem behavior */
   color: #f5f5f5;
 }
 
