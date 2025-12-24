@@ -71,13 +71,16 @@ defineExpose({
 const owners = ['dieWehmut', 'dieSehnsucht'];
 
 // 日期覆盖映射 - 为特定项目指定正确的日期
+// Keep in sync with server-side overrides in api/pages.js
 const dateOverrides = {
   'kotoba-hitomi': '2025-04-25',
   'profile': '2025-08-16',
   'notes': '2025-08-20',
   'hc-dsw-nexus': '2025-08-26',
-  'nexus': '2025-08-26', // 也包含 nexus 以防万一
-  'leereriss': '2025-11-02'
+  'nexus': '2025-08-26',
+  'leereriss': '2025-11-02',
+  'showcase': '2025-10-02',
+  'korekushon': '2025-10-09'
 };
 
 // 显示名称覆盖映射 - 为特定项目指定显示名称
@@ -115,14 +118,47 @@ function extractDisplayName(url, repoName = '') {
 }
 
 // 获取项目的日期 - 优先使用覆盖日期
-function getProjectDate(repoName, defaultDate) {
-  // 检查是否有覆盖日期
-  const displayName = repoName.toLowerCase();
-  if (dateOverrides[displayName]) {
-    return dateOverrides[displayName];
+function normalizeKey(key) {
+  if (!key) return '';
+  let k = key.toString().toLowerCase().trim();
+  k = k.replace(/^https?:\/\//, '');
+  k = k.replace(/\/$/, '');
+  k = k.replace(/[#?].*$/, '');
+  k = k.replace(/^www\./, '');
+  k = k.replace(/[\s_]+/g, '-');
+  return k;
+}
+
+function findOverride(key) {
+  if (!key) return null;
+  const base = normalizeKey(key);
+  if (!base) return null;
+  const variants = [
+    base,
+    base.split('.')[0],
+    base.replace(/_/g, '-'),
+    base.replace(/\s+/g, '-')
+  ];
+  for (const v of variants) {
+    if (dateOverrides[v]) return dateOverrides[v];
   }
-  // 如果没有覆盖日期,返回 null 表示需要获取 commit 时间
-  // 如果提供了 defaultDate,则返回它作为最后的 fallback
+  return null;
+}
+
+function getProjectDate(repoName, homepage, defaultDate) {
+  try {
+    if (homepage && typeof homepage === 'string') {
+      const displayFromHomepage = normalizeKey(extractDisplayName(homepage, repoName));
+      const override = findOverride(displayFromHomepage);
+      if (override) return override;
+    }
+  } catch (e) {
+    // ignore and fallback
+  }
+
+  const overrideByRepo = findOverride(repoName || '');
+  if (overrideByRepo) return overrideByRepo;
+
   return defaultDate || null;
 }
 
@@ -130,7 +166,8 @@ async function loadPages() {
   loading.value = true;
   error.value = null;
   try {
-    const resp = await fetch('/api/pages');
+    // force browser to revalidate cached responses (avoid stale client cache)
+    const resp = await fetch('/api/pages', { cache: 'no-cache' });
     if (!resp.ok) {
       throw new Error(`Server error: ${resp.status} ${resp.statusText}`);
     }
@@ -167,7 +204,7 @@ async function fetchPagesFromGitHub() {
       if (!Array.isArray(repos)) continue;
       for (const repo of repos) {
         if (repo.homepage && repo.homepage.trim()) {
-          const finalDate = getProjectDate(repo.name, repo.created_at);
+          const finalDate = getProjectDate(repo.name, repo.homepage, repo.created_at);
           allPages.push({
             name: repo.name,
             displayName: extractDisplayName(repo.homepage, repo.name),
