@@ -225,6 +225,39 @@ onMounted(() => {
   margin-right: 0;
 }
 
+/* Collapsed sidebar state: triggered by adding `sidebar-collapsed` to <html> */
+html.sidebar-collapsed .sidebar {
+  width: 72px; /* narrow strip for collapsed state */
+  padding: 12px;
+  margin-left: calc(-1 * var(--sidebar-left-gap, 32px));
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  overflow: hidden;
+}
+
+/* hide text content so only a small avatar/icon remains */
+html.sidebar-collapsed .about-content,
+html.sidebar-collapsed .name,
+html.sidebar-collapsed .bio,
+html.sidebar-collapsed .contact,
+html.sidebar-collapsed .nav-list,
+html.sidebar-collapsed .follow-row,
+html.sidebar-collapsed .contact-meta,
+html.sidebar-collapsed .last-updated-content,
+html.sidebar-collapsed .meta-item .email-link,
+html.sidebar-collapsed .label,
+html.sidebar-collapsed .follow-text {
+  display: none !important;
+}
+
+/* reduce avatar to a compact icon */
+html.sidebar-collapsed .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
 .about-me {
   margin-bottom: 18px;
   /* 左对齐文字内容 */
