@@ -398,6 +398,63 @@ a.repo-link {
   border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
+/* Single-column / collapsed-sidebar layout: center and expand main home content
+   Triggered when `sidebar-collapsed` is added to the <html> element. */
+html.sidebar-collapsed .home {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  /* Match SearchBar width so centers align */
+  width: min(960px, 92vw) !important;
+  max-width: 960px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure cards inside home also take the expanded width and stay centered */
+html.sidebar-collapsed .home__card {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+@media (max-width: 1000px) {
+  /* On small screens the layout already stacks; keep consistent padding */
+  html.sidebar-collapsed .home {
+    width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    max-width: none !important;
+  }
+}
+
+/* Further adjust layout when sidebar is collapsed so main column centers under header */
+html.sidebar-collapsed .layout {
+  justify-content: center !important;
+}
+
+html.sidebar-collapsed .layout .el-main {
+  /* prevent negative margin from shifting the main area */
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: min(960px, 92vw) !important; /* match SearchBar */
+  max-width: 960px !important;
+}
+
+/* Remove app side padding when sidebar is collapsed so everything truly centers */
+html.sidebar-collapsed .app {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  --sidebar-left-gap: 0 !important;
+  --sidebar-right-gap: 0 !important;
+}
+
+/* Ensure header uses full width available inside app when collapsed */
+html.sidebar-collapsed .app__header {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 /* Sidebar collapsed mode: hide left sidebar and visually center main content
    Note: we keep the root padding variables untouched so header/search bar
    remain centered. To visually center the main column we translate it left by
