@@ -76,7 +76,10 @@
       </a>
     </div>
 
-    <div class="copyright">© {{ copyrightYear }} {{ githubUser }}</div>
+    <div class="copyright">
+      © {{ copyrightYear }} {{ githubUser }} |
+      <a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener">萌ICP备20260803号</a>
+    </div>
   </div>
 </template>
 
@@ -265,5 +268,12 @@ onBeforeUnmount(() => {
   color: rgba(255, 255, 255, 0.92);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   font-weight: 500;
+}
+.copyright a {
+  color: inherit;
+  text-decoration: none;
+}
+.copyright a:hover {
+  text-decoration: underline;
 }
 </style>

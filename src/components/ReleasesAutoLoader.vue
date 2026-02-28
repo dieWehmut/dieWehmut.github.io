@@ -15,23 +15,23 @@
 
       <!-- Games Section -->
       <div v-if="props.type === 'games' && filteredGames.length > 0">
-        <div v-for="game in filteredGames" :key="game.tag_name" class="release-item" tabindex="0" role="button" @click="openRepo(game)" @keydown.enter="openRepo(game)">
+        <div v-for="game in filteredGames" :key="`${game.tag_name}-${game.name}-${resolveCopyUrl(game)}`" class="release-item" tabindex="0" role="button" @click="openRepo(game)" @keydown.enter="openRepo(game)">
           <div class="item-info">
-            <el-icon class="item-icon"><Monitor /></el-icon>
+            <el-icon class="item-icon"><Aim /></el-icon>
             <span class="item-name">{{ game.name }}</span>
           </div>
           <div class="item-actions">
-            <a :href="game.html_url" target="_blank" rel="noopener" class="action-btn" @click.stop>
+            <el-button v-if="shouldShowDownload(game)" class="action-btn" @click.stop="handleDownload(game)">
               <el-icon><Download /></el-icon>
               <span class="btn-text">{{ t('action.download') }}</span>
-            </a>
-            <a :href="game.repo_url" target="_blank" rel="noopener" class="action-btn repo-btn" @click.stop>
+            </el-button>
+            <a v-if="resolveRepoUrl(game)" :href="resolveRepoUrl(game)" target="_blank" rel="noopener" class="action-btn repo-btn" @click.stop>
               <el-icon><Link /></el-icon>
               <span class="btn-text">{{ t('action.repo') }}</span>
             </a>
-            <el-button class="action-btn copy-btn" @click.stop="copyLink(game.html_url)">
+            <el-button class="action-btn copy-btn" @click.stop="copyLink(resolveCopyUrl(game))">
               <el-icon><CopyDocument /></el-icon>
-              <span class="btn-text">{{ copiedLinks[game.html_url] ? t('action.copied') : t('action.copy') }}</span>
+              <span class="btn-text">{{ copiedLinks[resolveCopyUrl(game)] ? t('action.copied') : t('action.copy') }}</span>
             </el-button>
           </div>
         </div>
@@ -39,23 +39,23 @@
 
       <!-- Apps Section -->
       <div v-if="props.type === 'apps' && filteredApps.length > 0">
-        <div v-for="app in filteredApps" :key="app.tag_name" class="release-item" tabindex="0" role="button" @click="openRepo(app)" @keydown.enter="openRepo(app)">
+        <div v-for="app in filteredApps" :key="`${app.tag_name}-${app.name}-${resolveCopyUrl(app)}`" class="release-item" tabindex="0" role="button" @click="openRepo(app)" @keydown.enter="openRepo(app)">
           <div class="item-info">
             <el-icon class="item-icon"><Grid /></el-icon>
             <span class="item-name">{{ app.name }}</span>
           </div>
           <div class="item-actions">
-            <a :href="app.html_url" target="_blank" rel="noopener" class="action-btn" @click.stop>
+            <el-button v-if="shouldShowDownload(app)" class="action-btn" @click.stop="handleDownload(app)">
               <el-icon><Download /></el-icon>
               <span class="btn-text">{{ t('action.download') }}</span>
-            </a>
-            <a :href="app.repo_url" target="_blank" rel="noopener" class="action-btn repo-btn" @click.stop>
+            </el-button>
+            <a v-if="resolveRepoUrl(app)" :href="resolveRepoUrl(app)" target="_blank" rel="noopener" class="action-btn repo-btn" @click.stop>
               <el-icon><Link /></el-icon>
               <span class="btn-text">{{ t('action.repo') }}</span>
             </a>
-            <el-button class="action-btn copy-btn" @click.stop="copyLink(app.html_url)">
+            <el-button class="action-btn copy-btn" @click.stop="copyLink(resolveCopyUrl(app))">
               <el-icon><CopyDocument /></el-icon>
-              <span class="btn-text">{{ copiedLinks[app.html_url] ? t('action.copied') : t('action.copy') }}</span>
+              <span class="btn-text">{{ copiedLinks[resolveCopyUrl(app)] ? t('action.copied') : t('action.copy') }}</span>
             </el-button>
           </div>
         </div>
@@ -66,11 +66,12 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed, defineExpose } from 'vue'
-import { Monitor, Grid, Download, Link, CopyDocument } from '@element-plus/icons-vue'
+import { Aim, Grid, Download, Link, CopyDocument } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
 import { getGitHubHeaders } from '../utils/github'
+import { useContent } from '../data/content'
 
 const props = defineProps({
   type: {
@@ -84,6 +85,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { games: gamesConfig, apps: appsConfig } = useContent()
 
 // Reactive data
 const games = ref([])
@@ -113,6 +115,16 @@ const filteredApps = computed(() => {
   return apps.value.filter((item) => matchesItem(item, q))
 })
 
+const manualGames = computed(() => {
+  const items = gamesConfig.value?.[0]?.manualItems || []
+  return items.map((item, idx) => normalizeManualItem(item, idx, 'manual-game'))
+})
+
+const manualApps = computed(() => {
+  const items = appsConfig.value?.[0]?.manualItems || []
+  return items.map((item, idx) => normalizeManualItem(item, idx, 'manual-app'))
+})
+
 function stripExtension(filename) {
   return filename.replace(/\.[^/.]+$/, '')
 }
@@ -121,9 +133,57 @@ function isAndroidApp(filename) {
          filename.toLowerCase().endsWith('_android')
 }
 
+function normalizeManualItem(item, index, prefix) {
+  const downloadUrl = item?.html_url || item?.url || ''
+  const repoUrl = item?.repo_url || item?.repoUrl || ''
+  return {
+    tag_name: item?.tag_name || `${prefix}-${index}`,
+    name: item?.name || `${prefix}-${index}`,
+    html_url: downloadUrl,
+    repo_url: repoUrl,
+    showDownload: item?.showDownload !== false,
+    downloadToast: item?.downloadToast === true,
+    downloadToastMessage: item?.downloadToastMessage || '私聊站长要哦~',
+  }
+}
+
+function resolveDownloadUrl(item) {
+  return item?.html_url || item?.url || ''
+}
+
+function resolveRepoUrl(item) {
+  return item?.repo_url || item?.repoUrl || item?.html_url || item?.url || ''
+}
+
+function resolveCopyUrl(item) {
+  return resolveDownloadUrl(item) || resolveRepoUrl(item)
+}
+
+function shouldShowDownload(item) {
+  if (item?.showDownload === false) return false
+  if (item?.downloadToast === true) return true
+  return !!resolveDownloadUrl(item)
+}
+
+function handleDownload(item) {
+  if (item?.downloadToast === true) {
+    showCenteredToast(item?.downloadToastMessage || '私聊站长要哦~', { type: 'info', duration: 2500 })
+    return
+  }
+  const url = resolveDownloadUrl(item)
+  if (!url) {
+    showCenteredToast('私聊站长要哦~', { type: 'info', duration: 2500 })
+    return
+  }
+  window.open(url, '_blank', 'noopener')
+}
+
 async function loadReleases() {
   loading.value = true
   error.value = null
+
+  let autoGames = []
+  let autoApps = []
 
   try {
     const apiUrl = 'https://api.github.com/repos/dieWehmut/Showcase/releases'
@@ -146,7 +206,8 @@ async function loadReleases() {
             tag_name: release.tag_name,
             name: displayName,
             html_url: asset.browser_download_url,
-            repo_url: releaseTagUrl
+            repo_url: releaseTagUrl,
+            showDownload: true,
           })
         })
 
@@ -157,19 +218,24 @@ async function loadReleases() {
             tag_name: release.tag_name,
             name: displayName,
             html_url: asset.browser_download_url,
-            repo_url: releaseTagUrl
+            repo_url: releaseTagUrl,
+            showDownload: true,
           })
         })
       }
     })
 
-    games.value = gamesData
-    apps.value = appsData
+    autoGames = gamesData
+    autoApps = appsData
 
   } catch (e) {
-    error.value = t('error.unable_load') || 'Unable to load releases.'
+    if ((props.type === 'games' && manualGames.value.length === 0) || (props.type === 'apps' && manualApps.value.length === 0)) {
+      error.value = t('error.unable_load') || 'Unable to load releases.'
+    }
     console.error('Failed to load releases:', e)
   } finally {
+    games.value = [...manualGames.value, ...autoGames]
+    apps.value = [...manualApps.value, ...autoApps]
     loading.value = false
   }
 }
@@ -198,7 +264,7 @@ async function copyLink(url) {
 }
 
 function openRepo(item) {
-  const url = item?.repo_url || item?.html_url || ''
+  const url = resolveRepoUrl(item)
   if (!url) {
     showCenteredToast(t ? t('warning.no_repo') : '🔗 No repo available', { type: 'warning', duration: 3000 })
     return
