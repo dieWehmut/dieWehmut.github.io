@@ -151,13 +151,11 @@ function formatDateTime(d) {
   try {
     const dt = new Date(d);
     if (isNaN(dt.valueOf())) return d;
-    // format: YYYY-MM-DD HH:MM
+    // format: YYYY-MM-DD (no time)
     const Y = dt.getFullYear();
     const M = String(dt.getMonth() + 1).padStart(2, '0');
     const D = String(dt.getDate()).padStart(2, '0');
-    const hh = String(dt.getHours()).padStart(2, '0');
-    const mm = String(dt.getMinutes()).padStart(2, '0');
-    return `${Y}-${M}-${D} ${hh}:${mm}`;
+    return `${Y}-${M}-${D}`;
   } catch {
     return d;
   }
@@ -202,15 +200,17 @@ onMounted(() => {
 .sidebar {
   /* participate in layout (sticky) so left+main(+right) align as a group */
   position: sticky;
-  /* align so sidebar top sits below the header and layout padding (header + layout padding-top)
-    use a shared variable so changes to layout padding keep both columns aligned */
-  top: calc(var(--header-height, 80px) + var(--layout-padding-top, 20px));
-  width: 300px; /* increased width for bigger avatar */
+  /* slightly higher position so all content (including last-updated) is visible */
+  top: calc(var(--header-height, 80px) + 8px);
+  width: 300px;
   /* translucent background (lightened) to improve legibility over video without being too dark */
   background: rgba(0,0,0,0.30) !important;
   border: 1px solid rgba(255,255,255,0.04) !important;
   border-radius: 14px;
-  padding: 18px;
+  padding: 14px 18px;
+  /* ensure all content is visible without scrollbar */
+  overflow: visible;
+  max-height: calc(100vh - var(--header-height, 80px) - 16px);
   /* push shadow to left only so right edge appears flush with main content */
   box-shadow: none !important;
   z-index: 1100;
@@ -259,8 +259,7 @@ html.sidebar-collapsed .avatar {
 }
 
 .about-me {
-  margin-bottom: 18px;
-  /* 左对齐文字内容 */
+  margin-bottom: 12px;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -268,12 +267,12 @@ html.sidebar-collapsed .avatar {
 }
 
 .avatar-container {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .avatar {
-  width: 270px;
-  height: 270px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   box-shadow: 0 8px 20px rgba(64,158,255,0.12);
   transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms ease, filter 260ms ease;

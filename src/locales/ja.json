@@ -2,7 +2,9 @@
   "backToTop": "トップへ戻る",
   "settings": "設定",
   "language": "言語",
-  "search": { "hint": "検索 ..." },
+  "search": {
+    "hint": "検索 ..."
+  },
   "sidebar": {
     "bio": "南京大学（蘇州キャンパス）知能科学技術 学士",
     "lastUpdated": "最終更新：",
@@ -10,7 +12,7 @@
     "location": "中国 蘇州"
   },
   "nav": {
-    "pages": "ページ",
+    "pages": "サイト",
     "games": "ゲーム",
     "apps": "アプリ",
     "files": "ファイル",
@@ -31,7 +33,7 @@
     "copy": "コピー",
     "copied": "コピー済み",
     "first_result_copied": "最初の結果のリンクをコピーしました",
-  "no_result": "一致する結果が見つかりませんでした",
+    "no_result": "一致する結果が見つかりませんでした",
     "copy_failed": "コピーに失敗しました",
     "download": "ダウンロード",
     "repo": "リポジトリ",
@@ -39,7 +41,9 @@
     "expand": "展開",
     "collapse": "折りたたむ"
   },
-  "footer": { "uptime": "稼働時間" },
+  "footer": {
+    "uptime": "稼働時間"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -47,13 +51,11 @@
     "ja": "日本語",
     "de": "Deutsch",
     "la": "ラテン語"
-  }
-  ,
+  },
   "intro": {
     "title": "ようこそ！",
     "subtitle": "dieWehmut の Nexus"
-  }
-  ,
+  },
   "float": {
     "cleanMode": "クリーンモードを切り替え",
     "toggleSidebar": "1列/2列を切り替え"

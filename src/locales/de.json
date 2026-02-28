@@ -2,7 +2,9 @@
   "backToTop": "Nach oben",
   "settings": "Einstellungen",
   "language": "Sprache",
-  "search": { "hint": "Suche ..." },
+  "search": {
+    "hint": "Suche ..."
+  },
   "sidebar": {
     "bio": "Bachelor in Intelligent Science and Technology, Nanjing University, Suzhou Campus",
     "lastUpdated": "Zuletzt aktualisiert: ",
@@ -10,7 +12,7 @@
     "location": "Suzhou, China"
   },
   "nav": {
-    "pages": "Seiten",
+    "pages": "Websites",
     "games": "Spiele",
     "apps": "Apps",
     "files": "Dateien",
@@ -31,7 +33,7 @@
     "copy": "Kopieren",
     "copied": "Kopiert",
     "first_result_copied": "Link des ersten Ergebnisses kopiert",
-  "no_result": "Keine Ergebnisse gefunden",
+    "no_result": "Keine Ergebnisse gefunden",
     "copy_failed": "Kopieren fehlgeschlagen",
     "download": "Herunterladen",
     "repo": "Repo",
@@ -39,7 +41,9 @@
     "expand": "Erweitern",
     "collapse": "Einklappen"
   },
-  "footer": { "uptime": "Betriebszeit" },
+  "footer": {
+    "uptime": "Betriebszeit"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -47,13 +51,11 @@
     "ja": "日本語",
     "de": "Deutsch",
     "la": "Latein"
-  }
-  ,
+  },
   "intro": {
     "title": "Willkommen!",
     "subtitle": "dieWehmut's Nexus"
-  }
-  ,
+  },
   "float": {
     "cleanMode": "Clean-Modus umschalten",
     "toggleSidebar": "Spaltenansicht umschalten"

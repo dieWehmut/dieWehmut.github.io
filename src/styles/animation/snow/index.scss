@@ -1,25 +1,14 @@
 /* -------------------------------------------------------
- * Snow animation layer
- * The React component <SnowLayer> mounts a canvas directly
- * on document.body (fixed, full-viewport) so it is never
- * clipped by any overflow:hidden ancestor.
- * z-index: 9998  pointer-events: none  – purely visual.
+ * Snow animation layer (ParticleCanvas.vue)
+ * Full-viewport fixed canvas, pointer-events: none.
+ * z-index: 0 – behind sakura & UI.
  * ------------------------------------------------------- */
-
-/* Placeholder div – exists in the React tree but is invisible */
-#snow-layer,
-.snow-layer {
-  display: none; /* the real canvas lives on <body> */
-}
-
-/* Canvas injected by createSnowAnimation() onto <body> */
-body > .snow-canvas {
+.particle-canvas {
   display: block;
   position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
+  inset: 0;
   width: 100vw !important;
   height: 100vh !important;
   pointer-events: none !important;
-  z-index: 9998 !important;
+  z-index: 0 !important;
 }

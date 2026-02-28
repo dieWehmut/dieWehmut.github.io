@@ -5,4 +5,27 @@
 @use "./theme/light/index.scss" as *;
 @use "./theme/dark/index.scss" as *;
 @use "./animation/snow/index.scss" as *;
-/* tailwind/index.scss excluded: requires Tailwind PostCSS setup to enable */
+@use "./animation/sakura/index.scss" as *;
+
+/* Smooth transitions when toggling sidebar collapsed state */
+html.sidebar-collapsed .layout,
+html.sidebar-collapsed .home,
+html.sidebar-collapsed .app,
+html.sidebar-collapsed .el-main,
+html.sidebar-collapsed .sidebar {
+	transition: transform 340ms cubic-bezier(.2,.9,.2,1),
+							margin 340ms cubic-bezier(.2,.9,.2,1),
+							width 340ms cubic-bezier(.2,.9,.2,1),
+							opacity 260ms ease;
+}
+
+/* Ensure sidebar itself animates smoothly between visible/hidden states */
+.sidebar {
+	transition: transform 360ms cubic-bezier(.2,.9,.2,1), opacity 320ms ease, width 300ms ease;
+}
+
+/* When collapsing, fade & slide to keep transition smooth */
+html.sidebar-collapsed .sidebar {
+	transform: translateX(-8px);
+	opacity: 0.98;
+}

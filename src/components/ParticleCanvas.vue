@@ -17,7 +17,7 @@ const COUNT        = 120    // 雪的密度
 const AREA         = 800    // density reference area (px²/particle)
 const MIN_R        = 1.5    // min radius px (logical)
 const MAX_R        = 4.5    // max radius px (logical)
-const SPEED_BASE   = 1.2    // base fall speed (logical px/frame)
+const SPEED_BASE   = 0.5    // base fall speed (logical px/frame) – gentle drift
 const GRAB_DIST    = 140    // mouse grab distance (logical px)
 const GRAB_OPACITY = 0.55   // line opacity at distance=0
 const LINE_WIDTH   = 1      // grab line width px
@@ -167,11 +167,5 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.particle-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  display: block;
-}
+/* Layout styles moved to src/styles/animation/snow/index.scss */
 </style>

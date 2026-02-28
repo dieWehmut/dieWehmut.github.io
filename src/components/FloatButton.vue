@@ -260,8 +260,44 @@ onMounted(() => {
 .back-button { bottom: 0; }
 /* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
 .sidebar-toggle { bottom: 56px; }
-.sidebar-toggle svg { transition: transform 180ms ease; }
-.sidebar-toggle.active svg { transform: rotate(180deg); }
+.sidebar-toggle svg {
+  transition: transform 420ms cubic-bezier(.34,1.56,.64,1);
+}
+.sidebar-toggle.active svg {
+  transform: rotate(180deg) scale(0.85);
+}
+/* bounce-in when toggled */
+.sidebar-toggle {
+  transition: transform 360ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 260ms ease,
+              background-color 260ms ease,
+              opacity 160ms ease;
+}
+.sidebar-toggle:active {
+  transform: scale(0.82) !important;
+}
+/* pulse ring on state change via pseudo-element */
+.sidebar-toggle::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 300ms ease, transform 400ms cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+.sidebar-toggle.active::after {
+  opacity: 1;
+  transform: scale(1.12);
+  animation: sidebarPulse 600ms ease-out forwards;
+}
+@keyframes sidebarPulse {
+  0%   { opacity: 0.7; transform: scale(0.9); }
+  50%  { opacity: 0.4; transform: scale(1.18); }
+  100% { opacity: 0;   transform: scale(1.3); }
+}
 .settings-button { bottom: 112px; }
 .lang-toggle { bottom: 168px; }
 

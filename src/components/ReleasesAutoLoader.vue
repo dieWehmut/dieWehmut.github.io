@@ -167,7 +167,41 @@ function normalizeManualItem(item, index, prefix) {
     downloadToast: item?.downloadToast === true,
     downloadToastMessage: item?.downloadToastMessage || '私聊站长要哦~',
     date: item?.date || null,
+    _repoUrl: repoUrl, // keep for commit fetching
   }
+}
+
+/**
+ * Parse a GitHub repo URL → {owner, repo} or null.
+ * Supports: https://github.com/owner/repo[/...]
+ */
+function parseGitHubRepo(url) {
+  if (!url) return null
+  const m = url.match(/github\.com\/([^/]+)\/([^/]+)/)
+  if (!m) return null
+  return { owner: m[1], repo: m[2].replace(/\.git$/, '') }
+}
+
+/**
+ * For each manual item that has a GitHub repo_url but no date,
+ * fetch the latest commit date and patch the item in-place.
+ */
+async function enrichManualDates(items) {
+  await Promise.all(items.map(async (item) => {
+    if (item.date) return // already has a date
+    const info = parseGitHubRepo(item._repoUrl)
+    if (!info) return
+    try {
+      const commits = await fetchWithCache(
+        `https://api.github.com/repos/${info.owner}/${info.repo}/commits?per_page=1`,
+        { headers: getGitHubHeaders() },
+        1000 * 60 * 60 * 6 // cache 6h
+      )
+      if (Array.isArray(commits) && commits.length > 0) {
+        item.date = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
+      }
+    } catch (e) { /* ignore */ }
+  }))
 }
 
 function resolveDownloadUrl(item) {
@@ -205,7 +239,10 @@ function formatDate(d) {
   try {
     const date = new Date(d)
     if (!isNaN(date.valueOf())) {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      const Y = date.getFullYear()
+      const M = String(date.getMonth() + 1).padStart(2, '0')
+      const D = String(date.getDate()).padStart(2, '0')
+      return `${Y}-${M}-${D}`
     }
   } catch {}
   return d
@@ -269,6 +306,11 @@ async function loadReleases() {
     }
     console.error('Failed to load releases:', e)
   } finally {
+    // fetch commit dates for manual items that don't have one
+    await Promise.all([
+      enrichManualDates(manualGames.value),
+      enrichManualDates(manualApps.value),
+    ])
     games.value = [...manualGames.value, ...autoGames]
     apps.value = [...manualApps.value, ...autoApps]
     loading.value = false

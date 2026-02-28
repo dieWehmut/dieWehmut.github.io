@@ -79,8 +79,36 @@ const manualTools = computed(() => {
     downloadToast: item?.downloadToast === true,
     downloadToastMessage: item?.downloadToastMessage || '私聊站长要哦~',
     isManual: true,
+    _repoUrl: item?.repo_url || item?.repoUrl || '',
   }))
 })
+
+/** Parse GitHub repo URL → {owner, repo} or null */
+function parseGitHubRepo(url) {
+  if (!url) return null
+  const m = url.match(/github\.com\/([^/]+)\/([^/]+)/)
+  if (!m) return null
+  return { owner: m[1], repo: m[2].replace(/\.git$/, '') }
+}
+
+/** Fetch latest commit date for manual tools that don't have a date */
+async function enrichManualToolDates(items) {
+  await Promise.all(items.map(async (item) => {
+    if (item.lastModified) return
+    const info = parseGitHubRepo(item._repoUrl)
+    if (!info) return
+    try {
+      const commits = await fetchWithCache(
+        `https://api.github.com/repos/${info.owner}/${info.repo}/commits?per_page=1`,
+        { headers: getGitHubHeaders() },
+        1000 * 60 * 60 * 6
+      )
+      if (Array.isArray(commits) && commits.length > 0) {
+        item.lastModified = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
+      }
+    } catch (e) { /* ignore */ }
+  }))
+}
 
 function resolveDownloadUrl(tool) {
   return tool?.html_url || tool?.url || ''
@@ -148,6 +176,8 @@ async function fetchTools() {
   } catch (e) {
     autoTools = []
   } finally {
+    // fetch commit dates for manual tools that don't have a date
+    await enrichManualToolDates(manualTools.value)
     tools.value = [...manualTools.value, ...autoTools]
     loading.value = false
   }
@@ -209,8 +239,8 @@ function formatDateShort(d) {
     const dt = new Date(d);
     if (isNaN(dt.valueOf())) return d;
     const Y = dt.getFullYear();
-    const M = dt.getMonth() + 1;
-    const D = dt.getDate();
+    const M = String(dt.getMonth() + 1).padStart(2, '0');
+    const D = String(dt.getDate()).padStart(2, '0');
     return `${Y}-${M}-${D}`;
   } catch {
     return d;
