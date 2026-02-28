@@ -1,0 +1,40 @@
+/* Light theme variables */
+:root[data-theme="light"], [data-theme="light"] {
+  --brand-accent: #4b2a85;
+  --brand-accent-strong: #3b1a6a;
+  --brand-accent-soft: rgba(75, 42, 133, 0.08);
+  --brand-accent-faint: rgba(75, 42, 133, 0.16);
+  --brand-border: rgba(75, 42, 133, 0.18);
+  --brand-shadow: 0 10px 24px rgba(75, 42, 133, 0.06);
+  --brand-text: #2b1650;
+  --header-blue: var(--brand-text);
+  --brand-muted: #666;
+  --brand-bg: #ffffff;
+  --brand-blue: #3b5bdb;
+  --brand-purple: #6d28d9;
+  /* Nav button colors for light */
+  --nav-bg: #ffffff;
+  --nav-fg: #1f2937; /* dark text */
+}
+
+/* Ensure root & body have light background fallback */
+[data-theme="light"] html,
+[data-theme="light"] body,
+[data-theme="light"] #root {
+  background-color: #fce4f0 !important;
+  background-image: none !important;
+}
+
+/* Make Ant Design layout containers transparent so app-root gradient shows through */
+[data-theme="light"] .ant-layout,
+[data-theme="light"] .ant-layout-content {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Override Ant Design default Header element */
+[data-theme="light"] .ant-layout-header {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}

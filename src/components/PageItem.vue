@@ -5,11 +5,9 @@
         <template v-if="pageName">
           <span class="page-info">
             <el-icon class="page-icon">
-              <!-- inline globe svg to avoid relying on an unavailable icon export -->
+              <!-- inline book icon for Page item -->
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 12h20" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 2c2.2 4 2.2 12 0 16M22 12c-4 2.2-12 2.2-16 0" stroke="currentColor" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 5a2 2 0 012-2h12a2 2 0 012 2v14a1 1 0 01-1.447.894L12 17l-8.553 2.894A1 1 0 012 19V5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </svg>
             </el-icon>
             <span class="page-name">{{ pageName }}</span>

@@ -1,0 +1,10 @@
+/* Minimal cursor when hovering over scrollable regions/scrollbars */
+:root {
+  /* use ns-resize for vertical scrolling areas as a clear minimal indicator */
+  --cursor-scrollbar: ns-resize;
+}
+
+/* Apply for custom scroll areas if needed (can't reliably target native scrollbar across browsers) */
+.scrollable, .scroll-area, .custom-scrollbar {
+  cursor: var(--cursor-scrollbar);
+}

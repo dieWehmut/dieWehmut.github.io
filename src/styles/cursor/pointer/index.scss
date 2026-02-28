@@ -1,0 +1,8 @@
+/* Minimal pointer cursor for clickable elements */
+:root {
+  --cursor-pointer: pointer;
+}
+
+button, a, a[href], input[type="button"], input[type="submit"], .clickable {
+  cursor: var(--cursor-pointer);
+}

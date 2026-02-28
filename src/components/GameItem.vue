@@ -4,7 +4,15 @@
       <div class="game-item__line">
         <template v-if="gameName">
           <span class="game-info">
-            <el-icon class="game-icon"><Monitor /></el-icon>
+            <el-icon class="game-icon">
+              <!-- inline gamepad icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 12a3 3 0 00-3 3v1a3 3 0 003 3h12a3 3 0 003-3v-1a3 3 0 00-3-3H6z" stroke="currentColor" stroke-width="1.2" fill="none" />
+                <circle cx="9" cy="14" r="1" fill="currentColor" />
+                <circle cx="15" cy="14" r="1" fill="currentColor" />
+                <path d="M12 10v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </el-icon>
             <span class="game-name">{{ gameName }}</span>
           </span>
         </template>
@@ -59,7 +67,6 @@
 
 <script setup>
 import {
-  Monitor,
   Link,
   Download,
   DocumentCopy,

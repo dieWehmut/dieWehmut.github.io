@@ -17,8 +17,10 @@
         <div class="file-row" @click="toggleDir(entry)">
           <div class="file-info">
             <el-icon class="page-icon"><Folder /></el-icon>
-            <div class="title-container">
-              <div class="single-title">{{ entry.name }}</div>
+            <span class="single-title">{{ entry.name }}</span>
+            <div class="version-info" v-if="folderDates[entry.path]">
+              <el-icon class="calendar-icon"><Calendar /></el-icon>
+              <span class="date">{{ formatDate(folderDates[entry.path]) }}</span>
             </div>
           </div>
           
@@ -92,7 +94,8 @@ import {
   Download,
   ArrowDown,
   ArrowUp,
-  Document
+  Document,
+  Calendar
 } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { showCenteredToast } from '../utils/centerToast'
@@ -105,12 +108,7 @@ function formatDateShort(d) {
   try {
     const dt = new Date(d);
     if (isNaN(dt.valueOf())) return d;
-    const Y = dt.getFullYear();
-    const M = String(dt.getMonth() + 1).padStart(2, '0');
-    const D = String(dt.getDate()).padStart(2, '0');
-    const hh = String(dt.getHours()).padStart(2, '0');
-    const mm = String(dt.getMinutes()).padStart(2, '0');
-    return `${Y}-${M}-${D} ${hh}:${mm}`;
+    return `${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()}`;
   } catch {
     return d;
   }
@@ -146,6 +144,7 @@ const openDirs = reactive({}); // path => boolean
 const loading = ref(true);
 const error = ref(null);
 const copiedFiles = reactive({});
+const folderDates = reactive({});
 let defaultBranch = 'main';
 
 // Filter logic
@@ -254,6 +253,8 @@ async function loadContents(path = '') {
         .sort((a, b) => a.name.localeCompare(b.name));
       // keep entriesMap for root empty (not used)
       entriesMap[''] = [];
+      // Fetch commit dates for root folders
+      fetchFolderDates();
     } else {
       // when loading a folder, store only files inside it
       entriesMap[path || ''] = items.filter(i => i.type === 'file');
@@ -263,6 +264,24 @@ async function loadContents(path = '') {
   } finally {
     loading.value = false;
   }
+}
+
+async function fetchFolderDates() {
+  const { owner, repo } = parseRepo(props.repoUrl);
+  await Promise.all(entriesRoot.value.map(async (folder) => {
+    try {
+      const commits = await fetchWithCache(
+        `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(folder.path)}&per_page=1`,
+        { headers: getGitHubHeaders() },
+        1000 * 60 * 60 * 6
+      );
+      if (Array.isArray(commits) && commits.length > 0) {
+        folderDates[folder.path] = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }));
 }
 
 function getDisplayName(filename) {
@@ -433,6 +452,9 @@ async function toggleDir(item) {
   gap: 12px;
   flex: 1;
   min-width: 0;
+  flex-wrap: wrap;
+  line-height: 1.5;
+  font-size: 14px;
 }
 
   .page-icon {
@@ -450,6 +472,19 @@ async function toggleDir(item) {
   font-weight: 600;
   color: #f5f5f5 !important;
   font-size: 14px;
+}
+
+.version-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d0d0d0;
+}
+.calendar-icon {
+  font-size: 12px;
+}
+.date {
+  font-size: 13px;
 }
 
 .file-actions {

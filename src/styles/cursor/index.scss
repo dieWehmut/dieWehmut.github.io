@@ -1,0 +1,7 @@
+
+/* cursor index: use modular cursor styles (Dart Sass: prefer @use) */
+@use "./default/index.scss" as *;
+@use "./pointer/index.scss" as *;
+@use "./scrollbar/index.scss" as *;
+@use "./input/index.scss" as *;
+

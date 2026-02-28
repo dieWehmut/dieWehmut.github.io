@@ -17,8 +17,20 @@
       <div v-if="props.type === 'games' && filteredGames.length > 0">
         <div v-for="game in filteredGames" :key="`${game.tag_name}-${game.name}-${resolveCopyUrl(game)}`" class="release-item" tabindex="0" role="button" @click="openRepo(game)" @keydown.enter="openRepo(game)">
           <div class="item-info">
-            <el-icon class="item-icon"><Aim /></el-icon>
+            <el-icon class="item-icon">
+              <!-- inline gamepad icon for list -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 12a3 3 0 00-3 3v1a3 3 0 003 3h12a3 3 0 003-3v-1a3 3 0 00-3-3H6z" stroke="currentColor" stroke-width="1.2" fill="none" />
+                <circle cx="9" cy="14" r="1" fill="currentColor" />
+                <circle cx="15" cy="14" r="1" fill="currentColor" />
+                <path d="M12 10v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </el-icon>
             <span class="item-name">{{ game.name }}</span>
+            <div class="version-info" v-if="game.date">
+              <el-icon class="calendar-icon"><Calendar /></el-icon>
+              <span class="date">{{ formatDate(game.date) }}</span>
+            </div>
           </div>
           <div class="item-actions">
             <el-button v-if="shouldShowDownload(game)" class="action-btn" @click.stop="handleDownload(game)">
@@ -41,8 +53,18 @@
       <div v-if="props.type === 'apps' && filteredApps.length > 0">
         <div v-for="app in filteredApps" :key="`${app.tag_name}-${app.name}-${resolveCopyUrl(app)}`" class="release-item" tabindex="0" role="button" @click="openRepo(app)" @keydown.enter="openRepo(app)">
           <div class="item-info">
-            <el-icon class="item-icon"><Grid /></el-icon>
+            <el-icon class="item-icon">
+              <!-- inline app/mobile icon for list -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="1.2" fill="none" />
+                <circle cx="12" cy="18" r="0.8" fill="currentColor" />
+              </svg>
+            </el-icon>
             <span class="item-name">{{ app.name }}</span>
+            <div class="version-info" v-if="app.date">
+              <el-icon class="calendar-icon"><Calendar /></el-icon>
+              <span class="date">{{ formatDate(app.date) }}</span>
+            </div>
           </div>
           <div class="item-actions">
             <el-button v-if="shouldShowDownload(app)" class="action-btn" @click.stop="handleDownload(app)">
@@ -66,7 +88,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed, defineExpose } from 'vue'
-import { Aim, Grid, Download, Link, CopyDocument } from '@element-plus/icons-vue'
+import { Download, Link, CopyDocument, Calendar } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
@@ -144,6 +166,7 @@ function normalizeManualItem(item, index, prefix) {
     showDownload: item?.showDownload !== false,
     downloadToast: item?.downloadToast === true,
     downloadToastMessage: item?.downloadToastMessage || '私聊站长要哦~',
+    date: item?.date || null,
   }
 }
 
@@ -178,6 +201,16 @@ function handleDownload(item) {
   window.open(url, '_blank', 'noopener')
 }
 
+function formatDate(d) {
+  try {
+    const date = new Date(d)
+    if (!isNaN(date.valueOf())) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    }
+  } catch {}
+  return d
+}
+
 async function loadReleases() {
   loading.value = true
   error.value = null
@@ -208,6 +241,7 @@ async function loadReleases() {
             html_url: asset.browser_download_url,
             repo_url: releaseTagUrl,
             showDownload: true,
+            date: release.published_at || release.created_at || null,
           })
         })
 
@@ -220,6 +254,7 @@ async function loadReleases() {
             html_url: asset.browser_download_url,
             repo_url: releaseTagUrl,
             showDownload: true,
+            date: release.published_at || release.created_at || null,
           })
         })
       }
@@ -336,6 +371,8 @@ defineExpose({ games, apps, filteredGames, filteredApps })
   gap: 12px;
   flex: 1;
   min-width: 0;
+  flex-wrap: wrap;
+  line-height: 1.5;
 }
 
 .item-icon {
@@ -348,6 +385,19 @@ defineExpose({ games, apps, filteredGames, filteredApps })
   font-weight: 600;
   color: #f5f5f5 !important;
   font-size: 14px;
+}
+
+.version-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d0d0d0;
+}
+.calendar-icon {
+  font-size: 12px;
+}
+.date {
+  font-size: 13px;
 }
 
 .item-actions {

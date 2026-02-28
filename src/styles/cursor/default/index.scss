@@ -1,0 +1,8 @@
+/* Minimal default cursor */
+:root {
+  --cursor-default: auto;
+}
+
+html, body {
+  cursor: var(--cursor-default);
+}
