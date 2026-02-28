@@ -1,0 +1,8 @@
+/* Minimal text cursor for input and editable text areas */
+:root {
+  --cursor-text: text;
+}
+
+input, textarea, [contenteditable="true"] {
+  cursor: var(--cursor-text);
+}

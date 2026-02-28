@@ -1,0 +1,71 @@
+/* Dark theme variables */
+:root[data-theme="dark"], [data-theme="dark"] {
+  --brand-accent: #8b5cf6; /* keep accent visible on dark */
+  --brand-accent-strong: #6f3ae6;
+  --brand-accent-soft: rgba(139, 92, 246, 0.08);
+  --brand-accent-faint: rgba(139, 92, 246, 0.12);
+  --brand-border: rgba(255, 255, 255, 0.08);
+  --brand-shadow: none;
+  --brand-text: #dde4f5;
+  --brand-muted: #c4cce4;
+  --brand-bg: #152236; /* 显青深蓝，不过暗，星点清晰浮现 */
+  /* Nav button colors for dark (only arrow color needed when no box) */
+  --nav-fg: #ffffff;
+  --header-blue: #3b82f6; /* blue for headers in dark mode */
+  /* Auth-specific colors (cards/buttons) to ensure good contrast in dark mode */
+  --auth-panel-bg: rgba(255,255,255,0.04);
+  --auth-panel-border: rgba(255,255,255,0.08);
+  --auth-btn-bg: #1e40af; /* darker vivid blue for primary button */
+  --auth-btn-hover: #7c3aed; /* purple hover */
+  --auth-btn-text: #ffffff;
+  --auth-link: #93c5fd; /* lighter blue for inline links */
+  --auth-link-hover: #c4b5fd; /* lighter purple on hover */
+  --brand-blue: #93c5fd;
+  --brand-purple: #c4b5fd;
+}
+
+/* Global dark mode body background */
+[data-theme="dark"] body {
+  background-color: #152236 !important;
+  background-image: none !important;
+}
+
+/* Disable Tailwind gradient utility backgrounds in dark mode */
+[data-theme="dark"] [class*="bg-gradient-to"] {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+/* Make white backgrounds transparent in dark mode */
+:root[data-theme="dark"] [class*="bg-white"], [data-theme="dark"] [class*="bg-white"] {
+  background-color: transparent !important;
+}
+:root[data-theme="dark"] [class*="border-white"], [data-theme="dark"] [class*="border-white"] {
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Force unified background across the app in dark mode */
+[data-theme="dark"] html,
+[data-theme="dark"] body,
+[data-theme="dark"] #root {
+  background-color: #152236 !important;
+  background-image: none !important;
+}
+
+/* Make all element backgrounds transparent in dark mode */
+[data-theme="dark"] * {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+/* Exception: elements that opt into a solid background */
+[data-theme="dark"] [data-theme-keep-bg="true"] {
+  background-color: var(--keep-bg, rgba(255,255,255,0.06)) !important;
+}
+
+/* Override Ant Design default Header element */
+[data-theme="dark"] .ant-layout-header {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}

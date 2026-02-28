@@ -1,6 +1,7 @@
 <template>
   <el-config-provider :button="{ autoInsertSpace: true }">
         <DynamicBackground @ready="onBackgroundReady" />
+    <ParticleCanvas />
         <!-- Entry splash overlay -->
         <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
     <el-container class="app">
@@ -41,6 +42,7 @@
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import SearchBar from './components/SearchBar.vue'
 import DynamicBackground from './components/DynamicBackground.vue'
+import ParticleCanvas from './components/ParticleCanvas.vue'
 import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
 import SideBar from './components/SideBar.vue'

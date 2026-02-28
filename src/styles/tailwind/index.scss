@@ -1,0 +1,29 @@
+/* Tailwind directives removed – Tailwind not configured in this project.
+ * Add @tailwind base/components/utilities here if Tailwind is set up. */
+
+html[data-canvas-open="true"] .main-header {
+  display: none !important;
+}
+
+/* Override browser autofill so inputs keep intended background and text color */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill,
+input:-webkit-autofill:hover,
+textarea:-webkit-autofill:hover,
+select:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--brand-bg, #ffffff) inset !important;
+  box-shadow: 0 0 0px 1000px var(--brand-bg, #ffffff) inset !important;
+  -webkit-text-fill-color: var(--brand-text, #111827) !important;
+}
+
+/* Firefox autofill override */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  box-shadow: 0 0 0px 1000px var(--brand-bg, #ffffff) inset !important;
+  -moz-text-fill-color: var(--brand-text, #111827) !important;
+}

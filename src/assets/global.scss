@@ -1,0 +1,807 @@
+/* Global Styles */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+
+  /* Color Variables */
+  --primary-color: #409eff;
+  --secondary-color: #666;
+  --border-color: #e8e8e8;
+  --bg-light: #fafafa;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #409eff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #66b1ff;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Unified action button styles for cards */
+.action-btn,
+.copy-btn,
+.repo-button,
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px; /* larger, consistent size */
+  min-height: 36px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #333 !important;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  transition: all 0.12s ease;
+}
+.action-btn .el-icon,
+.copy-btn .el-icon,
+.repo-button .el-icon,
+.link-button .el-icon,
+.action-btn > svg,
+.copy-btn > svg,
+.repo-button > svg,
+.link-button > svg {
+  width: 18px;
+  height: 18px;
+  fill: #2b2b2b !important;
+}
+
+/* Stronger overrides for anchors/icons that still appear blue due to other styles */
+/* Target component-local action areas and general anchor.action-btn to ensure consistency */
+.item__actions a.action-btn,
+.item__actions a.repo-button,
+.item__actions a.link-button,
+.game-item__actions a.action-btn,
+.game-item__actions a.repo-button,
+.game-item__actions a.link-button,
+.app-item__actions a.action-btn,
+.app-item__actions a.repo-button,
+.app-item__actions a.link-button,
+.file-item__actions a.action-btn,
+.file-item__actions a.repo-button,
+.file-item__header .repo-link.action-btn,
+.file-item__header a.repo-button,
+.file-item__header a.link-button,
+a.action-btn {
+  color: #333 !important;
+  text-decoration: none !important;
+}
+
+.action-btn svg,
+.action-btn .el-icon,
+.action-btn .el-icon svg,
+.copy-btn svg,
+.copy-btn .el-icon,
+.copy-btn .el-icon svg {
+  fill: #2b2b2b !important;
+  stroke: #2b2b2b !important;
+  color: #2b2b2b !important;
+}
+
+/* In case some frameworks add a more specific link color, force background/border too */
+.item__actions a.action-btn:hover,
+.item__actions a.repo-button:hover,
+.item__actions a.link-button:hover,
+.game-item__actions a.action-btn:hover,
+.game-item__actions a.repo-button:hover,
+.game-item__actions a.link-button:hover,
+.app-item__actions a.action-btn:hover,
+.app-item__actions a.repo-button:hover,
+.app-item__actions a.link-button:hover,
+.file-item__actions a.action-btn:hover,
+.file-item__actions a.repo-button:hover,
+.file-item__header .repo-link.action-btn:hover,
+.file-item__header a.repo-button:hover,
+.file-item__header a.link-button:hover,
+.a.action-btn:hover,
+.a.repo-button:hover,
+.a.link-button:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+.action-btn:hover,
+.copy-btn:hover,
+.repo-button:hover,
+.link-button:hover {
+  background: transparent;
+  border-color: transparent;
+  transform: translateY(-1px) scale(1.01);
+}
+.action-text,
+.btn-text {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Ensure consistent gap in action areas */
+.item__actions,
+.game-item__actions,
+.app-item__actions,
+.file-list__actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Broad overrides for repo-link variants (scoped selectors may include data-v- hashes).
+   These rules are intentionally placed last to win against component-scoped attribute selectors
+   that target `.repo-link[data-v-xxxxx]`. They are high-specificity and use !important
+   so the UI stays visually consistent across components. */
+.repo-link,
+.repo-link.action-btn,
+.game-item__actions .repo-link,
+.file-item__header .repo-link,
+.item__actions .repo-link,
+a.repo-link {
+  /* Match the main action button visual contract */
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #333 !important;
+  border: 1px solid var(--border-color) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  /* Prevent repo buttons from stretching to container height */
+  align-self: center !important;
+  height: auto !important;
+  vertical-align: middle !important;
+  line-height: 1.2 !important;
+}
+.repo-link .el-icon,
+.repo-link svg,
+.repo-link .icon,
+.repo-link .action-icon {
+  width: 18px !important;
+  height: 18px !important;
+  fill: #2b2b2b !important;
+  stroke: #2b2b2b !important;
+  color: #2b2b2b !important;
+}
+.repo-link .action-text,
+.repo-link .btn-text,
+.repo-link span {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+.repo-link:hover,
+.repo-link.action-btn:hover,
+.game-item__actions .repo-link:hover,
+.file-item__header .repo-link:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  transform: translateY(-1px) scale(1.01) !important;
+}
+
+/* Target a common pattern where component-scoped selectors attach a data-v attribute.
+   This gives a bit more specificity against `.repo-link[data-v-xxxx]` rules. */
+.repo-link[data-v-08e32229],
+.game-item__actions a.repo-link[data-v-08e32229],
+.file-item__header a.repo-link[data-v-08e32229] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #333 !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Normalize card text color to a deep black so all cards look consistent */
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card {
+  color: #111417 !important;
+}
+
+/* Ensure textual children inherit the card color, but preserve icon fills which are set elsewhere */
+.game-item *,
+.app-item *,
+.page-item *,
+.file-item *,
+.card *,
+.page-card *,
+.item-card * {
+  color: inherit !important;
+}
+
+/* Normalize version tag (el-tag) across components to black/white style */
+.version-tag,
+.item .version-tag,
+.game-item .version-tag,
+.page-item .version-tag,
+.file-item .version-tag,
+.version-info .version-tag,
+.version-info el-tag {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: inherit !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+}
+
+/* Remove any glass/translucent styling: force full transparency for main cards and related elements */
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card,
+.file-item__header,
+.item-card > .card-body,
+.app-item__actions,
+.file-item__actions {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Reduce contrasts for elements that earlier forced white background: make them transparent */
+.repo-link,
+.action-btn,
+.copy-btn {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* For very small screens keep transparency */
+@media (max-width: 1000px) {
+  .game-item,
+  .app-item,
+  .page-item,
+  .file-item,
+  .card,
+  .page-card,
+  .item-card {
+    background: transparent !important;
+    border: none !important;
+  }
+}
+
+/* Strong final overrides: force full transparency for cards, sidebar, search and action buttons
+   Place at the end to maximize specificity and take precedence over other rules. */
+.app-item,
+.game-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card,
+.file-item__content,
+.item,
+.app-item__actions,
+.game-item__actions,
+.file-list__item,
+.sidebar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.action-btn,
+.repo-link,
+.repo-link.action-btn,
+.game-item__actions a.repo-button,
+.game-item__actions a.link-button,
+.app-item__actions a.repo-button,
+.app-item__actions a.link-button,
+.file-item__actions .repo-link,
+.repo-link[data-v-08e32229] {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ensure search input inner fallbacks stay transparent */
+.search-input :deep(.el-input__wrapper),
+.search-input :deep(.el-input__inner) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Element Plus card overrides: force el-card backgrounds transparent */
+.el-card,
+.el-card__body,
+.home__card,
+.home__card .el-card__body,
+.el-card .el-card__body {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Extra aggressive overrides for home cards: remove any remaining white backgrounds applied by component or library styles */
+.home__card,
+.home__card *,
+.home__card .el-card__header,
+.home__card .el-card__body,
+.home__card .el-card__content,
+.home__card .card-header,
+.home__card .card-header-left {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* If some components still set inline white via specific classes, ensure their most common class names are cleared */
+.github-card,
+.github-card * {
+  background: transparent !important;
+}
+
+/* Readability improvements for transparent UI over video background */
+/* Keep backgrounds transparent but make text/iconography more legible */
+.sidebar {
+  color: #ffffff !important;
+}
+.sidebar .name,
+.sidebar .nav-btn,
+.sidebar .follow-text,
+.sidebar .bio,
+.sidebar .about-content,
+.sidebar .meta-item,
+.sidebar .email-link {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+}
+.sidebar .icon,
+.sidebar svg {
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.6));
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+.github-btn {
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+/* Single-column / collapsed-sidebar layout: center and expand main home content
+   Triggered when `sidebar-collapsed` is added to the <html> element. */
+html.sidebar-collapsed .home {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  /* Match SearchBar width so centers align */
+  width: min(960px, 92vw) !important;
+  max-width: 960px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure cards inside home also take the expanded width and stay centered */
+html.sidebar-collapsed .home__card {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+@media (max-width: 1000px) {
+  /* On small screens the layout already stacks; keep consistent padding */
+  html.sidebar-collapsed .home {
+    width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    max-width: none !important;
+  }
+}
+
+/* Further adjust layout when sidebar is collapsed so main column centers under header */
+html.sidebar-collapsed .layout {
+  justify-content: center !important;
+}
+
+html.sidebar-collapsed .layout .el-main {
+  /* prevent negative margin from shifting the main area */
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: min(960px, 92vw) !important; /* match SearchBar */
+  max-width: 960px !important;
+}
+
+/* Remove app side padding when sidebar is collapsed so everything truly centers */
+html.sidebar-collapsed .app {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  --sidebar-left-gap: 0 !important;
+  --sidebar-right-gap: 0 !important;
+}
+
+/* Ensure header uses full width available inside app when collapsed */
+html.sidebar-collapsed .app__header {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Sidebar collapsed mode: hide left sidebar and visually center main content
+   Note: we keep the root padding variables untouched so header/search bar
+   remain centered. To visually center the main column we translate it left by
+   half the left-gap so it appears symmetric while the header stays put. */
+.sidebar-collapsed .sidebar {
+  /* Instead of fully removing the sidebar element, collapse it visually so it
+     occupies less vertical space while keeping the layout stable. Hide large
+     child blocks (avatar, bio, contact) but keep the name visible so the
+     collapsed bar reads like a compact header. */
+  display: block !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  overflow: hidden !important;
+  height: auto !important;
+}
+/* Hide heavy content inside sidebar when collapsed so the visible height
+   matches roughly the height of the .name element */
+.sidebar-collapsed .sidebar .avatar-container,
+.sidebar-collapsed .sidebar .about-content .bio,
+.sidebar-collapsed .sidebar .about-content .contact,
+.sidebar-collapsed .sidebar .nav-list,
+.sidebar-collapsed .sidebar .contact-meta,
+.sidebar-collapsed .sidebar .follow-row,
+.sidebar-collapsed .sidebar .github-btn {
+  display: none !important;
+}
+.sidebar-collapsed .sidebar .about-content {
+  padding: 0 8px !important;
+}
+.sidebar-collapsed .sidebar .name {
+  margin: 0 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+.sidebar-collapsed .layout {
+  justify-content: center !important;
+}
+.sidebar-collapsed .layout .el-main {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: 1080px;
+  width: 100%;
+  box-sizing: border-box;
+  /* keep main column horizontally centered when sidebar is collapsed */
+  transform: translateX(0);
+  transition: transform 220ms ease;
+}
+/* Small transition to make the layout change smooth */
+.layout { transition: justify-content 220ms ease; }
+
+/* --- Tools row specific override: ensure black translucent background for .tool-row ---
+   Placed at the end to take precedence over other global rules that enforce transparency.
+   This restores the intended visual of Tools.vue rows (rgba black translucent) while
+   keeping hover elevation/transparent behavior. */
+.tools-list .tool-row,
+.tools-list[data-v] .tool-row,
+.tools-list .tool-row[data-v],
+.tools-list[data-v] .tool-row[data-v] {
+  background: rgba(0,0,0,0.30) !important;
+  border-radius: 10px !important;
+  transition: transform 0.14s ease, box-shadow 0.18s ease, color 0.12s ease !important;
+  will-change: transform, box-shadow !important;
+  cursor: pointer !important;
+  color: #ffffff !important;
+}
+
+@media (hover: hover) {
+  .tools-list .tool-row:hover,
+  .tools-list[data-v] .tool-row:hover {
+    background: transparent !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22) !important;
+  }
+}
+
+/* Ensure icons and titles inside tool-row stay white */
+.tools-list .tool-row .single-title,
+.tools-list .tool-row .page-icon,
+.tools-list .tool-row .action-icon {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Keep action buttons visually flat but white colored inside tool rows */
+.tools-list .tool-row .action-btn,
+.tools-list .tool-row .action-btn .btn-text {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+/* Final, aggressive override for repo-link variants to ensure transparent background in deployment
+   This lives at the end of global.css so it wins over component-scoped selectors and third-party rules. */
+.repo-link,
+.repo-link.action-btn,
+.game-item__actions .repo-link,
+.file-item__header .repo-link,
+.item__actions .repo-link,
+a.repo-link,
+[class*="repo-link"],
+[class*="repo-link"] [class*="action"],
+[class*="repo-link"][data-v-] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border-radius: 10px !important;
+  /* transparent background */
+  background: rgba(255,255,255,0) !important;
+  background-color: transparent !important;
+  /* text color: keep dark text but allow components to override if needed */
+  color: #333 !important;
+  /* transparent border */
+  border: 1px solid rgba(232,232,232,0) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  align-self: center !important;
+  height: auto !important;
+  vertical-align: middle !important;
+  line-height: 1.2 !important;
+}
+
+.repo-link .el-icon,
+.repo-link svg,
+.repo-link .icon,
+.repo-link .action-icon {
+  width: 18px !important;
+  height: 18px !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  color: inherit !important;
+}
+
+.repo-link:hover,
+.repo-link.action-btn:hover,
+.game-item__actions .repo-link:hover,
+.file-item__header .repo-link:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  transform: none !important;
+}
+
+/* Clean background mode: animate hiding/showing of main UI regions while keeping floating controls visible
+   Use opacity/transform transitions instead of display:none so we get a smooth exit/enter animation. */
+/* Provide transition presets for the main structural elements */
+.sidebar,
+.home,
+.app__footer,
+.app__header,
+.home__card,
+.layout,
+.el-main {
+  transition: opacity 360ms cubic-bezier(.2,.9,.2,1), transform 360ms cubic-bezier(.2,.9,.2,1);
+  will-change: opacity, transform;
+}
+
+/* When clean-mode is active, fade and slide the primary regions out and disable pointer events */
+.clean-mode .sidebar,
+.clean-mode .home,
+.clean-mode .app__footer,
+.clean-mode .app__header,
+.clean-mode .home__card,
+.clean-mode .layout,
+.clean-mode .el-main {
+  opacity: 0 !important;
+  transform: translateY(10px) !important;
+  pointer-events: none !important;
+}
+
+/* Keep FloatButton visible above everything (do not force-display children) */
+.clean-mode .float-container {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure the page background remains and body doesn't collapse height */
+.clean-mode body, .clean-mode html {
+  height: 100%;
+}
+
+/* === Legibility improvements ===
+   Make text easier to read over dynamic/transparent backgrounds.
+   - Force higher-contrast text color for main content
+   - Add subtle text-shadow for separation from busy video/bg
+   - Give cards a translucent dark backing to improve readability while keeping the design transparent
+*/
+body,
+.home,
+.home *,
+.card,
+.home__card,
+.item,
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.repo-link,
+.action-text,
+.btn-text,
+.page-title,
+.card-header,
+.github-body {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7) !important;
+}
+
+/* translucent dark backdrop for cards and item rows to increase contrast
+   Reduced darkness so the UI isn't too heavy over bright backgrounds */
+.home__card,
+.item,
+.game-item,
+.app-item,
+.page-item,
+.file-item,
+.card,
+.page-card,
+.item-card {
+  background: rgba(0,0,0,0.30) !important;
+  border-radius: 10px !important;
+  padding: 10px !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+
+/* Make action button text/icons visible on dark translucent background */
+.action-btn,
+.repo-link,
+.copy-btn,
+.link-button {
+  background: rgba(255,255,255,0.06) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Increase base legibility: slightly bolder body text and spacing */
+body {
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Reduce icon harshness by using semi-transparent white where appropriate */
+.repo-link .el-icon,
+.action-btn .el-icon,
+.game-item .el-icon,
+.app-item .el-icon {
+  fill: rgba(255,255,255,0.95) !important;
+  color: rgba(255,255,255,0.95) !important;
+}
+
+.home,
+.home * {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55) !important;
+}
+
+/* Emphasize titles and names on home page */
+.home .card-header span,
+.home .page-title,
+.game-name,
+.app-name,
+.file-name-text,
+.single-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65) !important;
+}
+
+/* Slightly dim secondary metadata so primary text pops */
+.home .version-info,
+.home .date,
+.home .single-date,
+.home .activity-text,
+.sidebar .meta-item span {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* Repo/link buttons: make text bright and add subtle outline for visibility */
+.repo-link,
+.action-btn,
+.copy-btn {
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Keep back-to-top button visible but less intrusive (optional) */
+.back-to-top {
+  background-color: rgba(0,0,0,0.5) !important;
+  border-color: rgba(0,0,0,0.5) !important;
+}
+
+/* Restore clear hover/focus affordance for buttons without reintroducing heavy glass backgrounds */
+.action-btn,
+.repo-link,
+.repo-button,
+.link-button,
+.copy-btn,
+.nav-btn,
+.github-btn,
+.el-button[type="text"] {
+  transition: transform 0.12s ease, box-shadow 0.18s ease, color 0.12s ease;
+}
+
+.action-btn:hover,
+.repo-link:hover,
+.repo-button:hover,
+.link-button:hover,
+.copy-btn:hover,
+.github-btn:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+  color: #ffffff !important;
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.28) !important;
+  background: transparent !important; /* subtle highlight removed, keep shadow */
+  color: #ffffff !important;
+}
+
+/* focus accessibility for keyboard users */
+.action-btn:focus,
+.repo-link:focus,
+.repo-button:focus,
+.link-button:focus,
+.nav-btn:focus,
+.github-btn:focus,
+.el-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(64,158,255,0.12) !important;
+}
+
+/* Black & white message style for copy notifications */
+.el-message.bw-message {
+  background: #0b0b0b !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
+}
+.el-message.bw-message .el-message__content {
+  color: #ffffff !important;
+}
+.el-message.bw-message .el-message__icon svg,
+.el-message.bw-message .el-message__icon i {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+

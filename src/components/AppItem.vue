@@ -3,11 +3,19 @@
     <div class="app-item__main">
       <div class="app-item__line">
         <template v-if="appName">
-          <span class="app-info">
-            <el-icon class="app-icon"><Grid /></el-icon>
-            <span class="app-name">{{ appName }}</span>
-          </span>
-        </template>
+            <span class="app-info">
+              <el-icon class="app-icon">
+                <!-- inline apps-grid icon for App item (distinct) -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect x="3" y="3" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                  <rect x="13" y="3" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                  <rect x="3" y="13" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                  <rect x="13" y="13" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                </svg>
+              </el-icon>
+              <span class="app-name">{{ appName }}</span>
+            </span>
+          </template>
         <div class="version-info">
           <el-icon class="calendar-icon"><Calendar /></el-icon>
           <span class="date">{{ formatDate(version.date) }}</span>
@@ -59,7 +67,6 @@
 
 <script setup>
 import {
-  Grid,
   Link,
   Download,
   DocumentCopy,

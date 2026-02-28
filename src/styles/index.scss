@@ -1,0 +1,8 @@
+/* Aggregate style entry */
+@use "./fonts/index.scss" as *;
+@use "./scrollbars/index.scss" as *;
+@use "./cursor/index.scss" as *;
+@use "./theme/light/index.scss" as *;
+@use "./theme/dark/index.scss" as *;
+@use "./animation/snow/index.scss" as *;
+/* tailwind/index.scss excluded: requires Tailwind PostCSS setup to enable */

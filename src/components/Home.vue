@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { useI18n } from 'vue-i18n';
-import { Collection, Link, ArrowUp } from "@element-plus/icons-vue";
+import { Collection, Link, ArrowUp, Platform, Cpu, Flag, Monitor, FolderOpened } from "@element-plus/icons-vue";
 import PageItem from "../components/PageItem.vue";
 import PagesAutoLoader from "../components/PagesAutoLoader.vue";
 import ReleasesAutoLoader from "../components/ReleasesAutoLoader.vue";
@@ -229,6 +229,12 @@ const { t } = useI18n();
       <template #header>
         <div class="card-header" @click="showPages = !showPages" style="cursor: pointer;">
             <div class="card-header-left">
+            <el-icon class="section-icon">
+              <!-- inline bookmark icon for Pages header -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 2h8l4 4v16l-8-4-8 4V6z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </el-icon>
             <span>{{ t('nav.pages') }}</span>
             <el-text size="small" type="info">
               <template v-if="pagesAutoLoaderRef?.loading?.value">
@@ -265,7 +271,7 @@ const { t } = useI18n();
       <template #header>
         <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
             <div class="card-header-left">
-            <span>{{ t('nav.tools') }}</span>
+            <el-icon class="section-icon"><Cpu /></el-icon><span>{{ t('nav.tools') }}</span>
             <el-text size="small" type="info">
               {{ t('common.totalFormat', { count: totalToolsCount }) }}
               <template v-if="hasQuery">
@@ -293,7 +299,7 @@ const { t } = useI18n();
       <template #header>
         <div class="card-header" @click="showGames = !showGames" style="cursor: pointer;">
             <div class="card-header-left">
-            <span>{{ t('nav.games') }}</span>
+            <el-icon class="section-icon"><Flag /></el-icon><span>{{ t('nav.games') }}</span>
             <el-text size="small" type="info">
               {{ t('common.totalFormat', { count: totalGamesCount }) }}
               <template v-if="hasQuery">
@@ -321,6 +327,15 @@ const { t } = useI18n();
       <template #header>
         <div class="card-header" @click="showApps = !showApps" style="cursor: pointer;">
             <div class="card-header-left">
+            <el-icon class="section-icon">
+              <!-- inline app-grid icon for Apps header -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="3" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                <rect x="13" y="3" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                <rect x="3" y="13" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                <rect x="13" y="13" width="8" height="8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              </svg>
+            </el-icon>
             <span>{{ t('nav.apps') }}</span>
             <el-text size="small" type="info">
               {{ t('common.totalFormat', { count: totalAppsCount }) }}
@@ -349,7 +364,7 @@ const { t } = useI18n();
       <template #header>
         <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
             <div class="card-header-left">
-            <span>{{ t('nav.files') }}</span>
+            <el-icon class="section-icon"><FolderOpened /></el-icon><span>{{ t('nav.files') }}</span>
             <el-text size="small" type="info">
               <template v-if="fileItemRef?.loading?.value">
                 {{ t('common.loading') }}...
@@ -566,7 +581,7 @@ const { t } = useI18n();
 
 .card-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -578,8 +593,11 @@ const { t } = useI18n();
 }
 .card-header-left {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
+}
+.section-icon {
+  font-size: 18px;
 }
 .page-title {
   display: flex;
