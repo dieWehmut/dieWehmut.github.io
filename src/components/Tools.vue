@@ -3,26 +3,29 @@
     <div v-if="loading">Loading tools...</div>
     <div v-else>
   <div v-if="displayedTools.length === 0">No tools found</div>
-  <div v-for="tool in displayedTools" :key="tool.name" class="tool-row" @click="openRepo(tool)">
+  <div v-for="tool in displayedTools" :key="`${tool.name}-${resolveCopyUrl(tool)}`" class="tool-row" @click="openRepo(tool)">
         <div class="tool-info">
-          <el-icon class="page-icon"><Folder /></el-icon>
-          <div class="title-date">
-            <div class="single-title">{{ tool.name }}</div>
-            <div class="tool-date" v-if="tool.lastModified">{{ formatDateShort(tool.lastModified) }}</div>
+          <span class="page-info">
+            <el-icon class="page-icon"><SetUp /></el-icon>
+            <span class="page-name">{{ tool.name }}</span>
+          </span>
+          <div class="version-info" v-if="tool.lastModified">
+            <el-icon class="calendar-icon"><Calendar /></el-icon>
+            <span class="date">{{ formatDateShort(tool.lastModified) }}</span>
           </div>
         </div>
         <div class="tool-actions">
-          <el-button class="action-btn" type="text" size="small" @click="downloadRepo(tool)">
+          <el-button v-if="shouldShowDownload(tool)" class="action-btn" type="text" size="small" @click.stop="downloadRepo(tool)">
             <el-icon class="action-icon"><Download /></el-icon>
             <span class="btn-text">{{ t('action.download') }}</span>
           </el-button>
-          <el-button class="action-btn repo-button" type="text" size="small" @click="openRepo(tool)">
+          <el-button v-if="resolveRepoUrl(tool)" class="action-btn repo-button" type="text" size="small" @click.stop="openRepo(tool)">
             <el-icon class="action-icon"><Link /></el-icon>
             <span class="btn-text">{{ t('action.repo') }}</span>
           </el-button>
-          <el-button class="action-btn copy-btn" type="text" size="small" @click="copyLink(tool)">
+          <el-button class="action-btn copy-btn" type="text" size="small" @click.stop="copyLink(tool)">
             <el-icon class="action-icon"><CopyDocument /></el-icon>
-            <span class="btn-text">{{ copied[tool.html_url || buildFolderHtmlUrl(tool.name)] ? t('action.copied') : t('action.copy') }}</span>
+            <span class="btn-text">{{ copied[resolveCopyUrl(tool)] ? t('action.copied') : t('action.copy') }}</span>
           </el-button>
         </div>
       </div>
@@ -32,15 +35,17 @@
 
 <script setup>
 import { ref, onMounted, reactive, computed, defineExpose } from 'vue'
-import { Folder, Download, Link, CopyDocument } from "@element-plus/icons-vue";
+import { SetUp, Download, Link, CopyDocument, Calendar } from "@element-plus/icons-vue";
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
 import { getGitHubHeaders } from '../utils/github'
+import { useContent } from '../data/content'
 
 const tools = ref([])
 const loading = ref(true)
 const { t } = useI18n()
+const { tools: toolsConfig } = useContent()
 
 const props = defineProps({
   filterQuery: {
@@ -57,28 +62,69 @@ const displayedTools = computed(() => {
 })
 
 function buildFolderHtmlUrl(name) {
+  const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
+  const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
   // Prefer direct html_url if available from API results; fallback to tree URL
-  return `https://github.com/dieWehmut/Gajetto/tree/main/${encodeURIComponent(name)}`
+  return `https://github.com/${owner}/${repo}/tree/main/${encodeURIComponent(name)}`
+}
+
+const manualTools = computed(() => {
+  const items = toolsConfig.value?.[0]?.manualItems || []
+  return items.map((item, index) => ({
+    name: item?.name || `manual-tool-${index}`,
+    html_url: item?.html_url || item?.url || '',
+    repo_url: item?.repo_url || item?.repoUrl || '',
+    lastModified: item?.lastModified || item?.date || null,
+    showDownload: item?.showDownload !== false,
+    downloadToast: item?.downloadToast === true,
+    downloadToastMessage: item?.downloadToastMessage || '私聊站长要哦~',
+    isManual: true,
+  }))
+})
+
+function resolveDownloadUrl(tool) {
+  return tool?.html_url || tool?.url || ''
+}
+
+function resolveRepoUrl(tool) {
+  if (tool?.repo_url || tool?.repoUrl) return tool.repo_url || tool.repoUrl
+  if (tool?.isManual) return tool?.html_url || tool?.url || ''
+  return tool?.html_url || buildFolderHtmlUrl(tool?.name || '')
+}
+
+function resolveCopyUrl(tool) {
+  return resolveDownloadUrl(tool) || resolveRepoUrl(tool)
+}
+
+function shouldShowDownload(tool) {
+  if (tool?.showDownload === false) return false
+  if (tool?.downloadToast === true) return true
+  return !!resolveDownloadUrl(tool)
 }
 
 async function fetchTools() {
   loading.value = true
+  let autoTools = []
   try {
+    const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
+    const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
     // cache folder listing for 15 minutes
     const data = await fetchWithCache(
-      'https://api.github.com/repos/dieWehmut/Gajetto/contents',
+      `https://api.github.com/repos/${owner}/${repo}/contents`,
       { headers: getGitHubHeaders() },
       1000 * 60 * 15
     )
     if (!Array.isArray(data)) {
-      tools.value = []
+      tools.value = [...manualTools.value]
       loading.value = false
       return
     }
     const dirs = data.filter((i) => i.type === 'dir').map((d) => ({
       name: d.name,
       html_url: d.html_url || buildFolderHtmlUrl(d.name),
-      lastModified: null
+      lastModified: null,
+      showDownload: true,
+      isManual: false,
     }))
 
     // For each directory, try to fetch the latest commit touching that path so we can show a date
@@ -98,22 +144,41 @@ async function fetchTools() {
       }
       return dir
     }))
-    tools.value = withDates
+    autoTools = withDates
   } catch (e) {
-    tools.value = []
+    autoTools = []
   } finally {
+    tools.value = [...manualTools.value, ...autoTools]
     loading.value = false
   }
 }
 
 function openRepo(tool) {
-  const url = tool.html_url || buildFolderHtmlUrl(tool.name)
+  const url = resolveRepoUrl(tool)
+  if (!url) return
   window.open(url, '_blank', 'noopener')
 }
 
 function downloadRepo(tool) {
+  if (tool?.downloadToast === true) {
+    showCenteredToast(tool?.downloadToastMessage || '私聊站长要哦~', { type: 'info', duration: 2500 })
+    return
+  }
+
+  const downloadUrl = resolveDownloadUrl(tool)
+  if (!downloadUrl) {
+    showCenteredToast('私聊站长要哦~', { type: 'info', duration: 2500 })
+    return
+  }
+
+  // For direct file links/manual links, open directly.
+  if (!downloadUrl.includes('/tree/')) {
+    window.open(downloadUrl, '_blank', 'noopener')
+    return
+  }
+
   // Try to download only the folder using download-directory.github.io service
-  const folderUrl = tool.html_url || buildFolderHtmlUrl(tool.name)
+  const folderUrl = downloadUrl
   const dl = `https://download-directory.github.io/?url=${encodeURIComponent(folderUrl)}`
   window.open(dl, '_blank', 'noopener')
 }
@@ -121,7 +186,7 @@ function downloadRepo(tool) {
 const copied = reactive({})
 
 function copyLink(tool) {
-  const url = tool.html_url || buildFolderHtmlUrl(tool.name)
+  const url = resolveCopyUrl(tool)
   navigator.clipboard.writeText(url).then(() => {
     // mark as copied for this item so UI can show temporary 'copied' state
     try {
@@ -144,11 +209,9 @@ function formatDateShort(d) {
     const dt = new Date(d);
     if (isNaN(dt.valueOf())) return d;
     const Y = dt.getFullYear();
-    const M = String(dt.getMonth() + 1).padStart(2, '0');
-    const D = String(dt.getDate()).padStart(2, '0');
-    const hh = String(dt.getHours()).padStart(2, '0');
-    const mm = String(dt.getMinutes()).padStart(2, '0');
-    return `${Y}-${M}-${D} ${hh}:${mm}`;
+    const M = dt.getMonth() + 1;
+    const D = dt.getDate();
+    return `${Y}-${M}-${D}`;
   } catch {
     return d;
   }
@@ -183,36 +246,51 @@ defineExpose({ tools, displayedTools, loading })
   display: flex;
   gap: 8px;
 }
-.single-title {
-  font-weight: 600;
-  color: #f5f5f5; /* white text on dark bg */
-}
-.tool-info { display:flex; align-items:center; gap:8px }
-
-.title-date {
+.tool-info {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0; /* allow truncation */
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  line-height: 1.5;
+  font-size: 14px;
 }
-.single-title {
+.page-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.page-icon {
+  font-size: 18px;
+  color: #ffffff !important;
+  display: inline-flex;
+  align-items: center;
+}
+.page-name {
   font-weight: 600;
-  color: #f5f5f5; /* white text on dark bg */
+  color: #f5f5f5 !important;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.version-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d0d0d0;
+}
+.calendar-icon {
+  font-size: 12px;
+}
+.date {
+  font-size: 13px;
 }
 .tool-row .page-icon,
 .tool-row .action-icon {
   color: #ffffff;
   fill: #ffffff !important;
-}
-
-.tool-date {
-  font-size: 12px;
-  color: rgba(255,255,255,0.75);
-  margin-left: 12px;
-  white-space: nowrap;
 }
 
 /* Hover: remove dark overlay and add elevation to match Pages hover behavior */
@@ -231,7 +309,7 @@ defineExpose({ tools, displayedTools, loading })
 
 /* ensure text and icons stay white and buttons remain visually flat */
 .tool-row,
-.tool-row .single-title,
+.tool-row .page-name,
 .tool-row .page-icon,
 .tool-row .action-icon {
   color: #ffffff;
