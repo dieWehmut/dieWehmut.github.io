@@ -15,14 +15,36 @@
   /* Nav button colors for light */
   --nav-bg: #ffffff;
   --nav-fg: #1f2937; /* dark text */
+  --bg-fallback-gradient:
+    radial-gradient(1200px 700px at 50% -10%, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, #f6c3d9 0%, #e8bedf 52%, #cfb8ea 100%);
+  --bg-fallback-decor:
+    radial-gradient(circle at 40% 24%, rgba(255,255,255,0.82) 0 8px, transparent 9px),
+    radial-gradient(circle at 48% 28%, rgba(255,255,255,0.76) 0 5px, transparent 6px),
+    radial-gradient(circle at 52% 22%, rgba(255,255,255,0.78) 0 4px, transparent 5px),
+    radial-gradient(circle at 36% 15%, rgba(255,255,255,0.72) 0 3px, transparent 4px),
+    radial-gradient(circle at 58% 15%, rgba(255,255,255,0.7) 0 3px, transparent 4px),
+    radial-gradient(circle at 20% 46%, rgba(255,255,255,0.56) 0 6px, transparent 7px),
+    radial-gradient(circle at 80% 32%, rgba(255,255,255,0.52) 0 6px, transparent 7px),
+    radial-gradient(circle at 16% 70%, rgba(255,255,255,0.48) 0 5px, transparent 6px),
+    radial-gradient(circle at 82% 78%, rgba(255,255,255,0.5) 0 5px, transparent 6px),
+    radial-gradient(circle at 62% 56%, rgba(255,255,255,0.42) 0 4px, transparent 5px),
+    radial-gradient(circle at 30% 76%, rgba(255,255,255,0.44) 0 4px, transparent 5px);
 }
 
 /* Ensure root & body have light background fallback */
-[data-theme="light"] html,
+:root[data-theme="light"],
+html[data-theme="light"],
+body[data-theme="light"],
+html[data-theme="light"] body,
+html[data-theme="light"] #app,
 [data-theme="light"] body,
-[data-theme="light"] #root {
-  background-color: #fce4f0 !important;
-  background-image: none !important;
+[data-theme="light"] #app {
+  background-color: #f6c3d9 !important;
+  background-image: var(--bg-fallback-gradient) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
 }
 
 /* Make Ant Design layout containers transparent so app-root gradient shows through */

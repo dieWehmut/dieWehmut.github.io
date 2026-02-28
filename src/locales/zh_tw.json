@@ -2,7 +2,9 @@
   "backToTop": "回到頂部",
   "settings": "設定",
   "language": "語言",
-  "search": { "hint": "搜尋 ..." },
+  "search": {
+    "hint": "搜尋 ..."
+  },
   "sidebar": {
     "bio": "南京大學（蘇州校區）智能科學與技術 本科生",
     "lastUpdated": "最後更新：",
@@ -10,7 +12,7 @@
     "location": "中國 蘇州"
   },
   "nav": {
-    "pages": "頁面",
+    "pages": "網站",
     "games": "遊戲",
     "apps": "應用",
     "files": "文件",
@@ -31,7 +33,7 @@
     "copy": "複製",
     "copied": "已複製",
     "first_result_copied": "已複製第一個結果的連結",
-  "no_result": "未找到匹配結果",
+    "no_result": "未找到匹配結果",
     "copy_failed": "複製失敗",
     "download": "下載",
     "repo": "倉庫",
@@ -39,7 +41,9 @@
     "expand": "展開",
     "collapse": "收起"
   },
-  "footer": { "uptime": "運行時間" },
+  "footer": {
+    "uptime": "運行時間"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -47,13 +51,11 @@
     "ja": "日本語",
     "de": "Deutsch",
     "la": "拉丁語"
-  }
-  ,
+  },
   "intro": {
     "title": "歡迎！",
     "subtitle": "dieWehmut 的 Nexus"
-  }
-  ,
+  },
   "float": {
     "cleanMode": "切換純淨模式",
     "toggleSidebar": "切換單雙欄"

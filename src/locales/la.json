@@ -2,7 +2,9 @@
   "backToTop": "Ad summum",
   "settings": "Optiones",
   "language": "Lingua",
-  "search": { "hint": "Quaere ..." },
+  "search": {
+    "hint": "Quaere ..."
+  },
   "sidebar": {
     "bio": "Studens baccalaurei in Scientia Intelligentiae et Technologia, Universitas Nanjing, Campus Suzhou",
     "lastUpdated": "Ultima renovatio: ",
@@ -10,7 +12,7 @@
     "location": "Suzhou, Sinarum"
   },
   "nav": {
-    "pages": "Paginae",
+    "pages": "Situs",
     "games": "Ludi",
     "apps": "Applicationes",
     "files": "Fasciculi",
@@ -33,13 +35,15 @@
     "first_result_copied": "Primum resultatum nexus copiatus est",
     "copy_failed": "Copia defecit",
     "download": "Download",
-  "no_result": "Nulla inventa",
+    "no_result": "Nulla inventa",
     "repo": "Repo",
     "view": "Vide",
     "expand": "Expandere",
     "collapse": "Contrahere"
   },
-  "footer": { "uptime": "Tempus online" },
+  "footer": {
+    "uptime": "Tempus online"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",

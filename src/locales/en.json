@@ -2,7 +2,9 @@
   "backToTop": "Back to top",
   "settings": "Settings",
   "language": "Language",
-  "search": { "hint": "Search ..." },
+  "search": {
+    "hint": "Search ..."
+  },
   "sidebar": {
     "bio": "Undergraduate in Intelligent Science and Technology, Nanjing University, Suzhou Campus",
     "lastUpdated": "Last updated: ",
@@ -10,7 +12,7 @@
     "location": "Suzhou, China"
   },
   "nav": {
-    "pages": "Pages",
+    "pages": "Websites",
     "games": "Games",
     "apps": "Apps",
     "files": "Files",
@@ -39,7 +41,9 @@
     "expand": "Expand",
     "collapse": "Collapse"
   },
-  "footer": { "uptime": "Uptime" },
+  "footer": {
+    "uptime": "Uptime"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",

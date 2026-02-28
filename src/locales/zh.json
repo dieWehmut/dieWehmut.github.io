@@ -2,7 +2,9 @@
   "backToTop": "回到顶部",
   "settings": "设置",
   "language": "语言",
-  "search": { "hint": "搜索 ..." },
+  "search": {
+    "hint": "搜索 ..."
+  },
   "sidebar": {
     "bio": "南京大学（苏州校区）智能科学与技术 本科生",
     "lastUpdated": "最后更新：",
@@ -10,7 +12,7 @@
     "location": "中国 苏州"
   },
   "nav": {
-    "pages": "页面",
+    "pages": "网站",
     "games": "游戏",
     "apps": "应用",
     "files": "文件",
@@ -39,7 +41,9 @@
     "expand": "展开",
     "collapse": "收起"
   },
-  "footer": { "uptime": "运行时间" },
+  "footer": {
+    "uptime": "运行时间"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -51,8 +55,7 @@
   "intro": {
     "title": "欢迎！",
     "subtitle": "dieWehmut 的 Nexus"
-  }
-  ,
+  },
   "float": {
     "cleanMode": "切换纯净模式",
     "toggleSidebar": "切换单双栏"

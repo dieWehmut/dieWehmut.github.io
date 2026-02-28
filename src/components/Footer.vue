@@ -6,9 +6,7 @@
       <span class="time-number">{{ time.hours }}</span>h
       <span class="time-number">{{ time.minutes }}</span>m
       <span class="time-number">{{ time.seconds }}</span>s
-      <svg class="uptime-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 11H7a1 1 0 110-2h5V6a1 1 0 112 0v7z" />
-      </svg>
+
     </div>
 
 

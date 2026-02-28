@@ -1,8 +1,18 @@
-/* Minimal text cursor for input and editable text areas */
+/* Text cursor for input and editable areas (keep standard text cursor) */
 :root {
   --cursor-text: text;
 }
 
 input, textarea, [contenteditable="true"] {
-  cursor: var(--cursor-text);
+  cursor: var(--cursor-text) !important;
+}
+
+/* Ensure text cursor is kept even during sakura states */
+html.sakura-grabbing input,
+html.sakura-grabbing textarea,
+html.sakura-grabbing [contenteditable="true"],
+html.sakura-hover input,
+html.sakura-hover textarea,
+html.sakura-hover [contenteditable="true"] {
+  cursor: var(--cursor-text) !important;
 }

@@ -234,8 +234,16 @@ onBeforeUnmount(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #0f1724 0%, rgba(15,23,36,0.5) 50%, rgba(15,23,36,0.6) 100%);
+  background: var(--bg-fallback-gradient, linear-gradient(180deg, #0f1724 0%, rgba(15,23,36,0.5) 50%, rgba(15,23,36,0.6) 100%));
   z-index: -2;
+}
+
+.bg-root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bg-fallback-decor, none);
+  z-index: -1;
 }
 
 /* ensure background doesn't cover fixed header content visually (you can tweak) */

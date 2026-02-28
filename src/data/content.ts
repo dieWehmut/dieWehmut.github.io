@@ -19,14 +19,15 @@ export function useContent() {
       repoUrl: "https://github.com/dieWehmut/Showcase",
       description: "Automatically loaded from GitHub releases",
       manualItems: [
-        // 手动添加示例：
+        // 手动添加示例（支持 date 字段手动设置日期，格式 YYYY-MM-DD）：
       {
         name: "PhantomGenesis", // 游戏名称
         html_url: "https://example.com/game.zip", // 下载链接
         repo_url: "https://github.com/dieWehmut/PhantomGenesis", // 仓库/详情链接（点击行、Repo按钮使用）
         showDownload: true, // false 时隐藏下载按钮
         downloadToast: true, // true 时点击下载按钮仅弹提示
-        downloadToastMessage: "私聊站长要哦~"
+        downloadToastMessage: "私聊站长要哦~",
+        date: "2025-06-30", // 手动设置日期（可选，留空则自动获取）
       },
       {
         name: "GeistZerfall", // 游戏名称
@@ -34,7 +35,8 @@ export function useContent() {
         repo_url: "https://github.com/dieWehmut/GeistZerfall", // 仓库/详情链接（点击行、Repo按钮使用）
         showDownload: true, // false 时隐藏下载按钮
         downloadToast: true, // true 时点击下载按钮仅弹提示
-        downloadToastMessage: "私聊站长要哦~"
+        downloadToastMessage: "私聊站长要哦~",
+        date: "2025-12-21", // 手动设置日期（可选）
       },
       {
         name: "SugisarishiKage", // 游戏名称
@@ -42,7 +44,8 @@ export function useContent() {
         repo_url: "https://github.com/dieWehmut/SugisarishiKage", // 仓库/详情链接（点击行、Repo按钮使用）
         showDownload: true, // false 时隐藏下载按钮
         downloadToast: true, // true 时点击下载按钮仅弹提示
-        downloadToastMessage: "私聊站长要哦~"
+        downloadToastMessage: "私聊站长要哦~",
+        date: "2025-09-11", // 手动设置日期（可选）
       },
       ],
     },
@@ -55,14 +58,24 @@ export function useContent() {
       repoUrl: "https://github.com/dieWehmut/Showcase",
       description: "Automatically loaded from GitHub releases",
       manualItems: [
-        // 手动添加示例：
+        // 手动添加示例（支持 date 字段手动设置日期，格式 YYYY-MM-DD）：
       {
         name: "SugisarishiKage",
         html_url: "https://example.com/app.apk",
         repo_url: "https://github.com/dieWehmut/SugisarishiKage",
         showDownload: true,
         downloadToast: true,
-        downloadToastMessage: "私聊站长要哦~"
+        downloadToastMessage: "私聊站长要哦~",
+        date: "2025-09-11", // 手动设置日期（可选，留空则自动获取）
+      },
+      {
+        name: "GeistZerfall",
+        html_url: "https://example.com/app.apk",
+        repo_url: "https://github.com/dieWehmut/GeistZerfall",
+        showDownload: true,
+        downloadToast: true,
+        downloadToastMessage: "私聊站长要哦~",
+        date: "2025-12-21", // 手动设置日期（可选，留空则自动获取）
       }
       ],
     },
@@ -76,7 +89,7 @@ export function useContent() {
       repo: "Gajetto",
       description: "Automatically loaded from GitHub repository folders",
       manualItems: [
-        // 手动添加示例：
+        // 手动添加示例（支持 date/lastModified 字段手动设置日期，格式 YYYY-MM-DD）：
         // {
         //   name: "My Manual Tool",
         //   html_url: "https://github.com/your/repo/releases/download/v1.0/tool.zip", // 下载链接（可选）
@@ -84,7 +97,7 @@ export function useContent() {
         //   showDownload: true,
         //   downloadToast: true,
         //   downloadToastMessage: "私聊站长要哦~",
-        //   lastModified: "2026-02-28T10:30:00Z"
+        //   lastModified: "2026-02-28", // 手动设置日期（可选，留空则自动获取）
         // }
       ],
     },
