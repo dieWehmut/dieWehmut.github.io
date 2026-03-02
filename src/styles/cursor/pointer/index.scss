@@ -7,3 +7,9 @@ button, a, a[href], input[type="button"], input[type="submit"], .clickable,
 [role="button"], label, select, summary {
   cursor: var(--cursor-pointer);
 }
+
+/* ensure the heart cursor stays during active/click state */
+button:active, a:active, a[href]:active, input[type="button"]:active, input[type="submit"]:active,
+.clickable:active, [role="button"]:active, label:active, select:active, summary:active {
+  cursor: var(--cursor-pointer) !important;
+}
