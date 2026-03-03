@@ -403,7 +403,6 @@ onMounted(() => {
 
 /* ensure language option buttons also show the pink glow (inherit from btt-button) */
 .lang-btn::after { }
-}
 
 @keyframes float {
 	from { transform: translateX(0) translateY(0) scale(1); }
