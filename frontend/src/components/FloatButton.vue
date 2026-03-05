@@ -1,0 +1,419 @@
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { locale, t } = useI18n();
+
+function scrollToTop() {
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const visible = ref(true);
+
+function handleKey(e) {
+	if (e.key === 'Home') scrollToTop();
+}
+
+onMounted(() => window.addEventListener('keyup', handleKey));
+onBeforeUnmount(() => window.removeEventListener('keyup', handleKey));
+
+// UI state
+
+// UI state
+const settingsOpen = ref(false);
+const langPanelOpen = ref(false);
+// clean background mode: hide main UI, leaving only FloatButton visible
+const cleanMode = ref(false);
+
+function toggleSettings() {
+	settingsOpen.value = !settingsOpen.value;
+	if (!settingsOpen.value) langPanelOpen.value = false;
+}
+
+function toggleLangPanel() {
+	langPanelOpen.value = !langPanelOpen.value;
+}
+
+function selectLang(code) {
+	locale.value = code;
+	try { localStorage.setItem('locale', code); } catch (e) {}
+	// keep panels open per user's preference
+}
+
+function toggleCleanMode() {
+	cleanMode.value = !cleanMode.value;
+	try {
+		document.documentElement.classList.toggle('clean-mode', cleanMode.value);
+		localStorage.setItem('cleanMode', cleanMode.value ? '1' : '0');
+	} catch (e) {}
+}
+
+onMounted(() => {
+  try {
+    const stored = localStorage.getItem('cleanMode');
+    if (stored === '1') {
+      cleanMode.value = true;
+      document.documentElement.classList.add('clean-mode');
+    }
+  } catch (e) {}
+});
+
+const langs = [
+	// Order is arranged so that when buttons expand to the left,
+	// visual left-to-right sequence becomes: 拉, 德, 日, 英, 繁, 简
+	{ code: 'zh', label: '简' },
+	{ code: 'zh_tw', label: '繁' },
+	{ code: 'en', label: '英' },
+	{ code: 'ja', label: '日' },
+	{ code: 'de', label: '德' },
+	{ code: 'la', label: '拉' }
+];
+// sidebar collapse state
+const sidebarCollapsed = ref(false);
+
+function toggleSidebar() {
+	sidebarCollapsed.value = !sidebarCollapsed.value;
+ 	try {
+ 		document.documentElement.classList.toggle('sidebar-collapsed', sidebarCollapsed.value);
+ 		localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value ? '1' : '0');
+ 	} catch (e) {}
+}
+
+onMounted(() => {
+	try {
+		const stored = localStorage.getItem('sidebarCollapsed');
+		if (stored === '1') {
+			sidebarCollapsed.value = true;
+			document.documentElement.classList.add('sidebar-collapsed');
+		}
+	} catch (e) {}
+});
+</script>
+
+<template>
+	<div class="float-container" aria-hidden="false">
+		<!-- language option buttons (expand left) -->
+		<div class="lang-options" :class="{ open: langPanelOpen }">
+			<button
+				v-for="(l, idx) in langs"
+				:key="l.code"
+				class="lang-btn btt-button"
+				:class="{ active: locale === l.code }"
+				:style="{ '--i': idx, '--delay': (idx * 70) + 'ms' }"
+				@click="selectLang(l.code)"
+				:title="t('languages.' + l.code)"
+				:aria-label="t('languages.' + l.code)"
+			>
+				{{ l.label }}
+			</button>
+		</div>
+
+		<!-- clean-mode toggle (appears when settings open) -->
+			<button
+			class="btt-button clean-toggle"
+			:class="{ visible: settingsOpen, active: cleanMode }"
+			@click="toggleCleanMode"
+			:title="t('float.cleanMode')"
+			aria-label="Toggle clean background"
+			>
+				<!-- simple eye/eye-off icon: uses a circle to represent visibility -->
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+					<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2"/>
+				</svg>
+			</button>
+
+		<!-- language toggle button (appears above settings) -->
+			<button
+			class="btt-button lang-toggle"
+			:class="{ visible: settingsOpen }"
+			@click="toggleLangPanel"
+			:title="t('language')"
+				aria-label="Language toggle"
+			>
+				<!-- globe icon -->
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M2 12h20" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M12 2c2.2 4 2.2 12 0 16M22 12c-4 2.2-12 2.2-16 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</button>
+
+		<!-- settings button (rotating) -->
+			<button
+				class="btt-button settings-button"
+				@click="toggleSettings"
+				:title="t('settings')"
+				aria-label="Settings"
+				:class="{ rotating: !false }"
+			>
+				<!-- replaced gear icon (blue stroke) -->
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="#4ea8ff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 114.28 16.9l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09c.7 0 1.28-.39 1.51-1A1.65 1.65 0 004.28 6.1l-.06-.06A2 2 0 116.99 3.2l.06.06c.5.5 1.2.66 1.82.33.58-.3 1-.9 1-1.51V3a2 2 0 114 0v.09c0 .61.42 1.21 1 1.51.62.33 1.32.17 1.82-.33l.06-.06A2 2 0 1119.4 8.1l-.06.06c-.3.58-.3 1.3.0 1.82.3.5.9 1 1.51 1H21a2 2 0 110 4h-.09c-.61 0-1.21.42-1.51 1z" stroke="#4ea8ff" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+			</button>
+
+			<!-- sidebar collapse toggle (moved into settings column, below language toggle) -->
+			<button
+				class="btt-button sidebar-toggle"
+				:class="{ active: sidebarCollapsed }"
+				@click="toggleSidebar"
+				:aria-label="t('float.toggleSidebar')"
+				:title="t('float.toggleSidebar')"
+			>
+				<!-- horizontal arrows icon (fa-arrows-alt-h like) -->
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M7 8L3 12l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+					<path d="M17 8l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</button>
+
+			<!-- back to top button (bottom) -->
+			<button
+				class="btt-button back-button"
+				@click="scrollToTop"
+				:title="t('backToTop')"
+				aria-label="Back to top"
+				v-if="visible"
+			>
+			<!-- Arrow icon -->
+			<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M5 11L12 4L19 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+
+		<!-- (sidebar toggle moved up into settings column) -->
+	</div>
+</template>
+
+<style scoped>
+.float-container {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 99999 !important; /* ensure float controls always sit above other UI */
+	width: 64px; /* allow horizontal space for slide-out */
+	--float-step: 52px; /* button vertical step: button-height + gap */
+	height: auto;
+	}
+
+	.btt-button svg path { stroke: #fff !important; }
+
+/* ensure correct stacking so language buttons are not obscured */
+.float-container { z-index: 99999 !important; }
+.btt-button { z-index: 100000 !important; }
+.settings-button { z-index: 1202; }
+.lang-toggle { z-index: 1203; }
+.lang-options { z-index: 1204; }
+.lang-options .lang-btn { z-index: 1205; }
+
+/* base glass style for all float buttons */
+.btt-button {
+	width: 44px;
+	height: 44px;
+	padding: 6px;
+	border-radius: 10px;
+	background: rgba(255,255,255,0.12);
+	border: 1px solid rgba(255,255,255,0.18);
+	color: rgba(12,16,20,0.95);
+	box-shadow: 0 8px 30px rgba(6,10,20,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 180ms ease, opacity 120ms ease, border-color 180ms ease;
+	position: absolute;
+	right: 0;
+	backdrop-filter: blur(8px) saturate(120%);
+	-webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+/* pink/purple glow effect */
+.btt-button {
+	position: absolute; /* ensure pseudo-element positioned correctly */
+}
+.btt-button::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) scale(0.9);
+	width: 120%;
+	height: 120%;
+	pointer-events: none;
+	border-radius: 14px;
+	background: radial-gradient(40% 40% at 20% 20%, rgba(255,160,200,0.22), transparent 20%), radial-gradient(30% 30% at 80% 80%, rgba(255,120,190,0.12), transparent 20%);
+	filter: blur(10px) saturate(150%);
+	opacity: 0;
+	transition: opacity 240ms ease, transform 240ms ease;
+}
+.btt-button:hover::after,
+.btt-button:focus::after {
+	opacity: 1;
+	transform: translate(-50%, -50%) scale(1.02);
+}
+
+/* unified click effect: match sidebar-toggle active scale */
+.btt-button:active {
+	transform: scale(0.82) !important;
+}
+
+.settings-button { background: rgba(255,255,255,0.06); color: rgba(12,16,20,0.95); border-color: rgba(255,255,255,0.12); }
+.settings-button:hover { transform: scale(1.06); box-shadow: 0 22px 48px rgba(6,10,20,0.22); background: rgba(255,255,255,0.18); }
+.settings-button svg path { stroke: #fff !important; stroke-width: 1.2 !important; }
+
+/* language toggle show/hide animation */
+.lang-toggle {
+	opacity: 0;
+	transform: translateY(8px) scale(0.92);
+	transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	pointer-events: none;
+}
+.lang-toggle.visible {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	pointer-events: auto;
+}
+
+/* keep clean-toggle hidden until settings are opened (same behavior as lang-toggle) */
+.clean-toggle {
+	opacity: 0;
+	transform: translateY(8px) scale(0.92);
+	transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	pointer-events: none;
+}
+.clean-toggle.visible {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	pointer-events: auto;
+}
+
+.back-button { bottom: 0; }
+/* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
+.sidebar-toggle { bottom: calc(var(--float-step) * 1); }
+.sidebar-toggle svg {
+	transition: transform 420ms cubic-bezier(.34,1.56,.64,1);
+}
+.sidebar-toggle.active svg {
+	transform: rotate(180deg) scale(0.85);
+}
+/* bounce-in when toggled */
+.sidebar-toggle {
+  transition: transform 360ms cubic-bezier(.34,1.56,.64,1),
+              box-shadow 260ms ease,
+              background-color 260ms ease,
+              opacity 160ms ease;
+}
+.sidebar-toggle:active {
+  transform: scale(0.82) !important;
+}
+/* pulse ring on state change via pseudo-element */
+.sidebar-toggle::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 300ms ease, transform 400ms cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+.sidebar-toggle.active::after {
+  opacity: 1;
+  transform: scale(1.12);
+  animation: sidebarPulse 600ms ease-out forwards;
+}
+@keyframes sidebarPulse {
+  0%   { opacity: 0.7; transform: scale(0.9); }
+  50%  { opacity: 0.4; transform: scale(1.18); }
+  100% { opacity: 0;   transform: scale(1.3); }
+}
+.settings-button { bottom: calc(var(--float-step) * 2); }
+.lang-toggle { bottom: calc(var(--float-step) * 3); }
+
+/* clean-mode toggle placed above language toggle */
+.clean-toggle { bottom: calc(var(--float-step) * 4); }
+.clean-toggle.active { background: rgba(255,255,255,0.06); }
+
+@media (hover: hover) {
+	.btt-button:hover, .btt-button:focus {
+		transform: scale(1.06);
+		box-shadow: 0 22px 48px rgba(6,10,20,0.22);
+		background: rgba(255,255,255,0.18);
+		outline: none;
+	}
+}
+
+/* rotating gear */
+.settings-button svg { transform-origin: 50% 50%; }
+.settings-button.rotating svg {
+	animation: spin 2s linear infinite;
+}
+.settings-button.rotating:hover svg {
+	animation-play-state: paused;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* language options container (absolute positioned inside float) */
+.lang-options { position: absolute; right: 0; bottom: calc(var(--float-step) * 3); height: 44px; pointer-events: none; }
+.lang-options.open { pointer-events: auto; }
+.lang-options .lang-btn {
+	position: absolute;
+	/* place buttons to the left of the language toggle: first button sits just left of the toggle */
+	right: calc(var(--float-step) * (var(--i) + 1));
+	bottom: 0;
+	transform-origin: 100% 50%;
+	width: 44px;
+	height: 44px;
+	padding: 6px;
+	border-radius: 10px;
+	background: rgba(255,255,255,0.08);
+	color: #fff;
+	border: none;
+	opacity: 0;
+	transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 160ms linear;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 14px;
+}
+.lang-options.open .lang-btn {
+	opacity: 1;
+	transform: translateX(0) scale(1);
+	transition-delay: var(--delay, 0ms);
+}
+.lang-btn {
+	/* initial hidden state: slightly shifted toward the toggle and scaled down */
+	transform: translateX(12px) scale(0.92);
+}
+
+/* hover/floating animation for individual language buttons */
+.lang-btn:hover {
+	/* hover: slightly enlarge rather than shift up */
+	animation: none;
+	transform: scale(1.06) !important;
+	box-shadow: 0 14px 30px rgba(6,10,20,0.12);
+}
+
+/* ensure language option buttons also show the pink glow (inherit from btt-button) */
+.lang-btn::after { }
+
+@keyframes float {
+	from { transform: translateX(0) translateY(0) scale(1); }
+	to { transform: translateX(0) translateY(-6px) scale(1.02); }
+}
+.lang-btn.active { background: linear-gradient(135deg, rgba(78,168,255,0.95), rgba(102,150,255,0.95)); color: #fff; }
+
+/* reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+	.settings-button.rotating svg { animation: none; }
+	.btt-button, .lang-btn { transition: none !important; }
+}
+
+</style>
