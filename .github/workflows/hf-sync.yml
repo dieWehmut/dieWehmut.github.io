@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/hf-sync.yml'
 
 jobs:
   sync:

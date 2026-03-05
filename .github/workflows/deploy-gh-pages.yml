@@ -24,17 +24,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Enable pnpm via Corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10 --activate
 
       - name: Install dependencies
         working-directory: frontend
@@ -46,11 +44,28 @@ jobs:
           VITE_API_BASE: https://dieWehmut-nexus-backend.hf.space
         run: pnpm run build
 
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: frontend/dist
-          # If gh-pages does not exist, this action creates it automatically.
-          publish_branch: gh-pages
-          force_orphan: true
+      - name: Deploy to gh-pages branch (auto-create)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            git worktree add gh-pages origin/gh-pages
+            cd gh-pages
+            git rm -rf .
+          else
+            git worktree add --detach gh-pages
+            cd gh-pages
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+          fi
+
+          cp -r ../frontend/dist/* .
+          touch .nojekyll
+
+          git add -A
+          git commit -m "deploy: ${GITHUB_SHA}" || echo "No changes to commit"
+          git push origin HEAD:gh-pages --force
