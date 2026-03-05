@@ -1,38 +1,70 @@
 name: Deploy Frontend to GitHub Pages
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 on:
   push:
     branches:
       - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-gh-pages.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
+          node-version: 22
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: 'npm'
+      - name: Enable pnpm via Corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10 --activate
 
-      - run: npm ci
+      - name: Install dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
 
-      - run: npm run build --if-present
+      - name: Build frontend
+        working-directory: frontend
+        env:
+          VITE_API_BASE: https://dieWehmut-nexus-backend.hf.space
+        run: pnpm run build
 
-      - name: Show built files
-        run: ls -la ./dist || true
+      - name: Deploy to gh-pages branch (auto-create)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            git worktree add gh-pages origin/gh-pages
+            cd gh-pages
+            git rm -rf .
+          else
+            git worktree add --detach gh-pages
+            cd gh-pages
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+          fi
+
+          cp -r ../frontend/dist/* .
+          touch .nojekyll
+
+          git add -A
+          git commit -m "deploy: ${GITHUB_SHA}" || echo "No changes to commit"
+          git push origin HEAD:gh-pages --force
