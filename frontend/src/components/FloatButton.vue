@@ -8,14 +8,26 @@ function scrollToTop() {
 	window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-const visible = ref(true);
+const visible = ref(false);
+
+function updateBackButtonVisibility() {
+	visible.value = window.scrollY > 32;
+}
 
 function handleKey(e) {
 	if (e.key === 'Home') scrollToTop();
 }
 
-onMounted(() => window.addEventListener('keyup', handleKey));
-onBeforeUnmount(() => window.removeEventListener('keyup', handleKey));
+onMounted(() => {
+	window.addEventListener('keyup', handleKey);
+	window.addEventListener('scroll', updateBackButtonVisibility, { passive: true });
+	updateBackButtonVisibility();
+});
+
+onBeforeUnmount(() => {
+	window.removeEventListener('keyup', handleKey);
+	window.removeEventListener('scroll', updateBackButtonVisibility);
+});
 
 // UI state
 
@@ -196,7 +208,10 @@ onMounted(() => {
 	right: 20px;
 	z-index: 99999 !important; /* ensure float controls always sit above other UI */
 	width: 64px; /* allow horizontal space for slide-out */
-	--float-step: 52px; /* button vertical step: button-height + gap */
+	--btn-size: 44px;
+	--btn-padding: 6px;
+	--float-gap: 8px;
+	--float-step: calc(var(--btn-size) + var(--float-gap)); /* button vertical step */
 	height: auto;
 	}
 
@@ -212,9 +227,9 @@ onMounted(() => {
 
 /* base glass style for all float buttons */
 .btt-button {
-	width: 44px;
-	height: 44px;
-	padding: 6px;
+	width: var(--btn-size);
+	height: var(--btn-size);
+	padding: var(--btn-padding);
 	border-radius: 10px;
 	background: rgba(255,255,255,0.12);
 	border: 1px solid rgba(255,255,255,0.18);
@@ -368,9 +383,9 @@ onMounted(() => {
 	right: calc(var(--float-step) * (var(--i) + 1));
 	bottom: 0;
 	transform-origin: 100% 50%;
-	width: 44px;
-	height: 44px;
-	padding: 6px;
+	width: var(--btn-size);
+	height: var(--btn-size);
+	padding: var(--btn-padding);
 	border-radius: 10px;
 	background: rgba(255,255,255,0.08);
 	color: #fff;
@@ -401,9 +416,6 @@ onMounted(() => {
 	box-shadow: 0 14px 30px rgba(6,10,20,0.12);
 }
 
-/* ensure language option buttons also show the pink glow (inherit from btt-button) */
-.lang-btn::after { }
-
 @keyframes float {
 	from { transform: translateX(0) translateY(0) scale(1); }
 	to { transform: translateX(0) translateY(-6px) scale(1.02); }
@@ -414,6 +426,20 @@ onMounted(() => {
 @media (prefers-reduced-motion: reduce) {
 	.settings-button.rotating svg { animation: none; }
 	.btt-button, .lang-btn { transition: none !important; }
+}
+
+@media (max-width: 768px) {
+	.float-container {
+		right: 6px;
+		bottom: 6px;
+		--btn-size: 40px;
+		--btn-padding: 5px;
+		--float-gap: 6px;
+	}
+
+	.lang-options .lang-btn {
+		font-size: 13px;
+	}
 }
 
 </style>
