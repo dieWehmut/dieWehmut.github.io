@@ -15,15 +15,15 @@
           </div>
         </div>
         <div class="tool-actions">
-          <el-button v-if="shouldShowDownload(tool)" class="action-btn" type="text" size="small" @click.stop="downloadRepo(tool)">
+          <el-button v-if="shouldShowDownload(tool)" class="action-btn" type="link" size="small" @click.stop="downloadRepo(tool)">
             <el-icon class="action-icon"><Download /></el-icon>
             <span class="btn-text">{{ t('action.download') }}</span>
           </el-button>
-          <el-button v-if="resolveRepoUrl(tool)" class="action-btn repo-button" type="text" size="small" @click.stop="openRepo(tool)">
+          <el-button v-if="resolveRepoUrl(tool)" class="action-btn repo-button" type="link" size="small" @click.stop="openRepo(tool)">
             <el-icon class="action-icon"><Link /></el-icon>
             <span class="btn-text">{{ t('action.repo') }}</span>
           </el-button>
-          <el-button class="action-btn copy-btn" type="text" size="small" @click.stop="copyLink(tool)">
+          <el-button class="action-btn copy-btn" type="link" size="small" @click.stop="copyLink(tool)">
             <el-icon class="action-icon"><CopyDocument /></el-icon>
             <span class="btn-text">{{ copied[resolveCopyUrl(tool)] ? t('action.copied') : t('action.copy') }}</span>
           </el-button>
@@ -39,7 +39,7 @@ import { SetUp, Download, Link, CopyDocument, Calendar } from "@element-plus/ico
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
-import { getGitHubHeaders } from '../utils/github'
+import { getBackendApiUrl } from '../utils/backendApi'
 import { useContent } from '../data/content'
 
 const tools = ref([])
@@ -99,12 +99,12 @@ async function enrichManualToolDates(items) {
     if (!info) return
     try {
       const commits = await fetchWithCache(
-        `https://api.github.com/repos/${info.owner}/${info.repo}/commits?per_page=1`,
-        { headers: getGitHubHeaders() },
+        getBackendApiUrl(`/api/github/repos/${info.owner}/${info.repo}/commits/latest`),
+        {},
         1000 * 60 * 60 * 6
       )
-      if (Array.isArray(commits) && commits.length > 0) {
-        item.lastModified = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
+      if (commits && commits.commit) {
+        item.lastModified = commits?.commit?.committer?.date || commits?.commit?.author?.date || null
       }
     } catch (e) { /* ignore */ }
   }))
@@ -138,8 +138,8 @@ async function fetchTools() {
     const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
     // cache folder listing for 15 minutes
     const data = await fetchWithCache(
-      `https://api.github.com/repos/${owner}/${repo}/contents`,
-      { headers: getGitHubHeaders() },
+      getBackendApiUrl(`/api/github/repos/${owner}/${repo}/contents`),
+      {},
       1000 * 60 * 15
     )
     if (!Array.isArray(data)) {
@@ -160,12 +160,12 @@ async function fetchTools() {
       try {
         // cache commits per-path for 6 hours to avoid repeated per-dir calls
         const commits = await fetchWithCache(
-          `https://api.github.com/repos/dieWehmut/Gajetto/commits?path=${encodeURIComponent(dir.name)}&per_page=1`,
-          { headers: getGitHubHeaders() },
+          getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest?path=${encodeURIComponent(dir.name)}`),
+          {},
           1000 * 60 * 60 * 6
         )
-        if (Array.isArray(commits) && commits.length > 0) {
-          dir.lastModified = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
+        if (commits && commits.commit) {
+          dir.lastModified = commits?.commit?.committer?.date || commits?.commit?.author?.date || null
         }
       } catch (e) {
         // ignore per-dir failures

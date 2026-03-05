@@ -502,7 +502,7 @@ body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-it
 .back-to-top { background-color: rgba(0,0,0,0.5) !important; border-color: rgba(0,0,0,0.5) !important; }
 
 /* ── Hover/focus affordance ── */
-.action-btn, .repo-link, .repo-button, .link-button, .copy-btn, .nav-btn, .github-btn, .el-button[type="text"] {
+.action-btn, .repo-link, .repo-button, .link-button, .copy-btn, .nav-btn, .github-btn, .el-button[type="link"], .el-button[type="text"] {
   transition: transform 0.12s ease, box-shadow 0.18s ease, color 0.12s ease;
 }
 .action-btn:hover, .repo-link:hover, .repo-button:hover, .link-button:hover, .copy-btn:hover, .github-btn:hover {

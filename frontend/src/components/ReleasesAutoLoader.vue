@@ -92,7 +92,7 @@ import { Download, Link, CopyDocument, Calendar } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
-import { getGitHubHeaders } from '../utils/github'
+import { getBackendApiUrl } from '../utils/backendApi'
 import { useContent } from '../data/content'
 
 const props = defineProps({
@@ -193,12 +193,12 @@ async function enrichManualDates(items) {
     if (!info) return
     try {
       const commits = await fetchWithCache(
-        `https://api.github.com/repos/${info.owner}/${info.repo}/commits?per_page=1`,
-        { headers: getGitHubHeaders() },
+        getBackendApiUrl(`/api/github/repos/${info.owner}/${info.repo}/commits/latest`),
+        {},
         1000 * 60 * 60 * 6 // cache 6h
       )
-      if (Array.isArray(commits) && commits.length > 0) {
-        item.date = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null
+      if (commits && commits.commit) {
+        item.date = commits?.commit?.committer?.date || commits?.commit?.author?.date || null
       }
     } catch (e) { /* ignore */ }
   }))
@@ -256,8 +256,8 @@ async function loadReleases() {
   let autoApps = []
 
   try {
-    const apiUrl = 'https://api.github.com/repos/dieWehmut/Showcase/releases'
-    const releases = await fetchWithCache(apiUrl, { headers: getGitHubHeaders() }, 1000 * 60 * 15)
+    const apiUrl = getBackendApiUrl('/api/github/repos/dieWehmut/Showcase/releases')
+    const releases = await fetchWithCache(apiUrl, {}, 1000 * 60 * 15)
 
     const gamesData = []
     const appsData = []

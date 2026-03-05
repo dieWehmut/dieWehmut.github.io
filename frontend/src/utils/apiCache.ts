@@ -3,26 +3,28 @@
 // - localStorage for persistence across reloads
 // Exports: getCache, setCache, fetchWithCache, clearCache
 
+import { toLocalFallbackUrl } from './backendApi';
+
 const PREFIX = 'nw:apiCache:';
-const memory = new Map();
+const memory = new Map<string, { ts: number; ttl: number; value: any }>();
 
 function _now() { return Date.now(); }
 
-function _makeRecord(value, ttl) {
+function _makeRecord(value: any, ttl: number) {
   return { ts: _now(), ttl: ttl || 0, value };
 }
 
-function _isExpired(record) {
+function _isExpired(record: { ts: number; ttl: number; value: any } | null | undefined) {
   if (!record) return true;
   if (!record.ttl || record.ttl <= 0) return false; // ttl 0 means never expire
   return (_now() - record.ts) > record.ttl;
 }
 
-function getCache(key) {
+function getCache(key: string) {
   try {
     if (memory.has(key)) {
       const r = memory.get(key);
-      if (_isExpired(r)) {
+      if (!r || _isExpired(r)) {
         memory.delete(key);
         try { localStorage.removeItem(PREFIX + key); } catch(e) {}
         return null;
@@ -44,7 +46,7 @@ function getCache(key) {
   }
 }
 
-function setCache(key, value, ttl = 0) {
+function setCache(key: string, value: any, ttl = 0) {
   try {
     const record = _makeRecord(value, ttl);
     memory.set(key, record);
@@ -56,10 +58,12 @@ function setCache(key, value, ttl = 0) {
   }
 }
 
-function clearCache(key) {
+function clearCache(key?: string) {
   try {
-    memory.delete(key);
-    if (key) localStorage.removeItem(PREFIX + key);
+    if (key) {
+      memory.delete(key);
+      localStorage.removeItem(PREFIX + key);
+    }
     else {
       // clear all our keys
       Object.keys(localStorage).forEach(k => {
@@ -69,11 +73,14 @@ function clearCache(key) {
   } catch (e) {}
 }
 
-async function fetchWithCache(url, options = {}, ttl = 1000 * 60 * 15) {
+async function fetchWithCache(url: string, options: RequestInit = {}, ttl = 1000 * 60 * 15) {
   // key by URL + method + body (stringified) to avoid collisions
-  const method = (options.method || 'GET').toUpperCase();
+  const method = ((options.method as string) || 'GET').toUpperCase();
   let bodyKey = '';
-  try { bodyKey = options.body ? JSON.stringify(options.body) : ''; } catch {}
+  try {
+    const body = (options as RequestInit & { body?: any }).body;
+    bodyKey = body ? JSON.stringify(body) : '';
+  } catch {}
   const key = `${method}:${url}:${bodyKey}`;
 
   const cached = getCache(key);
@@ -81,29 +88,41 @@ async function fetchWithCache(url, options = {}, ttl = 1000 * 60 * 15) {
     return cached;
   }
 
-  const res = await fetch(url, {
+  const requestInit = {
     ...options,
     headers: {
-      'Accept': 'application/vnd.github.v3+json',
+      'Accept': 'application/json',
       ...options.headers,
     },
-  });
+  };
+
+  async function doFetch(targetUrl: string) {
+    return fetch(targetUrl, requestInit);
+  }
+
+  let res;
+  const fallbackUrl = toLocalFallbackUrl(url);
+
+  try {
+    res = await doFetch(url);
+  } catch (e) {
+    if (fallbackUrl !== url) {
+      res = await doFetch(fallbackUrl);
+    } else {
+      throw e;
+    }
+  }
+
+  if (!res.ok && fallbackUrl !== url) {
+    const retry = await doFetch(fallbackUrl);
+    if (retry.ok) {
+      res = retry;
+    }
+  }
   
   if (!res.ok) {
-    // Check GitHub rate limit
-    const remaining = res.headers.get('X-RateLimit-Remaining');
-    const resetTime = res.headers.get('X-RateLimit-Reset');
-    
-    if (res.status === 403 && remaining === '0') {
-      const resetDate = new Date(parseInt(resetTime) * 1000);
-      const err = new Error(`GitHub API rate limit exceeded. Resets at ${resetDate.toLocaleTimeString()}`);
-      err.status = res.status;
-      err.resetTime = resetDate;
-      throw err;
-    }
-    
     const text = await res.text().catch(() => null);
-    const err = new Error(`Fetch error ${res.status}`);
+    const err = new Error(`Fetch error ${res.status}`) as Error & { status?: number; body?: string | null };
     err.status = res.status;
     err.body = text;
     throw err;

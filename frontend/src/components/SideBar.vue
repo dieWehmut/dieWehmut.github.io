@@ -73,7 +73,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { fetchWithCache } from '../utils/apiCache';
-import { getGitHubHeaders } from '../utils/github';
+import { getBackendApiUrl } from '../utils/backendApi';
 const props = defineProps({ enterReady: { type: Boolean, default: true } });
 import { useI18n } from 'vue-i18n';
 
@@ -111,8 +111,8 @@ async function fetchGitHub() {
   try {
     // cache profile for 1 hour
     const data = await fetchWithCache(
-      'https://api.github.com/users/dieWehmut',
-      { headers: getGitHubHeaders() },
+      getBackendApiUrl('/api/github/user/dieWehmut'),
+      {},
       1000 * 60 * 60
     )
     profile.value = data;
@@ -131,12 +131,12 @@ async function fetchLatestCommit() {
     // Repo: dieWehmut/dieWehmut.github.io (site repo)
     // cache latest commit for 1 hour
     const commits = await fetchWithCache(
-      'https://api.github.com/repos/dieWehmut/dieWehmut.github.io/commits?per_page=1',
-      { headers: getGitHubHeaders() },
+      getBackendApiUrl('/api/github/repos/dieWehmut/dieWehmut.github.io/commits/latest'),
+      {},
       1000 * 60 * 60
     )
-    if (Array.isArray(commits) && commits.length > 0) {
-      const c = commits[0];
+    if (commits && commits.commit) {
+      const c = commits;
       const dateStr = c?.commit?.committer?.date || c?.commit?.author?.date;
       if (dateStr) {
         lastUpdated.value = formatDateTime(dateStr);

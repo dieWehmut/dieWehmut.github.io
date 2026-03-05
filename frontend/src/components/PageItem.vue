@@ -51,7 +51,7 @@
       </template>
       <el-button
         size="small"
-        type="text"
+        type="link"
         @click.stop="copyLink"
         class="action-btn copy-btn"
       >

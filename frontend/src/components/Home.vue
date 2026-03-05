@@ -251,7 +251,7 @@ const { t } = useI18n();
               </template>
             </el-text>
           </div>
-          <el-button type="text" size="small" style="margin-left:8px">
+          <el-button type="link" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showPages" />
               <Collection v-else />
@@ -279,7 +279,7 @@ const { t } = useI18n();
               </template>
             </el-text>
           </div>
-          <el-button type="text" size="small" style="margin-left:8px">
+          <el-button type="link" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showTools" />
               <Collection v-else />
@@ -307,7 +307,7 @@ const { t } = useI18n();
               </template>
             </el-text>
           </div>
-          <el-button type="text" size="small" style="margin-left:8px">
+          <el-button type="link" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showGames" />
               <Collection v-else />
@@ -344,7 +344,7 @@ const { t } = useI18n();
               </template>
             </el-text>
           </div>
-          <el-button type="text" size="small" style="margin-left:8px">
+          <el-button type="link" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showApps" />
               <Collection v-else />
@@ -380,7 +380,7 @@ const { t } = useI18n();
               </template>
             </el-text>
           </div>
-          <el-button type="text" size="small" style="margin-left:8px">
+          <el-button type="link" size="small" style="margin-left:8px">
             <el-icon>
               <ArrowUp v-if="showFiles" />
               <Collection v-else />

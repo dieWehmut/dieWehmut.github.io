@@ -25,20 +25,20 @@
           </div>
           
           <div class="file-actions" @click.stop>
-            <el-button class="action-btn" type="text" size="small" @click="toggleDir(entry)">
+            <el-button class="action-btn" type="link" size="small" @click="toggleDir(entry)">
               <el-icon v-if="!openDirs[entry.path]"><ArrowDown /></el-icon>
               <el-icon v-else><ArrowUp /></el-icon>
               <span class="btn-text">{{ openDirs[entry.path] ? t('action.collapse') : t('action.expand') }}</span>
             </el-button>
             
             <a :href="getFolderUrl(entry)" target="_blank" rel="noopener" class="download-link">
-              <el-button class="action-btn" type="text" size="small">
+              <el-button class="action-btn" type="link" size="small">
                 <el-icon class="action-icon"><Link /></el-icon>
                 <span class="btn-text">{{ t('action.repo') }}</span>
               </el-button>
             </a>
             
-            <el-button class="action-btn copy-btn" type="text" size="small" @click="copyLink(getFolderUrl(entry))">
+            <el-button class="action-btn copy-btn" type="link" size="small" @click="copyLink(getFolderUrl(entry))">
               <el-icon class="action-icon"><CopyDocument /></el-icon>
               <span class="btn-text">{{ copiedFiles[getFolderUrl(entry)] ? t('action.copied') : t('action.copy') }}</span>
             </el-button>
@@ -100,7 +100,7 @@ import {
 import { ElMessage } from "element-plus";
 import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../utils/apiCache'
-import { getGitHubHeaders } from '../utils/github'
+import { getBackendApiUrl } from '../utils/backendApi'
 import { ref, reactive, onMounted, computed, defineExpose, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 
@@ -217,8 +217,8 @@ async function loadContents(path = '') {
     // cache repo info and contents to reduce API calls
     try {
       const repoData = await fetchWithCache(
-        `https://api.github.com/repos/${owner}/${repo}`,
-        { headers: getGitHubHeaders() },
+        getBackendApiUrl(`/api/github/repos/${owner}/${repo}`),
+        {},
         1000 * 60 * 60
       );
       if (repoData && repoData.default_branch) defaultBranch = repoData.default_branch || defaultBranch;
@@ -226,10 +226,12 @@ async function loadContents(path = '') {
       // ignore
     }
 
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    const apiUrl = getBackendApiUrl(
+      `/api/github/repos/${owner}/${repo}/contents${path ? `?path=${encodeURIComponent(path)}` : ''}`
+    );
     let data = null;
     try {
-      data = await fetchWithCache(apiUrl, { headers: getGitHubHeaders() }, 1000 * 60 * 15);
+      data = await fetchWithCache(apiUrl, {}, 1000 * 60 * 15);
     } catch (e) {
       error.value = t('error.unable_load') || 'Unable to load files.';
       return;
@@ -271,12 +273,12 @@ async function fetchFolderDates() {
   await Promise.all(entriesRoot.value.map(async (folder) => {
     try {
       const commits = await fetchWithCache(
-        `https://api.github.com/repos/${owner}/${repo}/commits?path=${encodeURIComponent(folder.path)}&per_page=1`,
-        { headers: getGitHubHeaders() },
+        getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest?path=${encodeURIComponent(folder.path)}`),
+        {},
         1000 * 60 * 60 * 6
       );
-      if (Array.isArray(commits) && commits.length > 0) {
-        folderDates[folder.path] = commits[0]?.commit?.committer?.date || commits[0]?.commit?.author?.date || null;
+      if (commits && commits.commit) {
+        folderDates[folder.path] = commits?.commit?.committer?.date || commits?.commit?.author?.date || null;
       }
     } catch (e) {
       // ignore

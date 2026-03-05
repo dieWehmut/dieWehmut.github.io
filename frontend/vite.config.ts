@@ -16,6 +16,20 @@ export default defineConfig({
     // Dev proxy to allow loading GitHub's contributions SVG locally.
     // This proxies /api/contributions -> https://github.com/users/dieWehmut/contributions
     proxy: {
+      '/api/pages': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        proxyTimeout: 5000,
+        timeout: 5000,
+      },
+      '/api/github': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        proxyTimeout: 5000,
+        timeout: 5000,
+      },
       '/api/contributions': {
         target: 'https://github.com',
         changeOrigin: true,
