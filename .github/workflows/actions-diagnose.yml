@@ -1,0 +1,11 @@
+name: Actions Diagnose
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping
+        run: echo "GitHub Actions can run in this repository"
