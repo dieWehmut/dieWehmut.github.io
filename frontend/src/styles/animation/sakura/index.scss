@@ -2,7 +2,7 @@
  * Sakura animation layer (SakuraCanvas.vue)
  * Full-viewport fixed canvas. pointer-events: auto so
  * users can interact with petals (pick up on click).
- * z-index: 1 – above snow, below page UI.
+ * z-index: 2600 – top visual layer.
  * ------------------------------------------------------- */
 .sakura-canvas {
   display: block;
@@ -10,7 +10,7 @@
   inset: 0;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 1 !important;
+  z-index: 2600 !important;
   pointer-events: none !important;
 }
 

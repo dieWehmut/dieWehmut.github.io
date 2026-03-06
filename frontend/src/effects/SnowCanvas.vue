@@ -13,14 +13,14 @@ let H = 0
 let dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────────
-const COUNT        = 120    // 雪的密度
-const AREA         = 800    // density reference area (px²/particle)
-const MIN_R        = 1.5    // min radius px (logical)
-const MAX_R        = 4.5    // max radius px (logical)
-const SPEED_BASE   = 0.5    // base fall speed (logical px/frame) – gentle drift
-const GRAB_DIST    = 140    // mouse grab distance (logical px)
-const GRAB_OPACITY = 0.55   // line opacity at distance=0
-const LINE_WIDTH   = 1      // grab line width px
+const COUNT        = 260    // 雪的密度
+const AREA         = 420    // density reference area (px²/particle)
+const MIN_R        = 2.1    // min radius px (logical)
+const MAX_R        = 6.8    // max radius px (logical)
+const SPEED_BASE   = 0.78   // base fall speed (logical px/frame) – gentle drift
+const GRAB_DIST    = 180    // mouse grab distance (logical px)
+const GRAB_OPACITY = 0.68   // line opacity at distance=0
+const LINE_WIDTH   = 1.25   // grab line width px
 // ───────────────────────────────────────────────────────────────────────────
 
 // mouse in logical coords
@@ -39,8 +39,12 @@ function mkParticle(initY = false) {
     y:  initY ? rand(-20, H / dpr) : rand(-20, -r),
     r,
     vy: sp,                          // always positive → downward
-    vx: rand(-0.4, 0.4),             // slight horizontal drift
-    opacity: rand(0.4, 0.9),
+    vx: rand(-0.85, 0.85),            // slight horizontal drift
+    sway: rand(0.008, 0.028),
+    swayAmp: rand(0.25, 1.4),
+    phase: rand(0, Math.PI * 2),
+    glow: rand(0.18, 0.45),
+    opacity: rand(0.58, 0.98),
   }
 }
 
@@ -77,7 +81,8 @@ function frame() {
 
   // ── update positions ──
   for (const p of particles) {
-    p.x += p.vx
+    p.phase += p.sway
+    p.x += p.vx + Math.sin(p.phase) * p.swayAmp
     p.y += p.vy
 
     // wrap left/right
@@ -110,6 +115,11 @@ function frame() {
 
   // ── draw snowflakes ──
   for (const p of particles) {
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, p.r * 2.4, 0, Math.PI * 2)
+    ctx.fillStyle = `rgba(255,255,255,${(p.glow * 0.26).toFixed(2)})`
+    ctx.fill()
+
     ctx.beginPath()
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
     ctx.fillStyle = `rgba(255,255,255,${p.opacity.toFixed(2)})`

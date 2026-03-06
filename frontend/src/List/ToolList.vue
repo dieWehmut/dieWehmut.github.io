@@ -12,7 +12,7 @@
 import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { copyTextWithToast, enrichItemsWithLatestDate, formatListDate } from '../ui/ItemList.vue'
-import { showCenteredToast } from '../ui/CenterToast.vue'
+import { showCenteredToast } from '../layouts/CenterToast.vue'
 import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
@@ -61,6 +61,7 @@ const displayItems = computed(() => {
         key: 'copy',
         label: copiedLinks[resolveCopyUrl(tool)] ? t('action.copied') : t('action.copy'),
         icon: 'copy',
+        active: !!copiedLinks[resolveCopyUrl(tool)],
         onClick: () => copyTextWithToast(resolveCopyUrl(tool), copiedLinks, { copiedKey: resolveCopyUrl(tool), duration: 2500 }),
       },
     ],

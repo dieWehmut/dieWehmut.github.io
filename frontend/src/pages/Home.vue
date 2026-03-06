@@ -2,7 +2,7 @@
   <el-config-provider :button="{ autoInsertSpace: true }">
     <div class="relative min-h-screen overflow-x-clip text-white">
       <DynamicBackground @ready="onBackgroundReady" />
-      <ParticleCanvas v-if="showParticleCanvas" />
+      <SnowCanvas v-if="showSnowCanvas" />
       <SakuraCanvas v-if="showHeavyEffects" />
       <BounceCursor v-if="showHeavyEffects" />
       <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
@@ -21,7 +21,7 @@
         </header>
 
         <div class="mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
-          <SideBar v-if="!(isMobile && query.trim())" :enter-ready="!showIntro" />
+          <SideBar :enter-ready="!showIntro" />
 
           <main class="min-w-0 flex-1 max-[640px]:w-full">
             <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
@@ -197,7 +197,7 @@ function createAsyncView(loader) {
 
 const SearchBar = createAsyncView(() => import('../ui/SearchBar.vue'))
 const DynamicBackground = createAsyncView(() => import('../effects/DynamicBackground.vue'))
-const ParticleCanvas = createAsyncView(() => import('../effects/ParticleCanvas.vue'))
+const SnowCanvas = createAsyncView(() => import('../effects/SnowCanvas.vue'))
 const SakuraCanvas = createAsyncView(() => import('../effects/SakuraCanvas.vue'))
 const BounceCursor = createAsyncView(() => import('../effects/BounceCursor.vue'))
 const Footer = createAsyncView(() => import('../layouts/Footer.vue'))
@@ -247,8 +247,8 @@ const activatedSections = reactive({
 
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
-const showParticleCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value && !isMobile.value)
-const showHeavyEffects = computed(() => showParticleCanvas.value && !showIntro.value)
+const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value && !isMobile.value)
+const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
 const sectionCardClass = 'overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'

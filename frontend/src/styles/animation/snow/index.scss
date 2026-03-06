@@ -1,7 +1,7 @@
 /* -------------------------------------------------------
- * Snow animation layer (ParticleCanvas.vue)
+ * Snow animation layer (SnowCanvas.vue)
  * Full-viewport fixed canvas, pointer-events: none.
- * z-index: 0 – behind sakura & UI.
+ * z-index: 2500 – below sakura, above page UI.
  * ------------------------------------------------------- */
 .particle-canvas {
   display: block;
@@ -10,5 +10,5 @@
   width: 100vw !important;
   height: 100vh !important;
   pointer-events: none !important;
-  z-index: 0 !important;
+  z-index: 2500 !important;
 }

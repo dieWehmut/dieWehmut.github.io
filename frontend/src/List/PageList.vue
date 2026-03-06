@@ -76,6 +76,7 @@ const displayItems = computed(() => {
         key: 'copy',
         label: copiedLinks[page.url] ? t('action.copied') : t('action.copy'),
         icon: 'copy',
+        active: !!copiedLinks[page.url],
         onClick: () => copyTextWithToast(page.url, copiedLinks, { copiedKey: page.url, duration: 3000 }),
       },
     ],

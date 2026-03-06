@@ -1,5 +1,5 @@
 <script>
-import { showCenteredToast } from './CenterToast.vue'
+import { showCenteredToast } from '../layouts/CenterToast.vue'
 
 export function formatListDate(dateValue, { pad = false } = {}) {
   if (!dateValue) {
@@ -174,7 +174,7 @@ export async function enrichItemsWithLatestDate(items, options) {
               v-for="action in item.actions"
               :key="`${item.key}-${action.key}`"
               v-bind="getActionAttrs(action)"
-              class="inline-flex min-h-9 min-w-[100px] items-center justify-center gap-1.5 whitespace-nowrap rounded-2xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-sm font-medium text-white/85 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:rounded-xl max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-xs"
+              :class="getActionClass(action, 'inline-flex min-h-9 min-w-[100px] items-center justify-center gap-1.5 whitespace-nowrap rounded-2xl border px-2.5 py-1.5 text-sm font-medium transition max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:rounded-xl max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-xs')"
               @click.stop="handleActionClick(action)"
             >
               <component :is="resolveIcon(action.icon)" class="h-4 w-4 shrink-0 max-[640px]:h-3.5 max-[640px]:w-3.5" />
@@ -238,7 +238,7 @@ export async function enrichItemsWithLatestDate(items, options) {
                   v-for="action in child.actions"
                   :key="`${child.key}-${action.key}`"
                   v-bind="getActionAttrs(action)"
-                  class="inline-flex min-h-9 min-w-[92px] items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:px-1 max-[640px]:py-0.5"
+                  :class="getActionClass(action, 'inline-flex min-h-9 min-w-[92px] items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border px-2.5 py-1.5 text-xs font-medium transition max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:px-1 max-[640px]:py-0.5')"
                   @click.stop="handleActionClick(action)"
                 >
                   <component :is="resolveIcon(action.icon)" class="h-3.5 w-3.5 shrink-0 max-[640px]:h-3 max-[640px]:w-3" />
@@ -347,5 +347,13 @@ function handleActionClick(action) {
   if (typeof action?.onClick === 'function') {
     action.onClick()
   }
+}
+
+function getActionClass(action, baseClass) {
+  if (action?.active) {
+    return `${baseClass} border-emerald-300/40 bg-emerald-500/85 text-white shadow-[0_10px_24px_rgba(16,185,129,0.28)] hover:-translate-y-0.5 hover:border-emerald-200/60 hover:bg-emerald-400/90`
+  }
+
+  return `${baseClass} border-white/10 bg-white/8 text-white/85 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14`
 }
 </script>

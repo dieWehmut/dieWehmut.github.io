@@ -21,16 +21,16 @@ let ctx = null
 let W = 0, H = 0, dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────
-const PETAL_COUNT      = 35
-const MIN_SIZE         = 10
-const MAX_SIZE         = 24
-const FALL_SPEED       = 0.45
-const DRIFT_SPEED      = -0.35
-const ROTATION_SP      = 0.01
-const PICK_DIST        = 34
-const HOVER_DIST       = 40
-const CLUSTER_RADIUS   = 26
-const CLUSTER_LERP     = 0.15
+const PETAL_COUNT      = 58
+const MIN_SIZE         = 14
+const MAX_SIZE         = 32
+const FALL_SPEED       = 0.72
+const DRIFT_SPEED      = -0.52
+const ROTATION_SP      = 0.016
+const PICK_DIST        = 38
+const HOVER_DIST       = 54
+const CLUSTER_RADIUS   = 30
+const CLUSTER_LERP     = 0.18
 // ───────────────────────────────────────────────────────────────────────
 
 const mouse = { x: -99999, y: -99999 }
@@ -60,7 +60,7 @@ function mkPetal(initScatter = false) {
     wobbleSpeed: rand(0.008, 0.022),
     wobblePhase: rand(0, Math.PI * 2),
     tick: 0,
-    opacity: rand(0.6, 0.95),
+    opacity: rand(0.78, 1),
     hue: rand(-8, 12),          // color variation around pink
     lightness: rand(80, 92),
     // per-petal shape variation
@@ -127,10 +127,10 @@ function drawPetalShape(p, x, y, scale) {
 
   // ── radial gradient: lighter center, richer edges ──
   const grad = ctx.createRadialGradient(0, -s * 0.05, s * 0.04, 0, 0, s * 0.88)
-  grad.addColorStop(0,    `hsla(${h}, 85%, 96%, ${p.opacity})`)
-  grad.addColorStop(0.35, `hsla(${h}, 78%, ${p.lightness + 3}%, ${p.opacity})`)
-  grad.addColorStop(0.72, `hsla(${h}, 72%, ${p.lightness}%, ${p.opacity})`)
-  grad.addColorStop(1,    `hsla(${h}, 65%, ${p.lightness - 6}%, ${p.opacity * 0.72})`)
+  grad.addColorStop(0,    `hsla(${h}, 92%, 97%, ${p.opacity})`)
+  grad.addColorStop(0.3,  `hsla(${h}, 88%, ${p.lightness + 5}%, ${p.opacity})`)
+  grad.addColorStop(0.7,  `hsla(${h}, 80%, ${p.lightness + 1}%, ${p.opacity})`)
+  grad.addColorStop(1,    `hsla(${h}, 76%, ${p.lightness - 4}%, ${p.opacity * 0.82})`)
   ctx.fillStyle = grad
   ctx.fill()
 
