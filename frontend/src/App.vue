@@ -4,6 +4,12 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from 'vue'
 import Home from './pages/Home.vue'
-import CenterToast from './layouts/CenterToast.vue'
+
+const CenterToast = defineAsyncComponent({
+  loader: () => import('./layouts/CenterToast.vue'),
+  delay: 0,
+  suspensible: false,
+})
 </script>

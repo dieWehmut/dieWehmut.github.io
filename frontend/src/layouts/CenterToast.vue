@@ -18,29 +18,10 @@
   </Teleport>
 </template>
 
-<script>
-const CENTER_TOAST_EVENT = 'nexus:center-toast'
-
-export function showCenteredToast(messageOrKey, options = {}) {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  window.dispatchEvent(
-    new CustomEvent(CENTER_TOAST_EVENT, {
-      detail: {
-        messageOrKey,
-        type: options.type || 'success',
-        duration: options.duration || 2500,
-      },
-    }),
-  )
-}
-</script>
-
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { CENTER_TOAST_EVENT } from '../utils/centerToast'
 
 const { t, te } = useI18n()
 

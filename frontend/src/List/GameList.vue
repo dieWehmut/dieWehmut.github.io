@@ -9,10 +9,10 @@
 </template>
 
 <script setup>
-import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { copyTextWithToast, enrichItemsWithLatestDate, formatListDate } from '../ui/ItemList.vue'
-import { showCenteredToast } from '../layouts/CenterToast.vue'
+import { showCenteredToast } from '../utils/centerToast'
 import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'

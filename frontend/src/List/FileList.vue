@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { computed, defineExpose, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'

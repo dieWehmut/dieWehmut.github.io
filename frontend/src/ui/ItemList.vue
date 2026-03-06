@@ -1,5 +1,5 @@
 <script>
-import { showCenteredToast } from '../layouts/CenterToast.vue'
+import { showCenteredToast } from '../utils/centerToast'
 
 export function formatListDate(dateValue, { pad = false } = {}) {
   if (!dateValue) {

@@ -282,7 +282,7 @@ const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMo
 const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
 const snowDensityScale = computed(() => (isMobile.value ? 0.1 : 0.22))
 const sakuraDensityScale = computed(() => (isMobile.value ? 0.16 : 0.42))
-const sectionCardClass = 'overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
+const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
 const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-0.5 max-[640px]:pb-2.5'
@@ -559,6 +559,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.section-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 520px;
+}
+
 .section-toggle-enter-active,
 .section-toggle-leave-active {
   transition: opacity 220ms ease, transform 220ms ease;
