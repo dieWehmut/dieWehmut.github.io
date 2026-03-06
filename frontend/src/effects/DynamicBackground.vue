@@ -11,7 +11,7 @@
           playsinline
           webkit-playsinline
           x5-playsinline
-          preload="metadata"
+          preload="none"
         >
           <template v-if="videoStarted">
             <source :src="bgWebm" type="video/webm" />
@@ -85,6 +85,15 @@ onMounted(() => {
   const video = videoEl.value
   let readyFired = false
 
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+  const effectiveType = connection?.effectiveType || ''
+  const shouldSkipVideo =
+    !!connection?.saveData ||
+    effectiveType === 'slow-2g' ||
+    effectiveType === '2g' ||
+    effectiveType === '3g' ||
+    window.matchMedia?.('(max-width: 768px)').matches
+
   const markReady = () => {
     if (readyFired) return
     readyFired = true
@@ -120,10 +129,14 @@ onMounted(() => {
     window.setTimeout(markReady, 120)
   })
 
+  if (shouldSkipVideo) {
+    return
+  }
+
   if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(() => startVideo(), { timeout: 1200 })
+    window.requestIdleCallback(() => startVideo(), { timeout: 2000 })
   } else {
-    window.setTimeout(() => startVideo(), 480)
+    window.setTimeout(() => startVideo(), 1200)
   }
 })
 </script>

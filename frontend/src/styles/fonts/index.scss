@@ -1,22 +1,24 @@
 @font-face {
 	font-family: 'LXGW WenKai';
-	src: url('../../assets/fonts/LXGWWenKai-Regular.ttf') format('truetype');
+	src: local('LXGW WenKai'),
+		local('LXGWWenKai-Regular'),
+		url('../../assets/fonts/LXGWWenKai-Regular.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
 :root {
-	--font-family-base: 'LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+	--font-family-display: 'LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
 }
 
-html,
-body,
-#app,
-#root,
-button,
-input,
-textarea,
-select {
-	font-family: var(--font-family-base);
+html.fonts-loaded,
+html.fonts-loaded body,
+html.fonts-loaded #app,
+html.fonts-loaded #root,
+html.fonts-loaded button,
+html.fonts-loaded input,
+html.fonts-loaded textarea,
+html.fonts-loaded select {
+	font-family: var(--font-family-display);
 }

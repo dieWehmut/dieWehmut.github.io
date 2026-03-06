@@ -1,25 +1,29 @@
 <template>
   <div class="search w-[min(960px,92vw)] mx-auto rounded-xl border-0 bg-transparent px-2 py-0.5 shadow-none max-[640px]:w-full max-[640px]:px-0 max-[640px]:py-0.5" :class="{ 'entering': enterReady }">
-    <el-input
-      id="global-search-input"
-      ref="inputRef"
-      v-model="innerValue"
-      size="large"
-      clearable
-      :placeholder="placeholderText"
-      @clear="$emit('clear')"
-      @input="onInput"
-      class="search-input"
-    >
-      <template #prefix>
-        <el-icon class="search-icon text-[18px]"><Search /></el-icon>
-      </template>
-      <template #suffix>
-        <div class="mr-1 max-[640px]:hidden">
-          <span class="text-[11px] text-white/[0.88] border border-white/[0.12] px-1.5 py-0.5 rounded-md select-none bg-transparent font-medium">Ctrl + K</span>
-        </div>
-      </template>
-    </el-input>
+    <div class="search-shell flex items-center gap-3 rounded-2xl border border-white/[0.18] bg-[linear-gradient(135deg,rgba(53,56,68,0.76),rgba(45,54,63,0.76))] px-4 py-2 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_18px_40px_rgba(0,0,0,0.18)] backdrop-blur-[10px] backdrop-saturate-[118%] transition-all duration-200 max-[640px]:gap-2 max-[640px]:rounded-xl max-[640px]:px-2.5 max-[640px]:py-1.5">
+      <Search class="search-icon h-[18px] w-[18px] shrink-0" />
+      <input
+        id="global-search-input"
+        ref="inputRef"
+        v-model="innerValue"
+        type="text"
+        :placeholder="placeholderText"
+        class="search-field min-w-0 flex-1 border-0 bg-transparent p-0 text-[15px] font-medium tracking-[0.01em] text-white/[0.99] outline-none placeholder:text-white/[0.82] max-[640px]:text-sm"
+        @keydown.enter="$emit('submit')"
+      />
+      <button
+        v-if="innerValue"
+        type="button"
+        class="clear-btn inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-sm text-white/[0.72] transition hover:border-white/20 hover:bg-white/[0.1] hover:text-white/[0.96] max-[640px]:h-7 max-[640px]:w-7"
+        aria-label="Clear search"
+        @click="clearInput"
+      >
+        X
+      </button>
+      <div v-else class="mr-1 max-[640px]:hidden">
+        <span class="rounded-md border border-white/[0.12] bg-transparent px-1.5 py-0.5 text-[11px] font-medium text-white/[0.88] select-none">Ctrl + K</span>
+      </div>
+    </div>
 
     <div v-if="!innerValue" class="mt-0.5 mb-0 flex w-full flex-wrap justify-center gap-1 max-[640px]:gap-x-0.5 max-[640px]:gap-y-1 max-[640px]:px-0">
       <button
@@ -36,7 +40,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick, defineExpose } from 'vue'
+import { computed, defineExpose, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Search } from '@element-plus/icons-vue'
 
@@ -67,14 +71,17 @@ const navItems = [
 ]
 
 const inputRef = ref(null)
+
 function focusInput() {
   nextTick(() => {
     inputRef.value?.focus()
   })
 }
 
-function onInput() {
-  emit('update:modelValue', innerValue.value)
+function clearInput() {
+  innerValue.value = ''
+  emit('clear')
+  focusInput()
 }
 
 function scrollToSection(id) {
@@ -108,80 +115,38 @@ defineExpose({ focusInput })
 </script>
 
 <style scoped>
-.search-input :deep(.el-input) {
-  --el-input-border-color: rgba(255, 255, 255, 0.18);
-  --el-input-hover-border-color: rgba(255, 255, 255, 0.28);
-  --el-input-focus-border-color: rgba(255, 154, 197, 0.9);
-  --el-color-primary: rgba(255, 154, 197, 0.9);
+.search-shell:hover {
+  border-color: rgba(255, 172, 209, 0.32);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.2);
 }
 
-.search-input :deep(.el-input__wrapper) {
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(53, 56, 68, 0.76), rgba(45, 54, 63, 0.76)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.18) !important;
-  transition: all 0.2s ease;
-  padding: 4px 16px;
-  backdrop-filter: blur(10px) saturate(118%);
-  -webkit-backdrop-filter: blur(10px) saturate(118%);
+.search-shell:focus-within {
+  background: linear-gradient(135deg, rgba(58, 61, 74, 0.82), rgba(46, 56, 66, 0.82));
+  border-color: rgba(255, 154, 197, 0.9);
+  box-shadow: 0 0 0 1px rgba(255,154,197,0.36), 0 0 0 4px rgba(255,154,197,0.16), 0 16px 36px rgba(0,0,0,0.18);
 }
-.search-input :deep(.el-input__wrapper):hover {
-  border-color: rgba(255, 172, 209, 0.32) !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.2) !important;
+
+.search-field::-ms-clear,
+.search-field::-ms-reveal {
+  display: none;
 }
-.search-input :deep(.el-input__wrapper.is-focus) {
-  background: linear-gradient(135deg, rgba(58, 61, 74, 0.82), rgba(46, 56, 66, 0.82)) !important;
-  border-color: rgba(255, 154, 197, 0.9) !important;
-  box-shadow: 0 0 0 1px rgba(255,154,197,0.36), 0 0 0 4px rgba(255,154,197,0.16), 0 16px 36px rgba(0,0,0,0.18) !important;
-}
-.search-input :deep(.el-input__wrapper:focus-within) {
-  background: linear-gradient(135deg, rgba(58, 61, 74, 0.82), rgba(46, 56, 66, 0.82)) !important;
-  border-color: rgba(255, 154, 197, 0.9) !important;
-  box-shadow: 0 0 0 1px rgba(255,154,197,0.36), 0 0 0 4px rgba(255,154,197,0.16), 0 16px 36px rgba(0,0,0,0.18) !important;
-}
-.search-input :deep(.el-input__inner) {
-  background: transparent !important;
-  color: rgba(255,255,255,0.99) !important;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  border: none;
-  outline: none;
-  box-shadow: none !important;
-}
-.search-input :deep(.el-input__inner:focus) {
-  outline: none !important;
-  box-shadow: none !important;
-}
-.search-input :deep(.el-input__inner::placeholder) {
-  color: rgba(255,255,255,0.82) !important;
-}
+
 .search-icon {
   color: rgba(255, 196, 217, 0.95);
   filter: drop-shadow(0 0 10px rgba(255, 168, 201, 0.34));
 }
-.search-input :deep(.el-input__suffix) {
-  display: flex;
-  align-items: center;
-}
-.search-input :deep(.el-input__clear) {
-  color: rgba(255,255,255,0.72);
-  transition: color 0.2s ease;
-}
-.search-input :deep(.el-input__clear:hover) {
-  color: rgba(255,255,255,0.96);
-}
 
-/* entry animation */
 .search {
   transition: opacity 420ms cubic-bezier(.16,.9,.2,1), transform 420ms cubic-bezier(.16,.9,.2,1);
   will-change: opacity, transform;
 }
+
 .search:not(.entering) {
   opacity: 0;
   transform: translateY(-8px);
   pointer-events: none;
 }
+
 .search.entering {
   opacity: 1;
   transform: translateY(0);
@@ -233,12 +198,8 @@ defineExpose({ focusInput })
 }
 
 @media (max-width: 640px) {
-  .search-input :deep(.el-input__wrapper) {
-    padding: 2px 8px;
-  }
-
-  .search-input :deep(.el-input__inner) {
-    font-size: 14px;
+  .search-shell {
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 12px 28px rgba(0,0,0,0.16);
   }
 }
 </style>

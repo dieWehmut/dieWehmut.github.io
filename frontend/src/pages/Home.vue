@@ -1,185 +1,183 @@
 <template>
-  <el-config-provider :button="{ autoInsertSpace: true }">
-    <div class="relative min-h-screen overflow-x-clip text-white">
-      <DynamicBackground @ready="onBackgroundReady" />
-      <SnowCanvas v-if="showSnowCanvas" :density-scale="snowDensityScale" />
-      <SakuraCanvas v-if="showHeavyEffects" :density-scale="sakuraDensityScale" />
-      <BounceCursor v-if="showHeavyEffects" />
-      <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
+  <div class="relative min-h-screen overflow-x-clip text-white">
+    <DynamicBackground @ready="onBackgroundReady" />
+    <SnowCanvas v-if="showSnowCanvas" :density-scale="snowDensityScale" />
+    <SakuraCanvas v-if="showHeavyEffects" :density-scale="sakuraDensityScale" />
+    <BounceCursor v-if="showHeavyEffects" />
+    <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
 
-      <div class="relative z-10 min-h-screen flex flex-col">
-        <header class="sticky top-0 z-[2200] bg-transparent flex-shrink-0">
-          <div class="mx-auto w-full max-w-[2000px] px-4 py-1.5 sm:px-6 lg:px-8 max-[640px]:px-0 max-[640px]:py-1">
-            <SearchBar
-              ref="searchBarRef"
-              v-model="query"
-              :enter-ready="!showIntro"
-              @submit="openFirst"
-              @clear="onClear"
-            />
-          </div>
-        </header>
-
-        <div class="mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
-          <SideBar :enter-ready="!showIntro" />
-
-          <main class="min-w-0 flex-1 max-[640px]:w-full">
-            <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
-              <section id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(0)">
-                <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('pages')">
-                  <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
-                      <Collection class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
-                    </span>
-                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
-                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="!activatedSections.pages || readExposed(pageListRef?.loading, false)">{{ t('common.loading') }}...</template>
-                        <template v-else-if="readExposed(pageListRef?.error, '')">{{ t('error.unable_load') }}</template>
-                        <template v-else>
-                          {{ t('common.totalFormat', { count: totalPagesCount }) }}
-                          <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedPagesCount }) }}</span>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                  <component :is="showPages ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
-                </button>
-
-                <transition name="section-toggle">
-                  <div v-show="showPages" :class="sectionContentClass">
-                    <PageList v-if="activatedSections.pages" ref="pageListRef" :filter-query="normalizedQuery" />
-                  </div>
-                </transition>
-              </section>
-
-              <section id="section-tools" v-if="!hasQuery || matchedToolsCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(1)">
-                <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('tools')">
-                  <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
-                      <Cpu class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
-                    </span>
-                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.tools') }}</div>
-                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="!activatedSections.tools">{{ t('common.loading') }}...</template>
-                        <template v-else>
-                          {{ t('common.totalFormat', { count: totalToolsCount }) }}
-                          <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedToolsCount }) }}</span>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                  <component :is="showTools ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
-                </button>
-
-                <transition name="section-toggle">
-                  <div v-show="showTools" :class="sectionContentClass">
-                    <ToolList v-if="activatedSections.tools" ref="toolListRef" :filter-query="normalizedQuery" />
-                  </div>
-                </transition>
-              </section>
-
-              <section id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(2)">
-                <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('games')">
-                  <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
-                      <Flag class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
-                    </span>
-                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.games') }}</div>
-                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="!activatedSections.games">{{ t('common.loading') }}...</template>
-                        <template v-else>
-                          {{ t('common.totalFormat', { count: totalGamesCount }) }}
-                          <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedGamesCount }) }}</span>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                  <component :is="showGames ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
-                </button>
-
-                <transition name="section-toggle">
-                  <div v-show="showGames" :class="sectionContentClass">
-                    <GameList v-if="activatedSections.games" ref="gameListRef" :filter-query="normalizedQuery" />
-                  </div>
-                </transition>
-              </section>
-
-              <section id="section-apps" v-if="(!hasQuery && appsAutoLoadEnabled) || (hasQuery && filteredApps.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(3)">
-                <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('apps')">
-                  <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
-                      <Monitor class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
-                    </span>
-                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.apps') }}</div>
-                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="!activatedSections.apps">{{ t('common.loading') }}...</template>
-                        <template v-else>
-                          {{ t('common.totalFormat', { count: totalAppsCount }) }}
-                          <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedAppsCount }) }}</span>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                  <component :is="showApps ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
-                </button>
-
-                <transition name="section-toggle">
-                  <div v-show="showApps" :class="sectionContentClass">
-                    <AppList v-if="activatedSections.apps" ref="appListRef" :filter-query="normalizedQuery" />
-                  </div>
-                </transition>
-              </section>
-
-              <section id="section-files" v-if="!hasQuery || matchedFilesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(4)">
-                <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('files')">
-                  <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
-                      <FolderOpened class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
-                    </span>
-                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
-                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="!activatedSections.files || readExposed(fileListRef?.loading, false)">{{ t('common.loading') }}...</template>
-                        <template v-else-if="readExposed(fileListRef?.error, '')">{{ t('error.unable_load') }}</template>
-                        <template v-else>
-                          {{ t('common.totalFormat', { count: totalFilesCount }) }}
-                          <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedFilesCount }) }}</span>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                  <component :is="showFiles ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
-                </button>
-
-                <transition name="section-toggle">
-                  <div v-show="showFiles" :class="sectionContentClass">
-                    <FileList v-if="activatedSections.files" ref="fileListRef" :filter-query="normalizedQuery" />
-                  </div>
-                </transition>
-              </section>
-
-              <section v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && matchedToolsCount === 0" :class="sectionCardClass" :style="sectionDelayStyle(5)">
-                <div class="px-4 py-12 text-center sm:px-5 max-[640px]:px-2">
-                  <div class="text-lg font-semibold text-white">No matching content found</div>
-                  <div class="mt-2 text-sm text-white/60">Try a different keyword.</div>
-                </div>
-              </section>
-            </div>
-          </main>
+    <div class="relative z-10 min-h-screen flex flex-col">
+      <header class="sticky top-0 z-[2200] bg-transparent flex-shrink-0">
+        <div class="mx-auto w-full max-w-[2000px] px-4 py-1.5 sm:px-6 lg:px-8 max-[640px]:px-0 max-[640px]:py-1">
+          <SearchBar
+            ref="searchBarRef"
+            v-model="query"
+            :enter-ready="!showIntro"
+            @submit="openFirst"
+            @clear="onClear"
+          />
         </div>
+      </header>
 
-        <footer class="relative z-10 mt-auto flex-shrink-0">
-          <Footer />
-        </footer>
+      <div class="mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
+        <SideBar :enter-ready="!showIntro" />
 
-        <FloatButton />
+        <main class="min-w-0 flex-1 max-[640px]:w-full">
+          <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
+            <section id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(0)">
+              <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('pages')">
+                <div :class="sectionToggleInnerClass">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                    <Collection class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
+                  </span>
+                  <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
+                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                      <template v-if="!activatedSections.pages || readExposed(pageListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                      <template v-else-if="readExposed(pageListRef?.error, '')">{{ t('error.unable_load') }}</template>
+                      <template v-else>
+                        {{ t('common.totalFormat', { count: totalPagesCount }) }}
+                        <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedPagesCount }) }}</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <component :is="showPages ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+              </button>
+
+              <transition name="section-toggle">
+                <div v-show="showPages" :class="sectionContentClass">
+                  <PageList v-if="activatedSections.pages" ref="pageListRef" :filter-query="normalizedQuery" />
+                </div>
+              </transition>
+            </section>
+
+            <section id="section-tools" v-if="!hasQuery || matchedToolsCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(1)">
+              <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('tools')">
+                <div :class="sectionToggleInnerClass">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                    <Cpu class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
+                  </span>
+                  <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.tools') }}</div>
+                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                      <template v-if="!activatedSections.tools">{{ t('common.loading') }}...</template>
+                      <template v-else>
+                        {{ t('common.totalFormat', { count: totalToolsCount }) }}
+                        <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedToolsCount }) }}</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <component :is="showTools ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+              </button>
+
+              <transition name="section-toggle">
+                <div v-show="showTools" :class="sectionContentClass">
+                  <ToolList v-if="activatedSections.tools" ref="toolListRef" :filter-query="normalizedQuery" />
+                </div>
+              </transition>
+            </section>
+
+            <section id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(2)">
+              <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('games')">
+                <div :class="sectionToggleInnerClass">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                    <Flag class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
+                  </span>
+                  <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.games') }}</div>
+                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                      <template v-if="!activatedSections.games">{{ t('common.loading') }}...</template>
+                      <template v-else>
+                        {{ t('common.totalFormat', { count: totalGamesCount }) }}
+                        <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedGamesCount }) }}</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <component :is="showGames ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+              </button>
+
+              <transition name="section-toggle">
+                <div v-show="showGames" :class="sectionContentClass">
+                  <GameList v-if="activatedSections.games" ref="gameListRef" :filter-query="normalizedQuery" />
+                </div>
+              </transition>
+            </section>
+
+            <section id="section-apps" v-if="(!hasQuery && appsAutoLoadEnabled) || (hasQuery && filteredApps.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(3)">
+              <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('apps')">
+                <div :class="sectionToggleInnerClass">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                    <Monitor class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
+                  </span>
+                  <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.apps') }}</div>
+                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                      <template v-if="!activatedSections.apps">{{ t('common.loading') }}...</template>
+                      <template v-else>
+                        {{ t('common.totalFormat', { count: totalAppsCount }) }}
+                        <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedAppsCount }) }}</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <component :is="showApps ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+              </button>
+
+              <transition name="section-toggle">
+                <div v-show="showApps" :class="sectionContentClass">
+                  <AppList v-if="activatedSections.apps" ref="appListRef" :filter-query="normalizedQuery" />
+                </div>
+              </transition>
+            </section>
+
+            <section id="section-files" v-if="!hasQuery || matchedFilesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(4)">
+              <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('files')">
+                <div :class="sectionToggleInnerClass">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                    <FolderOpened class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
+                  </span>
+                  <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
+                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                      <template v-if="!activatedSections.files || readExposed(fileListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                      <template v-else-if="readExposed(fileListRef?.error, '')">{{ t('error.unable_load') }}</template>
+                      <template v-else>
+                        {{ t('common.totalFormat', { count: totalFilesCount }) }}
+                        <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedFilesCount }) }}</span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+                <component :is="showFiles ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+              </button>
+
+              <transition name="section-toggle">
+                <div v-show="showFiles" :class="sectionContentClass">
+                  <FileList v-if="activatedSections.files" ref="fileListRef" :filter-query="normalizedQuery" />
+                </div>
+              </transition>
+            </section>
+
+            <section v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && matchedToolsCount === 0" :class="sectionCardClass" :style="sectionDelayStyle(5)">
+              <div class="px-4 py-12 text-center sm:px-5 max-[640px]:px-2">
+                <div class="text-lg font-semibold text-white">No matching content found</div>
+                <div class="mt-2 text-sm text-white/60">Try a different keyword.</div>
+              </div>
+            </section>
+          </div>
+        </main>
       </div>
+
+      <footer v-if="showDeferredUi" class="relative z-10 mt-auto flex-shrink-0">
+        <Footer />
+      </footer>
+
+      <FloatButton v-if="showDeferredUi" />
     </div>
-  </el-config-provider>
+  </div>
 </template>
 
 <script setup>
@@ -211,6 +209,38 @@ const FileList = createAsyncView(() => import('../List/FileList.vue'))
 const ToolList = createAsyncView(() => import('../List/ToolList.vue'))
 import { useContent } from '../data/content'
 
+const INTRO_SEEN_KEY = 'nexus:intro-seen'
+
+function getConnectionInfo() {
+  if (typeof navigator === 'undefined') {
+    return null
+  }
+
+  return navigator.connection || navigator.mozConnection || navigator.webkitConnection || null
+}
+
+function isSlowConnection() {
+  const connection = getConnectionInfo()
+  const effectiveType = connection?.effectiveType || ''
+  return !!connection?.saveData || effectiveType === 'slow-2g' || effectiveType === '2g'
+}
+
+function shouldShowIntroInitially() {
+  if (typeof window === 'undefined') {
+    return false
+  }
+
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || isSlowConnection()) {
+    return false
+  }
+
+  try {
+    return window.sessionStorage.getItem(INTRO_SEEN_KEY) !== '1'
+  } catch {
+    return true
+  }
+}
+
 const { t } = useI18n()
 const { games, apps } = useContent()
 
@@ -226,7 +256,8 @@ const prefersReducedMotion = ref(false)
 const deferredActivationTimers = []
 const deferredIdleCallbacks = []
 
-const showIntro = ref(true)
+const showIntro = ref(shouldShowIntroInitially())
+const showDeferredUi = ref(false)
 const backgroundReady = ref(false)
 let introFallbackTimer = null
 let mediaQuery = null
@@ -314,6 +345,32 @@ function scheduleDeferredSections() {
   queueSectionActivation('files', 860)
 }
 
+function scheduleDeferredUi() {
+  if (showDeferredUi.value) {
+    return
+  }
+
+  const reveal = () => {
+    showDeferredUi.value = true
+  }
+
+  if (typeof window.requestIdleCallback === 'function') {
+    const idleCallback = window.requestIdleCallback(reveal, { timeout: 1000 })
+    deferredIdleCallbacks.push(idleCallback)
+    return
+  }
+
+  const timer = window.setTimeout(reveal, 220)
+  deferredActivationTimers.push(timer)
+}
+
+function markIntroSeen() {
+  try {
+    window.sessionStorage.setItem(INTRO_SEEN_KEY, '1')
+  } catch {
+  }
+}
+
 function toggleSection(name) {
   if (name === 'pages') {
     activateSection('pages')
@@ -384,11 +441,13 @@ function onClear() {
 
 function hideIntro() {
   showIntro.value = false
+  markIntroSeen()
   if (introFallbackTimer) {
     clearTimeout(introFallbackTimer)
     introFallbackTimer = null
   }
   scheduleDeferredSections()
+  scheduleDeferredUi()
 }
 
 function skipIntro() {
@@ -397,7 +456,11 @@ function skipIntro() {
 
 function onBackgroundReady() {
   backgroundReady.value = true
-  window.setTimeout(() => hideIntro(), prefersReducedMotion.value ? 120 : 420)
+  if (!showIntro.value) {
+    return
+  }
+
+  window.setTimeout(() => hideIntro(), prefersReducedMotion.value ? 80 : 220)
 }
 
 function handleGlobalHotkeys(event) {
@@ -461,8 +524,13 @@ onMounted(() => {
     if (!backgroundReady.value) {
       hideIntro()
     }
-  }, prefersReducedMotion.value ? 800 : 5000)
+  }, prefersReducedMotion.value ? 600 : 2200)
 
+  if (!showIntro.value) {
+    markIntroSeen()
+    scheduleDeferredSections()
+    scheduleDeferredUi()
+  }
 })
 
 onBeforeUnmount(() => {
