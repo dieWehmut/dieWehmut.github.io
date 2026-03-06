@@ -1,10 +1,10 @@
 <template>
-  <div class="nav-buttons">
-  <button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button>
-  <button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button>
-  <button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button>
-  <button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button>
-  <button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button>
+  <div class="flex gap-1 max-[640px]:gap-0.5 flex-wrap justify-center px-0">
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('pages')">{{ t('nav.pages') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('tools')">{{ t('nav.tools') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('games')">{{ t('nav.games') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('apps')">{{ t('nav.apps') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('files')">{{ t('nav.files') }}</button>
   </div>
 </template>
 
@@ -46,30 +46,7 @@ onMounted(() => {})
 </script>
 
 <style scoped>
-.nav-buttons {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  justify-content: center; /* center the nav buttons horizontally */
-}
-.nav-btn {
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.96);
-  border: none;
-  padding: 4px 8px; /* reduced padding to shrink distance between border and text */
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.nav-btn:active {
-  transform: translateY(1px);
-}
-
-/* pink glow for nav buttons on hover */
-.nav-btn {
-  position: relative;
-  overflow: visible;
-}
+/* pink glow hover effect via pseudo-element */
 .nav-btn::after {
   content: '';
   position: absolute;
@@ -80,7 +57,8 @@ onMounted(() => {})
   height: 120%;
   pointer-events: none;
   border-radius: 10px;
-  background: radial-gradient(40% 40% at 20% 20%, rgba(255,160,200,0.18), transparent 20%), radial-gradient(30% 30% at 80% 80%, rgba(255,120,190,0.08), transparent 20%);
+  background: radial-gradient(40% 40% at 20% 20%, rgba(255,160,200,0.18), transparent 20%),
+              radial-gradient(30% 30% at 80% 80%, rgba(255,120,190,0.08), transparent 20%);
   filter: blur(10px) saturate(150%);
   opacity: 0;
   transition: opacity 220ms ease, transform 220ms ease;

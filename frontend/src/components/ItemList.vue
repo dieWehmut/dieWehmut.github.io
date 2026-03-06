@@ -1,34 +1,34 @@
 <template>
-  <div class="space-y-3">
+  <div class="space-y-3 max-[640px]:space-y-2">
     <div
       v-if="loading"
-      class="rounded-3xl border border-white/10 bg-black/25 px-5 py-8 text-center text-sm text-white/70 backdrop-blur-sm"
+      class="rounded-3xl border border-white/10 bg-black/25 px-5 py-8 text-center text-sm text-white/70 backdrop-blur-sm max-[640px]:rounded-2xl max-[640px]:px-3 max-[640px]:py-5 max-[640px]:text-xs"
     >
       {{ loadingText }}
     </div>
 
     <div
       v-else-if="error"
-      class="rounded-3xl border border-rose-400/30 bg-rose-500/10 px-5 py-8 text-center text-sm text-rose-100 backdrop-blur-sm"
+      class="rounded-3xl border border-rose-400/30 bg-rose-500/10 px-5 py-8 text-center text-sm text-rose-100 backdrop-blur-sm max-[640px]:rounded-2xl max-[640px]:px-3 max-[640px]:py-5 max-[640px]:text-xs"
     >
       {{ error }}
     </div>
 
     <div
       v-else-if="!items.length"
-      class="rounded-3xl border border-white/10 bg-black/25 px-5 py-8 text-center text-sm text-white/60 backdrop-blur-sm"
+      class="rounded-3xl border border-white/10 bg-black/25 px-5 py-8 text-center text-sm text-white/60 backdrop-blur-sm max-[640px]:rounded-2xl max-[640px]:px-3 max-[640px]:py-5 max-[640px]:text-xs"
     >
       {{ emptyText }}
     </div>
 
-    <div v-else class="space-y-3">
+    <div v-else class="space-y-3 max-[640px]:space-y-2">
       <article
         v-for="item in items"
         :key="item.key"
-        class="rounded-3xl border border-white/10 bg-black/30 shadow-[0_18px_48px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+        class="rounded-3xl border border-white/10 bg-black/30 shadow-[0_18px_48px_rgba(0,0,0,0.2)] backdrop-blur-sm max-[640px]:rounded-2xl"
       >
         <div
-          class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
+          class="flex flex-col gap-4 p-3 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:p-2"
           :class="hasRowAction(item) ? 'cursor-pointer' : ''"
           :tabindex="hasRowAction(item) ? 0 : undefined"
           :role="hasRowAction(item) ? 'button' : undefined"
@@ -37,20 +37,20 @@
         >
           <div class="min-w-0 flex-1">
             <div class="flex min-w-0 items-start gap-3">
-              <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-white">
-                <component :is="resolveIcon(item.icon)" class="h-5 w-5" />
+              <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-white max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                <component :is="resolveIcon(item.icon)" class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
               </span>
 
               <div class="min-w-0 flex-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  <h3 class="truncate text-base font-semibold tracking-wide text-white">
+                  <h3 class="truncate text-base font-semibold tracking-wide text-white max-[640px]:text-sm">
                     {{ item.title }}
                   </h3>
 
                   <span
                     v-for="badge in item.badges || []"
                     :key="`${item.key}-${badge}`"
-                    class="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-white/70"
+                    class="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-white/70 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-[10px]"
                   >
                     {{ badge }}
                   </span>
@@ -74,13 +74,13 @@
             </div>
           </div>
 
-          <div v-if="item.actions?.length" class="flex flex-wrap items-center gap-2 sm:justify-end">
+          <div v-if="item.actions?.length" class="flex flex-wrap items-center gap-1.5 max-[640px]:w-full max-[640px]:gap-1 sm:justify-end">
             <component
               :is="action.href ? 'a' : 'button'"
               v-for="action in item.actions"
               :key="`${item.key}-${action.key}`"
               v-bind="getActionAttrs(action)"
-              class="inline-flex min-h-10 items-center gap-2 rounded-2xl border border-white/10 bg-white/8 px-3.5 py-2 text-sm font-medium text-white/85 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14"
+              class="inline-flex min-h-9 min-w-[100px] items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-sm font-medium text-white/85 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:flex-1 max-[640px]:basis-[calc(33.333%-0.25rem)] max-[640px]:min-w-[74px] max-[640px]:gap-1 max-[640px]:rounded-xl max-[640px]:px-1.5 max-[640px]:py-1 max-[640px]:text-xs"
               @click.stop="handleActionClick(action)"
             >
               <component :is="resolveIcon(action.icon)" class="h-4 w-4" />
@@ -89,12 +89,12 @@
           </div>
         </div>
 
-        <div v-if="item.children?.length" class="border-t border-white/10 px-4 pb-4 pt-3">
-          <div class="ml-2 space-y-2 border-l border-white/10 pl-4 sm:ml-4 sm:pl-5">
+        <div v-if="item.children?.length" class="border-t border-white/10 px-3 pb-3 pt-2.5 max-[640px]:px-1 max-[640px]:pb-2.5 max-[640px]:pt-2">
+          <div class="ml-1.5 space-y-2 border-l border-white/10 pl-3 sm:ml-3 sm:pl-4 max-[640px]:ml-0.5 max-[640px]:pl-1.5">
             <div
               v-for="child in item.children"
               :key="child.key"
-              class="flex flex-col gap-3 rounded-2xl border border-white/8 bg-black/20 px-3 py-3 sm:flex-row sm:items-center sm:justify-between"
+              class="flex flex-col gap-3 rounded-2xl border border-white/8 bg-black/20 px-2.5 py-2.5 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:px-1.5 max-[640px]:py-2"
               :class="hasRowAction(child) ? 'cursor-pointer' : ''"
               :tabindex="hasRowAction(child) ? 0 : undefined"
               :role="hasRowAction(child) ? 'button' : undefined"
@@ -138,13 +138,13 @@
                 </div>
               </div>
 
-              <div v-if="child.actions?.length" class="flex flex-wrap items-center gap-2 sm:justify-end">
+              <div v-if="child.actions?.length" class="flex flex-wrap items-center gap-1.5 max-[640px]:w-full max-[640px]:gap-1 sm:justify-end">
                 <component
                   :is="action.href ? 'a' : 'button'"
                   v-for="action in child.actions"
                   :key="`${child.key}-${action.key}`"
                   v-bind="getActionAttrs(action)"
-                  class="inline-flex min-h-9 items-center gap-2 rounded-xl border border-white/10 bg-white/8 px-3 py-2 text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14"
+                  class="inline-flex min-h-9 min-w-[92px] items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:flex-1 max-[640px]:basis-[calc(33.333%-0.25rem)] max-[640px]:min-w-[68px] max-[640px]:gap-1 max-[640px]:px-1.5 max-[640px]:py-1"
                   @click.stop="handleActionClick(action)"
                 >
                   <component :is="resolveIcon(action.icon)" class="h-3.5 w-3.5" />

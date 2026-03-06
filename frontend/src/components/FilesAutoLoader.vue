@@ -45,6 +45,7 @@ const { t } = useI18n()
 const entriesRoot = ref([])
 const entriesMap = reactive({})
 const openDirs = reactive({})
+const loadingDirs = reactive({})
 const folderDates = reactive({})
 const copiedLinks = reactive({})
 const loading = ref(true)
@@ -108,37 +109,47 @@ const displayItems = computed(() => {
       },
     ],
     children: openDirs[folder.path]
-      ? getFilteredFilesForFolder(folder.path).map((file) => ({
-          key: file.path,
-          title: file.name,
-          icon: 'file',
-          badges: file.extension ? [file.extension] : [],
-          onClick: isViewable(file) ? () => openFile(blobUrlFor(file)) : undefined,
-          actions: [
-            ...(isViewable(file)
-              ? [
-                  {
-                    key: 'view',
-                    label: t('action.view'),
-                    icon: 'view',
-                    href: blobUrlFor(file),
-                  },
-                ]
-              : []),
+      ? loadingDirs[folder.path]
+        ? [
             {
-              key: 'download',
-              label: t('action.download'),
-              icon: 'download',
-              href: rawUrlFor(file),
+              key: `${folder.path}__loading`,
+              title: `${t('common.loading')}...`,
+              icon: 'file',
+              meta: t('nav.files'),
+              actions: [],
             },
-            {
-              key: 'copy',
-              label: copiedLinks[blobUrlFor(file)] ? t('action.copied') : t('action.copy'),
-              icon: 'copy',
-              onClick: () => copyLink(blobUrlFor(file)),
-            },
-          ],
-        }))
+          ]
+        : getFilteredFilesForFolder(folder.path).map((file) => ({
+            key: file.path,
+            title: file.name,
+            icon: 'file',
+            badges: file.extension ? [file.extension] : [],
+            onClick: isViewable(file) ? () => openFile(blobUrlFor(file)) : undefined,
+            actions: [
+              ...(isViewable(file)
+                ? [
+                    {
+                      key: 'view',
+                      label: t('action.view'),
+                      icon: 'view',
+                      href: blobUrlFor(file),
+                    },
+                  ]
+                : []),
+              {
+                key: 'download',
+                label: t('action.download'),
+                icon: 'download',
+                href: rawUrlFor(file),
+              },
+              {
+                key: 'copy',
+                label: copiedLinks[blobUrlFor(file)] ? t('action.copied') : t('action.copy'),
+                icon: 'copy',
+                onClick: () => copyLink(blobUrlFor(file)),
+              },
+            ],
+          }))
       : [],
   }))
 })
@@ -166,8 +177,13 @@ function getFileExtension(fileName) {
 }
 
 async function loadContents(path = '') {
-  loading.value = true
-  error.value = ''
+  const isRoot = !path
+  if (isRoot) {
+    loading.value = true
+    error.value = ''
+  } else {
+    loadingDirs[path] = true
+  }
 
   const { owner, repo } = parseRepo(props.repoUrl)
 
@@ -201,9 +217,17 @@ async function loadContents(path = '') {
       entriesMap[path] = items.filter((item) => item.type === 'file')
     }
   } catch {
-    error.value = t('error.unable_load') || 'Unable to load files.'
+    if (isRoot) {
+      error.value = t('error.unable_load') || 'Unable to load files.'
+    } else {
+      showCenteredToast(t('error.unable_load') || 'Unable to load files.', { duration: 3000, type: 'error' })
+    }
   } finally {
-    loading.value = false
+    if (isRoot) {
+      loading.value = false
+    } else {
+      delete loadingDirs[path]
+    }
   }
 }
 

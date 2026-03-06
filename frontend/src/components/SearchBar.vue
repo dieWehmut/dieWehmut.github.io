@@ -1,5 +1,5 @@
 <template>
-  <div class="search" :class="{ 'entering': enterReady }">
+  <div class="search w-[min(960px,92vw)] mx-auto px-2 max-[640px]:px-0.5 py-0.5 bg-white/[0.02] rounded-xl" :class="{ 'entering': enterReady }">
     <el-input
       id="global-search-input"
       ref="inputRef"
@@ -12,16 +12,16 @@
       class="search-input"
     >
       <template #prefix>
-        <el-icon class="search-icon"><Search /></el-icon>
+        <el-icon class="text-white/[0.85] text-base"><Search /></el-icon>
       </template>
       <template #suffix>
-        <div class="shortcut-hint">
-          <span class="hint">Ctrl + K</span>
+        <div class="mr-1">
+          <span class="text-[11px] text-white/[0.88] border border-white/[0.12] px-1.5 py-0.5 rounded-md select-none bg-transparent font-medium">Ctrl + K</span>
         </div>
       </template>
     </el-input>
   <!-- Show the nav buttons beneath the search when input is empty (also for desktop) -->
-  <NavButtons v-if="!innerValue" class="mobile-nav" />
+  <NavButtons v-if="!innerValue" class="mobile-nav mt-0.5 mb-0 max-[640px]:px-0" />
   </div>
 </template>
 
@@ -75,86 +75,45 @@ defineExpose({ focusInput })
 </script>
 
 <style scoped>
-.search {
-  width: min(960px, 92vw);
-  margin: 0 auto;
-  padding: 6px 8px;
-  /* make the search container sit on a dark translucent header for legibility */
-  background: rgba(255,255,255,0.02);
-  border-radius: 12px;
-}
-
 .search-input :deep(.el-input__wrapper) {
   border-radius: 16px;
-  /* make fully transparent to expose background video */
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   transition: all 0.2s ease;
-  padding: 8px 16px;
+  padding: 4px 16px;
 }
-
 .search-input :deep(.el-input__wrapper):hover {
   border-color: transparent !important;
   box-shadow: none !important;
 }
-
 .search-input :deep(.el-input__wrapper.is-focus) {
   border-color: transparent !important;
   box-shadow: none !important;
 }
-
-/* Ensure actual input inner background is transparent too (Element Plus may add white background) */
-
 .search-input :deep(.el-input__inner) {
   background: transparent !important;
-  /* 强制白色文本，便于在深色/动态背景上可读 */
   color: rgba(255,255,255,0.96) !important;
   font-size: 15px;
   border: none;
   outline: none;
 }
-
 .search-input :deep(.el-input__inner::placeholder) {
-  /* placeholder 更柔和的白色 */
   color: rgba(255,255,255,0.7) !important;
 }
-
-.search-icon {
-  color: rgba(255,255,255,0.85);
-  font-size: 16px;
-}
-
-.shortcut-hint {
-  margin-right: 4px;
-}
-
-.hint {
-  font-size: 11px;
-  color: rgba(255,255,255,0.88);
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 2px 6px;
-  border-radius: 6px;
-  user-select: none;
-  background: transparent !important;
-  font-weight: 500;
-}
-
 .search-input :deep(.el-input__suffix) {
   display: flex;
   align-items: center;
 }
-
 .search-input :deep(.el-input__clear) {
   color: #b0a2a2;
   transition: color 0.2s ease;
 }
-
 .search-input :deep(.el-input__clear:hover) {
   color: #9a9a9a;
 }
 
-/* entry animation for search bar */
+/* entry animation */
 .search {
   transition: opacity 420ms cubic-bezier(.16,.9,.2,1), transform 420ms cubic-bezier(.16,.9,.2,1);
   will-change: opacity, transform;
@@ -170,11 +129,10 @@ defineExpose({ focusInput })
   pointer-events: auto;
 }
 
-/* Mobile: lower the search bar slightly so it's not too close to the top */
 @media (max-width: 1000px) {
   .search {
-    margin-top: 10px;
-    margin-bottom: 6px;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 }
 </style>

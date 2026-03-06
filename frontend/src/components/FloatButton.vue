@@ -103,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="float-container" :class="{ 'has-back': visible }" aria-hidden="false">
+	<div class="float-container fixed bottom-5 right-5 !z-[99999] w-16 h-auto max-[640px]:bottom-3 max-[640px]:right-3 max-[640px]:w-10" :class="{ 'has-back': visible }" aria-hidden="false">
 		<!-- language option buttons (expand left) -->
 		<div class="lang-options" :class="{ open: langPanelOpen }">
 			<button
@@ -203,22 +203,30 @@ onMounted(() => {
 
 <style scoped>
 .float-container {
-	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	z-index: 99999 !important; /* ensure float controls always sit above other UI */
-	width: 64px; /* allow horizontal space for slide-out */
+	/* CSS variable definitions for button sizing/spacing (used in calc() throughout) */
 	--btn-size: 44px;
 	--btn-padding: 6px;
 	--float-gap: 8px;
-	--float-step: calc(var(--btn-size) + var(--float-gap)); /* button vertical step */
-	height: auto;
-	}
+	--float-step: calc(var(--btn-size) + var(--float-gap));
+	/* slot indices (overridden by .has-back) */
+	--back-slot: -1;
+	--sidebar-slot: 0;
+	--settings-slot: 1;
+	--lang-slot: 2;
+	--clean-slot: 3;
+}
+
+.float-container.has-back {
+	--back-slot: 0;
+	--sidebar-slot: 1;
+	--settings-slot: 2;
+	--lang-slot: 3;
+	--clean-slot: 4;
+}
 
 	.btt-button svg path { stroke: #fff !important; }
 
-/* ensure correct stacking so language buttons are not obscured */
-.float-container { z-index: 99999 !important; }
+/* stacking order */
 .btt-button { z-index: 100000 !important; }
 .settings-button { z-index: 1202; }
 .lang-toggle { z-index: 1203; }
@@ -306,21 +314,7 @@ onMounted(() => {
 	pointer-events: auto;
 }
 
-.float-container {
-	--back-slot: -1;
-	--sidebar-slot: 0;
-	--settings-slot: 1;
-	--lang-slot: 2;
-	--clean-slot: 3;
-}
 
-.float-container.has-back {
-	--back-slot: 0;
-	--sidebar-slot: 1;
-	--settings-slot: 2;
-	--lang-slot: 3;
-	--clean-slot: 4;
-}
 
 .back-button { bottom: calc(var(--float-step) * var(--back-slot)); }
 /* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
@@ -511,13 +505,18 @@ onMounted(() => {
 	.float-container {
 		right: 6px;
 		bottom: 6px;
-		--btn-size: 40px;
-		--btn-padding: 5px;
-		--float-gap: 6px;
+		--btn-size: 36px;
+		--btn-padding: 4px;
+		--float-gap: 5px;
 	}
 
 	.lang-options .lang-btn {
-		font-size: 13px;
+		font-size: 12px;
+	}
+
+	.btt-button svg {
+		width: 15px;
+		height: 15px;
 	}
 }
 

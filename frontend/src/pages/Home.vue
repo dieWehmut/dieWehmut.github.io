@@ -9,7 +9,7 @@
 
       <div class="relative z-10 min-h-screen">
         <header class="sticky top-0 z-[2200] border-b border-white/8 bg-black/15 backdrop-blur-md">
-          <div class="mx-auto w-full max-w-[2000px] px-4 py-3 sm:px-6 lg:px-8">
+            <div class="mx-auto w-full max-w-[2000px] px-4 py-1.5 sm:px-6 lg:px-8">
             <SearchBar
               ref="searchBarRef"
               v-model="query"
@@ -26,10 +26,10 @@
           <main class="min-w-0 flex-1">
             <div class="space-y-4 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
               <section id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(0)">
-                <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6" @click="showPages = !showPages">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                      <Collection class="h-5 w-5" />
+                <button type="button" :class="sectionToggleButtonClass" @click="showPages = !showPages">
+                  <div :class="sectionToggleInnerClass">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                      <Collection class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
                     <div class="min-w-0">
                       <div class="text-base font-semibold tracking-wide text-white">{{ t('nav.pages') }}</div>
@@ -47,17 +47,17 @@
                 </button>
 
                 <transition name="section-toggle">
-                  <div v-show="showPages" class="px-5 pb-5 sm:px-6 sm:pb-6">
+                  <div v-show="showPages" :class="sectionContentClass">
                     <PagesAutoLoader ref="pagesAutoLoaderRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
 
               <section id="section-tools" v-if="!hasQuery || matchedToolsCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(1)">
-                <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6" @click="showTools = !showTools">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                      <Cpu class="h-5 w-5" />
+                <button type="button" :class="sectionToggleButtonClass" @click="showTools = !showTools">
+                  <div :class="sectionToggleInnerClass">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                      <Cpu class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
                     <div class="min-w-0">
                       <div class="text-base font-semibold tracking-wide text-white">{{ t('nav.tools') }}</div>
@@ -71,17 +71,17 @@
                 </button>
 
                 <transition name="section-toggle">
-                  <div v-show="showTools" class="px-5 pb-5 sm:px-6 sm:pb-6">
+                  <div v-show="showTools" :class="sectionContentClass">
                     <ToolsAutoLoader ref="toolsRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
 
               <section id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(2)">
-                <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6" @click="showGames = !showGames">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                      <Flag class="h-5 w-5" />
+                <button type="button" :class="sectionToggleButtonClass" @click="showGames = !showGames">
+                  <div :class="sectionToggleInnerClass">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                      <Flag class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
                     <div class="min-w-0">
                       <div class="text-base font-semibold tracking-wide text-white">{{ t('nav.games') }}</div>
@@ -95,17 +95,17 @@
                 </button>
 
                 <transition name="section-toggle">
-                  <div v-show="showGames" class="px-5 pb-5 sm:px-6 sm:pb-6">
+                  <div v-show="showGames" :class="sectionContentClass">
                     <ReleasesAutoLoader ref="gamesReleasesRef" type="games" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
 
               <section id="section-apps" v-if="(!hasQuery && appsAutoLoadEnabled) || (hasQuery && filteredApps.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(3)">
-                <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6" @click="showApps = !showApps">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                      <Monitor class="h-5 w-5" />
+                <button type="button" :class="sectionToggleButtonClass" @click="showApps = !showApps">
+                  <div :class="sectionToggleInnerClass">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                      <Monitor class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
                     <div class="min-w-0">
                       <div class="text-base font-semibold tracking-wide text-white">{{ t('nav.apps') }}</div>
@@ -119,17 +119,17 @@
                 </button>
 
                 <transition name="section-toggle">
-                  <div v-show="showApps" class="px-5 pb-5 sm:px-6 sm:pb-6">
+                  <div v-show="showApps" :class="sectionContentClass">
                     <ReleasesAutoLoader ref="appsReleasesRef" type="apps" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
 
               <section id="section-files" v-if="!hasQuery || matchedFilesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(4)">
-                <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6" @click="showFiles = !showFiles">
-                  <div class="flex min-w-0 items-center gap-3">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                      <FolderOpened class="h-5 w-5" />
+                <button type="button" :class="sectionToggleButtonClass" @click="showFiles = !showFiles">
+                  <div :class="sectionToggleInnerClass">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                      <FolderOpened class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
                     <div class="min-w-0">
                       <div class="text-base font-semibold tracking-wide text-white">{{ t('nav.files') }}</div>
@@ -147,14 +147,14 @@
                 </button>
 
                 <transition name="section-toggle">
-                  <div v-show="showFiles" class="px-5 pb-5 sm:px-6 sm:pb-6">
+                  <div v-show="showFiles" :class="sectionContentClass">
                     <FilesAutoLoader ref="filesRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
 
               <section v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && matchedToolsCount === 0" :class="sectionCardClass" :style="sectionDelayStyle(5)">
-                <div class="px-5 py-12 text-center sm:px-6">
+                <div class="px-4 py-12 text-center sm:px-5 max-[640px]:px-2">
                   <div class="text-lg font-semibold text-white">No matching content found</div>
                   <div class="mt-2 text-sm text-white/60">Try a different keyword.</div>
                 </div>
@@ -217,7 +217,10 @@ const showTools = ref(true)
 
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
-const sectionCardClass = 'overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500'
+const sectionCardClass = 'overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
+const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2 max-[640px]:py-3'
+const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
+const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-1.5 max-[640px]:pb-3'
 
 const gamesAutoLoadEnabled = computed(() => games.value.length > 0 && !!games.value[0]?.autoLoad)
 const appsAutoLoadEnabled = computed(() => apps.value.length > 0 && !!apps.value[0]?.autoLoad)
