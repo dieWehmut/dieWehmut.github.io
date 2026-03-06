@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { fetchWithCache } from '../api/apiCache';
 import { getBackendApiUrl } from '../api/backendApi';
 const props = defineProps({ enterReady: { type: Boolean, default: true } });
@@ -77,6 +77,7 @@ import { useI18n } from 'vue-i18n';
 const avatarUrl = ref('https://github.com/dieWehmut.png');
 const profile = ref({});
 const lastUpdated = ref('');
+const sidebarDataLoaded = ref(false);
 
 function scrollToSection(id) {
   const el = document.getElementById(id);
@@ -120,7 +121,9 @@ async function fetchGitHub() {
 }
 
 onMounted(() => {
-  fetchGitHub();
+  if (props.enterReady) {
+    scheduleSidebarDataLoad();
+  }
 });
 
 async function fetchLatestCommit() {
@@ -159,8 +162,39 @@ function formatDateTime(d) {
 }
 
 onMounted(() => {
-  fetchLatestCommit();
+  if (props.enterReady) {
+    scheduleSidebarDataLoad();
+  }
 });
+
+function scheduleSidebarDataLoad() {
+  if (sidebarDataLoaded.value) {
+    return;
+  }
+
+  sidebarDataLoaded.value = true;
+
+  const load = () => {
+    Promise.allSettled([fetchGitHub(), fetchLatestCommit()]);
+  };
+
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    window.requestIdleCallback(() => load(), { timeout: 1200 });
+    return;
+  }
+
+  window.setTimeout(load, 180);
+}
+
+watch(
+  () => props.enterReady,
+  (ready) => {
+    if (ready) {
+      scheduleSidebarDataLoad();
+    }
+  },
+  { immediate: true },
+);
 
 const { t } = useI18n();
 

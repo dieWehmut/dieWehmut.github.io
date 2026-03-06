@@ -13,7 +13,8 @@ import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'
-import { fetchBackendWithFallback } from '../api/backendApi'
+import { fetchWithCache } from '../api/apiCache'
+import { getBackendApiUrl } from '../api/backendApi'
 
 const props = defineProps({
   filterQuery: {
@@ -88,12 +89,7 @@ async function loadPages() {
   error.value = ''
 
   try {
-    const response = await fetchBackendWithFallback('/api/pages', { cache: 'no-cache' })
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status} ${response.statusText}`)
-    }
-
-    const data = await response.json()
+    const data = await fetchWithCache(getBackendApiUrl('/api/pages'), {}, 1000 * 60 * 10)
     pages.value = Array.isArray(data) ? data : []
   } catch (loadError) {
     console.error('Failed to load pages from server API:', loadError)

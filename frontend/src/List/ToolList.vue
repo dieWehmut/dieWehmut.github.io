@@ -45,7 +45,7 @@ const displayedTools = computed(() => {
 
 const displayItems = computed(() => {
   return displayedTools.value.map((tool) => ({
-    key: `${tool.name}-${resolveCopyUrl(tool)}`,
+    key: `${tool.name}-${tool.path || ''}-${resolveCopyUrl(tool)}`,
     title: tool.name,
     icon: 'tool',
     date: formatListDate(tool.lastModified, { pad: true }),
@@ -72,6 +72,11 @@ function buildFolderHtmlUrl(name) {
   const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
   const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
   return `https://github.com/${owner}/${repo}/tree/main/${encodeURIComponent(name)}`
+}
+
+function buildLatestCommitApiUrl(owner, repo, folderPath = '') {
+  const basePath = `/api/github/repos/${owner}/${repo}/commits/latest`
+  return folderPath ? getBackendApiUrl(`${basePath}?path=${encodeURIComponent(folderPath)}`) : getBackendApiUrl(basePath)
 }
 
 const manualTools = computed(() => {
@@ -137,6 +142,7 @@ async function fetchTools() {
           .filter((item) => item.type === 'dir')
           .map((directory) => ({
             name: directory.name,
+            path: directory.path || directory.name,
             html_url: directory.html_url || buildFolderHtmlUrl(directory.name),
             lastModified: null,
             showDownload: true,
@@ -147,15 +153,30 @@ async function fetchTools() {
     tools.value = [...manual, ...autoTools]
     loading.value = false
 
-    await enrichItemsWithLatestDate([...manual, ...autoTools], {
+    const datedManual = manual.map((item) => ({ ...item }))
+    await enrichItemsWithLatestDate(datedManual, {
       fetchCommit: ({ owner: targetOwner, repo: targetRepo }) =>
-        fetchWithCache(getBackendApiUrl(`/api/github/repos/${targetOwner}/${targetRepo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
+        fetchWithCache(buildLatestCommitApiUrl(targetOwner, targetRepo), {}, 1000 * 60 * 60 * 6),
       getRepoUrl: (item) => item._repoUrl || resolveRepoUrl(item),
       hasDate: (item) => !!item?.lastModified,
       assignDate: (item, value) => {
         item.lastModified = value
       },
     })
+
+    const datedAutoTools = await Promise.all(
+      autoTools.map(async (tool) => {
+        try {
+          const commit = await fetchWithCache(buildLatestCommitApiUrl(owner, repo, tool.path || tool.name), {}, 1000 * 60 * 60 * 6)
+          const lastModified = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
+          return { ...tool, lastModified }
+        } catch {
+          return tool
+        }
+      }),
+    )
+
+    tools.value = [...datedManual, ...datedAutoTools]
   } catch (loadError) {
     console.error('Failed to load tools:', loadError)
     error.value = manual.length ? '' : t('error.unable_load') || 'Unable to load tools.'

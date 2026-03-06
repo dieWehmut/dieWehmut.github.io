@@ -34,7 +34,7 @@
                     <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                       <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
                       <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="readExposed(pageListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                        <template v-if="!activatedSections.pages || readExposed(pageListRef?.loading, false)">{{ t('common.loading') }}...</template>
                         <template v-else-if="readExposed(pageListRef?.error, '')">{{ t('error.unable_load') }}</template>
                         <template v-else>
                           {{ t('common.totalFormat', { count: totalPagesCount }) }}
@@ -238,7 +238,7 @@ const showApps = ref(true)
 const showFiles = ref(true)
 const showTools = ref(true)
 const activatedSections = reactive({
-  pages: true,
+  pages: false,
   tools: false,
   games: false,
   apps: false,
@@ -307,10 +307,11 @@ function scheduleDeferredSections() {
   }
 
   deferredSectionsScheduled = true
-  queueSectionActivation('tools', 120)
-  queueSectionActivation('games', 320)
-  queueSectionActivation('apps', 560)
-  queueSectionActivation('files', 840)
+  queueSectionActivation('pages', 0)
+  queueSectionActivation('tools', 140)
+  queueSectionActivation('games', 340)
+  queueSectionActivation('apps', 580)
+  queueSectionActivation('files', 860)
 }
 
 function toggleSection(name) {
