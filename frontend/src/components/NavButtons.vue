@@ -1,10 +1,10 @@
 <template>
-  <div class="flex gap-1 max-[640px]:gap-0.5 flex-wrap justify-center px-0">
-    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('pages')">{{ t('nav.pages') }}</button>
-    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('tools')">{{ t('nav.tools') }}</button>
-    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('games')">{{ t('nav.games') }}</button>
-    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('apps')">{{ t('nav.apps') }}</button>
-    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1.5 max-[640px]:py-0.5 max-[640px]:text-xs rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('files')">{{ t('nav.files') }}</button>
+  <div class="flex w-full flex-wrap justify-center gap-1 max-[640px]:gap-x-0.5 max-[640px]:gap-y-1 max-[640px]:px-0">
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-[11px] rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('pages')">{{ t('nav.pages') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-[11px] rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('tools')">{{ t('nav.tools') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-[11px] rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('games')">{{ t('nav.games') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-[11px] rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('apps')">{{ t('nav.apps') }}</button>
+    <button class="nav-btn relative border-0 px-2 py-1 max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-[11px] rounded-lg font-bold cursor-pointer bg-white/[0.06] text-white/[0.96] active:translate-y-px" @click="go('files')">{{ t('nav.files') }}</button>
   </div>
 </template>
 

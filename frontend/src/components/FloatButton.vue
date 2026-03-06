@@ -168,7 +168,7 @@ onMounted(() => {
 
 			<!-- sidebar collapse toggle (moved into settings column, below language toggle) -->
 			<button
-				class="btt-button sidebar-toggle"
+				class="btt-button sidebar-toggle max-[640px]:!hidden"
 				:class="{ active: sidebarCollapsed }"
 				@click="toggleSidebar"
 				:aria-label="t('float.toggleSidebar')"
@@ -520,4 +520,20 @@ onMounted(() => {
 	}
 }
 
+</style>
+
+<style>
+/* Clean Mode Hide UI */
+html.clean-mode .z-10 > header,
+html.clean-mode .z-10 > div.mx-auto,
+html.clean-mode .z-10 > footer {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.z-10 > header,
+.z-10 > div.mx-auto,
+.z-10 > footer {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
 </style>

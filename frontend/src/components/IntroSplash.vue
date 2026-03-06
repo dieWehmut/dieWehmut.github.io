@@ -158,27 +158,38 @@ onBeforeUnmount(() => {
   transform-origin: center;
 }
 .semi-ring.outer {
-  width: 420px; height: 420px;
-  border-width: 2px;
-  border-color: rgba(255,255,255,0.1) rgba(255,255,255,0.1) transparent transparent;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
-  animation: spinCW 12s linear infinite;
+  width: 460px; height: 460px;
+  border-width: 4px;
+  border-color: rgba(81, 214, 255, 0.95) rgba(81, 214, 255, 0.95) transparent transparent;
+  clip-path: inset(0 0 50% 0);
+  box-shadow: 0 0 32px rgba(81, 214, 255, 0.28);
+  animation: spinCW 7s linear infinite;
 }
 .semi-ring.inner {
-  width: 280px; height: 280px;
-  border-width: 2px;
-  border-color: transparent transparent rgba(255,255,255,0.1) rgba(255,255,255,0.1);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
-  animation: spinCCW 16s linear infinite;
+  width: 320px; height: 320px;
+  border-width: 4px;
+  border-color: transparent transparent rgba(255, 161, 95, 0.95) rgba(255, 161, 95, 0.95);
+  clip-path: inset(50% 0 0 0);
+  box-shadow: 0 0 28px rgba(255, 161, 95, 0.24);
+  animation: spinCCW 10s linear infinite;
 }
 
 @keyframes spinCW { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
 @keyframes spinCCW { from { transform: rotate(0deg) } to { transform: rotate(-360deg) } }
 
-/* mobile: shrink rings */
+/* mobile: larger rings with more visible color contrast */
 @media (max-width: 640px) {
-  .semi-ring.outer { width: 220px; height: 220px; }
-  .semi-ring.inner { width: 150px; height: 150px; }
+  .semi-ring.outer {
+    width: 320px;
+    height: 320px;
+    border-width: 3px;
+  }
+
+  .semi-ring.inner {
+    width: 230px;
+    height: 230px;
+    border-width: 3px;
+  }
 }
 
 @keyframes loaderBounce { 0% { transform: translateY(0); opacity: 0.8 } 50% { transform: translateY(-12px); opacity:1 } 100% { transform: translateY(0); opacity:0.8 } }

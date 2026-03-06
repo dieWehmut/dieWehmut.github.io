@@ -80,11 +80,11 @@
               v-for="action in item.actions"
               :key="`${item.key}-${action.key}`"
               v-bind="getActionAttrs(action)"
-              class="inline-flex min-h-9 min-w-[100px] items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-sm font-medium text-white/85 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:flex-1 max-[640px]:basis-[calc(33.333%-0.25rem)] max-[640px]:min-w-[74px] max-[640px]:gap-1 max-[640px]:rounded-xl max-[640px]:px-1.5 max-[640px]:py-1 max-[640px]:text-xs"
+              class="inline-flex min-h-9 min-w-[100px] items-center justify-center gap-1.5 whitespace-nowrap rounded-2xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-sm font-medium text-white/85 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:rounded-xl max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-xs"
               @click.stop="handleActionClick(action)"
             >
-              <component :is="resolveIcon(action.icon)" class="h-4 w-4" />
-              <span>{{ action.label }}</span>
+              <component :is="resolveIcon(action.icon)" class="h-4 w-4 shrink-0 max-[640px]:h-3.5 max-[640px]:w-3.5" />
+              <span class="truncate">{{ action.label }}</span>
             </component>
           </div>
         </div>
@@ -144,11 +144,11 @@
                   v-for="action in child.actions"
                   :key="`${child.key}-${action.key}`"
                   v-bind="getActionAttrs(action)"
-                  class="inline-flex min-h-9 min-w-[92px] items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:flex-1 max-[640px]:basis-[calc(33.333%-0.25rem)] max-[640px]:min-w-[68px] max-[640px]:gap-1 max-[640px]:px-1.5 max-[640px]:py-1"
+                  class="inline-flex min-h-9 min-w-[92px] items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-white/10 bg-white/8 px-2.5 py-1.5 text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14 max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:px-1 max-[640px]:py-0.5"
                   @click.stop="handleActionClick(action)"
                 >
-                  <component :is="resolveIcon(action.icon)" class="h-3.5 w-3.5" />
-                  <span>{{ action.label }}</span>
+                  <component :is="resolveIcon(action.icon)" class="h-3.5 w-3.5 shrink-0 max-[640px]:h-3 max-[640px]:w-3" />
+                  <span class="truncate">{{ action.label }}</span>
                 </component>
               </div>
             </div>

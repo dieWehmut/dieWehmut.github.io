@@ -1,5 +1,5 @@
 <template>
-  <div class="search w-[min(960px,92vw)] mx-auto px-2 max-[640px]:px-0.5 py-0.5 bg-white/[0.02] rounded-xl" :class="{ 'entering': enterReady }">
+  <div class="search w-[min(960px,92vw)] mx-auto px-2 max-[640px]:w-full max-[640px]:px-0 max-[640px]:py-0.5 py-0.5 bg-white/[0.02] rounded-xl" :class="{ 'entering': enterReady }">
     <el-input
       id="global-search-input"
       ref="inputRef"
@@ -15,13 +15,13 @@
         <el-icon class="text-white/[0.85] text-base"><Search /></el-icon>
       </template>
       <template #suffix>
-        <div class="mr-1">
+        <div class="mr-1 max-[640px]:hidden">
           <span class="text-[11px] text-white/[0.88] border border-white/[0.12] px-1.5 py-0.5 rounded-md select-none bg-transparent font-medium">Ctrl + K</span>
         </div>
       </template>
     </el-input>
   <!-- Show the nav buttons beneath the search when input is empty (also for desktop) -->
-  <NavButtons v-if="!innerValue" class="mobile-nav mt-0.5 mb-0 max-[640px]:px-0" />
+  <NavButtons v-if="!innerValue" class="mobile-nav mt-0.5 mb-0 w-full max-[640px]:px-0" />
   </div>
 </template>
 
@@ -133,6 +133,16 @@ defineExpose({ focusInput })
   .search {
     margin-top: 2px;
     margin-bottom: 2px;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-input :deep(.el-input__wrapper) {
+    padding: 2px 8px;
+  }
+
+  .search-input :deep(.el-input__inner) {
+    font-size: 14px;
   }
 }
 </style>
