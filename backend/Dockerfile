@@ -2,25 +2,28 @@ FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
-# 先复制依赖
+# Copy module metadata first so dependency downloads stay cached.
 COPY go.mod go.sum ./
 RUN go mod download
 
-# 再复制源码
+# Copy the rest of the source after dependencies.
 COPY . .
 
-# 构建
+# Build a static Linux binary for the Space container.
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -o server ./cmd/server
 
 
 FROM alpine:3.20
 
+RUN apk add --no-cache ca-certificates
 RUN adduser -D -u 10001 appuser
 
 WORKDIR /app
 
 COPY --from=builder /app/server ./server
+
+ENV PORT=7860
 
 USER appuser
 

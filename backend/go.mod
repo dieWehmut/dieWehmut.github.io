@@ -1,6 +1,6 @@
 module github.com/dieWehmut/dieWehmut.github.io/backend
 
-go 1.25.7
+go 1.25
 
 require (
 	github.com/gin-contrib/cors v1.7.6
