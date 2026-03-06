@@ -117,22 +117,25 @@ defineExpose({ focusInput })
 
 .search-input :deep(.el-input__wrapper) {
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(135deg, rgba(53, 56, 68, 0.76), rgba(45, 54, 63, 0.76)) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 10px 28px rgba(0,0,0,0.12) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.18) !important;
   transition: all 0.2s ease;
   padding: 4px 16px;
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
 }
 .search-input :deep(.el-input__wrapper):hover {
-  border-color: rgba(255,255,255,0.28) !important;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 14px 32px rgba(0,0,0,0.16) !important;
+  border-color: rgba(255, 172, 209, 0.32) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.2) !important;
 }
 .search-input :deep(.el-input__wrapper.is-focus) {
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: linear-gradient(135deg, rgba(58, 61, 74, 0.82), rgba(46, 56, 66, 0.82)) !important;
   border-color: rgba(255, 154, 197, 0.9) !important;
   box-shadow: 0 0 0 1px rgba(255,154,197,0.36), 0 0 0 4px rgba(255,154,197,0.16), 0 16px 36px rgba(0,0,0,0.18) !important;
 }
 .search-input :deep(.el-input__wrapper:focus-within) {
+  background: linear-gradient(135deg, rgba(58, 61, 74, 0.82), rgba(46, 56, 66, 0.82)) !important;
   border-color: rgba(255, 154, 197, 0.9) !important;
   box-shadow: 0 0 0 1px rgba(255,154,197,0.36), 0 0 0 4px rgba(255,154,197,0.16), 0 16px 36px rgba(0,0,0,0.18) !important;
 }

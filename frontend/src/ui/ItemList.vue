@@ -126,10 +126,10 @@ export async function enrichItemsWithLatestDate(items, options) {
       <article
         v-for="item in items"
         :key="item.key"
-        class="rounded-3xl border border-white/10 bg-black/30 shadow-[0_18px_48px_rgba(0,0,0,0.2)] backdrop-blur-sm max-[640px]:rounded-2xl"
+        class="item-card rounded-3xl border border-white/10 bg-black/30 shadow-[0_18px_48px_rgba(0,0,0,0.2)] backdrop-blur-sm max-[640px]:rounded-2xl"
       >
         <div
-          class="flex flex-col gap-4 p-3 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:p-2"
+          class="item-row flex flex-col gap-4 rounded-[inherit] p-3 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:p-2"
           :class="hasRowAction(item) ? 'cursor-pointer' : ''"
           :tabindex="hasRowAction(item) ? 0 : undefined"
           :role="hasRowAction(item) ? 'button' : undefined"
@@ -197,7 +197,7 @@ export async function enrichItemsWithLatestDate(items, options) {
             <div
               v-for="child in item.children"
               :key="child.key"
-              class="flex flex-col gap-3 rounded-2xl border border-white/8 bg-black/20 px-2.5 py-2.5 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:px-1.5 max-[640px]:py-2"
+              class="child-row flex flex-col gap-3 rounded-2xl border border-white/8 bg-black/20 px-2.5 py-2.5 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:px-1.5 max-[640px]:py-2"
               :class="hasRowAction(child) ? 'cursor-pointer' : ''"
               :tabindex="hasRowAction(child) ? 0 : undefined"
               :role="hasRowAction(child) ? 'button' : undefined"
@@ -374,3 +374,39 @@ function getActionClass(action, baseClass) {
   return `${baseClass} border-white/10 bg-white/8 text-white/85 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/14`
 }
 </script>
+
+<style scoped>
+.item-card,
+.item-row,
+.child-row {
+  transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease, transform 220ms cubic-bezier(.2,.9,.2,1);
+}
+
+.item-row:focus-visible,
+.child-row:focus-visible {
+  outline: none;
+}
+
+@media (hover: hover) {
+  .item-card:hover,
+  .item-card:focus-within {
+    border-color: rgba(255, 172, 209, 0.38);
+    background: rgba(24, 28, 38, 0.48);
+    box-shadow: 0 20px 52px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(255, 154, 197, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .item-card:hover .item-row,
+  .item-card:focus-within .item-row {
+    background: linear-gradient(135deg, rgba(255, 142, 191, 0.08), rgba(255, 142, 191, 0.02));
+  }
+
+  .child-row:hover,
+  .child-row:focus-visible {
+    border-color: rgba(255, 172, 209, 0.34);
+    background: linear-gradient(135deg, rgba(255, 142, 191, 0.12), rgba(26, 30, 41, 0.38));
+    box-shadow: 0 14px 30px rgba(255, 126, 180, 0.12);
+    transform: translateY(-1px);
+  }
+}
+</style>

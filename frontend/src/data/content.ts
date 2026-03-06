@@ -22,7 +22,7 @@ export function useContent() {
         // 手动添加示例（支持 date 字段手动设置日期，格式 YYYY-MM-DD）：
       {
         name: "PhantomGenesis", // 游戏名称
-        html_url: "https://example.com/game.zip", // 下载链接
+        html_url: "https://github.com/dieWehmut/PhantomGenesis", // 下载链接
         repo_url: "https://github.com/dieWehmut/PhantomGenesis", // 仓库/详情链接（点击行、Repo按钮使用）
         showDownload: true, // false 时隐藏下载按钮
         downloadToast: true, // true 时点击下载按钮仅弹提示
@@ -31,7 +31,7 @@ export function useContent() {
       },
       {
         name: "GeistZerfall", // 游戏名称
-        html_url: "https://example.com/game.zip", // 下载链接
+        html_url: "https://github.com/dieWehmut/GeistZerfall", // 下载链接
         repo_url: "https://github.com/dieWehmut/GeistZerfall", // 仓库/详情链接（点击行、Repo按钮使用）
         showDownload: true, // false 时隐藏下载按钮
         downloadToast: true, // true 时点击下载按钮仅弹提示
@@ -40,7 +40,7 @@ export function useContent() {
       },
       {
         name: "SugisarishiKage", // 游戏名称
-        html_url: "https://example.com/game.zip", // 下载链接
+        html_url: "https://github.com/dieWehmut/SugisarishiKage", // 下载链接
         repo_url: "https://github.com/dieWehmut/SugisarishiKage", // 仓库/详情链接（点击行、Repo按钮使用）
         showDownload: true, // false 时隐藏下载按钮
         downloadToast: true, // true 时点击下载按钮仅弹提示
@@ -61,7 +61,7 @@ export function useContent() {
         // 手动添加示例（支持 date 字段手动设置日期，格式 YYYY-MM-DD）：
       {
         name: "SugisarishiKage",
-        html_url: "https://example.com/app.apk",
+        html_url: "https://github.com/dieWehmut/SugisarishiKage",
         repo_url: "https://github.com/dieWehmut/SugisarishiKage",
         showDownload: true,
         downloadToast: true,
@@ -70,7 +70,7 @@ export function useContent() {
       },
       {
         name: "GeistZerfall",
-        html_url: "https://example.com/app.apk",
+        html_url: "https://github.com/dieWehmut/GeistZerfall",
         repo_url: "https://github.com/dieWehmut/GeistZerfall",
         showDownload: true,
         downloadToast: true,
