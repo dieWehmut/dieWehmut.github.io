@@ -7,8 +7,8 @@
       <BounceCursor />
       <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
 
-      <div class="relative z-10 min-h-screen">
-        <header class="sticky top-0 z-[2200] border-b border-white/8 bg-black/15 backdrop-blur-md">
+      <div class="relative z-10 min-h-screen flex flex-col">
+        <header class="sticky top-0 z-[2200] border-b border-white/8 bg-black/15 backdrop-blur-md flex-shrink-0">
           <div class="mx-auto w-full max-w-[2000px] px-4 py-1.5 sm:px-6 lg:px-8 max-[640px]:px-0 max-[640px]:py-1">
             <SearchBar
               ref="searchBarRef"
@@ -20,20 +20,20 @@
           </div>
         </header>
 
-        <div class="mx-auto flex w-full max-w-[2000px] items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
+        <div class="mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
           <SideBar v-if="!(isMobile && query.trim())" :enter-ready="!showIntro" />
 
           <main class="min-w-0 flex-1 max-[640px]:w-full">
-            <div class="space-y-4 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
+            <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
               <section id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(0)">
                 <button type="button" :class="sectionToggleButtonClass" @click="showPages = !showPages">
                   <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:hidden">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                       <Collection class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
-                    <div class="min-w-0">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-sm">{{ t('nav.pages') }}</div>
-                      <div class="mt-1 text-sm text-white/60 max-[640px]:mt-0.5 max-[640px]:text-xs">
+                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
+                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
                         <template v-if="readExposed(pagesAutoLoaderRef?.loading, false)">{{ t('common.loading') }}...</template>
                         <template v-else-if="readExposed(pagesAutoLoaderRef?.error, '')">{{ t('error.unable_load') }}</template>
                         <template v-else>
@@ -43,7 +43,7 @@
                       </div>
                     </div>
                   </div>
-                  <component :is="showPages ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:hidden" />
+                  <component :is="showPages ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
                 </button>
 
                 <transition name="section-toggle">
@@ -56,18 +56,18 @@
               <section id="section-tools" v-if="!hasQuery || matchedToolsCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(1)">
                 <button type="button" :class="sectionToggleButtonClass" @click="showTools = !showTools">
                   <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:hidden">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                       <Cpu class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
-                    <div class="min-w-0">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-sm">{{ t('nav.tools') }}</div>
-                      <div class="mt-1 text-sm text-white/60 max-[640px]:mt-0.5 max-[640px]:text-xs">
+                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.tools') }}</div>
+                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
                         {{ t('common.totalFormat', { count: totalToolsCount }) }}
                         <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedToolsCount }) }}</span>
                       </div>
                     </div>
                   </div>
-                  <component :is="showTools ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:hidden" />
+                  <component :is="showTools ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
                 </button>
 
                 <transition name="section-toggle">
@@ -80,18 +80,18 @@
               <section id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(2)">
                 <button type="button" :class="sectionToggleButtonClass" @click="showGames = !showGames">
                   <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:hidden">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                       <Flag class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
-                    <div class="min-w-0">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-sm">{{ t('nav.games') }}</div>
-                      <div class="mt-1 text-sm text-white/60 max-[640px]:mt-0.5 max-[640px]:text-xs">
+                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.games') }}</div>
+                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
                         {{ t('common.totalFormat', { count: totalGamesCount }) }}
                         <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedGamesCount }) }}</span>
                       </div>
                     </div>
                   </div>
-                  <component :is="showGames ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:hidden" />
+                  <component :is="showGames ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
                 </button>
 
                 <transition name="section-toggle">
@@ -104,18 +104,18 @@
               <section id="section-apps" v-if="(!hasQuery && appsAutoLoadEnabled) || (hasQuery && filteredApps.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(3)">
                 <button type="button" :class="sectionToggleButtonClass" @click="showApps = !showApps">
                   <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:hidden">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                       <Monitor class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
-                    <div class="min-w-0">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-sm">{{ t('nav.apps') }}</div>
-                      <div class="mt-1 text-sm text-white/60 max-[640px]:mt-0.5 max-[640px]:text-xs">
+                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.apps') }}</div>
+                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
                         {{ t('common.totalFormat', { count: totalAppsCount }) }}
                         <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedAppsCount }) }}</span>
                       </div>
                     </div>
                   </div>
-                  <component :is="showApps ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:hidden" />
+                  <component :is="showApps ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
                 </button>
 
                 <transition name="section-toggle">
@@ -128,12 +128,12 @@
               <section id="section-files" v-if="!hasQuery || matchedFilesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(4)">
                 <button type="button" :class="sectionToggleButtonClass" @click="showFiles = !showFiles">
                   <div :class="sectionToggleInnerClass">
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:hidden">
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                       <FolderOpened class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                     </span>
-                    <div class="min-w-0">
-                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-sm">{{ t('nav.files') }}</div>
-                      <div class="mt-1 text-sm text-white/60 max-[640px]:mt-0.5 max-[640px]:text-xs">
+                    <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
+                      <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
+                      <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
                         <template v-if="readExposed(filesRef?.loading, false)">{{ t('common.loading') }}...</template>
                         <template v-else-if="readExposed(filesRef?.error, '')">{{ t('error.unable_load') }}</template>
                         <template v-else>
@@ -143,7 +143,7 @@
                       </div>
                     </div>
                   </div>
-                  <component :is="showFiles ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:hidden" />
+                  <component :is="showFiles ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
                 </button>
 
                 <transition name="section-toggle">
@@ -163,7 +163,7 @@
           </main>
         </div>
 
-        <footer class="relative z-10">
+        <footer class="relative z-10 mt-auto flex-shrink-0">
           <Footer />
         </footer>
 
@@ -218,8 +218,8 @@ const showTools = ref(true)
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
 const sectionCardClass = 'overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
-const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-1 max-[640px]:px-1.5 max-[640px]:py-2.5'
-const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:w-full max-[640px]:gap-0'
+const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
+const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
 const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-0.5 max-[640px]:pb-2.5'
 
 const gamesAutoLoadEnabled = computed(() => games.value.length > 0 && !!games.value[0]?.autoLoad)

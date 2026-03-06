@@ -216,12 +216,31 @@ onMounted(() => {
 	--clean-slot: 3;
 }
 
+@media (max-width: 640px) {
+  .float-container {
+    --sidebar-slot: -1;
+    --settings-slot: 0;
+    --lang-slot: 1;
+    --clean-slot: 2;
+  }
+}
+
 .float-container.has-back {
 	--back-slot: 0;
 	--sidebar-slot: 1;
 	--settings-slot: 2;
 	--lang-slot: 3;
 	--clean-slot: 4;
+}
+
+@media (max-width: 640px) {
+  .float-container.has-back {
+    --back-slot: 0;
+    --sidebar-slot: -1;
+    --settings-slot: 1;
+    --lang-slot: 2;
+    --clean-slot: 3;
+  }
 }
 
 	.btt-button svg path { stroke: #fff !important; }
