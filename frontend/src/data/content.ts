@@ -104,7 +104,7 @@ export function useContent() {
   ]);
 
   // Files section no longer needs manual per-file listings.
-  // Provide a single entry pointing to the GitHub repo that will be enumerated dynamically by the FileItem component.
+  // Provide a single entry pointing to the GitHub repo that will be enumerated dynamically by the file auto-loader.
   const files = ref([
     {
       name: "Files",

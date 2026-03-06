@@ -6,6 +6,7 @@
 @use "./theme/dark/index.scss" as *;
 @use "./animation/snow/index.scss" as *;
 @use "./animation/sakura/index.scss" as *;
+@use "./background/index.scss" as *;
 
 /* Smooth transitions when toggling sidebar collapsed state */
 html.sidebar-collapsed .layout,
