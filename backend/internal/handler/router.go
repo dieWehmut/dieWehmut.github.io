@@ -22,7 +22,7 @@ func NewRouter(githubService *service.GitHubService, pagesService *service.Pages
     engine.Use(gin.Logger(), gin.Recovery())
     engine.Use(cors.New(config.CORSConfig()))
 
-    engine.GET("/healthz", func(c *gin.Context) {
+    engine.GET("/health", func(c *gin.Context) {
         c.JSON(200, gin.H{"status": "ok"})
     })
 
