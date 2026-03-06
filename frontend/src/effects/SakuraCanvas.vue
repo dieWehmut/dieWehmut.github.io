@@ -15,13 +15,20 @@
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const props = defineProps({
+  densityScale: {
+    type: Number,
+    default: 1,
+  },
+})
+
 const canvasRef = ref(null)
 let animId = null
 let ctx = null
 let W = 0, H = 0, dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────
-const PETAL_COUNT      = 58
+const PETAL_COUNT      = 48
 const MIN_SIZE         = 14
 const MAX_SIZE         = 32
 const FALL_SPEED       = 0.72
@@ -39,6 +46,10 @@ let collected = []
 let burstPetals = []
 let hoveringPetal = false
 let pickCooldown = 0
+
+function targetPetalCount() {
+  return Math.max(12, Math.round(PETAL_COUNT * props.densityScale))
+}
 
 function rand(a, b) { return a + Math.random() * (b - a) }
 
@@ -229,7 +240,17 @@ function init() {
   canvas.style.height = window.innerHeight + 'px'
   ctx = canvas.getContext('2d')
   ctx.scale(dpr, dpr)
-  petals = Array.from({ length: PETAL_COUNT }, () => mkPetal(true))
+  petals = Array.from({ length: targetPetalCount() }, () => mkPetal(true))
+}
+
+function rebalancePetals() {
+  const want = targetPetalCount()
+  while (petals.length < want) {
+    petals.push(mkPetal(true))
+  }
+  if (petals.length > want) {
+    petals.length = want
+  }
 }
 
 function frame() {
@@ -365,6 +386,7 @@ function onResize() {
     canvasRef.value.style.height = window.innerHeight + 'px'
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.scale(dpr, dpr)
+    rebalancePetals()
   }, 120)
 }
 

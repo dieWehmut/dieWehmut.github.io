@@ -2,13 +2,13 @@
   <el-config-provider :button="{ autoInsertSpace: true }">
     <div class="relative min-h-screen overflow-x-clip text-white">
       <DynamicBackground @ready="onBackgroundReady" />
-      <SnowCanvas v-if="showSnowCanvas" />
-      <SakuraCanvas v-if="showHeavyEffects" />
+      <SnowCanvas v-if="showSnowCanvas" :density-scale="snowDensityScale" />
+      <SakuraCanvas v-if="showHeavyEffects" :density-scale="sakuraDensityScale" />
       <BounceCursor v-if="showHeavyEffects" />
       <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
 
       <div class="relative z-10 min-h-screen flex flex-col">
-        <header class="sticky top-0 z-[2200] border-b border-white/8 bg-black/15 backdrop-blur-md flex-shrink-0">
+        <header class="sticky top-0 z-[2200] bg-transparent flex-shrink-0">
           <div class="mx-auto w-full max-w-[2000px] px-4 py-1.5 sm:px-6 lg:px-8 max-[640px]:px-0 max-[640px]:py-1">
             <SearchBar
               ref="searchBarRef"
@@ -247,8 +247,10 @@ const activatedSections = reactive({
 
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
-const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value && !isMobile.value)
+const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value)
 const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
+const snowDensityScale = computed(() => (isMobile.value ? 0.1 : 0.22))
+const sakuraDensityScale = computed(() => (isMobile.value ? 0.16 : 0.42))
 const sectionCardClass = 'overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'

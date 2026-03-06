@@ -28,8 +28,15 @@ export async function copyTextWithToast(text, copiedState, options = {}) {
     errorMessage = 'action.copy_failed',
   } = options
 
+  const normalizedText = typeof text === 'string' ? text : String(text ?? '')
+
+  if (!normalizedText.trim()) {
+    showCenteredToast(errorMessage, { duration, type: 'error' })
+    return false
+  }
+
   try {
-    await navigator.clipboard.writeText(text)
+    await navigator.clipboard.writeText(normalizedText)
 
     if (copiedState && copiedKey != null) {
       copiedState[copiedKey] = true
@@ -172,10 +179,12 @@ export async function enrichItemsWithLatestDate(items, options) {
             <component
               :is="action.href ? 'a' : 'button'"
               v-for="action in item.actions"
-              :key="`${item.key}-${action.key}`"
+              :key="getActionRenderKey(item.key, action)"
               v-bind="getActionAttrs(action)"
               :class="getActionClass(action, 'inline-flex min-h-9 min-w-[100px] items-center justify-center gap-1.5 whitespace-nowrap rounded-2xl border px-2.5 py-1.5 text-sm font-medium transition max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:rounded-xl max-[640px]:px-1 max-[640px]:py-0.5 max-[640px]:text-xs')"
-              @click.stop="handleActionClick(action)"
+              @click="handleActionClick(action, $event)"
+              @pointerdown.stop
+              @mousedown.stop
             >
               <component :is="resolveIcon(action.icon)" class="h-4 w-4 shrink-0 max-[640px]:h-3.5 max-[640px]:w-3.5" />
               <span class="truncate">{{ action.label }}</span>
@@ -236,10 +245,12 @@ export async function enrichItemsWithLatestDate(items, options) {
                 <component
                   :is="action.href ? 'a' : 'button'"
                   v-for="action in child.actions"
-                  :key="`${child.key}-${action.key}`"
+                  :key="getActionRenderKey(child.key, action)"
                   v-bind="getActionAttrs(action)"
                   :class="getActionClass(action, 'inline-flex min-h-9 min-w-[92px] items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border px-2.5 py-1.5 text-xs font-medium transition max-[640px]:min-h-7 max-[640px]:min-w-0 max-[640px]:basis-0 max-[640px]:grow max-[640px]:gap-1 max-[640px]:px-1 max-[640px]:py-0.5')"
-                  @click.stop="handleActionClick(action)"
+                  @click="handleActionClick(action, $event)"
+                  @pointerdown.stop
+                  @mousedown.stop
                 >
                   <component :is="resolveIcon(action.icon)" class="h-3.5 w-3.5 shrink-0 max-[640px]:h-3 max-[640px]:w-3" />
                   <span class="truncate">{{ action.label }}</span>
@@ -343,9 +354,15 @@ function getActionAttrs(action) {
   }
 }
 
-function handleActionClick(action) {
+function getActionRenderKey(parentKey, action) {
+  return `${parentKey}-${action?.key || 'action'}-${action?.href || action?.label || 'inline'}`
+}
+
+function handleActionClick(action, event) {
+  event?.stopPropagation?.()
+
   if (typeof action?.onClick === 'function') {
-    action.onClick()
+    action.onClick(event)
   }
 }
 

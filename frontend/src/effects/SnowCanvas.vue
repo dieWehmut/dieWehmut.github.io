@@ -5,6 +5,13 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const props = defineProps({
+  densityScale: {
+    type: Number,
+    default: 1,
+  },
+})
+
 const canvasRef = ref(null)
 let animId = null
 let ctx = null
@@ -13,7 +20,7 @@ let H = 0
 let dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────────
-const COUNT        = 260    // 雪的密度
+const COUNT        = 180    // 雪的基础密度
 const AREA         = 420    // density reference area (px²/particle)
 const MIN_R        = 2.1    // min radius px (logical)
 const MAX_R        = 6.8    // max radius px (logical)
@@ -43,14 +50,13 @@ function mkParticle(initY = false) {
     sway: rand(0.008, 0.028),
     swayAmp: rand(0.25, 1.4),
     phase: rand(0, Math.PI * 2),
-    glow: rand(0.18, 0.45),
     opacity: rand(0.58, 0.98),
   }
 }
 
 function targetCount() {
   const area = (W / dpr) * (H / dpr)
-  return Math.round(COUNT * area / (AREA * 1000))
+  return Math.max(18, Math.round((COUNT * props.densityScale) * area / (AREA * 1000)))
 }
 
 function init() {
@@ -115,11 +121,6 @@ function frame() {
 
   // ── draw snowflakes ──
   for (const p of particles) {
-    ctx.beginPath()
-    ctx.arc(p.x, p.y, p.r * 2.4, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(255,255,255,${(p.glow * 0.26).toFixed(2)})`
-    ctx.fill()
-
     ctx.beginPath()
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
     ctx.fillStyle = `rgba(255,255,255,${p.opacity.toFixed(2)})`

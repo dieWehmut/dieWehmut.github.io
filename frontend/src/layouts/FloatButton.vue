@@ -243,7 +243,11 @@ onMounted(() => {
   }
 }
 
-	.btt-button svg path { stroke: #fff !important; }
+	.btt-button {
+		color: rgba(255, 255, 255, 0.96);
+	}
+
+	.btt-button svg path { stroke: currentColor !important; }
 
 /* stacking order */
 .btt-button { z-index: 100000 !important; }
@@ -260,7 +264,7 @@ onMounted(() => {
 	border-radius: 10px;
 	background: rgba(255,255,255,0.12);
 	border: 1px solid rgba(255,255,255,0.18);
-	color: rgba(12,16,20,0.95);
+	color: rgba(255, 255, 255, 0.96);
 	box-shadow: 0 8px 30px rgba(6,10,20,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
 	display: inline-flex;
 	align-items: center;
@@ -303,9 +307,9 @@ onMounted(() => {
 	transform: scale(0.82) !important;
 }
 
-.settings-button { background: rgba(255,255,255,0.06); color: rgba(12,16,20,0.95); border-color: rgba(255,255,255,0.12); }
-.settings-button:hover { transform: scale(1.06); box-shadow: 0 22px 48px rgba(6,10,20,0.22); background: rgba(255,255,255,0.18); }
-.settings-button svg path { stroke: #fff !important; stroke-width: 1.2 !important; }
+.settings-button { background: rgba(255,255,255,0.06); color: rgba(255, 255, 255, 0.96); border-color: rgba(255,255,255,0.12); }
+.settings-button:hover { transform: scale(1.06); box-shadow: 0 18px 42px rgba(255, 120, 182, 0.24); background: rgba(255, 132, 186, 0.18); color: rgba(255, 229, 240, 0.98); border-color: rgba(255, 172, 209, 0.46); }
+.settings-button svg path { stroke: currentColor !important; stroke-width: 1.2 !important; }
 
 /* language toggle show/hide animation */
 .lang-toggle {
@@ -394,8 +398,10 @@ onMounted(() => {
 @media (hover: hover) {
 	.btt-button:hover, .btt-button:focus {
 		transform: scale(1.06);
-		box-shadow: 0 22px 48px rgba(6,10,20,0.22);
-		background: rgba(255,255,255,0.18);
+		box-shadow: 0 18px 42px rgba(255, 120, 182, 0.24);
+		background: rgba(255, 132, 186, 0.18);
+		border-color: rgba(255, 172, 209, 0.46);
+		color: rgba(255, 229, 240, 0.98);
 		outline: none;
 	}
 }
