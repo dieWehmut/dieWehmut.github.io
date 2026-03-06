@@ -26,10 +26,10 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick, defineExpose, onMounted } from 'vue'
+import { computed, ref, watch, nextTick, defineExpose } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Search } from '@element-plus/icons-vue'
-import NavButtons from './NavButtons.vue'
+import NavButtons from '../layouts/NavButtons.vue'
 
 const props = defineProps({
   modelValue: {
@@ -56,16 +56,6 @@ function focusInput() {
     inputRef.value?.focus()
   })
 }
-
-// responsive flag - show nav buttons under search only on mobile
-const isMobile = ref(false)
-onMounted(() => {
-  const mq = window.matchMedia('(max-width: 1000px)')
-  const update = () => (isMobile.value = mq.matches)
-  update()
-  if (mq.addEventListener) mq.addEventListener('change', update)
-  else mq.addListener(update)
-})
 
 function onInput() {
   emit('update:modelValue', innerValue.value)

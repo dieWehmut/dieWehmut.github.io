@@ -11,10 +11,10 @@
 <script setup>
 import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import ItemList from './ItemList.vue'
+import ItemList from '../ui/ItemList.vue'
 import { showCenteredToast } from '../utils/centerToast'
-import { fetchWithCache } from '../utils/apiCache'
-import { getBackendApiUrl } from '../utils/backendApi'
+import { fetchWithCache } from '../api/apiCache'
+import { getBackendApiUrl } from '../api/backendApi'
 import { useContent } from '../data/content'
 
 const props = defineProps({

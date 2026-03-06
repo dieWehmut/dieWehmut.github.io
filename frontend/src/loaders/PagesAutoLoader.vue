@@ -13,9 +13,9 @@
 <script setup>
 import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import ItemList from './ItemList.vue'
+import ItemList from '../ui/ItemList.vue'
 import { showCenteredToast } from '../utils/centerToast'
-import { fetchBackendWithFallback } from '../utils/backendApi'
+import { fetchBackendWithFallback } from '../api/backendApi'
 
 const { t } = useI18n()
 

@@ -6,7 +6,7 @@ import "./tailwind.css";
 import "./styles/index.scss";
 
 import App from "./App.vue";
-import i18n from "./i18n";
+import i18n from "./utils/i18n";
 
 const app = createApp(App);
 app.use(ElementPlus);

@@ -69,8 +69,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { fetchWithCache } from '../utils/apiCache';
-import { getBackendApiUrl } from '../utils/backendApi';
+import { fetchWithCache } from '../api/apiCache';
+import { getBackendApiUrl } from '../api/backendApi';
 const props = defineProps({ enterReady: { type: Boolean, default: true } });
 import { useI18n } from 'vue-i18n';
 
