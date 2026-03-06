@@ -227,15 +227,24 @@ onMounted(() => {
 
 /* Collapsed sidebar state: triggered by adding `sidebar-collapsed` to <html> */
 html.sidebar-collapsed .sidebar {
-  width: 72px; /* narrow strip for collapsed state */
-  padding: 12px;
-  margin-left: calc(-1 * var(--sidebar-left-gap, 32px));
-  border-top-right-radius: 14px;
-  border-bottom-right-radius: 14px;
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  border: none !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  opacity: 0;
+  transform: translateX(-18px);
+  pointer-events: none;
   overflow: hidden;
+  max-height: 0;
 }
 
 /* hide text content so only a small avatar/icon remains */
+html.sidebar-collapsed .about-me,
+html.sidebar-collapsed .avatar-container,
 html.sidebar-collapsed .about-content,
 html.sidebar-collapsed .name,
 html.sidebar-collapsed .bio,
@@ -252,9 +261,9 @@ html.sidebar-collapsed .follow-text {
 
 /* reduce avatar to a compact icon */
 html.sidebar-collapsed .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 0;
+  height: 0;
+  border-radius: 0;
   box-shadow: none;
 }
 

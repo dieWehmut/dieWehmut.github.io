@@ -103,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="float-container" aria-hidden="false">
+	<div class="float-container" :class="{ 'has-back': visible }" aria-hidden="false">
 		<!-- language option buttons (expand left) -->
 		<div class="lang-options" :class="{ open: langPanelOpen }">
 			<button
@@ -182,20 +182,20 @@ onMounted(() => {
 				</svg>
 			</button>
 
-			<!-- back to top button (bottom) -->
-			<button
-				class="btt-button back-button"
-				@click="scrollToTop"
-				:title="t('backToTop')"
-				aria-label="Back to top"
-				v-if="visible"
-			>
-			<!-- Arrow icon -->
-			<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-				<path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-				<path d="M5 11L12 4L19 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			</svg>
-		</button>
+			<Transition name="back-pop">
+				<button
+					v-if="visible"
+					class="btt-button back-button"
+					@click="scrollToTop"
+					:title="t('backToTop')"
+					aria-label="Back to top"
+				>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M5 11L12 4L19 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+			</Transition>
 
 		<!-- (sidebar toggle moved up into settings column) -->
 	</div>
@@ -239,7 +239,7 @@ onMounted(() => {
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 180ms ease, opacity 120ms ease, border-color 180ms ease;
+	transition: bottom 380ms cubic-bezier(.22,1,.36,1), transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 180ms ease, opacity 120ms ease, border-color 180ms ease;
 	position: absolute;
 	right: 0;
 	backdrop-filter: blur(8px) saturate(120%);
@@ -284,7 +284,7 @@ onMounted(() => {
 .lang-toggle {
 	opacity: 0;
 	transform: translateY(8px) scale(0.92);
-	transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	transition: bottom 380ms cubic-bezier(.22,1,.36,1), transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
 	pointer-events: none;
 }
 .lang-toggle.visible {
@@ -297,7 +297,7 @@ onMounted(() => {
 .clean-toggle {
 	opacity: 0;
 	transform: translateY(8px) scale(0.92);
-	transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	transition: bottom 380ms cubic-bezier(.22,1,.36,1), transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
 	pointer-events: none;
 }
 .clean-toggle.visible {
@@ -306,9 +306,25 @@ onMounted(() => {
 	pointer-events: auto;
 }
 
-.back-button { bottom: 0; }
+.float-container {
+	--back-slot: -1;
+	--sidebar-slot: 0;
+	--settings-slot: 1;
+	--lang-slot: 2;
+	--clean-slot: 3;
+}
+
+.float-container.has-back {
+	--back-slot: 0;
+	--sidebar-slot: 1;
+	--settings-slot: 2;
+	--lang-slot: 3;
+	--clean-slot: 4;
+}
+
+.back-button { bottom: calc(var(--float-step) * var(--back-slot)); }
 /* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
-.sidebar-toggle { bottom: calc(var(--float-step) * 1); }
+.sidebar-toggle { bottom: calc(var(--float-step) * var(--sidebar-slot)); }
 .sidebar-toggle svg {
 	transition: transform 420ms cubic-bezier(.34,1.56,.64,1);
 }
@@ -317,7 +333,8 @@ onMounted(() => {
 }
 /* bounce-in when toggled */
 .sidebar-toggle {
-  transition: transform 360ms cubic-bezier(.34,1.56,.64,1),
+	transition: bottom 380ms cubic-bezier(.22,1,.36,1),
+							transform 360ms cubic-bezier(.34,1.56,.64,1),
               box-shadow 260ms ease,
               background-color 260ms ease,
               opacity 160ms ease;
@@ -347,12 +364,19 @@ onMounted(() => {
   50%  { opacity: 0.4; transform: scale(1.18); }
   100% { opacity: 0;   transform: scale(1.3); }
 }
-.settings-button { bottom: calc(var(--float-step) * 2); }
-.lang-toggle { bottom: calc(var(--float-step) * 3); }
+.settings-button { bottom: calc(var(--float-step) * var(--settings-slot)); }
+.lang-toggle { bottom: calc(var(--float-step) * var(--lang-slot)); }
 
 /* clean-mode toggle placed above language toggle */
-.clean-toggle { bottom: calc(var(--float-step) * 4); }
+.clean-toggle { bottom: calc(var(--float-step) * var(--clean-slot)); }
 .clean-toggle.active { background: rgba(255,255,255,0.06); }
+
+.float-container.has-back .sidebar-toggle,
+.float-container.has-back .settings-button,
+.float-container.has-back .lang-toggle,
+.float-container.has-back .clean-toggle {
+	animation: controlLift 420ms cubic-bezier(.22,1,.36,1);
+}
 
 @media (hover: hover) {
 	.btt-button:hover, .btt-button:focus {
@@ -375,7 +399,7 @@ onMounted(() => {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* language options container (absolute positioned inside float) */
-.lang-options { position: absolute; right: 0; bottom: calc(var(--float-step) * 3); height: 44px; pointer-events: none; }
+.lang-options { position: absolute; right: 0; bottom: calc(var(--float-step) * var(--lang-slot)); height: 44px; pointer-events: none; transition: bottom 380ms cubic-bezier(.22,1,.36,1); }
 .lang-options.open { pointer-events: auto; }
 .lang-options .lang-btn {
 	position: absolute;
@@ -422,10 +446,65 @@ onMounted(() => {
 }
 .lang-btn.active { background: linear-gradient(135deg, rgba(78,168,255,0.95), rgba(102,150,255,0.95)); color: #fff; }
 
+.back-pop-enter-active {
+	animation: backPressIn 420ms cubic-bezier(.18,.9,.24,1.24);
+}
+
+.back-pop-leave-active {
+	animation: backPressOut 240ms ease forwards;
+}
+
+@keyframes backPressIn {
+	0% {
+		opacity: 0;
+		transform: translateY(24px) scale(0.72);
+		filter: blur(4px);
+	}
+	55% {
+		opacity: 1;
+		transform: translateY(-8px) scale(1.06);
+		filter: blur(0);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+		filter: blur(0);
+	}
+}
+
+@keyframes backPressOut {
+	0% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(18px) scale(0.88);
+	}
+}
+
+@keyframes controlLift {
+	0% {
+		transform: translateY(0) scale(1);
+	}
+	40% {
+		transform: translateY(-6px) scale(1.03);
+	}
+	100% {
+		transform: translateY(0) scale(1);
+	}
+}
+
 /* reduced motion respect */
 @media (prefers-reduced-motion: reduce) {
 	.settings-button.rotating svg { animation: none; }
 	.btt-button, .lang-btn { transition: none !important; }
+	.back-pop-enter-active,
+	.back-pop-leave-active,
+	.float-container.has-back .sidebar-toggle,
+	.float-container.has-back .settings-button,
+	.float-container.has-back .lang-toggle,
+	.float-container.has-back .clean-toggle { animation: none !important; }
 }
 
 @media (max-width: 768px) {

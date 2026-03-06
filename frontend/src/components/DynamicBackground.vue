@@ -1,191 +1,106 @@
 <template>
-  <div ref="container" class="bg-root" aria-hidden="true">
-    <img
-      v-if="posterSrc"
-      :src="posterSrc"
-      class="bg-poster"
-      :class="{ 'is-hidden': videoVisible }
-    "
-      alt="background poster"
-    />
-
-    <video
-      ref="videoEl"
-      class="bg-video"
-      autoplay
-      muted
-      loop
-      playsinline
-      webkit-playsinline
-      x5-playsinline
-      disablepictureinpicture
-      disableremoteplayback
-      tabindex="-1"
-      preload="none"
-      :class="{ visible: videoVisible }"
-      aria-hidden="true"
-    >
-      <template v-if="started">
-        <source v-for="s in sources" :key="s.src" :src="s.src" :type="s.type" />
-      </template>
-    </video>
+  <div class="bg-root" aria-hidden="true">
+    <div class="bg-video-stage">
+      <div class="bg-video-wrap" :class="{ 'is-visible': videoVisible }">
+        <video
+          ref="videoEl"
+          class="bg-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          webkit-playsinline
+          x5-playsinline
+          preload="auto"
+        >
+          <source :src="bgWebm" type="video/webm" />
+          <source :src="bgMp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="bg-video-glass"></div>
+    </div>
+    <div class="bg-base"></div>
+    <div class="bg-blur bg-blur--a"></div>
+    <div class="bg-blur bg-blur--b"></div>
+    <div class="bg-blur bg-blur--c"></div>
+    <div class="bg-blur bg-blur--d"></div>
+    <div class="bg-orbit bg-orbit--a"></div>
+    <div class="bg-orbit bg-orbit--b"></div>
+    <div class="bg-ribbon bg-ribbon--a"></div>
+    <div class="bg-ribbon bg-ribbon--b"></div>
+    <div class="bg-sheen"></div>
+    <div class="bg-sparks">
+      <span v-for="spark in sparkItems" :key="spark.id" class="bg-spark" :style="spark.style"></span>
+    </div>
+    <div class="bg-vignette"></div>
+    <div class="bg-noise"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import bgMp4 from '../assets/bg.mp4'
-import bgWebm from '../assets/bg.webm'
-
-// states
-const posterSrc = ref('')
-const videoVisible = ref(false)
-const container = ref(null)
-const videoEl = ref(null)
-const started = ref(false) // reactive so template can render <source> only when starting
-const sources = ref([])
-let io = null
-
-function extractFirstFrame(videoUrl) {
-  return new Promise((resolve, reject) => {
-    const v = document.createElement('video')
-    v.preload = 'metadata'
-    v.muted = true
-    v.playsInline = true
-  // 不为临时 video 设置 crossOrigin，避免在同源但未返回 CORS 头时污染 canvas
-    v.src = videoUrl
-
-    const cleanup = () => {
-      v.pause()
-      v.src = ''
-      v.removeAttribute('src')
-    }
-
-    function fail(e) {
-      cleanup()
-      reject(e)
-    }
-
-    v.addEventListener('loadeddata', () => {
-      try {
-        const canvas = document.createElement('canvas')
-        canvas.width = v.videoWidth || 1920
-        canvas.height = v.videoHeight || 1080
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(v, 0, 0, canvas.width, canvas.height)
-        const data = canvas.toDataURL('image/jpeg', 0.85)
-        cleanup()
-        resolve(data)
-      } catch (err) {
-        fail(err)
-      }
-    }, { once: true })
-
-    v.addEventListener('error', (e) => fail(e), { once: true })
-  })
-}
+import { computed, onMounted, ref } from 'vue'
+import bgMp4 from '../assets/bg/mov/bg.mp4'
+import bgWebm from '../assets/bg/mov/bg.webm'
 
 const emit = defineEmits(['ready'])
+const videoEl = ref(null)
+const videoVisible = ref(false)
 
-async function startLoading() {
-  if (started.value) return
+const sparkItems = computed(() => {
+  const items = []
 
-  // 1) try to extract first frame to use as poster (try mp4 first, fallback to webm)
-  try {
-    let dataUrl = ''
-    try {
-      dataUrl = await extractFirstFrame(bgMp4)
-    } catch (e) {
-      // try webm if mp4 extraction fails
-      try { dataUrl = await extractFirstFrame(bgWebm) } catch (e2) { dataUrl = '' }
-    }
-    posterSrc.value = dataUrl
-  } catch (e) {
-    posterSrc.value = ''
-  }
+  for (let i = 0; i < 26; i += 1) {
+    const size = 6 + (i % 5) * 3
+    const left = 4 + ((i * 11) % 92)
+    const delay = -(i * 1.1)
+    const duration = 8.6 + (i % 6) * 1.15
+    const drift = ((i % 7) - 3) * 1.6
+    const scale = 0.72 + (i % 4) * 0.11
 
-  // 2) attach video sources and begin loading/playing when ready
-  const v = videoEl.value
-  if (!v) return
-  // prepare sources (webm first, then mp4) and render them
-  sources.value = []
-  if (bgWebm) sources.value.push({ src: bgWebm, type: 'video/webm' })
-  if (bgMp4) sources.value.push({ src: bgMp4, type: 'video/mp4' })
-  started.value = true
-  // set attributes for loading now
-  v.preload = 'auto'
-  // call load so browser will parse the added <source> elements
-  try { v.load() } catch (e) {}
-
-  // Ensure can autoplay: muted + playsinline already set in template
-  // But also explicitly set a few runtime flags for better cross-browser behavior
-  try {
-    v.playsInline = true
-    v.setAttribute('webkit-playsinline', '')
-    v.setAttribute('x5-playsinline', '')
-
-    v.muted = true
-    v.setAttribute('muted', '')
-
-    try { v.disablePictureInPicture = true } catch (e) {}
-    v.setAttribute('disablePictureInPicture', '')
-    try { v.disableRemotePlayback = true } catch (e) {}
-    v.setAttribute('disableRemotePlayback', '')
-  } catch (e) {}
-  const onCanPlay = () => {
-    // crossfade: give poster a little time then show video
-    requestAnimationFrame(() => {
-      // small timeout to allow paint of poster
-      setTimeout(() => {
-        videoVisible.value = true
-        // notify parent that background is ready
-        try { emit('ready') } catch (e) {}
-      }, 60)
+    items.push({
+      id: `spark-${i}`,
+      style: {
+        left: `${left}%`,
+        bottom: `${-10 - (i % 5) * 4}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        animationDelay: `${delay}s`,
+        animationDuration: `${duration}s`,
+        '--spark-size': size,
+        '--spark-drift': `${drift}vw`,
+        '--spark-scale': scale,
+      },
     })
   }
 
-  v.addEventListener('canplay', onCanPlay, { once: true })
-  // fallback in case canplay doesn't fire fast enough
-  setTimeout(() => {
-    if (!videoVisible.value) videoVisible.value = true
-  }, 3000)
-
-  // try to play (browsers allow autoplay only when muted)
-  try { v.play().catch(() => {}) } catch (e) {}
-
-  // If autoplay is blocked on some browsers despite muted, allow first user interaction to kickstart
-  const onUserInteraction = () => {
-    try { v.play().catch(() => {}) } catch (err) {}
-  }
-  document.addEventListener('click', onUserInteraction, { once: true, passive: true })
-}
-
-onMounted(() => {
-  // Lazy start: observe container, start when visible in viewport
-  if ('IntersectionObserver' in window) {
-    io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          startLoading()
-          if (io && container.value) io.unobserve(container.value)
-          break
-        }
-      }
-    }, { root: null, threshold: 0 })
-
-    if (container.value) io.observe(container.value)
-  } else {
-    // no IO -> start immediately but defer to idle
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => startLoading())
-    } else {
-      setTimeout(() => startLoading(), 200)
-    }
-  }
+  return items
 })
 
-onBeforeUnmount(() => {
-  if (io && container.value) io.unobserve(container.value)
+onMounted(() => {
+  const video = videoEl.value
+  let readyFired = false
+
+  const markReady = () => {
+    if (readyFired) return
+    readyFired = true
+    videoVisible.value = true
+    emit('ready')
+  }
+
+  if (video) {
+    const onCanPlay = () => {
+      window.setTimeout(markReady, 120)
+    }
+
+    video.addEventListener('canplay', onCanPlay, { once: true })
+    try {
+      video.play().catch(() => {})
+    } catch (e) {}
+  }
+
+  requestAnimationFrame(() => {
+    window.setTimeout(markReady, 380)
+  })
 })
 </script>
 
@@ -193,61 +108,378 @@ onBeforeUnmount(() => {
 .bg-root {
   position: fixed;
   inset: 0;
-  z-index: -1; /* keep behind page content */
+  z-index: -1;
+  overflow: hidden;
   pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 239, 248, 0.95), transparent 24%),
+    radial-gradient(circle at 84% 14%, rgba(255, 221, 236, 0.9), transparent 26%),
+    linear-gradient(135deg, #f6d1e4 0%, #efb7d6 34%, #edaccf 62%, #f5c7da 100%);
+}
+
+  .bg-video-stage,
+.bg-base,
+.bg-blur,
+.bg-orbit,
+.bg-ribbon,
+.bg-sheen,
+.bg-sparks,
+.bg-vignette,
+.bg-noise {
+  position: absolute;
+  inset: 0;
+}
+
+.bg-video-stage {
+  perspective: 1800px;
   overflow: hidden;
 }
 
-.bg-poster {
+.bg-video-wrap {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transform: translateZ(0);
-  transition: opacity 700ms ease, filter 700ms ease;
-  opacity: 1;
-  filter: blur(0.3px);
-}
-.bg-poster.is-hidden {
+  inset: -10% -18%;
   opacity: 0;
-  pointer-events: none;
+  transform: rotateX(16deg) rotateY(-7deg) scale(1.18) translate3d(0, 4%, 0);
+  transform-origin: center center;
+  transition: opacity 900ms ease, transform 1400ms cubic-bezier(.16,.9,.2,1);
+  mix-blend-mode: soft-light;
+  filter: saturate(1.25) hue-rotate(-8deg) brightness(1.12);
+}
+
+.bg-video-wrap.is-visible {
+  opacity: 0.34;
+  transform: rotateX(12deg) rotateY(-4deg) scale(1.1) translate3d(0, 0, 0);
 }
 
 .bg-video {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.08);
+  filter: blur(1px) saturate(1.3) contrast(1.04);
+}
+
+.bg-video-glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.02) 22%, rgba(255, 173, 216, 0.08) 72%, rgba(255, 255, 255, 0.04)),
+    radial-gradient(circle at 50% 14%, rgba(255, 248, 252, 0.34), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(197, 74, 132, 0.14), transparent 34%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+.bg-base {
+  background:
+    radial-gradient(circle at 20% 24%, rgba(255, 250, 252, 0.9), transparent 18%),
+    radial-gradient(circle at 72% 28%, rgba(255, 201, 230, 0.52), transparent 24%),
+    radial-gradient(circle at 50% 82%, rgba(255, 154, 204, 0.32), transparent 30%);
+}
+
+.bg-blur {
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: 0.92;
+  mix-blend-mode: screen;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+.bg-blur--a {
+  top: -8%;
+  left: -10%;
+  width: 48vw;
+  height: 42vw;
+  background: radial-gradient(circle, rgba(255, 248, 252, 0.96) 0%, rgba(255, 207, 231, 0.78) 38%, rgba(255, 207, 231, 0) 72%);
+  animation-duration: 19s;
+}
+
+.bg-blur--b {
+  top: 18%;
+  right: -12%;
+  width: 44vw;
+  height: 38vw;
+  background: radial-gradient(circle, rgba(255, 190, 220, 0.8) 0%, rgba(255, 153, 203, 0.58) 42%, rgba(255, 153, 203, 0) 74%);
+  animation-duration: 24s;
+  animation-delay: -6s;
+}
+
+.bg-blur--c {
+  bottom: -18%;
+  left: 16%;
+  width: 54vw;
+  height: 34vw;
+  background: radial-gradient(circle, rgba(255, 174, 214, 0.76) 0%, rgba(253, 120, 185, 0.44) 40%, rgba(253, 120, 185, 0) 74%);
+  animation-duration: 28s;
+  animation-delay: -10s;
+}
+
+.bg-blur--d {
+  top: 38%;
+  left: 34%;
+  width: 28vw;
+  height: 28vw;
+  background: radial-gradient(circle, rgba(255, 252, 254, 0.7) 0%, rgba(255, 224, 240, 0.35) 45%, rgba(255, 224, 240, 0) 76%);
+  animation-duration: 16s;
+  animation-delay: -3s;
+}
+
+.bg-orbit {
+  inset: auto;
+  border-radius: 999px;
+  opacity: 0.44;
+  mix-blend-mode: screen;
+  filter: blur(22px);
+}
+
+.bg-orbit--a {
+  width: 34vw;
+  height: 34vw;
+  top: 8%;
+  left: 48%;
+  border: 1px solid rgba(255, 245, 250, 0.5);
+  box-shadow: inset 0 0 60px rgba(255, 238, 246, 0.12), 0 0 80px rgba(255, 194, 223, 0.18);
+  animation: orbitFloatA 30s linear infinite;
+}
+
+.bg-orbit--b {
+  width: 46vw;
+  height: 24vw;
+  bottom: 4%;
+  left: 6%;
+  border: 1px solid rgba(255, 226, 238, 0.34);
+  box-shadow: inset 0 0 50px rgba(255, 214, 233, 0.08), 0 0 90px rgba(247, 133, 190, 0.14);
+  transform: rotate(-18deg);
+  animation: orbitFloatB 26s ease-in-out infinite alternate;
+}
+
+.bg-ribbon {
+  inset: auto;
+  border-radius: 999px;
+  filter: blur(50px);
+  opacity: 0.55;
+  transform: rotate(-12deg);
+  mix-blend-mode: soft-light;
+  animation: ribbonShift 18s ease-in-out infinite alternate;
+}
+
+.bg-ribbon--a {
+  top: 12%;
+  left: -8%;
+  width: 76vw;
+  height: 14vw;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 245, 250, 0.8) 26%, rgba(255, 189, 222, 0.65) 54%, rgba(255, 255, 255, 0) 100%);
+}
+
+.bg-ribbon--b {
+  right: -12%;
+  bottom: 10%;
+  width: 70vw;
+  height: 16vw;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 214, 234, 0.18) 22%, rgba(255, 155, 202, 0.6) 58%, rgba(255, 255, 255, 0) 100%);
+  transform: rotate(14deg);
+  animation-duration: 22s;
+  animation-delay: -8s;
+}
+
+.bg-sheen {
+  inset: auto;
+  top: -18%;
+  left: -24%;
+  width: 68vw;
+  height: 140vh;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 246, 250, 0.36) 48%, rgba(255, 255, 255, 0) 100%);
+  filter: blur(18px);
+  transform: rotate(18deg);
+  mix-blend-mode: soft-light;
+  animation: sheenSweep 18s ease-in-out infinite;
+}
+
+.bg-sparks {
+  overflow: hidden;
+}
+
+.bg-spark {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 231, 242, 0.7) 35%, rgba(255, 231, 242, 0) 72%);
+  box-shadow: 0 0 18px rgba(255, 224, 239, 0.55);
   opacity: 0;
-  transition: opacity 900ms ease;
-  will-change: opacity;
-}
-.bg-video.visible {
-  opacity: 1;
+  animation: sparkFloat 11s linear infinite;
 }
 
-/* fallback gradient if poster not available */
-.bg-root::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--bg-fallback-gradient, linear-gradient(180deg, #0f1724 0%, rgba(15,23,36,0.5) 50%, rgba(15,23,36,0.6) 100%));
-  z-index: -2;
+.bg-spark:nth-child(3n) {
+  background: radial-gradient(circle, rgba(255, 250, 252, 0.98) 0%, rgba(255, 214, 236, 0.78) 36%, rgba(255, 214, 236, 0) 72%);
 }
 
-.bg-root::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--bg-fallback-decor, none);
-  z-index: -1;
+.bg-spark:nth-child(4n) {
+  box-shadow: 0 0 24px rgba(255, 212, 232, 0.72);
 }
 
-/* ensure background doesn't cover fixed header content visually (you can tweak) */
+.bg-vignette {
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0) 48%, rgba(228, 132, 180, 0.08) 78%, rgba(176, 72, 126, 0.18) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(216, 118, 170, 0.1));
+}
+
+.bg-noise {
+  opacity: 0.15;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 160px 160px;
+  mix-blend-mode: soft-light;
+  animation: noiseShift 14s linear infinite;
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3vw, -2vh, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-2vw, 3vh, 0) scale(0.98);
+  }
+}
+
+@keyframes ribbonShift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-12deg) scaleX(1);
+  }
+  100% {
+    transform: translate3d(2vw, 2vh, 0) rotate(-6deg) scaleX(1.08);
+  }
+}
+
+.bg-ribbon--b {
+  animation-name: ribbonShiftB;
+}
+
+@keyframes ribbonShiftB {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(14deg) scaleX(1);
+  }
+  100% {
+    transform: translate3d(-2vw, -2vh, 0) rotate(8deg) scaleX(1.06);
+  }
+}
+
+@keyframes orbitFloatA {
+  0% {
+    transform: rotate(0deg) translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) translate3d(2vw, -1vh, 0) scale(1.04);
+  }
+  100% {
+    transform: rotate(360deg) translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes orbitFloatB {
+  0% {
+    transform: rotate(-18deg) translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: rotate(-10deg) translate3d(3vw, -2vh, 0) scale(1.08);
+  }
+}
+
+@keyframes sheenSweep {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(18deg);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate3d(36vw, 0, 0) rotate(18deg);
+    opacity: 0.28;
+  }
+  100% {
+    transform: translate3d(72vw, 0, 0) rotate(18deg);
+    opacity: 0.1;
+  }
+}
+
+@keyframes sparkFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(calc(var(--spark-scale, 1) * 0.68));
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.8;
+  }
+  38% {
+    transform: translate3d(calc(var(--spark-drift, 0vw) * 0.65), -28vh, 0) scale(calc(var(--spark-scale, 1) * 1.08));
+    opacity: 0.92;
+  }
+  65% {
+    transform: translate3d(calc(var(--spark-drift, 0vw)), -48vh, 0) scale(calc(var(--spark-scale, 1) * 1.18));
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate3d(calc(var(--spark-drift, 0vw) * -0.45), -92vh, 0) scale(calc(var(--spark-scale, 1) * 0.86));
+    opacity: 0;
+  }
+}
+
+@keyframes noiseShift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-1.2%, 1%, 0);
+  }
+  100% {
+    transform: translate3d(1.2%, -1%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-video-wrap,
+  .bg-blur,
+  .bg-orbit,
+  .bg-ribbon,
+  .bg-sheen,
+  .bg-spark,
+  .bg-noise {
+    animation: none;
+  }
+}
+
 @media (max-width: 1000px) {
-  .bg-root { display: block }
+  .bg-root {
+    background:
+      radial-gradient(circle at 18% 14%, rgba(255, 244, 249, 0.96), transparent 28%),
+      radial-gradient(circle at 78% 18%, rgba(255, 204, 229, 0.88), transparent 26%),
+      linear-gradient(180deg, #f5d4e4 0%, #efbfd8 42%, #efb1d0 100%);
+  }
+
+  .bg-video-wrap {
+    inset: -14% -24%;
+    transform: rotateX(10deg) rotateY(-2deg) scale(1.16);
+  }
+
+  .bg-video-wrap.is-visible {
+    opacity: 0.26;
+  }
+
+  .bg-blur--a,
+  .bg-blur--b,
+  .bg-blur--c {
+    width: 72vw;
+    height: 72vw;
+  }
+
+  .bg-ribbon {
+    width: 110vw;
+    height: 30vw;
+    opacity: 0.42;
+  }
+
+  .bg-orbit--a,
+  .bg-orbit--b {
+    width: 72vw;
+    height: 72vw;
+  }
 }
 </style>
