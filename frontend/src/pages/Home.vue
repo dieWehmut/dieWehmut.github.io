@@ -34,8 +34,8 @@
                     <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                       <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
                       <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="readExposed(pagesAutoLoaderRef?.loading, false)">{{ t('common.loading') }}...</template>
-                        <template v-else-if="readExposed(pagesAutoLoaderRef?.error, '')">{{ t('error.unable_load') }}</template>
+                        <template v-if="readExposed(pageListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                        <template v-else-if="readExposed(pageListRef?.error, '')">{{ t('error.unable_load') }}</template>
                         <template v-else>
                           {{ t('common.totalFormat', { count: totalPagesCount }) }}
                           <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedPagesCount }) }}</span>
@@ -48,7 +48,7 @@
 
                 <transition name="section-toggle">
                   <div v-show="showPages" :class="sectionContentClass">
-                    <PagesAutoLoader v-if="activatedSections.pages" ref="pagesAutoLoaderRef" :filter-query="normalizedQuery" />
+                    <PageList v-if="activatedSections.pages" ref="pageListRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
@@ -75,7 +75,7 @@
 
                 <transition name="section-toggle">
                   <div v-show="showTools" :class="sectionContentClass">
-                    <ToolsAutoLoader v-if="activatedSections.tools" ref="toolsRef" :filter-query="normalizedQuery" />
+                    <ToolList v-if="activatedSections.tools" ref="toolListRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
@@ -102,7 +102,7 @@
 
                 <transition name="section-toggle">
                   <div v-show="showGames" :class="sectionContentClass">
-                    <ReleasesAutoLoader v-if="activatedSections.games" ref="gamesReleasesRef" type="games" :filter-query="normalizedQuery" />
+                    <GameList v-if="activatedSections.games" ref="gameListRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
@@ -129,7 +129,7 @@
 
                 <transition name="section-toggle">
                   <div v-show="showApps" :class="sectionContentClass">
-                    <ReleasesAutoLoader v-if="activatedSections.apps" ref="appsReleasesRef" type="apps" :filter-query="normalizedQuery" />
+                    <AppList v-if="activatedSections.apps" ref="appListRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
@@ -143,8 +143,8 @@
                     <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                       <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
                       <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                        <template v-if="!activatedSections.files || readExposed(filesRef?.loading, false)">{{ t('common.loading') }}...</template>
-                        <template v-else-if="readExposed(filesRef?.error, '')">{{ t('error.unable_load') }}</template>
+                        <template v-if="!activatedSections.files || readExposed(fileListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                        <template v-else-if="readExposed(fileListRef?.error, '')">{{ t('error.unable_load') }}</template>
                         <template v-else>
                           {{ t('common.totalFormat', { count: totalFilesCount }) }}
                           <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedFilesCount }) }}</span>
@@ -157,7 +157,7 @@
 
                 <transition name="section-toggle">
                   <div v-show="showFiles" :class="sectionContentClass">
-                    <FilesAutoLoader v-if="activatedSections.files" ref="filesRef" :filter-query="normalizedQuery" />
+                    <FileList v-if="activatedSections.files" ref="fileListRef" :filter-query="normalizedQuery" />
                   </div>
                 </transition>
               </section>
@@ -186,19 +186,29 @@
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, unref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowDown, ArrowUp, Collection, Cpu, Flag, FolderOpened, Monitor } from '@element-plus/icons-vue'
-const SearchBar = defineAsyncComponent(() => import('../ui/SearchBar.vue'))
-const DynamicBackground = defineAsyncComponent(() => import('../effects/DynamicBackground.vue'))
-const ParticleCanvas = defineAsyncComponent(() => import('../effects/ParticleCanvas.vue'))
-const SakuraCanvas = defineAsyncComponent(() => import('../effects/SakuraCanvas.vue'))
-const BounceCursor = defineAsyncComponent(() => import('../effects/BounceCursor.vue'))
-const Footer = defineAsyncComponent(() => import('../layouts/Footer.vue'))
-const SideBar = defineAsyncComponent(() => import('../layouts/SideBar.vue'))
-const IntroSplash = defineAsyncComponent(() => import('../ui/IntroSplash.vue'))
-const FloatButton = defineAsyncComponent(() => import('../layouts/FloatButton.vue'))
-const PagesAutoLoader = defineAsyncComponent(() => import('../loaders/PagesAutoLoader.vue'))
-const ReleasesAutoLoader = defineAsyncComponent(() => import('../loaders/ReleasesAutoLoader.vue'))
-const FilesAutoLoader = defineAsyncComponent(() => import('../loaders/FilesAutoLoader.vue'))
-const ToolsAutoLoader = defineAsyncComponent(() => import('../loaders/ToolsAutoLoader.vue'))
+
+function createAsyncView(loader) {
+  return defineAsyncComponent({
+    loader,
+    delay: 0,
+    suspensible: false,
+  })
+}
+
+const SearchBar = createAsyncView(() => import('../ui/SearchBar.vue'))
+const DynamicBackground = createAsyncView(() => import('../effects/DynamicBackground.vue'))
+const ParticleCanvas = createAsyncView(() => import('../effects/ParticleCanvas.vue'))
+const SakuraCanvas = createAsyncView(() => import('../effects/SakuraCanvas.vue'))
+const BounceCursor = createAsyncView(() => import('../effects/BounceCursor.vue'))
+const Footer = createAsyncView(() => import('../layouts/Footer.vue'))
+const SideBar = createAsyncView(() => import('../layouts/SideBar.vue'))
+const IntroSplash = createAsyncView(() => import('../ui/IntroSplash.vue'))
+const FloatButton = createAsyncView(() => import('../layouts/FloatButton.vue'))
+const PageList = createAsyncView(() => import('../List/PageList.vue'))
+const AppList = createAsyncView(() => import('../List/AppList.vue'))
+const GameList = createAsyncView(() => import('../List/GameList.vue'))
+const FileList = createAsyncView(() => import('../List/FileList.vue'))
+const ToolList = createAsyncView(() => import('../List/ToolList.vue'))
 import { useContent } from '../data/content'
 
 const { t } = useI18n()
@@ -206,19 +216,21 @@ const { games, apps } = useContent()
 
 const query = ref('')
 const searchBarRef = ref(null)
-const pagesAutoLoaderRef = ref(null)
-const toolsRef = ref(null)
-const gamesReleasesRef = ref(null)
-const appsReleasesRef = ref(null)
-const filesRef = ref(null)
+const pageListRef = ref(null)
+const toolListRef = ref(null)
+const gameListRef = ref(null)
+const appListRef = ref(null)
+const fileListRef = ref(null)
 const isMobile = ref(false)
 const prefersReducedMotion = ref(false)
 const deferredActivationTimers = []
+const deferredIdleCallbacks = []
 
 const showIntro = ref(true)
 const backgroundReady = ref(false)
 let introFallbackTimer = null
 let mediaQuery = null
+let deferredSectionsScheduled = false
 
 const showPages = ref(true)
 const showGames = ref(true)
@@ -245,20 +257,20 @@ const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-0.5 max-[6
 const gamesAutoLoadEnabled = computed(() => games.value.length > 0 && !!games.value[0]?.autoLoad)
 const appsAutoLoadEnabled = computed(() => apps.value.length > 0 && !!apps.value[0]?.autoLoad)
 
-const totalPagesCount = computed(() => readExposed(pagesAutoLoaderRef.value?.pagesCount, 0))
-const matchedPagesCount = computed(() => readExposed(pagesAutoLoaderRef.value?.matchedCount, 0))
-const toolItems = computed(() => readExposed(toolsRef.value?.tools, []))
-const filteredTools = computed(() => readExposed(toolsRef.value?.displayedTools, []))
+const totalPagesCount = computed(() => readExposed(pageListRef.value?.pagesCount, 0))
+const matchedPagesCount = computed(() => readExposed(pageListRef.value?.matchedCount, 0))
+const toolItems = computed(() => readExposed(toolListRef.value?.tools, []))
+const filteredTools = computed(() => readExposed(toolListRef.value?.displayedTools, []))
 const totalToolsCount = computed(() => toolItems.value.length)
 const matchedToolsCount = computed(() => filteredTools.value.length)
-const filteredGames = computed(() => readExposed(gamesReleasesRef.value?.filteredGames, []))
-const filteredApps = computed(() => readExposed(appsReleasesRef.value?.filteredApps, []))
-const totalGamesCount = computed(() => readExposed(gamesReleasesRef.value?.games, []).length)
-const totalAppsCount = computed(() => readExposed(appsReleasesRef.value?.apps, []).length)
+const filteredGames = computed(() => readExposed(gameListRef.value?.filteredGames, []))
+const filteredApps = computed(() => readExposed(appListRef.value?.filteredApps, []))
+const totalGamesCount = computed(() => readExposed(gameListRef.value?.games, []).length)
+const totalAppsCount = computed(() => readExposed(appListRef.value?.apps, []).length)
 const matchedGamesCount = computed(() => filteredGames.value.length)
 const matchedAppsCount = computed(() => filteredApps.value.length)
-const totalFilesCount = computed(() => readExposed(filesRef.value?.filesCount, 0))
-const matchedFilesCount = computed(() => readExposed(filesRef.value?.matchedFilesCount, 0))
+const totalFilesCount = computed(() => readExposed(fileListRef.value?.filesCount, 0))
+const matchedFilesCount = computed(() => readExposed(fileListRef.value?.matchedFilesCount, 0))
 
 function readExposed(value, fallback) {
   return value == null ? fallback : unref(value)
@@ -275,8 +287,28 @@ function activateSection(name) {
 }
 
 function queueSectionActivation(name, delay) {
-  const timer = window.setTimeout(() => activateSection(name), delay)
+  const timer = window.setTimeout(() => {
+    if (typeof window.requestIdleCallback === 'function') {
+      const idleCallback = window.requestIdleCallback(() => activateSection(name), { timeout: 900 })
+      deferredIdleCallbacks.push(idleCallback)
+      return
+    }
+
+    activateSection(name)
+  }, delay)
   deferredActivationTimers.push(timer)
+}
+
+function scheduleDeferredSections() {
+  if (deferredSectionsScheduled) {
+    return
+  }
+
+  deferredSectionsScheduled = true
+  queueSectionActivation('tools', 120)
+  queueSectionActivation('games', 320)
+  queueSectionActivation('apps', 560)
+  queueSectionActivation('files', 840)
 }
 
 function toggleSection(name) {
@@ -353,6 +385,7 @@ function hideIntro() {
     clearTimeout(introFallbackTimer)
     introFallbackTimer = null
   }
+  scheduleDeferredSections()
 }
 
 function skipIntro() {
@@ -427,10 +460,6 @@ onMounted(() => {
     }
   }, prefersReducedMotion.value ? 800 : 5000)
 
-  queueSectionActivation('tools', 300)
-  queueSectionActivation('games', 700)
-  queueSectionActivation('apps', 1100)
-  queueSectionActivation('files', 1500)
 })
 
 onBeforeUnmount(() => {
@@ -450,6 +479,11 @@ onBeforeUnmount(() => {
   }
 
   deferredActivationTimers.forEach((timer) => clearTimeout(timer))
+  deferredIdleCallbacks.forEach((idleCallback) => {
+    if (typeof window.cancelIdleCallback === 'function') {
+      window.cancelIdleCallback(idleCallback)
+    }
+  })
 })
 </script>
 

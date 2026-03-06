@@ -1,20 +1,19 @@
 <template>
-  <div class="w-full">
-    <ItemList
-      :items="displayItems"
-      :loading="loading"
-      :error="error || ''"
-      :empty-text="t('common.no_files')"
-      :loading-text="`${t('common.loading')}...`"
-    />
-  </div>
+  <ItemList
+    :items="displayItems"
+    :loading="loading"
+    :error="error"
+    :empty-text="normalizedFilter ? t('common.no_match') : t('common.no_files')"
+    :loading-text="`${t('common.loading')}...`"
+  />
 </template>
 
 <script setup>
 import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { copyTextWithToast, enrichItemsWithLatestDate, formatListDate } from '../ui/ItemList.vue'
+import { showCenteredToast } from '../ui/CenterToast.vue'
 import ItemList from '../ui/ItemList.vue'
-import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
 import { useContent } from '../data/content'
@@ -65,7 +64,7 @@ const displayItems = computed(() => {
     key: `${item.tag_name}-${item.name}-${resolveCopyUrl(item)}`,
     title: item.name,
     icon,
-    date: formatDate(item.date),
+    date: formatListDate(item.date, { pad: true }),
     href: resolveRepoUrl(item),
     actions: [
       ...(shouldShowDownload(item)
@@ -78,7 +77,7 @@ const displayItems = computed(() => {
         key: 'copy',
         label: copiedLinks[resolveCopyUrl(item)] ? t('action.copied') : t('action.copy'),
         icon: 'copy',
-        onClick: () => copyLink(resolveCopyUrl(item)),
+        onClick: () => copyTextWithToast(resolveCopyUrl(item), copiedLinks, { copiedKey: resolveCopyUrl(item), duration: 3000 }),
       },
     ],
   }))
@@ -123,46 +122,6 @@ function normalizeManualItem(item, index, prefix) {
   }
 }
 
-function parseGitHubRepo(url) {
-  if (!url) {
-    return null
-  }
-
-  const match = url.match(/github\.com\/([^/]+)\/([^/]+)/)
-  if (!match) {
-    return null
-  }
-
-  return { owner: match[1], repo: match[2].replace(/\.git$/, '') }
-}
-
-async function enrichManualDates(items) {
-  await Promise.all(
-    items.map(async (item) => {
-      if (item.date) {
-        return
-      }
-
-      const repo = parseGitHubRepo(item._repoUrl)
-      if (!repo) {
-        return
-      }
-
-      try {
-        const commit = await fetchWithCache(
-          getBackendApiUrl(`/api/github/repos/${repo.owner}/${repo.repo}/commits/latest`),
-          {},
-          1000 * 60 * 60 * 6,
-        )
-        if (commit?.commit) {
-          item.date = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
-        }
-      } catch {
-      }
-    }),
-  )
-}
-
 function resolveDownloadUrl(item) {
   return item?.html_url || item?.url || ''
 }
@@ -202,29 +161,12 @@ function handleDownload(item) {
   window.open(url, '_blank', 'noopener')
 }
 
-function formatDate(dateValue) {
-  if (!dateValue) {
-    return ''
-  }
-
-  try {
-    const date = new Date(dateValue)
-    if (Number.isNaN(date.valueOf())) {
-      return dateValue
-    }
-
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  } catch {
-    return dateValue
-  }
-}
-
 async function loadReleases() {
   loading.value = true
   error.value = ''
+
+  const manualGameItems = manualGames.value.map((item) => ({ ...item }))
+  const manualAppItems = manualApps.value.map((item) => ({ ...item }))
 
   let autoGames = []
   let autoApps = []
@@ -270,25 +212,24 @@ async function loadReleases() {
     autoApps = appsData
   } catch (loadError) {
     console.error('Failed to load releases:', loadError)
-    if ((props.type === 'games' && manualGames.value.length === 0) || (props.type === 'apps' && manualApps.value.length === 0)) {
+    if ((props.type === 'games' && manualGameItems.length === 0) || (props.type === 'apps' && manualAppItems.length === 0)) {
       error.value = t('error.unable_load') || 'Unable to load releases.'
     }
   } finally {
-    await Promise.all([enrichManualDates(manualGames.value), enrichManualDates(manualApps.value)])
-    games.value = [...manualGames.value, ...autoGames]
-    apps.value = [...manualApps.value, ...autoApps]
+    games.value = [...manualGameItems, ...autoGames]
+    apps.value = [...manualAppItems, ...autoApps]
     loading.value = false
-  }
-}
 
-async function copyLink(url) {
-  try {
-    await navigator.clipboard.writeText(url)
-    copiedLinks[url] = true
-    showCenteredToast(t('action.copied'), { duration: 3000, type: 'success' })
-    setTimeout(() => delete copiedLinks[url], 3000)
-  } catch {
-    showCenteredToast(t('action.copy_failed'), { duration: 3000, type: 'error' })
+    await Promise.all([
+      enrichItemsWithLatestDate(manualGameItems, {
+        fetchCommit: ({ owner, repo }) => fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
+        getRepoUrl: (item) => item._repoUrl,
+      }),
+      enrichItemsWithLatestDate(manualAppItems, {
+        fetchCommit: ({ owner, repo }) => fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
+        getRepoUrl: (item) => item._repoUrl,
+      }),
+    ])
   }
 }
 
@@ -296,5 +237,5 @@ onMounted(() => {
   loadReleases()
 })
 
-defineExpose({ games, apps, filteredGames, filteredApps })
+defineExpose({ games, apps, filteredGames, filteredApps, loading, error })
 </script>

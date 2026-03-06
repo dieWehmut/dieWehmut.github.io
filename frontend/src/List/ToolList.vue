@@ -2,7 +2,7 @@
   <ItemList
     :items="displayItems"
     :loading="loading"
-    :error="''"
+    :error="error"
     :empty-text="normalizedFilter ? t('common.no_match') : t('common.no_files')"
     :loading-text="`${t('common.loading')}...`"
   />
@@ -11,8 +11,9 @@
 <script setup>
 import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { copyTextWithToast, enrichItemsWithLatestDate, formatListDate } from '../ui/ItemList.vue'
+import { showCenteredToast } from '../ui/CenterToast.vue'
 import ItemList from '../ui/ItemList.vue'
-import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
 import { useContent } from '../data/content'
@@ -29,6 +30,7 @@ const { tools: toolsConfig } = useContent()
 
 const tools = ref([])
 const loading = ref(true)
+const error = ref('')
 const copiedLinks = reactive({})
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
@@ -46,7 +48,7 @@ const displayItems = computed(() => {
     key: `${tool.name}-${resolveCopyUrl(tool)}`,
     title: tool.name,
     icon: 'tool',
-    date: formatDateShort(tool.lastModified),
+    date: formatListDate(tool.lastModified, { pad: true }),
     href: resolveRepoUrl(tool),
     actions: [
       ...(shouldShowDownload(tool)
@@ -59,7 +61,7 @@ const displayItems = computed(() => {
         key: 'copy',
         label: copiedLinks[resolveCopyUrl(tool)] ? t('action.copied') : t('action.copy'),
         icon: 'copy',
-        onClick: () => copyLink(tool),
+        onClick: () => copyTextWithToast(resolveCopyUrl(tool), copiedLinks, { copiedKey: resolveCopyUrl(tool), duration: 2500 }),
       },
     ],
   }))
@@ -85,46 +87,6 @@ const manualTools = computed(() => {
     _repoUrl: item?.repo_url || item?.repoUrl || '',
   }))
 })
-
-function parseGitHubRepo(url) {
-  if (!url) {
-    return null
-  }
-
-  const match = url.match(/github\.com\/([^/]+)\/([^/]+)/)
-  if (!match) {
-    return null
-  }
-
-  return { owner: match[1], repo: match[2].replace(/\.git$/, '') }
-}
-
-async function enrichManualToolDates(items) {
-  await Promise.all(
-    items.map(async (item) => {
-      if (item.lastModified) {
-        return
-      }
-
-      const repo = parseGitHubRepo(item._repoUrl)
-      if (!repo) {
-        return
-      }
-
-      try {
-        const commit = await fetchWithCache(
-          getBackendApiUrl(`/api/github/repos/${repo.owner}/${repo.repo}/commits/latest`),
-          {},
-          1000 * 60 * 60 * 6,
-        )
-        if (commit?.commit) {
-          item.lastModified = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
-        }
-      } catch {
-      }
-    }),
-  )
-}
 
 function resolveDownloadUrl(tool) {
   return tool?.html_url || tool?.url || ''
@@ -160,46 +122,48 @@ function shouldShowDownload(tool) {
 
 async function fetchTools() {
   loading.value = true
-  let autoTools = []
+  error.value = ''
+
+  const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
+  const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
+  const manual = manualTools.value.map((item) => ({ ...item }))
+  tools.value = [...manual]
 
   try {
-    const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
-    const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
     const data = await fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/contents`), {}, 1000 * 60 * 15)
+    const autoTools = Array.isArray(data)
+      ? data
+          .filter((item) => item.type === 'dir')
+          .map((directory) => ({
+            name: directory.name,
+            html_url: directory.html_url || buildFolderHtmlUrl(directory.name),
+            lastModified: null,
+            showDownload: true,
+            isManual: false,
+          }))
+      : []
 
-    if (Array.isArray(data)) {
-      const directories = data.filter((item) => item.type === 'dir').map((directory) => ({
-        name: directory.name,
-        html_url: directory.html_url || buildFolderHtmlUrl(directory.name),
-        lastModified: null,
-        showDownload: true,
-        isManual: false,
-      }))
-
-      autoTools = await Promise.all(
-        directories.map(async (directory) => {
-          try {
-            const commit = await fetchWithCache(
-              getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest?path=${encodeURIComponent(directory.name)}`),
-              {},
-              1000 * 60 * 60 * 6,
-            )
-            if (commit?.commit) {
-              directory.lastModified = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
-            }
-          } catch {
-          }
-
-          return directory
-        }),
-      )
-    }
-  } catch {
-    autoTools = []
-  } finally {
-    await enrichManualToolDates(manualTools.value)
-    tools.value = [...manualTools.value, ...autoTools]
+    tools.value = [...manual, ...autoTools]
     loading.value = false
+
+    await enrichItemsWithLatestDate([...manual, ...autoTools], {
+      fetchCommit: ({ owner: targetOwner, repo: targetRepo }) =>
+        fetchWithCache(getBackendApiUrl(`/api/github/repos/${targetOwner}/${targetRepo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
+      getRepoUrl: (item) => item._repoUrl || resolveRepoUrl(item),
+      hasDate: (item) => !!item?.lastModified,
+      assignDate: (item, value) => {
+        item.lastModified = value
+      },
+    })
+  } catch (loadError) {
+    console.error('Failed to load tools:', loadError)
+    error.value = manual.length ? '' : t('error.unable_load') || 'Unable to load tools.'
+    tools.value = [...manual]
+    loading.value = false
+
+    if (!manual.length) {
+      return
+    }
   }
 }
 
@@ -223,40 +187,9 @@ function downloadRepo(tool) {
   window.open(`https://download-directory.github.io/?url=${encodeURIComponent(downloadUrl)}`, '_blank', 'noopener')
 }
 
-function copyLink(tool) {
-  const url = resolveCopyUrl(tool)
-  navigator.clipboard.writeText(url).then(() => {
-    copiedLinks[url] = true
-    showCenteredToast('action.copied', { duration: 2500, type: 'success' })
-    setTimeout(() => delete copiedLinks[url], 2500)
-  }).catch(() => {
-    showCenteredToast('action.copy_failed', { duration: 2500, type: 'error' })
-  })
-}
-
-function formatDateShort(dateValue) {
-  if (!dateValue) {
-    return ''
-  }
-
-  try {
-    const date = new Date(dateValue)
-    if (Number.isNaN(date.valueOf())) {
-      return dateValue
-    }
-
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  } catch {
-    return dateValue
-  }
-}
-
 onMounted(() => {
   fetchTools()
 })
 
-defineExpose({ tools, displayedTools, loading })
+defineExpose({ tools, displayedTools, loading, error })
 </script>

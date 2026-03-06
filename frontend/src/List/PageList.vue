@@ -1,23 +1,19 @@
 <template>
-  <div class="w-full">
-    <ItemList
-      :items="displayItems"
-      :loading="loading"
-      :error="error || ''"
-      :empty-text="normalizedFilter ? t('common.no_match') : t('common.no_files')"
-      :loading-text="`${t('common.loading')}...`"
-    />
-  </div>
+  <ItemList
+    :items="displayItems"
+    :loading="loading"
+    :error="error"
+    :empty-text="normalizedFilter ? t('common.no_match') : t('common.no_files')"
+    :loading-text="`${t('common.loading')}...`"
+  />
 </template>
 
 <script setup>
 import { computed, defineExpose, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'
-import { showCenteredToast } from '../utils/centerToast'
 import { fetchBackendWithFallback } from '../api/backendApi'
-
-const { t } = useI18n()
 
 const props = defineProps({
   filterQuery: {
@@ -25,6 +21,8 @@ const props = defineProps({
     default: '',
   },
 })
+
+const { t } = useI18n()
 
 const pages = ref([])
 const loading = ref(true)
@@ -55,7 +53,7 @@ const displayItems = computed(() => {
     key: page.name,
     title: page.displayName || page.name,
     icon: 'page',
-    date: formatDate(page.date),
+    date: formatListDate(page.date),
     href: page.url,
     actions: [
       {
@@ -78,7 +76,7 @@ const displayItems = computed(() => {
         key: 'copy',
         label: copiedLinks[page.url] ? t('action.copied') : t('action.copy'),
         icon: 'copy',
-        onClick: () => copyLink(page.url),
+        onClick: () => copyTextWithToast(page.url, copiedLinks, { copiedKey: page.url, duration: 3000 }),
       },
     ],
   }))
@@ -101,34 +99,6 @@ async function loadPages() {
     error.value = t('error.unable_load') || 'Unable to load pages.'
   } finally {
     loading.value = false
-  }
-}
-
-async function copyLink(url) {
-  try {
-    await navigator.clipboard.writeText(url)
-    copiedLinks[url] = true
-    showCenteredToast('action.copied', { duration: 3000, type: 'success' })
-    setTimeout(() => delete copiedLinks[url], 3000)
-  } catch {
-    showCenteredToast('action.copy_failed', { duration: 3000, type: 'error' })
-  }
-}
-
-function formatDate(dateValue) {
-  if (!dateValue) {
-    return ''
-  }
-
-  try {
-    const date = new Date(dateValue)
-    if (Number.isNaN(date.valueOf())) {
-      return dateValue
-    }
-
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-  } catch {
-    return dateValue
   }
 }
 

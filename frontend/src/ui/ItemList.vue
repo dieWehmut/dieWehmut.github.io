@@ -1,3 +1,97 @@
+<script>
+import { showCenteredToast } from './CenterToast.vue'
+
+export function formatListDate(dateValue, { pad = false } = {}) {
+  if (!dateValue) {
+    return ''
+  }
+
+  try {
+    const date = new Date(dateValue)
+    if (Number.isNaN(date.valueOf())) {
+      return dateValue
+    }
+
+    const month = pad ? String(date.getMonth() + 1).padStart(2, '0') : date.getMonth() + 1
+    const day = pad ? String(date.getDate()).padStart(2, '0') : date.getDate()
+    return `${date.getFullYear()}-${month}-${day}`
+  } catch {
+    return dateValue
+  }
+}
+
+export async function copyTextWithToast(text, copiedState, options = {}) {
+  const {
+    copiedKey = text,
+    duration = 3000,
+    successMessage = 'action.copied',
+    errorMessage = 'action.copy_failed',
+  } = options
+
+  try {
+    await navigator.clipboard.writeText(text)
+
+    if (copiedState && copiedKey != null) {
+      copiedState[copiedKey] = true
+      window.setTimeout(() => {
+        delete copiedState[copiedKey]
+      }, duration)
+    }
+
+    showCenteredToast(successMessage, { duration, type: 'success' })
+    return true
+  } catch {
+    showCenteredToast(errorMessage, { duration, type: 'error' })
+    return false
+  }
+}
+
+export function parseGitHubRepo(url) {
+  if (!url) {
+    return null
+  }
+
+  const match = url.match(/github\.com\/([^/]+)\/([^/]+)/)
+  if (!match) {
+    return null
+  }
+
+  return { owner: match[1], repo: match[2].replace(/\.git$/, '') }
+}
+
+export async function enrichItemsWithLatestDate(items, options) {
+  const {
+    fetchCommit,
+    getRepoUrl,
+    hasDate = (item) => !!item?.date,
+    assignDate = (item, value) => {
+      item.date = value
+    },
+  } = options
+
+  await Promise.all(
+    items.map(async (item) => {
+      if (hasDate(item)) {
+        return
+      }
+
+      const repo = parseGitHubRepo(getRepoUrl(item))
+      if (!repo) {
+        return
+      }
+
+      try {
+        const commit = await fetchCommit(repo)
+        if (commit?.commit) {
+          assignDate(item, commit?.commit?.committer?.date || commit?.commit?.author?.date || null)
+        }
+      } catch {
+      }
+    }),
+  )
+}
+</script>
+
 <template>
   <div class="space-y-3 max-[640px]:space-y-2">
     <div

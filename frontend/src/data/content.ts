@@ -6,7 +6,7 @@ export function useContent() {
   const pages = ref([
     {
       name: "Pages",
-      autoLoad: true, // Flag to indicate this should use PagesAutoLoader
+      autoLoad: true, // Flag to indicate this should use PageList
       owners: ["dieWehmut", "dieSehnsucht"],
       description: "Automatically loaded from GitHub repositories with homepage",
     },
@@ -15,7 +15,7 @@ export function useContent() {
   const games = ref([
     {
       name: "Games",
-      autoLoad: true, // Flag to indicate this should use ReleasesAutoLoader
+      autoLoad: true, // Flag to indicate this should use GameList/AppList
       repoUrl: "https://github.com/dieWehmut/Showcase",
       description: "Automatically loaded from GitHub releases",
       manualItems: [
@@ -54,7 +54,7 @@ export function useContent() {
   const apps = ref([
     {
       name: "Apps",
-      autoLoad: true, // Flag to indicate this should use ReleasesAutoLoader
+      autoLoad: true, // Flag to indicate this should use GameList/AppList
       repoUrl: "https://github.com/dieWehmut/Showcase",
       description: "Automatically loaded from GitHub releases",
       manualItems: [

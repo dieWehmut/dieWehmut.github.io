@@ -2,7 +2,7 @@
   <ItemList
     :items="displayItems"
     :loading="loading"
-    :error="error || ''"
+    :error="error"
     :empty-text="normalizedQuery ? t('common.no_match') : t('common.no_files')"
     :loading-text="`${t('common.loading')}...`"
   />
@@ -11,23 +11,10 @@
 <script setup>
 import { computed, defineExpose, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'
-import { showCenteredToast } from '../utils/centerToast'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
-
-function formatDateShort(dateValue) {
-  try {
-    const date = new Date(dateValue)
-    if (Number.isNaN(date.valueOf())) {
-      return dateValue
-    }
-
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-  } catch {
-    return dateValue
-  }
-}
 
 const props = defineProps({
   repoUrl: {
@@ -86,7 +73,7 @@ const displayItems = computed(() => {
     key: folder.path,
     title: folder.name,
     icon: 'folder',
-    date: folderDates[folder.path] ? formatDateShort(folderDates[folder.path]) : '',
+    date: folderDates[folder.path] ? formatListDate(folderDates[folder.path], { pad: true }) : '',
     onClick: () => toggleDir(folder),
     actions: [
       {
@@ -105,7 +92,7 @@ const displayItems = computed(() => {
         key: 'copy',
         label: copiedLinks[getFolderUrl(folder)] ? t('action.copied') : t('action.copy'),
         icon: 'copy',
-        onClick: () => copyLink(getFolderUrl(folder)),
+        onClick: () => copyTextWithToast(getFolderUrl(folder), copiedLinks, { copiedKey: getFolderUrl(folder), duration: 3000 }),
       },
     ],
     children: openDirs[folder.path]
@@ -146,7 +133,7 @@ const displayItems = computed(() => {
                 key: 'copy',
                 label: copiedLinks[blobUrlFor(file)] ? t('action.copied') : t('action.copy'),
                 icon: 'copy',
-                onClick: () => copyLink(blobUrlFor(file)),
+                onClick: () => copyTextWithToast(blobUrlFor(file), copiedLinks, { copiedKey: blobUrlFor(file), duration: 3000 }),
               },
             ],
           }))
@@ -212,20 +199,21 @@ async function loadContents(path = '') {
     if (!path) {
       entriesRoot.value = items.filter((item) => item.type === 'dir').sort((left, right) => left.name.localeCompare(right.name))
       entriesMap[''] = []
-      await fetchFolderDates()
-    } else {
-      entriesMap[path] = items.filter((item) => item.type === 'file')
+      loading.value = false
+      window.setTimeout(() => {
+        fetchFolderDates()
+      }, 0)
+      return
     }
+
+    entriesMap[path] = items.filter((item) => item.type === 'file')
   } catch {
     if (isRoot) {
       error.value = t('error.unable_load') || 'Unable to load files.'
-    } else {
-      showCenteredToast(t('error.unable_load') || 'Unable to load files.', { duration: 3000, type: 'error' })
+      loading.value = false
     }
   } finally {
-    if (isRoot) {
-      loading.value = false
-    } else {
+    if (!isRoot) {
       delete loadingDirs[path]
     }
   }
@@ -283,17 +271,6 @@ function openFile(url) {
   window.open(url, '_blank', 'noopener')
 }
 
-async function copyLink(url) {
-  try {
-    await navigator.clipboard.writeText(url)
-    copiedLinks[url] = true
-    showCenteredToast(t('action.copied') || 'Copied', { duration: 3000, type: 'success' })
-    setTimeout(() => delete copiedLinks[url], 3000)
-  } catch {
-    showCenteredToast(t('action.copy_failed') || 'Copy failed', { duration: 3000, type: 'error' })
-  }
-}
-
 async function toggleDir(folder) {
   const path = folder.path || ''
   openDirs[path] = !openDirs[path]
@@ -311,15 +288,14 @@ watch(normalizedQuery, async (queryValue) => {
     return
   }
 
-  for (const folder of filteredEntriesRoot.value) {
-    if (!entriesMap[folder.path]) {
-      await loadContents(folder.path)
-    }
+  const foldersToLoad = filteredEntriesRoot.value.filter((folder) => !entriesMap[folder.path])
+  await Promise.all(foldersToLoad.map((folder) => loadContents(folder.path)))
 
+  filteredEntriesRoot.value.forEach((folder) => {
     if (getFilteredFilesForFolder(folder.path).length > 0) {
       openDirs[folder.path] = true
     }
-  }
+  })
 })
 
 defineExpose({ filesCount, matchedFilesCount, loading, error })
