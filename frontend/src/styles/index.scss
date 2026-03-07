@@ -53,11 +53,11 @@ select {
    to avoid layout thrashing caused by width/margin transitions
    combined with backdrop-blur on section cards. */
 .sidebar {
-	transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
+	transition: transform 150ms cubic-bezier(.2,.9,.2,1), opacity 120ms ease;
 	will-change: transform, opacity;
 }
 
 html.sidebar-collapsed .sidebar {
-	transform: translateX(-18px);
+	transform: translateX(-24px);
 	opacity: 0;
 }

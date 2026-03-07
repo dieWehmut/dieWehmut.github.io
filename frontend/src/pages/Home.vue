@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-screen overflow-x-clip text-white">
+  <div class="relative min-h-screen overflow-x-clip text-[#3b4cb8]">
     <DynamicBackground @ready="onBackgroundReady" />
     <SnowCanvas v-if="showSnowCanvas" :density-scale="snowDensityScale" />
     <SakuraCanvas v-if="showHeavyEffects" :density-scale="sakuraDensityScale" />
@@ -19,20 +19,20 @@
         </div>
       </header>
 
-      <div class="mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
-        <SideBar :enter-ready="!showIntro" />
+      <div class="home-layout mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
+        <SideBar :enter-ready="!showIntro" :show-last-updated="showLastUpdatedInSidebar" />
 
         <main class="min-w-0 flex-1 max-[640px]:w-full">
           <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
             <section id="section-pages" v-show="showPagesSection" :class="sectionCardClass" :style="sectionDelayStyle(0)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('pages')">
                 <div :class="sectionToggleInnerClass">
-                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#3b4cb8]/12 bg-[#3b4cb8]/8 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                     <Collection class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                   </span>
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
-                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                    <div class="text-base font-semibold tracking-wide text-[#3b4cb8] max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
+                    <div class="text-[13px] text-[#3b4cb8]/55 max-[640px]:text-[11px] mt-[1px]">
                       <template v-if="readExposed(pageListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else-if="readExposed(pageListRef?.error, '')">{{ t('error.unable_load') }}</template>
                       <template v-else>
@@ -42,7 +42,7 @@
                     </div>
                   </div>
                 </div>
-                <component :is="showPages ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+                <component :is="showPages ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-[#3b4cb8]/45 max-[640px]:h-4 max-[640px]:w-4" />
               </button>
 
               <transition name="section-toggle">
@@ -55,12 +55,12 @@
             <section id="section-tools" v-show="showToolsSection" :class="sectionCardClass" :style="sectionDelayStyle(1)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('tools')">
                 <div :class="sectionToggleInnerClass">
-                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#3b4cb8]/12 bg-[#3b4cb8]/8 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                     <Cpu class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                   </span>
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.tools') }}</div>
-                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                    <div class="text-base font-semibold tracking-wide text-[#3b4cb8] max-[640px]:text-[13px]">{{ t('nav.tools') }}</div>
+                    <div class="text-[13px] text-[#3b4cb8]/55 max-[640px]:text-[11px] mt-[1px]">
                       <template v-if="readExposed(toolListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalToolsCount }) }}
@@ -69,7 +69,7 @@
                     </div>
                   </div>
                 </div>
-                <component :is="showTools ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+                <component :is="showTools ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-[#3b4cb8]/45 max-[640px]:h-4 max-[640px]:w-4" />
               </button>
 
               <transition name="section-toggle">
@@ -82,12 +82,12 @@
             <section id="section-games" v-show="showGamesSection" :class="sectionCardClass" :style="sectionDelayStyle(2)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('games')">
                 <div :class="sectionToggleInnerClass">
-                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#3b4cb8]/12 bg-[#3b4cb8]/8 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                     <Flag class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                   </span>
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.games') }}</div>
-                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                    <div class="text-base font-semibold tracking-wide text-[#3b4cb8] max-[640px]:text-[13px]">{{ t('nav.games') }}</div>
+                    <div class="text-[13px] text-[#3b4cb8]/55 max-[640px]:text-[11px] mt-[1px]">
                       <template v-if="readExposed(gameListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalGamesCount }) }}
@@ -96,7 +96,7 @@
                     </div>
                   </div>
                 </div>
-                <component :is="showGames ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+                <component :is="showGames ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-[#3b4cb8]/45 max-[640px]:h-4 max-[640px]:w-4" />
               </button>
 
               <transition name="section-toggle">
@@ -109,12 +109,12 @@
             <section id="section-apps" v-show="showAppsSection" :class="sectionCardClass" :style="sectionDelayStyle(3)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('apps')">
                 <div :class="sectionToggleInnerClass">
-                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#3b4cb8]/12 bg-[#3b4cb8]/8 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                     <Monitor class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                   </span>
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.apps') }}</div>
-                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                    <div class="text-base font-semibold tracking-wide text-[#3b4cb8] max-[640px]:text-[13px]">{{ t('nav.apps') }}</div>
+                    <div class="text-[13px] text-[#3b4cb8]/55 max-[640px]:text-[11px] mt-[1px]">
                       <template v-if="readExposed(appListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalAppsCount }) }}
@@ -123,7 +123,7 @@
                     </div>
                   </div>
                 </div>
-                <component :is="showApps ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+                <component :is="showApps ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-[#3b4cb8]/45 max-[640px]:h-4 max-[640px]:w-4" />
               </button>
 
               <transition name="section-toggle">
@@ -136,12 +136,12 @@
             <section id="section-files" v-show="showFilesSection" :class="sectionCardClass" :style="sectionDelayStyle(4)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('files')">
                 <div :class="sectionToggleInnerClass">
-                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#3b4cb8]/12 bg-[#3b4cb8]/8 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
                     <FolderOpened class="h-5 w-5 max-[640px]:h-4 max-[640px]:w-4" />
                   </span>
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
-                    <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
-                    <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
+                    <div class="text-base font-semibold tracking-wide text-[#3b4cb8] max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
+                    <div class="text-[13px] text-[#3b4cb8]/55 max-[640px]:text-[11px] mt-[1px]">
                       <template v-if="readExposed(fileListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else-if="readExposed(fileListRef?.error, '')">{{ t('error.unable_load') }}</template>
                       <template v-else>
@@ -151,7 +151,7 @@
                     </div>
                   </div>
                 </div>
-                <component :is="showFiles ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-white/70 max-[640px]:h-4 max-[640px]:w-4" />
+                <component :is="showFiles ? ArrowUp : ArrowDown" class="h-5 w-5 shrink-0 text-[#3b4cb8]/45 max-[640px]:h-4 max-[640px]:w-4" />
               </button>
 
               <transition name="section-toggle">
@@ -163,16 +163,16 @@
 
             <section v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && matchedToolsCount === 0" :class="sectionCardClass" :style="sectionDelayStyle(5)">
               <div class="px-4 py-12 text-center sm:px-5 max-[640px]:px-2">
-                <div class="text-lg font-semibold text-white">No matching content found</div>
-                <div class="mt-2 text-sm text-white/60">Try a different keyword.</div>
+                <div class="text-lg font-semibold text-[#3b4cb8]">No matching content found</div>
+                <div class="mt-2 text-sm text-[#3b4cb8]/55">Try a different keyword.</div>
               </div>
             </section>
           </div>
         </main>
       </div>
 
-      <footer v-if="showDeferredUi" class="relative z-10 mt-auto flex-shrink-0">
-        <Footer />
+      <footer v-if="showDeferredUi" ref="footerRef" class="relative z-10 mt-auto flex-shrink-0">
+        <Footer :show-last-updated="showLastUpdatedInFooter" />
       </footer>
 
       <FloatButton v-if="showDeferredUi" />
@@ -242,14 +242,17 @@ const toolListRef = ref(null)
 const gameListRef = ref(null)
 const appListRef = ref(null)
 const fileListRef = ref(null)
+const footerRef = ref(null)
 const isMobile = ref(false)
 const prefersReducedMotion = ref(false)
+const footerInView = ref(false)
 
 const showIntro = ref(shouldShowIntroInitially())
 const showDeferredUi = ref(!showIntro.value)
 const backgroundReady = ref(false)
 let introFallbackTimer = null
 let mediaQuery = null
+let footerObserver = null
 
 const showPages = ref(true)
 const showGames = ref(true)
@@ -263,7 +266,7 @@ const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMo
 const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
 const snowDensityScale = computed(() => (isMobile.value ? 0.05 : 0.12))
 const sakuraDensityScale = computed(() => (isMobile.value ? 0.1 : 0.24))
-const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
+const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.48] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-xl transition duration-500 max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
 const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-0.5 max-[640px]:pb-2.5'
@@ -290,6 +293,8 @@ const showToolsSection = computed(() => !hasQuery.value || matchedToolsCount.val
 const showGamesSection = computed(() => (!hasQuery.value && gamesAutoLoadEnabled.value) || (hasQuery.value && matchedGamesCount.value > 0))
 const showAppsSection = computed(() => (!hasQuery.value && appsAutoLoadEnabled.value) || (hasQuery.value && matchedAppsCount.value > 0))
 const showFilesSection = computed(() => !hasQuery.value || matchedFilesCount.value > 0)
+const showLastUpdatedInFooter = computed(() => isMobile.value && footerInView.value)
+const showLastUpdatedInSidebar = computed(() => !isMobile.value || !footerInView.value)
 
 function readExposed(value, fallback) {
   return value == null ? fallback : unref(value)
@@ -411,6 +416,33 @@ function handleOpenSection(event) {
   if (name === 'files') showFiles.value = true
 }
 
+function teardownFooterObserver() {
+  if (footerObserver) {
+    footerObserver.disconnect()
+    footerObserver = null
+  }
+}
+
+function observeFooterVisibility() {
+  teardownFooterObserver()
+
+  if (!footerRef.value || !window.IntersectionObserver) {
+    footerInView.value = false
+    return
+  }
+
+  footerObserver = new window.IntersectionObserver(
+    ([entry]) => {
+      footerInView.value = !!entry?.isIntersecting
+    },
+    {
+      threshold: 0.08,
+    },
+  )
+
+  footerObserver.observe(footerRef.value)
+}
+
 watch(normalizedQuery, (queryValue) => {
   if (!queryValue) {
     return
@@ -421,6 +453,28 @@ watch(normalizedQuery, (queryValue) => {
   showGames.value = true
   showApps.value = true
   showFiles.value = true
+})
+
+watch(showDeferredUi, (visible) => {
+  if (!visible) {
+    footerInView.value = false
+    teardownFooterObserver()
+    return
+  }
+
+  window.requestAnimationFrame(() => {
+    observeFooterVisibility()
+  })
+})
+
+watch(isMobile, (mobile) => {
+  if (!mobile) {
+    footerInView.value = false
+  }
+
+  window.requestAnimationFrame(() => {
+    observeFooterVisibility()
+  })
 })
 
 onMounted(() => {
@@ -449,6 +503,10 @@ onMounted(() => {
     markIntroSeen()
     showDeferredUi.value = true
   }
+
+  window.requestAnimationFrame(() => {
+    observeFooterVisibility()
+  })
 })
 
 onBeforeUnmount(() => {
@@ -466,10 +524,20 @@ onBeforeUnmount(() => {
   if (introFallbackTimer) {
     clearTimeout(introFallbackTimer)
   }
+
+  teardownFooterObserver()
 })
 </script>
 
 <style scoped>
+.home-layout {
+  transition: none;
+}
+
+html.sidebar-collapsed .home-layout {
+  gap: 0;
+}
+
 .section-card {
   contain: layout paint;
 }

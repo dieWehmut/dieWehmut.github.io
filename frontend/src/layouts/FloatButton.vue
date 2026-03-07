@@ -103,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="float-container fixed bottom-5 right-5 !z-[99999] w-16 h-auto max-[640px]:bottom-3 max-[640px]:right-3 max-[640px]:w-10" :class="{ 'has-back': visible }" aria-hidden="false">
+	<div class="float-container fixed bottom-3 right-3 !z-[99999] w-16 h-auto max-[640px]:bottom-2 max-[640px]:right-2 max-[640px]:w-10" :class="{ 'has-back': visible }" aria-hidden="false">
 		<!-- language option buttons (expand left) -->
 		<div class="lang-options" :class="{ open: langPanelOpen }">
 			<button
@@ -129,7 +129,7 @@ onMounted(() => {
 			aria-label="Toggle clean background"
 			>
 				<!-- simple eye/eye-off icon: uses a circle to represent visibility -->
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
 					<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2"/>
 				</svg>
@@ -144,7 +144,7 @@ onMounted(() => {
 				aria-label="Language toggle"
 			>
 				<!-- globe icon -->
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 					<path d="M2 12h20" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
 					<path d="M12 2c2.2 4 2.2 12 0 16M22 12c-4 2.2-12 2.2-16 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -160,9 +160,9 @@ onMounted(() => {
 				:class="{ rotating: !false }"
 			>
 				<!-- replaced gear icon (blue stroke) -->
-					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-						<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="#4ea8ff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 114.28 16.9l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09c.7 0 1.28-.39 1.51-1A1.65 1.65 0 004.28 6.1l-.06-.06A2 2 0 116.99 3.2l.06.06c.5.5 1.2.66 1.82.33.58-.3 1-.9 1-1.51V3a2 2 0 114 0v.09c0 .61.42 1.21 1 1.51.62.33 1.32.17 1.82-.33l.06-.06A2 2 0 1119.4 8.1l-.06.06c-.3.58-.3 1.3.0 1.82.3.5.9 1 1.51 1H21a2 2 0 110 4h-.09c-.61 0-1.21.42-1.51 1z" stroke="#4ea8ff" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="#3b4cb8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 114.28 16.9l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09c.7 0 1.28-.39 1.51-1A1.65 1.65 0 004.28 6.1l-.06-.06A2 2 0 116.99 3.2l.06.06c.5.5 1.2.66 1.82.33.58-.3 1-.9 1-1.51V3a2 2 0 114 0v.09c0 .61.42 1.21 1 1.51.62.33 1.32.17 1.82-.33l.06-.06A2 2 0 1119.4 8.1l-.06.06c-.3.58-.3 1.3.0 1.82.3.5.9 1 1.51 1H21a2 2 0 110 4h-.09c-.61 0-1.21.42-1.51 1z" stroke="#3b4cb8" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 			</button>
 
@@ -175,7 +175,7 @@ onMounted(() => {
 				:title="t('float.toggleSidebar')"
 			>
 				<!-- horizontal arrows icon (fa-arrows-alt-h like) -->
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
 					<path d="M7 8L3 12l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
 					<path d="M17 8l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -190,7 +190,7 @@ onMounted(() => {
 					:title="t('backToTop')"
 					aria-label="Back to top"
 				>
-					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 						<path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						<path d="M5 11L12 4L19 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
@@ -205,8 +205,8 @@ onMounted(() => {
 .float-container {
 	/* CSS variable definitions for button sizing/spacing (used in calc() throughout) */
 	--btn-size: 44px;
-	--btn-padding: 6px;
-	--float-gap: 8px;
+	--btn-padding: 3px;
+	--float-gap: 6px;
 	--float-step: calc(var(--btn-size) + var(--float-gap));
 	/* slot indices (overridden by .has-back) */
 	--back-slot: -1;
@@ -244,7 +244,7 @@ onMounted(() => {
 }
 
 	.btt-button {
-		color: rgba(255, 255, 255, 0.96);
+		color: rgba(59, 76, 184, 0.85);
 	}
 
 	.btt-button svg path { stroke: currentColor !important; }
@@ -262,15 +262,15 @@ onMounted(() => {
 	height: var(--btn-size);
 	padding: var(--btn-padding);
 	border-radius: 10px;
-	background: rgba(255,255,255,0.12);
-	border: 1px solid rgba(255,255,255,0.18);
-	color: rgba(255, 255, 255, 0.96);
-	box-shadow: 0 8px 30px rgba(6,10,20,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+	background: rgba(255,255,255,0.48);
+	border: 1px solid rgba(255,255,255,0.4);
+	color: rgba(59, 76, 184, 0.85);
+	box-shadow: 0 8px 30px rgba(180,160,220,0.14), inset 0 1px 0 rgba(255,255,255,0.2);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	transition: bottom 380ms cubic-bezier(.22,1,.36,1), transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 180ms ease, opacity 120ms ease, border-color 180ms ease;
+	transition: transform 90ms ease, box-shadow 120ms ease, background-color 120ms ease, opacity 90ms ease, border-color 120ms ease;
 	position: absolute;
 	right: 0;
 	backdrop-filter: blur(8px) saturate(120%);
@@ -291,7 +291,7 @@ onMounted(() => {
 	height: 120%;
 	pointer-events: none;
 	border-radius: 14px;
-	background: radial-gradient(40% 40% at 20% 20%, rgba(255,160,200,0.22), transparent 20%), radial-gradient(30% 30% at 80% 80%, rgba(255,120,190,0.12), transparent 20%);
+	background: radial-gradient(40% 40% at 20% 20%, rgba(124,58,237,0.12), transparent 20%), radial-gradient(30% 30% at 80% 80%, rgba(124,58,237,0.06), transparent 20%);
 	filter: blur(10px) saturate(150%);
 	opacity: 0;
 	transition: opacity 240ms ease, transform 240ms ease;
@@ -307,15 +307,15 @@ onMounted(() => {
 	transform: scale(0.82) !important;
 }
 
-.settings-button { background: rgba(255,255,255,0.06); color: rgba(255, 255, 255, 0.96); border-color: rgba(255,255,255,0.12); }
-.settings-button:hover { transform: scale(1.06); box-shadow: 0 18px 42px rgba(255, 120, 182, 0.24); background: rgba(255, 132, 186, 0.18); color: rgba(255, 229, 240, 0.98); border-color: rgba(255, 172, 209, 0.46); }
+.settings-button { background: rgba(255,255,255,0.38); color: rgba(59, 76, 184, 0.85); border-color: rgba(255,255,255,0.35); }
+.settings-button:hover { transform: scale(1.06); box-shadow: 0 12px 32px rgba(124, 58, 237, 0.16); background: rgba(124, 58, 237, 0.08); color: rgba(124, 58, 237, 0.95); border-color: rgba(124, 58, 237, 0.22); }
 .settings-button svg path { stroke: currentColor !important; stroke-width: 1.2 !important; }
 
 /* language toggle show/hide animation */
 .lang-toggle {
 	opacity: 0;
 	transform: translateY(8px) scale(0.92);
-	transition: bottom 380ms cubic-bezier(.22,1,.36,1), transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	transition: transform 140ms ease, opacity 120ms ease;
 	pointer-events: none;
 }
 .lang-toggle.visible {
@@ -328,7 +328,7 @@ onMounted(() => {
 .clean-toggle {
 	opacity: 0;
 	transform: translateY(8px) scale(0.92);
-	transition: bottom 380ms cubic-bezier(.22,1,.36,1), transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+	transition: transform 140ms ease, opacity 120ms ease;
 	pointer-events: none;
 }
 .clean-toggle.visible {
@@ -343,65 +343,42 @@ onMounted(() => {
 /* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
 .sidebar-toggle { bottom: calc(var(--float-step) * var(--sidebar-slot)); }
 .sidebar-toggle svg {
-	transition: transform 420ms cubic-bezier(.34,1.56,.64,1);
+	transition: transform 90ms ease;
 }
 .sidebar-toggle.active svg {
-	transform: rotate(180deg) scale(0.85);
+	transform: rotate(180deg);
 }
 /* bounce-in when toggled */
 .sidebar-toggle {
-	transition: bottom 380ms cubic-bezier(.22,1,.36,1),
-							transform 360ms cubic-bezier(.34,1.56,.64,1),
+	transition: transform 90ms ease,
               box-shadow 260ms ease,
               background-color 260ms ease,
-              opacity 160ms ease;
+							opacity 100ms ease;
 }
 .sidebar-toggle:active {
   transform: scale(0.82) !important;
-}
-/* pulse ring on state change via pseudo-element */
-.sidebar-toggle::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 16px;
-  border: 2px solid rgba(255,255,255,0.35);
-  opacity: 0;
-  transform: scale(0.85);
-  transition: opacity 300ms ease, transform 400ms cubic-bezier(.34,1.56,.64,1);
-  pointer-events: none;
-}
-.sidebar-toggle.active::after {
-  opacity: 1;
-  transform: scale(1.12);
-  animation: sidebarPulse 600ms ease-out forwards;
-}
-@keyframes sidebarPulse {
-  0%   { opacity: 0.7; transform: scale(0.9); }
-  50%  { opacity: 0.4; transform: scale(1.18); }
-  100% { opacity: 0;   transform: scale(1.3); }
 }
 .settings-button { bottom: calc(var(--float-step) * var(--settings-slot)); }
 .lang-toggle { bottom: calc(var(--float-step) * var(--lang-slot)); }
 
 /* clean-mode toggle placed above language toggle */
 .clean-toggle { bottom: calc(var(--float-step) * var(--clean-slot)); }
-.clean-toggle.active { background: rgba(255,255,255,0.06); }
+.clean-toggle.active { background: rgba(124,58,237,0.08); }
 
 .float-container.has-back .sidebar-toggle,
 .float-container.has-back .settings-button,
 .float-container.has-back .lang-toggle,
 .float-container.has-back .clean-toggle {
-	animation: controlLift 420ms cubic-bezier(.22,1,.36,1);
+	animation: none;
 }
 
 @media (hover: hover) {
 	.btt-button:hover, .btt-button:focus {
 		transform: scale(1.06);
-		box-shadow: 0 18px 42px rgba(255, 120, 182, 0.24);
-		background: rgba(255, 132, 186, 0.18);
-		border-color: rgba(255, 172, 209, 0.46);
-		color: rgba(255, 229, 240, 0.98);
+		box-shadow: 0 12px 32px rgba(124, 58, 237, 0.16);
+		background: rgba(124, 58, 237, 0.08);
+		border-color: rgba(124, 58, 237, 0.22);
+		color: rgba(124, 58, 237, 0.95);
 		outline: none;
 	}
 }
@@ -430,8 +407,8 @@ onMounted(() => {
 	height: var(--btn-size);
 	padding: var(--btn-padding);
 	border-radius: 10px;
-	background: rgba(255,255,255,0.08);
-	color: #fff;
+	background: rgba(255,255,255,0.48);
+	color: #3b4cb8;
 	border: none;
 	opacity: 0;
 	transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 160ms linear;
@@ -463,7 +440,7 @@ onMounted(() => {
 	from { transform: translateX(0) translateY(0) scale(1); }
 	to { transform: translateX(0) translateY(-6px) scale(1.02); }
 }
-.lang-btn.active { background: linear-gradient(135deg, rgba(78,168,255,0.95), rgba(102,150,255,0.95)); color: #fff; }
+.lang-btn.active { background: linear-gradient(135deg, rgba(124,58,237,0.9), rgba(147,85,255,0.9)); color: #fff; }
 
 .back-pop-enter-active {
 	animation: backPressIn 420ms cubic-bezier(.18,.9,.24,1.24);
@@ -528,11 +505,11 @@ onMounted(() => {
 
 @media (max-width: 768px) {
 	.float-container {
-		right: 6px;
-		bottom: 6px;
+		right: 4px;
+		bottom: 4px;
 		--btn-size: 36px;
-		--btn-padding: 4px;
-		--float-gap: 5px;
+		--btn-padding: 2px;
+		--float-gap: 4px;
 	}
 
 	.lang-options .lang-btn {
@@ -540,8 +517,8 @@ onMounted(() => {
 	}
 
 	.btt-button svg {
-		width: 15px;
-		height: 15px;
+		width: 18px;
+		height: 18px;
 	}
 }
 
