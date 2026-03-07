@@ -1,6 +1,7 @@
 <template>
-  <div class="footer max-w-[1080px] mx-auto px-3 pt-[18px] pb-7 text-center !bg-transparent">
-    <div class="survival-time mb-1.5 inline-flex flex-wrap items-center justify-center gap-2 !text-[#3b4cb8]">
+  <div class="footer max-w-[1080px] mx-auto px-3 pt-[18px] pb-7 text-center !bg-transparent max-[640px]:px-0.5">
+    <div class="footer-meta flex flex-col items-center gap-1">
+    <div class="survival-time inline-flex flex-wrap items-center justify-center gap-2 text-[15px] leading-none !text-[#3b4cb8] max-[640px]:text-[15px]">
       <svg class="h-[18px] w-[18px] shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
       </svg>
@@ -11,10 +12,11 @@
       <span class="font-bold px-1">{{ time.seconds }}</span>s
     </div>
 
-    <LastUpdatedRow v-if="showLastUpdated" placement="footer" />
+    <LastUpdatedRow v-if="showLastUpdated" class="!mt-0" placement="footer" />
 
-    <div class="copyright text-xs text-[#3b4cb8]/80 font-medium mt-3">
+    <div class="copyright text-xs text-[#3b4cb8]/80 font-medium leading-none whitespace-nowrap max-[640px]:w-full max-[640px]:px-0 max-[640px]:text-[11px]">
       © {{ copyrightYear }} {{ githubUser }}.All Rights Reserved.|<a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener">萌ICP备20260803号</a>
+    </div>
     </div>
   </div>
 </template>
@@ -102,10 +104,21 @@ onBeforeUnmount(() => {
   text-shadow: 0 1px 2px rgba(180,160,220,0.2) !important;
 }
 
+.footer-meta {
+  text-shadow: 0 1px 2px rgba(180,160,220,0.14);
+}
+
 /* copyright text-shadow */
 .copyright,
 .record {
   text-shadow: 0 1px 4px rgba(180,160,220,0.15);
+}
+.copyright a {
+  color: inherit;
+  text-decoration: none;
+}
+.copyright a:hover {
+  text-decoration: underline;
 }
 .record a {
   color: inherit;

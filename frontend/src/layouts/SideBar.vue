@@ -263,23 +263,25 @@ html.sidebar-collapsed .avatar {
   }
   .mobile-top-row {
     grid-template-columns: minmax(144px, 1fr) minmax(0, 0.7fr);
-    align-items: start;
+    align-items: center;
   }
   .mobile-bottom-row {
     grid-template-columns: minmax(144px, 1fr) minmax(0, 0.7fr);
+    align-items: center;
   }
   .about-content {
     max-width: none;
     display: flex;
     min-height: 100%;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
+    padding-top: 10px;
   }
   .avatar-container {
     align-self: start;
     display: flex;
     min-height: 100%;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
   }
   .name {
@@ -292,12 +294,12 @@ html.sidebar-collapsed .avatar {
   }
   .mobile-meta {
     margin-left: 0;
-    align-self: end;
+    align-self: center;
     min-height: 100%;
-    justify-content: flex-end;
+    justify-content: center;
   }
   .mobile-github {
-    align-self: end;
+    align-self: center;
     justify-content: center;
     min-height: 42px;
   }
@@ -325,6 +327,9 @@ html.sidebar-collapsed .avatar {
   }
   .name {
     font-size: 22px;
+  }
+  .about-content {
+    padding-top: 15px;
   }
 }
 </style>

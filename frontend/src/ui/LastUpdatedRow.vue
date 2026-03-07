@@ -29,7 +29,7 @@ const isLoading = ref(true)
 
 const wrapperClass = computed(() => {
   if (props.placement === 'footer') {
-    return 'mt-1.5 inline-flex flex-wrap items-center justify-center gap-2 text-base text-[#3b4cb8] max-[640px]:mt-1 max-[640px]:text-sm'
+    return 'mt-1.5 inline-flex flex-wrap items-center justify-center gap-2 text-[15px] leading-none text-[#3b4cb8] max-[640px]:mt-1 max-[640px]:text-[15px]'
   }
 
   return 'grid grid-cols-[18px_1fr] items-start gap-x-2 text-[13px] text-[#3b4cb8]/60'
