@@ -120,12 +120,6 @@ async function fetchGitHub() {
   }
 }
 
-onMounted(() => {
-  if (props.enterReady) {
-    scheduleSidebarDataLoad();
-  }
-});
-
 async function fetchLatestCommit() {
   try {
     // Repo: dieWehmut/dieWehmut.github.io (site repo)
@@ -173,17 +167,7 @@ function scheduleSidebarDataLoad() {
   }
 
   sidebarDataLoaded.value = true;
-
-  const load = () => {
-    Promise.allSettled([fetchGitHub(), fetchLatestCommit()]);
-  };
-
-  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-    window.requestIdleCallback(() => load(), { timeout: 1200 });
-    return;
-  }
-
-  window.setTimeout(load, 180);
+  Promise.allSettled([fetchGitHub(), fetchLatestCommit()]);
 }
 
 watch(
@@ -229,7 +213,9 @@ onMounted(() => {
   margin-left: calc(-1 * var(--sidebar-left-gap, 32px));
 }
 
-/* Collapsed sidebar state: triggered by adding `sidebar-collapsed` to <html> */
+/* Collapsed sidebar state: triggered by adding `sidebar-collapsed` to <html>.
+   Layout props (width, padding, margin) are set WITHOUT transition so the reflow
+   happens once instantly. Only transform + opacity are animated for smooth visuals. */
 html.sidebar-collapsed .sidebar {
   width: 0;
   min-width: 0;
@@ -237,34 +223,14 @@ html.sidebar-collapsed .sidebar {
   margin-left: 0;
   margin-right: 0;
   border: none !important;
-  border-radius: 0;
   box-shadow: none !important;
-  opacity: 0;
-  transform: translateX(-18px);
   pointer-events: none;
   overflow: hidden;
-  max-height: 0;
-}
-html.sidebar-collapsed .about-me,
-html.sidebar-collapsed .avatar-container,
-html.sidebar-collapsed .about-content,
-html.sidebar-collapsed .name,
-html.sidebar-collapsed .bio,
-html.sidebar-collapsed .contact,
-html.sidebar-collapsed .nav-list,
-html.sidebar-collapsed .follow-row,
-html.sidebar-collapsed .contact-meta,
-html.sidebar-collapsed .last-updated-content,
-html.sidebar-collapsed .meta-item .email-link,
-html.sidebar-collapsed .label,
-html.sidebar-collapsed .follow-text {
-  display: none !important;
+  visibility: hidden;
 }
 html.sidebar-collapsed .avatar {
   width: 0;
   height: 0;
-  border-radius: 0;
-  box-shadow: none;
 }
 
 /* avatar hover lift (media query required) */

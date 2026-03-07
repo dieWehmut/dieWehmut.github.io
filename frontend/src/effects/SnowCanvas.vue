@@ -25,13 +25,7 @@ const AREA         = 420    // density reference area (px²/particle)
 const MIN_R        = 2.1    // min radius px (logical)
 const MAX_R        = 6.8    // max radius px (logical)
 const SPEED_BASE   = 0.78   // base fall speed (logical px/frame) – gentle drift
-const GRAB_DIST    = 180    // mouse grab distance (logical px)
-const GRAB_OPACITY = 0.68   // line opacity at distance=0
-const LINE_WIDTH   = 1.25   // grab line width px
 // ───────────────────────────────────────────────────────────────────────────
-
-// mouse in logical coords
-const mouse = { x: -99999, y: -99999, active: false }
 
 let particles = []
 
@@ -75,11 +69,6 @@ function init() {
   particles = Array.from({ length: n }, () => mkParticle(true))
 }
 
-function dist2(ax, ay, bx, by) {
-  const dx = ax - bx, dy = ay - by
-  return dx * dx + dy * dy
-}
-
 function frame() {
   const lW = W / dpr
   const lH = H / dpr
@@ -101,42 +90,17 @@ function frame() {
     }
   }
 
-  // ── grab lines (mouse → nearby particles) ──
-  if (mouse.active) {
-    const mx = mouse.x, my = mouse.y
-    const gd2 = GRAB_DIST * GRAB_DIST
-    for (const p of particles) {
-      const d2 = dist2(mx, my, p.x, p.y)
-      if (d2 > gd2) continue
-      const ratio = 1 - d2 / gd2
-      const alpha = (GRAB_OPACITY * ratio).toFixed(3)
-      ctx.beginPath()
-      ctx.moveTo(mx, my)
-      ctx.lineTo(p.x, p.y)
-      ctx.strokeStyle = `rgba(255,255,255,${alpha})`
-      ctx.lineWidth   = LINE_WIDTH
-      ctx.stroke()
-    }
-  }
-
   // ── draw snowflakes ──
+  ctx.fillStyle = 'rgba(255,255,255,0.78)'
   for (const p of particles) {
+    ctx.globalAlpha = p.opacity
     ctx.beginPath()
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(255,255,255,${p.opacity.toFixed(2)})`
     ctx.fill()
   }
+  ctx.globalAlpha = 1
 
   animId = requestAnimationFrame(frame)
-}
-
-function onMouseMove(e) {
-  mouse.x = e.clientX
-  mouse.y = e.clientY
-  mouse.active = true
-}
-function onMouseLeave() {
-  mouse.active = false
 }
 
 let resizeTimer = null
@@ -163,16 +127,12 @@ function onResize() {
 onMounted(() => {
   init()
   animId = requestAnimationFrame(frame)
-  window.addEventListener('mousemove',  onMouseMove,  { passive: true })
-  window.addEventListener('mouseleave', onMouseLeave, { passive: true })
-  window.addEventListener('resize',     onResize,     { passive: true })
+  window.addEventListener('resize', onResize, { passive: true })
 })
 
 onBeforeUnmount(() => {
   if (animId) cancelAnimationFrame(animId)
-  window.removeEventListener('mousemove',  onMouseMove)
-  window.removeEventListener('mouseleave', onMouseLeave)
-  window.removeEventListener('resize',     onResize)
+  window.removeEventListener('resize', onResize)
   clearTimeout(resizeTimer)
 })
 </script>

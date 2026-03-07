@@ -55,10 +55,23 @@ function updateHoverState(target) {
   }
 }
 
-function onMouseMove(e) {
+let pendingRaf = 0
+let lastMoveEvent = null
+
+function flushMove() {
+  pendingRaf = 0
+  const e = lastMoveEvent
+  if (!e) return
   x.value = e.clientX
   y.value = e.clientY
   updateHoverState(e.target)
+}
+
+function onMouseMove(e) {
+  lastMoveEvent = e
+  if (!pendingRaf) {
+    pendingRaf = requestAnimationFrame(flushMove)
+  }
 }
 
 function onMouseLeave() {
@@ -72,6 +85,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  if (pendingRaf) cancelAnimationFrame(pendingRaf)
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mouseleave', onMouseLeave)
   document.documentElement.classList.remove('heart-bounce-active')

@@ -24,7 +24,7 @@
 
         <main class="min-w-0 flex-1 max-[640px]:w-full">
           <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
-            <section id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(0)">
+            <section id="section-pages" v-show="showPagesSection" :class="sectionCardClass" :style="sectionDelayStyle(0)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('pages')">
                 <div :class="sectionToggleInnerClass">
                   <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
@@ -33,7 +33,7 @@
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                     <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.pages') }}</div>
                     <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                      <template v-if="!activatedSections.pages || readExposed(pageListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                      <template v-if="readExposed(pageListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else-if="readExposed(pageListRef?.error, '')">{{ t('error.unable_load') }}</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalPagesCount }) }}
@@ -47,12 +47,12 @@
 
               <transition name="section-toggle">
                 <div v-show="showPages" :class="sectionContentClass">
-                  <PageList v-if="activatedSections.pages" ref="pageListRef" :filter-query="normalizedQuery" />
+                  <PageList ref="pageListRef" :filter-query="normalizedQuery" />
                 </div>
               </transition>
             </section>
 
-            <section id="section-tools" v-if="!hasQuery || matchedToolsCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(1)">
+            <section id="section-tools" v-show="showToolsSection" :class="sectionCardClass" :style="sectionDelayStyle(1)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('tools')">
                 <div :class="sectionToggleInnerClass">
                   <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
@@ -61,7 +61,7 @@
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                     <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.tools') }}</div>
                     <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                      <template v-if="!activatedSections.tools">{{ t('common.loading') }}...</template>
+                      <template v-if="readExposed(toolListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalToolsCount }) }}
                         <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedToolsCount }) }}</span>
@@ -74,12 +74,12 @@
 
               <transition name="section-toggle">
                 <div v-show="showTools" :class="sectionContentClass">
-                  <ToolList v-if="activatedSections.tools" ref="toolListRef" :filter-query="normalizedQuery" />
+                  <ToolList ref="toolListRef" :filter-query="normalizedQuery" />
                 </div>
               </transition>
             </section>
 
-            <section id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(2)">
+            <section id="section-games" v-show="showGamesSection" :class="sectionCardClass" :style="sectionDelayStyle(2)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('games')">
                 <div :class="sectionToggleInnerClass">
                   <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
@@ -88,7 +88,7 @@
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                     <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.games') }}</div>
                     <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                      <template v-if="!activatedSections.games">{{ t('common.loading') }}...</template>
+                      <template v-if="readExposed(gameListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalGamesCount }) }}
                         <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedGamesCount }) }}</span>
@@ -101,12 +101,12 @@
 
               <transition name="section-toggle">
                 <div v-show="showGames" :class="sectionContentClass">
-                  <GameList v-if="activatedSections.games" ref="gameListRef" :filter-query="normalizedQuery" />
+                  <GameList ref="gameListRef" :filter-query="normalizedQuery" />
                 </div>
               </transition>
             </section>
 
-            <section id="section-apps" v-if="(!hasQuery && appsAutoLoadEnabled) || (hasQuery && filteredApps.length > 0)" :class="sectionCardClass" :style="sectionDelayStyle(3)">
+            <section id="section-apps" v-show="showAppsSection" :class="sectionCardClass" :style="sectionDelayStyle(3)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('apps')">
                 <div :class="sectionToggleInnerClass">
                   <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
@@ -115,7 +115,7 @@
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                     <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.apps') }}</div>
                     <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                      <template v-if="!activatedSections.apps">{{ t('common.loading') }}...</template>
+                      <template v-if="readExposed(appListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalAppsCount }) }}
                         <span v-if="hasQuery">, {{ t('common.matchedFormat', { count: matchedAppsCount }) }}</span>
@@ -128,12 +128,12 @@
 
               <transition name="section-toggle">
                 <div v-show="showApps" :class="sectionContentClass">
-                  <AppList v-if="activatedSections.apps" ref="appListRef" :filter-query="normalizedQuery" />
+                  <AppList ref="appListRef" :filter-query="normalizedQuery" />
                 </div>
               </transition>
             </section>
 
-            <section id="section-files" v-if="!hasQuery || matchedFilesCount > 0" :class="sectionCardClass" :style="sectionDelayStyle(4)">
+            <section id="section-files" v-show="showFilesSection" :class="sectionCardClass" :style="sectionDelayStyle(4)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('files')">
                 <div :class="sectionToggleInnerClass">
                   <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 max-[640px]:h-8 max-[640px]:w-8 max-[640px]:rounded-xl">
@@ -142,7 +142,7 @@
                   <div class="min-w-0 flex flex-1 items-center gap-2.5 max-[640px]:gap-2">
                     <div class="text-base font-semibold tracking-wide text-white max-[640px]:text-[13px]">{{ t('nav.files') }}</div>
                     <div class="text-[13px] text-white/60 max-[640px]:text-[11px] mt-[1px]">
-                      <template v-if="!activatedSections.files || readExposed(fileListRef?.loading, false)">{{ t('common.loading') }}...</template>
+                      <template v-if="readExposed(fileListRef?.loading, true)">{{ t('common.loading') }}...</template>
                       <template v-else-if="readExposed(fileListRef?.error, '')">{{ t('error.unable_load') }}</template>
                       <template v-else>
                         {{ t('common.totalFormat', { count: totalFilesCount }) }}
@@ -156,7 +156,7 @@
 
               <transition name="section-toggle">
                 <div v-show="showFiles" :class="sectionContentClass">
-                  <FileList v-if="activatedSections.files" ref="fileListRef" :filter-query="normalizedQuery" />
+                  <FileList ref="fileListRef" :filter-query="normalizedQuery" />
                 </div>
               </transition>
             </section>
@@ -181,32 +181,23 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, unref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, unref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowDown, ArrowUp, Collection, Cpu, Flag, FolderOpened, Monitor } from '@element-plus/icons-vue'
-
-function createAsyncView(loader) {
-  return defineAsyncComponent({
-    loader,
-    delay: 0,
-    suspensible: false,
-  })
-}
-
-const SearchBar = createAsyncView(() => import('../ui/SearchBar.vue'))
-const DynamicBackground = createAsyncView(() => import('../effects/DynamicBackground.vue'))
-const SnowCanvas = createAsyncView(() => import('../effects/SnowCanvas.vue'))
-const SakuraCanvas = createAsyncView(() => import('../effects/SakuraCanvas.vue'))
-const BounceCursor = createAsyncView(() => import('../effects/BounceCursor.vue'))
-const Footer = createAsyncView(() => import('../layouts/Footer.vue'))
-const SideBar = createAsyncView(() => import('../layouts/SideBar.vue'))
-const IntroSplash = createAsyncView(() => import('../ui/IntroSplash.vue'))
-const FloatButton = createAsyncView(() => import('../layouts/FloatButton.vue'))
-const PageList = createAsyncView(() => import('../List/PageList.vue'))
-const AppList = createAsyncView(() => import('../List/AppList.vue'))
-const GameList = createAsyncView(() => import('../List/GameList.vue'))
-const FileList = createAsyncView(() => import('../List/FileList.vue'))
-const ToolList = createAsyncView(() => import('../List/ToolList.vue'))
+import SearchBar from '../ui/SearchBar.vue'
+import DynamicBackground from '../effects/DynamicBackground.vue'
+import SnowCanvas from '../effects/SnowCanvas.vue'
+import SakuraCanvas from '../effects/SakuraCanvas.vue'
+import BounceCursor from '../effects/BounceCursor.vue'
+import Footer from '../layouts/Footer.vue'
+import SideBar from '../layouts/SideBar.vue'
+import IntroSplash from '../ui/IntroSplash.vue'
+import FloatButton from '../layouts/FloatButton.vue'
+import PageList from '../List/PageList.vue'
+import AppList from '../List/AppList.vue'
+import GameList from '../List/GameList.vue'
+import FileList from '../List/FileList.vue'
+import ToolList from '../List/ToolList.vue'
 import { useContent } from '../data/content'
 
 const INTRO_SEEN_KEY = 'nexus:intro-seen'
@@ -253,35 +244,25 @@ const appListRef = ref(null)
 const fileListRef = ref(null)
 const isMobile = ref(false)
 const prefersReducedMotion = ref(false)
-const deferredActivationTimers = []
-const deferredIdleCallbacks = []
 
 const showIntro = ref(shouldShowIntroInitially())
-const showDeferredUi = ref(false)
+const showDeferredUi = ref(!showIntro.value)
 const backgroundReady = ref(false)
 let introFallbackTimer = null
 let mediaQuery = null
-let deferredSectionsScheduled = false
 
 const showPages = ref(true)
 const showGames = ref(true)
 const showApps = ref(true)
 const showFiles = ref(true)
 const showTools = ref(true)
-const activatedSections = reactive({
-  pages: false,
-  tools: false,
-  games: false,
-  apps: false,
-  files: false,
-})
 
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
 const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value)
 const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
-const snowDensityScale = computed(() => (isMobile.value ? 0.1 : 0.22))
-const sakuraDensityScale = computed(() => (isMobile.value ? 0.16 : 0.42))
+const snowDensityScale = computed(() => (isMobile.value ? 0.05 : 0.12))
+const sakuraDensityScale = computed(() => (isMobile.value ? 0.1 : 0.24))
 const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md transition duration-500 max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
@@ -304,6 +285,11 @@ const matchedGamesCount = computed(() => filteredGames.value.length)
 const matchedAppsCount = computed(() => filteredApps.value.length)
 const totalFilesCount = computed(() => readExposed(fileListRef.value?.filesCount, 0))
 const matchedFilesCount = computed(() => readExposed(fileListRef.value?.matchedFilesCount, 0))
+const showPagesSection = computed(() => !hasQuery.value || matchedPagesCount.value > 0)
+const showToolsSection = computed(() => !hasQuery.value || matchedToolsCount.value > 0)
+const showGamesSection = computed(() => (!hasQuery.value && gamesAutoLoadEnabled.value) || (hasQuery.value && matchedGamesCount.value > 0))
+const showAppsSection = computed(() => (!hasQuery.value && appsAutoLoadEnabled.value) || (hasQuery.value && matchedAppsCount.value > 0))
+const showFilesSection = computed(() => !hasQuery.value || matchedFilesCount.value > 0)
 
 function readExposed(value, fallback) {
   return value == null ? fallback : unref(value)
@@ -311,57 +297,6 @@ function readExposed(value, fallback) {
 
 function sectionDelayStyle(index) {
   return { transitionDelay: showIntro.value ? '0ms' : `${120 + index * 70}ms` }
-}
-
-function activateSection(name) {
-  if (name in activatedSections) {
-    activatedSections[name] = true
-  }
-}
-
-function queueSectionActivation(name, delay) {
-  const timer = window.setTimeout(() => {
-    if (typeof window.requestIdleCallback === 'function') {
-      const idleCallback = window.requestIdleCallback(() => activateSection(name), { timeout: 900 })
-      deferredIdleCallbacks.push(idleCallback)
-      return
-    }
-
-    activateSection(name)
-  }, delay)
-  deferredActivationTimers.push(timer)
-}
-
-function scheduleDeferredSections() {
-  if (deferredSectionsScheduled) {
-    return
-  }
-
-  deferredSectionsScheduled = true
-  queueSectionActivation('pages', 0)
-  queueSectionActivation('tools', 140)
-  queueSectionActivation('games', 340)
-  queueSectionActivation('apps', 580)
-  queueSectionActivation('files', 860)
-}
-
-function scheduleDeferredUi() {
-  if (showDeferredUi.value) {
-    return
-  }
-
-  const reveal = () => {
-    showDeferredUi.value = true
-  }
-
-  if (typeof window.requestIdleCallback === 'function') {
-    const idleCallback = window.requestIdleCallback(reveal, { timeout: 1000 })
-    deferredIdleCallbacks.push(idleCallback)
-    return
-  }
-
-  const timer = window.setTimeout(reveal, 220)
-  deferredActivationTimers.push(timer)
 }
 
 function markIntroSeen() {
@@ -373,41 +308,28 @@ function markIntroSeen() {
 
 function toggleSection(name) {
   if (name === 'pages') {
-    activateSection('pages')
     showPages.value = !showPages.value
     return
   }
 
   if (name === 'tools') {
-    activateSection('tools')
     showTools.value = !showTools.value
     return
   }
 
   if (name === 'games') {
-    activateSection('games')
     showGames.value = !showGames.value
     return
   }
 
   if (name === 'apps') {
-    activateSection('apps')
     showApps.value = !showApps.value
     return
   }
 
   if (name === 'files') {
-    activateSection('files')
     showFiles.value = !showFiles.value
   }
-}
-
-function activateAllSections() {
-  activateSection('pages')
-  activateSection('tools')
-  activateSection('games')
-  activateSection('apps')
-  activateSection('files')
 }
 
 function focusSearch() {
@@ -441,13 +363,12 @@ function onClear() {
 
 function hideIntro() {
   showIntro.value = false
+  showDeferredUi.value = true
   markIntroSeen()
   if (introFallbackTimer) {
     clearTimeout(introFallbackTimer)
     introFallbackTimer = null
   }
-  scheduleDeferredSections()
-  scheduleDeferredUi()
 }
 
 function skipIntro() {
@@ -483,7 +404,6 @@ function handleOpenSection(event) {
     return
   }
 
-  activateSection(name)
   if (name === 'pages') showPages.value = true
   if (name === 'tools') showTools.value = true
   if (name === 'games') showGames.value = true
@@ -496,7 +416,6 @@ watch(normalizedQuery, (queryValue) => {
     return
   }
 
-  activateAllSections()
   showPages.value = true
   showTools.value = true
   showGames.value = true
@@ -528,8 +447,7 @@ onMounted(() => {
 
   if (!showIntro.value) {
     markIntroSeen()
-    scheduleDeferredSections()
-    scheduleDeferredUi()
+    showDeferredUi.value = true
   }
 })
 
@@ -548,20 +466,12 @@ onBeforeUnmount(() => {
   if (introFallbackTimer) {
     clearTimeout(introFallbackTimer)
   }
-
-  deferredActivationTimers.forEach((timer) => clearTimeout(timer))
-  deferredIdleCallbacks.forEach((idleCallback) => {
-    if (typeof window.cancelIdleCallback === 'function') {
-      window.cancelIdleCallback(idleCallback)
-    }
-  })
 })
 </script>
 
 <style scoped>
 .section-card {
-  content-visibility: auto;
-  contain-intrinsic-size: 520px;
+  contain: layout paint;
 }
 
 .section-toggle-enter-active,

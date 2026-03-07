@@ -48,25 +48,16 @@ select {
   font: inherit;
 }
 
-/* Smooth transitions when toggling sidebar collapsed state */
-html.sidebar-collapsed .layout,
-html.sidebar-collapsed .home,
-html.sidebar-collapsed .app,
-html.sidebar-collapsed .el-main,
-html.sidebar-collapsed .sidebar {
-	transition: transform 340ms cubic-bezier(.2,.9,.2,1),
-							margin 340ms cubic-bezier(.2,.9,.2,1),
-							width 340ms cubic-bezier(.2,.9,.2,1),
-							opacity 260ms ease;
-}
-
-/* Ensure sidebar itself animates smoothly between visible/hidden states */
+/* Smooth transitions when toggling sidebar collapsed state.
+   Only animate compositor-friendly properties (transform, opacity)
+   to avoid layout thrashing caused by width/margin transitions
+   combined with backdrop-blur on section cards. */
 .sidebar {
-	transition: transform 360ms cubic-bezier(.2,.9,.2,1), opacity 320ms ease, width 300ms ease;
+	transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
+	will-change: transform, opacity;
 }
 
-/* When collapsing, fade & slide to keep transition smooth */
 html.sidebar-collapsed .sidebar {
-	transform: translateX(-8px);
-	opacity: 0.98;
+	transform: translateX(-18px);
+	opacity: 0;
 }
