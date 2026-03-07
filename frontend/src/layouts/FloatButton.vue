@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { locale, t } = useI18n();
@@ -70,16 +70,15 @@ onMounted(() => {
   } catch (e) {}
 });
 
-const langs = [
-	// Order is arranged so that when buttons expand to the left,
-	// visual left-to-right sequence becomes: 拉, 德, 日, 英, 繁, 简
-	{ code: 'zh', label: '简' },
-	{ code: 'zh_tw', label: '繁' },
-	{ code: 'en', label: '英' },
-	{ code: 'ja', label: '日' },
-	{ code: 'de', label: '德' },
-	{ code: 'la', label: '拉' }
-];
+const languageCodes = ['zh', 'zh_tw', 'en', 'ja', 'de', 'la'];
+
+const languageBadges = computed(() => {
+	return languageCodes.map((code) => ({
+		code,
+		label: t(`float.languageBadges.${code}`),
+		title: t(`languages.${code}`),
+	}));
+});
 // sidebar collapse state
 const sidebarCollapsed = ref(false);
 
@@ -107,16 +106,16 @@ onMounted(() => {
 		<!-- language option buttons (expand left) -->
 		<div class="lang-options" :class="{ open: langPanelOpen }">
 			<button
-				v-for="(l, idx) in langs"
+				v-for="(l, idx) in languageBadges"
 				:key="l.code"
 				class="lang-btn btt-button"
 				:class="{ active: locale === l.code }"
 				:style="{ '--i': idx, '--delay': (idx * 70) + 'ms' }"
 				@click="selectLang(l.code)"
-				:title="t('languages.' + l.code)"
-				:aria-label="t('languages.' + l.code)"
+				:title="l.title"
+				:aria-label="l.title"
 			>
-				{{ l.label }}
+				<span class="lang-btn__text">{{ l.label }}</span>
 			</button>
 		</div>
 
@@ -416,7 +415,8 @@ onMounted(() => {
 	align-items: center;
 	justify-content: center;
 	font-weight: 600;
-	font-size: 14px;
+	font-size: 13px;
+	letter-spacing: 0.02em;
 }
 .lang-options.open .lang-btn {
 	opacity: 1;
@@ -426,6 +426,18 @@ onMounted(() => {
 .lang-btn {
 	/* initial hidden state: slightly shifted toward the toggle and scaled down */
 	transform: translateX(12px) scale(0.92);
+	padding-inline: 0;
+}
+
+.lang-btn__text {
+	display: inline-flex;
+	max-width: 100%;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 4px;
+	font-weight: 700;
+	line-height: 1;
+	text-align: center;
 }
 
 /* hover/floating animation for individual language buttons */
@@ -513,7 +525,7 @@ onMounted(() => {
 	}
 
 	.lang-options .lang-btn {
-		font-size: 12px;
+		font-size: 11px;
 	}
 
 	.btt-button svg {

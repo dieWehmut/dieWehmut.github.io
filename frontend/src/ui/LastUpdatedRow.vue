@@ -1,11 +1,11 @@
 <template>
-  <div v-if="formattedDate" :class="wrapperClass">
+  <div :class="wrapperClass">
     <svg :class="iconClass" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
     </svg>
     <div :class="contentClass">
       <span :class="labelClass">{{ t('sidebar.lastUpdated') }}</span>
-      <span :class="dateClass">{{ formattedDate }}</span>
+      <span :class="dateClass">{{ displayDate }}</span>
     </div>
   </div>
 </template>
@@ -25,10 +25,11 @@ const props = defineProps({
 
 const { t } = useI18n()
 const formattedDate = ref('')
+const isLoading = ref(true)
 
 const wrapperClass = computed(() => {
   if (props.placement === 'footer') {
-    return 'mt-1.5 flex items-center justify-center gap-2 text-[13px] text-[#3b4cb8]/70 max-[640px]:mt-1 max-[640px]:flex-wrap max-[640px]:text-xs'
+    return 'mt-1.5 inline-flex flex-wrap items-center justify-center gap-2 text-base text-[#3b4cb8] max-[640px]:mt-1 max-[640px]:text-sm'
   }
 
   return 'grid grid-cols-[18px_1fr] items-start gap-x-2 text-[13px] text-[#3b4cb8]/60'
@@ -36,7 +37,7 @@ const wrapperClass = computed(() => {
 
 const iconClass = computed(() => {
   return props.placement === 'footer'
-    ? 'h-4 w-4 shrink-0 fill-[#3b4cb8]/60'
+    ? 'h-[18px] w-[18px] shrink-0 fill-current'
     : 'mt-0.5 h-4 w-4 fill-[#3b4cb8]/60'
 })
 
@@ -47,11 +48,19 @@ const contentClass = computed(() => {
 })
 
 const labelClass = computed(() => {
-  return props.placement === 'footer' ? 'text-[#3b4cb8]/65' : 'flex-initial'
+  return props.placement === 'footer' ? 'text-inherit' : 'flex-initial'
 })
 
 const dateClass = computed(() => {
-  return props.placement === 'footer' ? 'whitespace-nowrap font-medium text-[#3b4cb8]/80' : 'whitespace-nowrap'
+  return props.placement === 'footer' ? 'whitespace-nowrap font-bold text-inherit' : 'whitespace-nowrap'
+})
+
+const displayDate = computed(() => {
+  if (formattedDate.value) {
+    return formattedDate.value
+  }
+
+  return isLoading.value ? '...' : '--'
 })
 
 function formatDate(dateValue) {
@@ -96,6 +105,7 @@ async function loadLastUpdated(attempt = 0) {
     const dateValue = (await requestFromBackend()) || (await requestFromGitHub())
     if (dateValue) {
       formattedDate.value = formatDate(dateValue)
+      isLoading.value = false
       try {
         window.localStorage.setItem('nexus:last-updated', formattedDate.value)
       } catch {
@@ -117,6 +127,8 @@ async function loadLastUpdated(attempt = 0) {
   } catch {
     formattedDate.value = ''
   }
+
+  isLoading.value = false
 }
 
 onMounted(() => {

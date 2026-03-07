@@ -58,7 +58,15 @@
   },
   "float": {
     "cleanMode": "クリーンモードを切り替え",
-    "toggleSidebar": "1列/2列を切り替え"
+    "toggleSidebar": "1列/2列を切り替え",
+    "languageBadges": {
+      "zh": "簡",
+      "zh_tw": "繁",
+      "en": "EN",
+      "ja": "日",
+      "de": "独",
+      "la": "羅"
+    }
   },
   "error": {
     "unable_load": "データを読み込めません"

@@ -58,7 +58,15 @@
   },
   "float": {
     "cleanMode": "切換純淨模式",
-    "toggleSidebar": "切換單雙欄"
+    "toggleSidebar": "切換單雙欄",
+    "languageBadges": {
+      "zh": "簡",
+      "zh_tw": "繁",
+      "en": "英",
+      "ja": "日",
+      "de": "德",
+      "la": "拉"
+    }
   },
   "error": {
     "unable_load": "無法載入資料"

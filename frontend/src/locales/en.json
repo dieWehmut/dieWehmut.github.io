@@ -58,7 +58,15 @@
   },
   "float": {
     "cleanMode": "Toggle clean mode",
-    "toggleSidebar": "Toggle columns"
+    "toggleSidebar": "Toggle columns",
+    "languageBadges": {
+      "zh": "CN",
+      "zh_tw": "TW",
+      "en": "EN",
+      "ja": "JP",
+      "de": "DE",
+      "la": "LA"
+    }
   },
   "error": {
     "unable_load": "Unable to load data"

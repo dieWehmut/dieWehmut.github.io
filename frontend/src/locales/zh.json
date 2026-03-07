@@ -58,7 +58,15 @@
   },
   "float": {
     "cleanMode": "切换纯净模式",
-    "toggleSidebar": "切换单双栏"
+    "toggleSidebar": "切换单双栏",
+    "languageBadges": {
+      "zh": "简",
+      "zh_tw": "繁",
+      "en": "英",
+      "ja": "日",
+      "de": "德",
+      "la": "拉"
+    }
   },
   "error": {
     "unable_load": "无法加载数据"

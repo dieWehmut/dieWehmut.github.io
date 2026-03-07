@@ -58,7 +58,15 @@
   },
   "float": {
     "cleanMode": "Muta modum mundum",
-    "toggleSidebar": "Commutare columnas"
+    "toggleSidebar": "Commutare columnas",
+    "languageBadges": {
+      "zh": "SIN",
+      "zh_tw": "TRA",
+      "en": "ANG",
+      "ja": "IAP",
+      "de": "GER",
+      "la": "LAT"
+    }
   },
   "error": {
     "unable_load": "Data onerare non potest"
