@@ -42,7 +42,8 @@
     "collapse": "Collapse"
   },
   "footer": {
-    "uptime": "Uptime"
+    "uptime": "Uptime",
+    "visitors": "Visitors"
   },
   "languages": {
     "zh": "中文",

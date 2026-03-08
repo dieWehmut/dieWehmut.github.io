@@ -42,7 +42,8 @@
     "collapse": "Einklappen"
   },
   "footer": {
-    "uptime": "Betriebszeit"
+    "uptime": "Betriebszeit",
+    "visitors": "Besucher"
   },
   "languages": {
     "zh": "中文",

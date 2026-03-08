@@ -42,7 +42,8 @@
     "collapse": "Contrahere"
   },
   "footer": {
-    "uptime": "Tempus online"
+    "uptime": "Tempus online",
+    "visitors": "Visitatores"
   },
   "languages": {
     "zh": "中文",

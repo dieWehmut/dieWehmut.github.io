@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -16,36 +17,40 @@ import (
 )
 
 func getenv(key, fallback string) string {
-    v := strings.TrimSpace(os.Getenv(key))
-    if v == "" {
-        return fallback
-    }
-    return v
+	v := strings.TrimSpace(os.Getenv(key))
+	if v == "" {
+		return fallback
+	}
+	return v
 }
 
 func main() {
-    port := getenv("PORT", "7860")
-    githubToken := getenv("GITHUB_TOKEN", "")
-    githubAPIBase := getenv("GITHUB_API_BASE", "https://api.github.com")
+	port := getenv("PORT", "7860")
+	githubToken := getenv("GITHUB_TOKEN", "")
+	githubAPIBase := getenv("GITHUB_API_BASE", "https://api.github.com")
+	visitorCountFile := getenv("VISITOR_COUNT_FILE", filepath.Join("data", "visitors.json"))
 
-    if strings.EqualFold(getenv("GIN_MODE", ""), "release") {
-        gin.SetMode(gin.ReleaseMode)
-    }
+	if strings.EqualFold(getenv("GIN_MODE", ""), "release") {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
-    cacheStore := database.NewMemoryCache()
-    httpClient := &http.Client{Timeout: 15 * time.Second}
-    ghClient := github.NewClient(httpClient, githubAPIBase, githubToken, cacheStore)
-    ghRepo := repository.NewGitHubRepository(ghClient)
+	cacheStore := database.NewMemoryCache()
+	httpClient := &http.Client{Timeout: 15 * time.Second}
+	ghClient := github.NewClient(httpClient, githubAPIBase, githubToken, cacheStore)
+	ghRepo := repository.NewGitHubRepository(ghClient)
 
-    githubService := service.NewGitHubService(ghRepo)
-    pagesService := service.NewPagesService(ghRepo)
+	githubService := service.NewGitHubService(ghRepo)
+	pagesService := service.NewPagesService(ghRepo)
+	visitorService, err := service.NewVisitorService(visitorCountFile)
+	if err != nil {
+		log.Fatalf("failed to initialize visitor service: %v", err)
+	}
 
-    router := handler.NewRouter(githubService, pagesService)
+	router := handler.NewRouter(githubService, pagesService, visitorService)
 
-    addr := ":" + port
-    log.Printf("backend server listening on %s", addr)
-    if err := router.Run(addr); err != nil {
-        log.Fatalf("server error: %v", err)
-    }
+	addr := ":" + port
+	log.Printf("backend server listening on %s", addr)
+	if err := router.Run(addr); err != nil {
+		log.Fatalf("server error: %v", err)
+	}
 }
-

@@ -42,7 +42,8 @@
     "collapse": "折りたたむ"
   },
   "footer": {
-    "uptime": "稼働時間"
+    "uptime": "稼働時間",
+    "visitors": "訪問者数"
   },
   "languages": {
     "zh": "中文",
