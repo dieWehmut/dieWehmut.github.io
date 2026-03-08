@@ -19,7 +19,6 @@ func (h *PagesHandler) ListPages(c *gin.Context) {
         c.JSON(502, gin.H{"error": err.Error()})
         return
     }
-    c.Header("Cache-Control", "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
-    c.JSON(200, pages)
+    respondJSONWithETag(c, 200, pages, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
 }
 

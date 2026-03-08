@@ -24,7 +24,7 @@ func (h *GitHubHandler) GetUser(c *gin.Context) {
         c.JSON(502, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(200, user)
+    respondJSONWithETag(c, 200, user, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
 }
 
 func (h *GitHubHandler) GetRepo(c *gin.Context) {
@@ -39,7 +39,7 @@ func (h *GitHubHandler) GetRepo(c *gin.Context) {
         c.JSON(502, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(200, data)
+    respondJSONWithETag(c, 200, data, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
 }
 
 func (h *GitHubHandler) ListRepoContents(c *gin.Context) {
@@ -56,7 +56,7 @@ func (h *GitHubHandler) ListRepoContents(c *gin.Context) {
         c.JSON(502, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(200, data)
+    respondJSONWithETag(c, 200, data, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
 }
 
 func (h *GitHubHandler) GetLatestCommit(c *gin.Context) {
@@ -74,10 +74,10 @@ func (h *GitHubHandler) GetLatestCommit(c *gin.Context) {
         return
     }
     if data == nil {
-        c.JSON(200, map[string]any{})
+        respondJSONWithETag(c, 200, map[string]any{}, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
         return
     }
-    c.JSON(200, data)
+    respondJSONWithETag(c, 200, data, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
 }
 
 func (h *GitHubHandler) ListReleases(c *gin.Context) {
@@ -93,6 +93,6 @@ func (h *GitHubHandler) ListReleases(c *gin.Context) {
         c.JSON(502, gin.H{"error": err.Error()})
         return
     }
-    c.JSON(200, data)
+    respondJSONWithETag(c, 200, data, "public, max-age=0, s-maxage=300, stale-while-revalidate=60")
 }
 
