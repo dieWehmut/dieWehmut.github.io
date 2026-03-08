@@ -4,9 +4,9 @@
     <SnowCanvas v-if="showSnowCanvas" :density-scale="snowDensityScale" />
     <SakuraCanvas v-if="showHeavyEffects" :density-scale="sakuraDensityScale" />
     <BounceCursor v-if="showHeavyEffects" />
-    <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
+    <IntroSplash v-if="showIntro" :exiting="introExiting" @skip="skipIntro" />
 
-    <div class="relative z-10 min-h-screen flex flex-col">
+    <div class="relative z-10 min-h-screen flex flex-col" :class="mainContentVisible ? 'main-visible' : 'main-hidden'">
       <header class="sticky top-0 z-[2200] bg-transparent flex-shrink-0">
         <div class="mx-auto w-full max-w-[2000px] px-4 py-1.5 sm:px-6 lg:px-8 max-[640px]:px-0 max-[640px]:py-1">
           <SearchBar
@@ -23,7 +23,7 @@
         <SideBar :enter-ready="true" :show-last-updated="showLastUpdatedInSidebar" />
 
         <main class="content-rail min-w-0 flex-1 max-[640px]:w-full">
-          <div class="sections-stack flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none' : 'pointer-events-auto'">
+          <div class="sections-stack flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="mainContentVisible ? 'pointer-events-auto' : 'pointer-events-none'">
             <section id="section-pages" v-show="showPagesSection" :class="sectionCardClass" :style="sectionDelayStyle(0)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('pages')">
                 <div :class="sectionToggleInnerClass">
@@ -181,24 +181,26 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, unref, watch } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, shallowRef, unref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowDown, ArrowUp, Collection, Cpu, Flag, FolderOpened, Monitor } from '@element-plus/icons-vue'
 import SearchBar from '../ui/SearchBar.vue'
 import DynamicBackground from '../effects/DynamicBackground.vue'
-import SnowCanvas from '../effects/SnowCanvas.vue'
-import SakuraCanvas from '../effects/SakuraCanvas.vue'
-import BounceCursor from '../effects/BounceCursor.vue'
-import Footer from '../layouts/Footer.vue'
 import SideBar from '../layouts/SideBar.vue'
-import IntroSplash from '../ui/IntroSplash.vue'
-import FloatButton from '../layouts/FloatButton.vue'
 import PageList from '../List/PageList.vue'
 import AppList from '../List/AppList.vue'
 import GameList from '../List/GameList.vue'
 import FileList from '../List/FileList.vue'
 import ToolList from '../List/ToolList.vue'
 import { useContent } from '../data/content'
+
+import IntroSplash from '../ui/IntroSplash.vue'
+
+const SnowCanvas = defineAsyncComponent(() => import('../effects/SnowCanvas.vue'))
+const SakuraCanvas = defineAsyncComponent(() => import('../effects/SakuraCanvas.vue'))
+const BounceCursor = defineAsyncComponent(() => import('../effects/BounceCursor.vue'))
+const Footer = defineAsyncComponent(() => import('../layouts/Footer.vue'))
+const FloatButton = defineAsyncComponent(() => import('../layouts/FloatButton.vue'))
 
 const INTRO_SEEN_KEY = 'nexus:intro-seen'
 
@@ -236,21 +238,24 @@ const { t } = useI18n()
 const { games, apps } = useContent()
 
 const query = ref('')
-const searchBarRef = ref(null)
-const pageListRef = ref(null)
-const toolListRef = ref(null)
-const gameListRef = ref(null)
-const appListRef = ref(null)
-const fileListRef = ref(null)
-const footerRef = ref(null)
+const searchBarRef = shallowRef(null)
+const pageListRef = shallowRef(null)
+const toolListRef = shallowRef(null)
+const gameListRef = shallowRef(null)
+const appListRef = shallowRef(null)
+const fileListRef = shallowRef(null)
+const footerRef = shallowRef(null)
 const isMobile = ref(false)
 const prefersReducedMotion = ref(false)
 const footerInView = ref(false)
 
 const showIntro = ref(shouldShowIntroInitially())
+const introExiting = ref(false)
+const mainContentVisible = ref(!showIntro.value)
 const showDeferredUi = ref(!showIntro.value)
 const backgroundReady = ref(false)
 let introFallbackTimer = null
+let introHideTimer = null
 let mediaQuery = null
 let footerObserver = null
 
@@ -263,7 +268,7 @@ const showTools = ref(true)
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
 const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value)
-const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
+const showHeavyEffects = computed(() => showSnowCanvas.value && mainContentVisible.value)
 const snowDensityScale = computed(() => (isMobile.value ? 0.05 : 0.12))
 const sakuraDensityScale = computed(() => (isMobile.value ? 0.1 : 0.24))
 const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.48] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-xl max-[640px]:rounded-2xl'
@@ -368,12 +373,36 @@ function onClear() {
 
 function hideIntro() {
   showIntro.value = false
+  introExiting.value = false
+  mainContentVisible.value = true
   showDeferredUi.value = true
   markIntroSeen()
   if (introFallbackTimer) {
     clearTimeout(introFallbackTimer)
     introFallbackTimer = null
   }
+  if (introHideTimer) {
+    clearTimeout(introHideTimer)
+    introHideTimer = null
+  }
+}
+
+function beginIntroExit(delay = prefersReducedMotion.value ? 180 : 680) {
+  if (!showIntro.value) {
+    return
+  }
+
+  introExiting.value = true
+  mainContentVisible.value = true
+  showDeferredUi.value = true
+
+  if (introHideTimer) {
+    return
+  }
+
+  introHideTimer = window.setTimeout(() => {
+    hideIntro()
+  }, delay)
 }
 
 function skipIntro() {
@@ -386,7 +415,7 @@ function onBackgroundReady() {
     return
   }
 
-  window.setTimeout(() => hideIntro(), prefersReducedMotion.value ? 140 : 720)
+  beginIntroExit()
 }
 
 function handleGlobalHotkeys(event) {
@@ -495,7 +524,7 @@ onMounted(() => {
 
   introFallbackTimer = window.setTimeout(() => {
     if (!backgroundReady.value) {
-      hideIntro()
+      beginIntroExit(prefersReducedMotion.value ? 180 : 420)
     }
   }, prefersReducedMotion.value ? 600 : 2200)
 
@@ -525,6 +554,10 @@ onBeforeUnmount(() => {
     clearTimeout(introFallbackTimer)
   }
 
+  if (introHideTimer) {
+    clearTimeout(introHideTimer)
+  }
+
   teardownFooterObserver()
 })
 </script>
@@ -550,6 +583,7 @@ html.sidebar-collapsed .home-layout {
   contain: layout paint;
   transform-origin: left center;
   transition: none;
+  will-change: auto;
 }
 
 @media (min-width: 1001px) {
@@ -564,18 +598,29 @@ html.sidebar-collapsed .home-layout {
 
 .section-toggle-enter-active,
 .section-toggle-leave-active {
-  transition: opacity 260ms ease, transform 260ms ease;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
 }
 
 .section-toggle-enter-from,
 .section-toggle-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 
 .section-toggle-enter-to,
 .section-toggle-leave-from {
   opacity: 1;
   transform: translateY(0);
+}
+
+.main-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.main-visible {
+  opacity: 1;
+  transition: opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>

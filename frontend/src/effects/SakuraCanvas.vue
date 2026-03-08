@@ -238,7 +238,7 @@ function init() {
   canvas.height = H
   canvas.style.width  = window.innerWidth  + 'px'
   canvas.style.height = window.innerHeight + 'px'
-  ctx = canvas.getContext('2d')
+  ctx = canvas.getContext('2d', { willReadFrequently: false })
   ctx.scale(dpr, dpr)
   petals = Array.from({ length: targetPetalCount() }, () => mkPetal(true))
 }
@@ -390,6 +390,14 @@ function onResize() {
   }, 120)
 }
 
+function onVisibilityChange() {
+  if (document.hidden) {
+    if (animId) { cancelAnimationFrame(animId); animId = null }
+  } else if (!animId) {
+    animId = requestAnimationFrame(frame)
+  }
+}
+
 onMounted(() => {
   init()
   animId = requestAnimationFrame(frame)
@@ -397,6 +405,7 @@ onMounted(() => {
   window.addEventListener('mouseleave', onMouseLeave, { passive: true })
   window.addEventListener('resize',     onResize,     { passive: true })
   window.addEventListener('mousedown',  onGlobalClick, { passive: true })
+  document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
 onBeforeUnmount(() => {
@@ -405,6 +414,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('mouseleave', onMouseLeave)
   window.removeEventListener('resize',     onResize)
   window.removeEventListener('mousedown',  onGlobalClick)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
   clearTimeout(resizeTimer)
   document.documentElement.classList.remove('sakura-hover', 'sakura-grabbing')
 })

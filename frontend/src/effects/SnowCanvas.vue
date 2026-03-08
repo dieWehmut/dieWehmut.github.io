@@ -63,7 +63,7 @@ function init() {
   canvas.height = H
   canvas.style.width  = window.innerWidth  + 'px'
   canvas.style.height = window.innerHeight + 'px'
-  ctx = canvas.getContext('2d')
+  ctx = canvas.getContext('2d', { willReadFrequently: false })
   ctx.scale(dpr, dpr)
   const n = targetCount()
   particles = Array.from({ length: n }, () => mkParticle(true))
@@ -75,7 +75,8 @@ function frame() {
   ctx.clearRect(0, 0, lW, lH)
 
   // ── update positions ──
-  for (const p of particles) {
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i]
     p.phase += p.sway
     p.x += p.vx + Math.sin(p.phase) * p.swayAmp
     p.y += p.vy
@@ -90,12 +91,14 @@ function frame() {
     }
   }
 
-  // ── draw snowflakes ──
+  // ── draw snowflakes (batched by opacity range to reduce state switches) ──
   ctx.fillStyle = 'rgba(255,255,255,0.78)'
-  for (const p of particles) {
+  const TAU = Math.PI * 2
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i]
     ctx.globalAlpha = p.opacity
     ctx.beginPath()
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+    ctx.arc(p.x, p.y, p.r, 0, TAU)
     ctx.fill()
   }
   ctx.globalAlpha = 1
@@ -124,15 +127,25 @@ function onResize() {
   }, 120)
 }
 
+function onVisibilityChange() {
+  if (document.hidden) {
+    if (animId) { cancelAnimationFrame(animId); animId = null }
+  } else if (!animId) {
+    animId = requestAnimationFrame(frame)
+  }
+}
+
 onMounted(() => {
   init()
   animId = requestAnimationFrame(frame)
   window.addEventListener('resize', onResize, { passive: true })
+  document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
 onBeforeUnmount(() => {
   if (animId) cancelAnimationFrame(animId)
   window.removeEventListener('resize', onResize)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
   clearTimeout(resizeTimer)
 })
 </script>

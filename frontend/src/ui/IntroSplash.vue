@@ -1,5 +1,5 @@
 <template>
-  <div class="intro-splash fixed inset-0 z-[6000] flex items-center justify-center overflow-hidden" :class="{ ready: backgroundReady }" @click="$emit('skip')" role="dialog" aria-label="Entry animation">
+  <div class="intro-splash fixed inset-0 z-[6000] flex items-center justify-center overflow-hidden" :class="{ ready: exiting }" @click="$emit('skip')" role="dialog" aria-label="Entry animation">
     <div class="splash-layer relative w-full max-w-[1100px] px-4 py-6 max-[640px]:px-3 max-[640px]:py-4 box-border">
         <!-- Two concentric semi-ring arcs -->
         <div class="rings absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
@@ -39,7 +39,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-const props = defineProps({ backgroundReady: { type: Boolean, default: false } });
+defineProps({ exiting: { type: Boolean, default: false } });
 const emit = defineEmits(['skip']);
 const { t } = useI18n();
 
@@ -117,11 +117,13 @@ onBeforeUnmount(() => {
 .intro-splash {
   background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.36));
   backdrop-filter: blur(10px) saturate(1.05);
+  will-change: opacity;
 }
 .intro-splash.ready {
   animation: introOverlayExit 680ms cubic-bezier(.22,1,.36,1) forwards;
+  pointer-events: none;
 }
-.splash-layer { transform-origin: center center; animation: splashIn 900ms cubic-bezier(.16,.9,.2,1) both; }
+.splash-layer { transform-origin: center center; animation: splashIn 900ms cubic-bezier(.16,.9,.2,1) both; will-change: transform, opacity; }
 .splash-inner { transform-origin: center center; }
 .splash-logo { text-shadow: 0 6px 18px rgba(0,0,0,0.6); display:inline-block; position: relative }
 

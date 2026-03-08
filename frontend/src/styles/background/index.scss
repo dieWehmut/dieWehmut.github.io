@@ -6,6 +6,7 @@
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  contain: strict;
   background:
     radial-gradient(ellipse 120% 80% at 20% 20%, rgba(255, 182, 216, 0.92), transparent 50%),
     radial-gradient(ellipse 100% 70% at 80% 15%, rgba(200, 170, 255, 0.85), transparent 48%),
@@ -38,6 +39,8 @@
   mix-blend-mode: screen;
   animation: drift 22s ease-in-out infinite alternate;
   will-change: transform;
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 .bg-blur--a {
@@ -90,6 +93,8 @@
   mix-blend-mode: soft-light;
   animation: ribbonShift 18s ease-in-out infinite alternate;
   will-change: transform;
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 .bg-ribbon--a {
@@ -126,6 +131,8 @@
   mix-blend-mode: soft-light;
   animation: sheenSweep 18s ease-in-out infinite;
   will-change: transform;
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 /* ── vignette ── */

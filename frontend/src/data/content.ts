@@ -60,7 +60,7 @@ export function useContent() {
       manualItems: [
         // 手动添加示例（支持 date 字段手动设置日期，格式 YYYY-MM-DD）：
       {
-        name: "SugisarishiKage",
+        name: "SugisarishiKage_android",
         html_url: "https://github.com/dieWehmut/SugisarishiKage",
         repo_url: "https://github.com/dieWehmut/SugisarishiKage",
         showDownload: true,
@@ -69,7 +69,7 @@ export function useContent() {
         date: "2025-09-11", // 手动设置日期（可选，留空则自动获取）
       },
       {
-        name: "GeistZerfall",
+        name: "GeistZerfall_android",
         html_url: "https://github.com/dieWehmut/GeistZerfall",
         repo_url: "https://github.com/dieWehmut/GeistZerfall",
         showDownload: true,

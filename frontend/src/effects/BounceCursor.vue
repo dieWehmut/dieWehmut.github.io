@@ -1,20 +1,22 @@
 <template>
   <div
-    v-show="visible"
+    ref="cursorEl"
     class="heart-bounce-cursor"
-    :style="{ left: `${x}px`, top: `${y}px` }"
     aria-hidden="true"
   >
-    <div class="ripple" aria-hidden="true"></div>
+    <div class="heart-bounce-cursor__inner">
+      <div class="ripple" aria-hidden="true"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const x = ref(-9999)
-const y = ref(-9999)
-const visible = ref(false)
+const cursorEl = ref(null)
+let currentVisible = false
+let rafId = null
+let pendingEvent = null
 
 const CLICKABLE_SELECTOR = [
   'button',
@@ -37,47 +39,67 @@ function isTextInputLike(el) {
   return !!el.closest?.('input, textarea, select, [contenteditable="true"]')
 }
 
-function updateHoverState(target) {
-  const root = document.documentElement
+function setVisible(show) {
+  if (currentVisible === show) return
+  currentVisible = show
+  const el = cursorEl.value
+  if (el) el.style.display = show ? '' : 'none'
+  if (show) {
+    document.documentElement.classList.add('heart-bounce-active')
+  } else {
+    document.documentElement.classList.remove('heart-bounce-active')
+  }
+}
+
+function flushMove() {
+  rafId = null
+  const e = pendingEvent
+  if (!e) return
+  pendingEvent = null
+
+  const el = cursorEl.value
+  if (el) {
+    el.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
+  }
+
+  const target = e.target
   if (!target || isTextInputLike(target)) {
-    visible.value = false
-    root.classList.remove('heart-bounce-active')
+    setVisible(false)
     return
   }
 
-  const hit = target.closest?.(CLICKABLE_SELECTOR)
-  if (hit) {
-    visible.value = true
-    root.classList.add('heart-bounce-active')
-  } else {
-    visible.value = false
-    root.classList.remove('heart-bounce-active')
-  }
-}
-
-function applyMove(e) {
-  x.value = e.clientX
-  y.value = e.clientY
-  updateHoverState(e.target)
+  setVisible(!!target.closest?.(CLICKABLE_SELECTOR))
 }
 
 function onMouseMove(e) {
-  applyMove(e)
+  pendingEvent = e
+  if (rafId === null) {
+    rafId = requestAnimationFrame(flushMove)
+  }
 }
 
 function onMouseLeave() {
-  visible.value = false
-  document.documentElement.classList.remove('heart-bounce-active')
+  pendingEvent = null
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId)
+    rafId = null
+  }
+  setVisible(false)
 }
 
 onMounted(() => {
-  window.addEventListener('mousemove', onMouseMove, { passive: true })
+  if (cursorEl.value) {
+    cursorEl.value.style.display = 'none'
+    cursorEl.value.style.transform = 'translate3d(-9999px, -9999px, 0)'
+  }
+  window.addEventListener('pointermove', onMouseMove, { passive: true })
   window.addEventListener('mouseleave', onMouseLeave, { passive: true })
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('pointermove', onMouseMove)
   window.removeEventListener('mouseleave', onMouseLeave)
+  if (rafId !== null) cancelAnimationFrame(rafId)
   document.documentElement.classList.remove('heart-bounce-active')
 })
 </script>
@@ -85,18 +107,28 @@ onBeforeUnmount(() => {
 <style scoped>
 .heart-bounce-cursor {
   position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 2147483647 !important;
+  will-change: transform;
+  contain: layout style;
+}
+
+.heart-bounce-cursor__inner {
   width: 24px;
   height: 24px;
   transform: translate(-12px, -20px);
-  pointer-events: none;
-  z-index: 2147483647 !important;
   background-repeat: no-repeat;
   background-size: contain;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ff69b4'/%3E%3C/svg%3E");
   animation: heartBounce 560ms ease-in-out infinite;
+  will-change: transform;
 }
 
-.heart-bounce-cursor .ripple {
+.heart-bounce-cursor__inner .ripple {
   position: absolute;
   left: 50%;
   top: 100%;

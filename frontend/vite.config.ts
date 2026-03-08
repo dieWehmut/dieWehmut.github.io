@@ -16,9 +16,14 @@ export default defineConfig({
   build: {
     sourcemap: false,
     assetsDir: 'assets',
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name].[ext]' 
+        assetFileNames: 'assets/[name].[ext]',
+        manualChunks: {
+          'vendor-vue': ['vue', 'vue-i18n'],
+          'vendor-icons': ['@element-plus/icons-vue'],
+        },
       }
     }
   }

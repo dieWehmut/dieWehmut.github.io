@@ -81,8 +81,6 @@ const languageBadges = computed(() => {
 });
 // sidebar collapse state
 const sidebarCollapsed = ref(false);
-let lastSidebarPointerToggleAt = 0;
-let sidebarToggleFrame = 0;
 
 function applySidebarCollapsed(nextCollapsed) {
 	try {
@@ -97,32 +95,7 @@ function applySidebarCollapsed(nextCollapsed) {
 function toggleSidebar() {
 	const nextCollapsed = !sidebarCollapsed.value;
 	sidebarCollapsed.value = nextCollapsed;
-
-	if (sidebarToggleFrame) {
-		window.cancelAnimationFrame(sidebarToggleFrame);
-	}
-
-	sidebarToggleFrame = window.requestAnimationFrame(() => {
-		applySidebarCollapsed(nextCollapsed);
-		sidebarToggleFrame = 0;
-	});
-}
-
-function handleSidebarPointerDown(event) {
-	if (event.pointerType === 'mouse' && event.button !== 0) {
-		return;
-	}
-
-	lastSidebarPointerToggleAt = Date.now();
-	toggleSidebar();
-}
-
-function handleSidebarClick() {
-	if (Date.now() - lastSidebarPointerToggleAt < 320) {
-		return;
-	}
-
-	toggleSidebar();
+	applySidebarCollapsed(nextCollapsed);
 }
 
 onMounted(() => {
@@ -133,12 +106,6 @@ onMounted(() => {
 			applySidebarCollapsed(true);
 		}
 	} catch (e) {}
-});
-
-onBeforeUnmount(() => {
-	if (sidebarToggleFrame) {
-		window.cancelAnimationFrame(sidebarToggleFrame);
-	}
 });
 </script>
 
@@ -210,8 +177,7 @@ onBeforeUnmount(() => {
 			<button
 				class="btt-button sidebar-toggle max-[640px]:!hidden"
 				:class="{ active: sidebarCollapsed }"
-				@pointerdown.prevent="handleSidebarPointerDown"
-				@click="handleSidebarClick"
+				@click="toggleSidebar"
 				@keydown.enter.prevent="toggleSidebar"
 				@keydown.space.prevent="toggleSidebar"
 				:aria-label="t('float.toggleSidebar')"
