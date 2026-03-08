@@ -181,7 +181,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, unref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, unref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowDown, ArrowUp, Collection, Cpu, Flag, FolderOpened, Monitor } from '@element-plus/icons-vue'
 import SearchBar from '../ui/SearchBar.vue'
@@ -366,17 +366,6 @@ function onClear() {
   query.value = ''
 }
 
-async function preloadListData() {
-  await nextTick()
-  await Promise.allSettled([
-    pageListRef.value?.ensureLoaded?.(),
-    toolListRef.value?.ensureLoaded?.(),
-    gameListRef.value?.ensureLoaded?.(),
-    appListRef.value?.ensureLoaded?.(),
-    fileListRef.value?.ensureLoaded?.(),
-  ])
-}
-
 function hideIntro() {
   showIntro.value = false
   showDeferredUi.value = true
@@ -518,9 +507,6 @@ onMounted(() => {
   window.requestAnimationFrame(() => {
     observeFooterVisibility()
   })
-
-  // Ensure every list is fetched on first load without requiring scroll interaction.
-  preloadListData()
 })
 
 onBeforeUnmount(() => {

@@ -17,6 +17,7 @@ import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
 import { useContent } from '../data/content'
+import { LIST_SNAPSHOT_TTL, readSnapshot, writeSnapshot } from '../utils/browserSnapshot'
 
 const props = defineProps({
   filterQuery: {
@@ -33,6 +34,8 @@ const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
 const hasLoaded = ref(false)
+const SNAPSHOT_KEY = 'apps:list'
+let loadPromise = null
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -142,58 +145,96 @@ function handleDownload(item) {
   window.open(url, '_blank', 'noopener')
 }
 
-async function loadApps() {
-  if (hasLoaded.value) {
+function restoreAppsSnapshot() {
+  const cachedApps = readSnapshot(SNAPSHOT_KEY, null)
+  if (!Array.isArray(cachedApps)) {
     return
   }
 
-  loading.value = true
+  apps.value = cachedApps
+  loading.value = false
+}
+
+async function loadApps() {
+  if (hasLoaded.value) {
+    return apps.value
+  }
+
+  if (loadPromise) {
+    return loadPromise
+  }
+
+  if (!apps.value.length) {
+    loading.value = true
+  }
   error.value = ''
 
-  const manualAppItems = manualApps.value.map((item) => ({ ...item }))
-  let autoApps = []
+  loadPromise = (async () => {
+    const manualAppItems = manualApps.value.map((item) => ({ ...item }))
+    let autoApps = []
 
-  try {
-    const releases = await fetchWithCache(getBackendApiUrl('/api/github/repos/dieWehmut/Showcase/releases'), {}, 1000 * 60 * 15)
-    const appsData = []
+    if (!apps.value.length) {
+      apps.value = [...manualAppItems]
+    }
 
-    releases.forEach((release) => {
-      if (!release.assets?.length) {
-        return
-      }
+    try {
+      const releases = await fetchWithCache(getBackendApiUrl('/api/github/repos/dieWehmut/Showcase/releases'), {}, 1000 * 60 * 15)
+      const appsData = []
 
-      const androidAssets = release.assets.filter((asset) => isAndroidApp(asset.name))
-      const releaseTagUrl = release.html_url || `https://github.com/dieWehmut/Showcase/releases/tag/${release.tag_name}`
+      releases.forEach((release) => {
+        if (!release.assets?.length) {
+          return
+        }
 
-      androidAssets.forEach((asset) => {
-        appsData.push({
-          tag_name: release.tag_name,
-          name: stripExtension(asset.name),
-          html_url: asset.browser_download_url,
-          repo_url: releaseTagUrl,
-          showDownload: true,
-          date: release.published_at || release.created_at || null,
+        const androidAssets = release.assets.filter((asset) => isAndroidApp(asset.name))
+        const releaseTagUrl = release.html_url || `https://github.com/dieWehmut/Showcase/releases/tag/${release.tag_name}`
+
+        androidAssets.forEach((asset) => {
+          appsData.push({
+            tag_name: release.tag_name,
+            name: stripExtension(asset.name),
+            html_url: asset.browser_download_url,
+            repo_url: releaseTagUrl,
+            showDownload: true,
+            date: release.published_at || release.created_at || null,
+          })
         })
       })
-    })
 
-    autoApps = appsData
-  } catch (loadError) {
-    console.error('Failed to load app releases:', loadError)
-    if (manualAppItems.length === 0) {
-      error.value = t('error.unable_load') || 'Unable to load releases.'
+      autoApps = appsData
+      apps.value = [...manualAppItems, ...autoApps]
+      writeSnapshot(SNAPSHOT_KEY, apps.value, LIST_SNAPSHOT_TTL)
+    } catch (loadError) {
+      console.error('Failed to load app releases:', loadError)
+      if (!apps.value.length) {
+        apps.value = [...manualAppItems]
+      }
+      if (!apps.value.length) {
+        error.value = t('error.unable_load') || 'Unable to load releases.'
+      }
+    } finally {
+      loading.value = false
     }
-  } finally {
-    apps.value = [...manualAppItems, ...autoApps]
-    loading.value = false
-    hasLoaded.value = true
 
     await enrichItemsWithLatestDate(manualAppItems, {
       fetchCommit: ({ owner, repo }) => fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
       getRepoUrl: (item) => item._repoUrl,
     })
-  }
+
+    if (manualAppItems.length || autoApps.length) {
+      apps.value = [...manualAppItems, ...autoApps]
+      writeSnapshot(SNAPSHOT_KEY, apps.value, LIST_SNAPSHOT_TTL)
+    }
+
+    hasLoaded.value = true
+    loadPromise = null
+    return apps.value
+  })()
+
+  return loadPromise
 }
+
+restoreAppsSnapshot()
 
 onMounted(() => {
   loadApps()

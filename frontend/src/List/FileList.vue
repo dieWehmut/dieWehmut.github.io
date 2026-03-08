@@ -15,6 +15,7 @@ import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
+import { LIST_SNAPSHOT_TTL, readSnapshot, replaceReactiveRecord, writeSnapshot } from '../utils/browserSnapshot'
 
 const props = defineProps({
   repoUrl: {
@@ -39,6 +40,9 @@ const loading = ref(true)
 const error = ref('')
 const defaultBranch = ref('main')
 const hasLoadedRoot = ref(false)
+const SNAPSHOT_KEY = 'files:list'
+let repoMetaPromise = null
+const loadPromises = new Map()
 
 const normalizedQuery = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -166,65 +170,135 @@ function getFileExtension(fileName) {
   return parts[parts.length - 1].toUpperCase()
 }
 
-async function loadContents(path = '') {
-  const isRoot = !path
-  if (isRoot && hasLoadedRoot.value) {
+function persistFileSnapshot() {
+  writeSnapshot(
+    SNAPSHOT_KEY,
+    {
+      entriesRoot: entriesRoot.value,
+      entriesMap: { ...entriesMap },
+      folderDates: { ...folderDates },
+      defaultBranch: defaultBranch.value,
+    },
+    LIST_SNAPSHOT_TTL,
+  )
+}
+
+function restoreFileSnapshot() {
+  const cachedState = readSnapshot(SNAPSHOT_KEY, null)
+  if (!cachedState || typeof cachedState !== 'object') {
     return
   }
 
-  if (isRoot) {
-    loading.value = true
-    error.value = ''
-  } else {
-    loadingDirs[path] = true
+  if (Array.isArray(cachedState.entriesRoot)) {
+    entriesRoot.value = cachedState.entriesRoot
+  }
+
+  replaceReactiveRecord(entriesMap, cachedState.entriesMap || {})
+  replaceReactiveRecord(folderDates, cachedState.folderDates || {})
+
+  if (typeof cachedState.defaultBranch === 'string' && cachedState.defaultBranch) {
+    defaultBranch.value = cachedState.defaultBranch
+  }
+
+  loading.value = false
+}
+
+async function ensureRepoMetaLoaded() {
+  if (repoMetaPromise) {
+    return repoMetaPromise
   }
 
   const { owner, repo } = parseRepo(props.repoUrl)
 
-  try {
+  repoMetaPromise = (async () => {
     try {
       const repoData = await fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}`), {}, 1000 * 60 * 60)
       if (repoData?.default_branch) {
         defaultBranch.value = repoData.default_branch
+        persistFileSnapshot()
       }
     } catch {
     }
+  })()
 
-    const apiUrl = getBackendApiUrl(`/api/github/repos/${owner}/${repo}/contents${path ? `?path=${encodeURIComponent(path)}` : ''}`)
-    const data = await fetchWithCache(apiUrl, {}, 1000 * 60 * 15)
-    const items = Array.isArray(data)
-      ? data.map((item) => ({
-          name: item.name,
-          path: item.path,
-          type: item.type,
-          download_url: item.download_url,
-          html_url: item.html_url,
-          extension: getFileExtension(item.name),
-        }))
-      : []
-
-    if (!path) {
-      entriesRoot.value = items.filter((item) => item.type === 'dir').sort((left, right) => left.name.localeCompare(right.name))
-      entriesMap[''] = []
-      loading.value = false
-      hasLoadedRoot.value = true
-      window.setTimeout(() => {
-        fetchFolderDates()
-      }, 0)
-      return
-    }
-
-    entriesMap[path] = items.filter((item) => item.type === 'file')
-  } catch {
-    if (isRoot) {
-      error.value = t('error.unable_load') || 'Unable to load files.'
-      loading.value = false
-    }
+  try {
+    await repoMetaPromise
   } finally {
-    if (!isRoot) {
-      delete loadingDirs[path]
-    }
+    repoMetaPromise = null
   }
+}
+
+async function loadContents(path = '') {
+  const isRoot = !path
+  const requestKey = path || '__root__'
+
+  if (isRoot && hasLoadedRoot.value) {
+    return entriesRoot.value
+  }
+
+  if (loadPromises.has(requestKey)) {
+    return loadPromises.get(requestKey)
+  }
+
+  const promise = (async () => {
+    if (isRoot) {
+      if (!entriesRoot.value.length) {
+        loading.value = true
+      }
+      error.value = ''
+    } else {
+      loadingDirs[path] = true
+    }
+
+    const { owner, repo } = parseRepo(props.repoUrl)
+
+    try {
+      await ensureRepoMetaLoaded()
+
+      const apiUrl = getBackendApiUrl(`/api/github/repos/${owner}/${repo}/contents${path ? `?path=${encodeURIComponent(path)}` : ''}`)
+      const data = await fetchWithCache(apiUrl, {}, 1000 * 60 * 15)
+      const items = Array.isArray(data)
+        ? data.map((item) => ({
+            name: item.name,
+            path: item.path,
+            type: item.type,
+            download_url: item.download_url,
+            html_url: item.html_url,
+            extension: getFileExtension(item.name),
+          }))
+        : []
+
+      if (!path) {
+        entriesRoot.value = items.filter((item) => item.type === 'dir').sort((left, right) => left.name.localeCompare(right.name))
+        entriesMap[''] = []
+        loading.value = false
+        hasLoadedRoot.value = true
+        persistFileSnapshot()
+        window.setTimeout(() => {
+          fetchFolderDates()
+        }, 0)
+        return entriesRoot.value
+      }
+
+      entriesMap[path] = items.filter((item) => item.type === 'file')
+      persistFileSnapshot()
+      return entriesMap[path]
+    } catch {
+      if (isRoot && !entriesRoot.value.length) {
+        error.value = t('error.unable_load') || 'Unable to load files.'
+        loading.value = false
+      }
+      return isRoot ? entriesRoot.value : entriesMap[path] || []
+    } finally {
+      if (!isRoot) {
+        delete loadingDirs[path]
+      }
+      loadPromises.delete(requestKey)
+    }
+  })()
+
+  loadPromises.set(requestKey, promise)
+  return promise
 }
 
 async function fetchFolderDates() {
@@ -240,6 +314,7 @@ async function fetchFolderDates() {
         )
         if (commit?.commit) {
           folderDates[folder.path] = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
+          persistFileSnapshot()
         }
       } catch {
       }
@@ -286,6 +361,8 @@ async function toggleDir(folder) {
     await loadContents(path)
   }
 }
+
+restoreFileSnapshot()
 
 onMounted(() => {
   loadContents('')

@@ -400,6 +400,12 @@ function getActionClass(action, baseClass) {
   transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease, transform 220ms cubic-bezier(.2,.9,.2,1);
 }
 
+.item-card {
+  contain: layout paint style;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 164px;
+}
+
 .skeleton-block {
   position: relative;
   display: block;

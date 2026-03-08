@@ -17,6 +17,7 @@ import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
 import { useContent } from '../data/content'
+import { LIST_SNAPSHOT_TTL, readSnapshot, writeSnapshot } from '../utils/browserSnapshot'
 
 const props = defineProps({
   filterQuery: {
@@ -33,6 +34,8 @@ const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
 const hasLoaded = ref(false)
+const SNAPSHOT_KEY = 'games:list'
+let loadPromise = null
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -142,58 +145,96 @@ function handleDownload(item) {
   window.open(url, '_blank', 'noopener')
 }
 
-async function loadGames() {
-  if (hasLoaded.value) {
+function restoreGamesSnapshot() {
+  const cachedGames = readSnapshot(SNAPSHOT_KEY, null)
+  if (!Array.isArray(cachedGames)) {
     return
   }
 
-  loading.value = true
+  games.value = cachedGames
+  loading.value = false
+}
+
+async function loadGames() {
+  if (hasLoaded.value) {
+    return games.value
+  }
+
+  if (loadPromise) {
+    return loadPromise
+  }
+
+  if (!games.value.length) {
+    loading.value = true
+  }
   error.value = ''
 
-  const manualGameItems = manualGames.value.map((item) => ({ ...item }))
-  let autoGames = []
+  loadPromise = (async () => {
+    const manualGameItems = manualGames.value.map((item) => ({ ...item }))
+    let autoGames = []
 
-  try {
-    const releases = await fetchWithCache(getBackendApiUrl('/api/github/repos/dieWehmut/Showcase/releases'), {}, 1000 * 60 * 15)
-    const gamesData = []
+    if (!games.value.length) {
+      games.value = [...manualGameItems]
+    }
 
-    releases.forEach((release) => {
-      if (!release.assets?.length) {
-        return
-      }
+    try {
+      const releases = await fetchWithCache(getBackendApiUrl('/api/github/repos/dieWehmut/Showcase/releases'), {}, 1000 * 60 * 15)
+      const gamesData = []
 
-      const otherAssets = release.assets.filter((asset) => !isAndroidApp(asset.name))
-      const releaseTagUrl = release.html_url || `https://github.com/dieWehmut/Showcase/releases/tag/${release.tag_name}`
+      releases.forEach((release) => {
+        if (!release.assets?.length) {
+          return
+        }
 
-      otherAssets.forEach((asset) => {
-        gamesData.push({
-          tag_name: release.tag_name,
-          name: stripExtension(asset.name),
-          html_url: asset.browser_download_url,
-          repo_url: releaseTagUrl,
-          showDownload: true,
-          date: release.published_at || release.created_at || null,
+        const otherAssets = release.assets.filter((asset) => !isAndroidApp(asset.name))
+        const releaseTagUrl = release.html_url || `https://github.com/dieWehmut/Showcase/releases/tag/${release.tag_name}`
+
+        otherAssets.forEach((asset) => {
+          gamesData.push({
+            tag_name: release.tag_name,
+            name: stripExtension(asset.name),
+            html_url: asset.browser_download_url,
+            repo_url: releaseTagUrl,
+            showDownload: true,
+            date: release.published_at || release.created_at || null,
+          })
         })
       })
-    })
 
-    autoGames = gamesData
-  } catch (loadError) {
-    console.error('Failed to load game releases:', loadError)
-    if (manualGameItems.length === 0) {
-      error.value = t('error.unable_load') || 'Unable to load releases.'
+      autoGames = gamesData
+      games.value = [...manualGameItems, ...autoGames]
+      writeSnapshot(SNAPSHOT_KEY, games.value, LIST_SNAPSHOT_TTL)
+    } catch (loadError) {
+      console.error('Failed to load game releases:', loadError)
+      if (!games.value.length) {
+        games.value = [...manualGameItems]
+      }
+      if (!games.value.length) {
+        error.value = t('error.unable_load') || 'Unable to load releases.'
+      }
+    } finally {
+      loading.value = false
     }
-  } finally {
-    games.value = [...manualGameItems, ...autoGames]
-    loading.value = false
-    hasLoaded.value = true
 
     await enrichItemsWithLatestDate(manualGameItems, {
       fetchCommit: ({ owner, repo }) => fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
       getRepoUrl: (item) => item._repoUrl,
     })
-  }
+
+    if (manualGameItems.length || autoGames.length) {
+      games.value = [...manualGameItems, ...autoGames]
+      writeSnapshot(SNAPSHOT_KEY, games.value, LIST_SNAPSHOT_TTL)
+    }
+
+    hasLoaded.value = true
+    loadPromise = null
+    return games.value
+  })()
+
+  return loadPromise
 }
+
+restoreGamesSnapshot()
 
 onMounted(() => {
   loadGames()

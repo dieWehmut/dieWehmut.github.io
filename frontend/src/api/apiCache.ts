@@ -5,6 +5,7 @@
 // Exports: getCache, setCache, fetchWithCache, clearCache
 
 const PREFIX = 'nw:apiCache:';
+const pendingRequests = new Map<string, Promise<unknown>>();
 
 type CacheRecord<T = unknown> = {
   ts: number;
@@ -30,6 +31,10 @@ function _isExpired(record: CacheRecord | null | undefined) {
 }
 
 function _readStoredRecord(key: string, allowExpired = false): CacheRecord | null {
+  if (typeof localStorage === 'undefined') {
+    return memory.get(key) || null;
+  }
+
   if (memory.has(key)) {
     const record = memory.get(key) || null;
     if (!allowExpired && _isExpired(record)) {
@@ -53,9 +58,9 @@ function _readStoredRecord(key: string, allowExpired = false): CacheRecord | nul
   return record;
 }
 
-function getCache(key: string) {
+function getCache(key: string, options: { allowExpired?: boolean } = {}) {
   try {
-    const record = _readStoredRecord(key);
+    const record = _readStoredRecord(key, options.allowExpired === true);
     return record ? record.value : null;
   } catch (e) {
     return null;
@@ -66,7 +71,9 @@ function setCache(key: string, value: unknown, ttl = 0, etag?: string) {
   try {
     const record = _makeRecord(value, ttl, etag);
     memory.set(key, record);
-    try { localStorage.setItem(PREFIX + key, JSON.stringify(record)); } catch (e) {}
+    if (typeof localStorage !== 'undefined') {
+      try { localStorage.setItem(PREFIX + key, JSON.stringify(record)); } catch (e) {}
+    }
   } catch (e) {}
 }
 
@@ -74,16 +81,20 @@ function clearCache(key?: string) {
   try {
     if (key) {
       memory.delete(key);
-      localStorage.removeItem(PREFIX + key);
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(PREFIX + key);
+      }
       return;
     }
 
     memory.clear();
-    Object.keys(localStorage).forEach((storageKey) => {
-      if (storageKey.startsWith(PREFIX)) {
-        localStorage.removeItem(storageKey);
-      }
-    });
+    if (typeof localStorage !== 'undefined') {
+      Object.keys(localStorage).forEach((storageKey) => {
+        if (storageKey.startsWith(PREFIX)) {
+          localStorage.removeItem(storageKey);
+        }
+      });
+    }
   } catch (e) {}
 }
 
@@ -109,6 +120,10 @@ async function fetchWithCache(url: string, options: RequestInit = {}, ttl = 1000
     return cachedRecord.value;
   }
 
+  if (pendingRequests.has(key)) {
+    return pendingRequests.get(key);
+  }
+
   const staleRecord = (() => {
     try {
       return _readStoredRecord(key, true);
@@ -129,28 +144,38 @@ async function fetchWithCache(url: string, options: RequestInit = {}, ttl = 1000
     headers,
   };
 
-  const response = await fetch(url, requestInit);
+  const requestPromise = (async () => {
+    const response = await fetch(url, requestInit);
 
-  if (response.status === 304 && staleRecord) {
-    setCache(key, staleRecord.value, ttl, response.headers.get('etag') || staleRecord.etag);
-    return staleRecord.value;
+    if (response.status === 304 && staleRecord) {
+      setCache(key, staleRecord.value, ttl, response.headers.get('etag') || staleRecord.etag);
+      return staleRecord.value;
+    }
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => null);
+      const err = new Error(`Fetch error ${response.status}`) as Error & { status?: number; body?: string | null };
+      err.status = response.status;
+      err.body = text;
+      throw err;
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    const data = contentType.includes('application/json')
+      ? await response.json()
+      : await response.text();
+
+    setCache(key, data, ttl, response.headers.get('etag') || undefined);
+    return data;
+  })();
+
+  pendingRequests.set(key, requestPromise);
+
+  try {
+    return await requestPromise;
+  } finally {
+    pendingRequests.delete(key);
   }
-
-  if (!response.ok) {
-    const text = await response.text().catch(() => null);
-    const err = new Error(`Fetch error ${response.status}`) as Error & { status?: number; body?: string | null };
-    err.status = response.status;
-    err.body = text;
-    throw err;
-  }
-
-  const contentType = response.headers.get('content-type') || '';
-  const data = contentType.includes('application/json')
-    ? await response.json()
-    : await response.text();
-
-  setCache(key, data, ttl, response.headers.get('etag') || undefined);
-  return data;
 }
 
 export { getCache, setCache, clearCache, fetchWithCache };

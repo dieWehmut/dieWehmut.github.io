@@ -15,6 +15,7 @@ import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
+import { LIST_SNAPSHOT_TTL, readSnapshot, writeSnapshot } from '../utils/browserSnapshot'
 
 const props = defineProps({
   filterQuery: {
@@ -30,6 +31,8 @@ const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
 const hasLoaded = ref(false)
+const SNAPSHOT_KEY = 'pages:list'
+let loadPromise = null
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -85,25 +88,53 @@ const displayItems = computed(() => {
   }))
 })
 
-async function loadPages() {
-  if (hasLoaded.value) {
+function restorePagesSnapshot() {
+  const cachedPages = readSnapshot(SNAPSHOT_KEY, null)
+  if (!Array.isArray(cachedPages)) {
     return
   }
 
-  loading.value = true
+  pages.value = cachedPages
+  loading.value = false
+}
+
+async function loadPages() {
+  if (hasLoaded.value) {
+    return pages.value
+  }
+
+  if (loadPromise) {
+    return loadPromise
+  }
+
+  if (!pages.value.length) {
+    loading.value = true
+  }
   error.value = ''
 
-  try {
-    const data = await fetchWithCache(getBackendApiUrl('/api/pages'), {}, 1000 * 60 * 10)
-    pages.value = Array.isArray(data) ? data : []
-  } catch (loadError) {
-    console.error('Failed to load pages from server API:', loadError)
-    error.value = t('error.unable_load') || 'Unable to load pages.'
-  } finally {
-    loading.value = false
-    hasLoaded.value = true
-  }
+  loadPromise = (async () => {
+    try {
+      const data = await fetchWithCache(getBackendApiUrl('/api/pages'), {}, 1000 * 60 * 10)
+      pages.value = Array.isArray(data) ? data : []
+      writeSnapshot(SNAPSHOT_KEY, pages.value, LIST_SNAPSHOT_TTL)
+    } catch (loadError) {
+      console.error('Failed to load pages from server API:', loadError)
+      if (!pages.value.length) {
+        error.value = t('error.unable_load') || 'Unable to load pages.'
+      }
+    } finally {
+      loading.value = false
+      hasLoaded.value = true
+      loadPromise = null
+    }
+
+    return pages.value
+  })()
+
+  return loadPromise
 }
+
+restorePagesSnapshot()
 
 onMounted(() => {
   loadPages()

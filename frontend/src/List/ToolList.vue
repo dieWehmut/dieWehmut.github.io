@@ -17,6 +17,7 @@ import ItemList from '../ui/ItemList.vue'
 import { fetchWithCache } from '../api/apiCache'
 import { getBackendApiUrl } from '../api/backendApi'
 import { useContent } from '../data/content'
+import { LIST_SNAPSHOT_TTL, readSnapshot, writeSnapshot } from '../utils/browserSnapshot'
 
 const props = defineProps({
   filterQuery: {
@@ -33,6 +34,8 @@ const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
 const hasLoaded = ref(false)
+const SNAPSHOT_KEY = 'tools:list'
+let loadPromise = null
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -127,73 +130,104 @@ function shouldShowDownload(tool) {
   return !!resolveDownloadUrl(tool)
 }
 
-async function fetchTools() {
-  if (hasLoaded.value) {
+function restoreToolsSnapshot() {
+  const cachedTools = readSnapshot(SNAPSHOT_KEY, null)
+  if (!Array.isArray(cachedTools)) {
     return
   }
 
-  loading.value = true
+  tools.value = cachedTools
+  loading.value = false
+}
+
+async function fetchTools() {
+  if (hasLoaded.value) {
+    return tools.value
+  }
+
+  if (loadPromise) {
+    return loadPromise
+  }
+
+  if (!tools.value.length) {
+    loading.value = true
+  }
   error.value = ''
 
-  const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
-  const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
-  const manual = manualTools.value.map((item) => ({ ...item }))
-  tools.value = [...manual]
+  loadPromise = (async () => {
+    const owner = toolsConfig.value?.[0]?.owner || 'dieWehmut'
+    const repo = toolsConfig.value?.[0]?.repo || 'Gajetto'
+    const manual = manualTools.value.map((item) => ({ ...item }))
 
-  try {
-    const data = await fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/contents`), {}, 1000 * 60 * 15)
-    const autoTools = Array.isArray(data)
-      ? data
-          .filter((item) => item.type === 'dir')
-          .map((directory) => ({
-            name: directory.name,
-            path: directory.path || directory.name,
-            html_url: directory.html_url || buildFolderHtmlUrl(directory.name),
-            lastModified: null,
-            showDownload: true,
-            isManual: false,
-          }))
-      : []
-
-    tools.value = [...manual, ...autoTools]
-    loading.value = false
-
-    const datedManual = manual.map((item) => ({ ...item }))
-    await enrichItemsWithLatestDate(datedManual, {
-      fetchCommit: ({ owner: targetOwner, repo: targetRepo }) =>
-        fetchWithCache(buildLatestCommitApiUrl(targetOwner, targetRepo), {}, 1000 * 60 * 60 * 6),
-      getRepoUrl: (item) => item._repoUrl || resolveRepoUrl(item),
-      hasDate: (item) => !!item?.lastModified,
-      assignDate: (item, value) => {
-        item.lastModified = value
-      },
-    })
-
-    const datedAutoTools = await Promise.all(
-      autoTools.map(async (tool) => {
-        try {
-          const commit = await fetchWithCache(buildLatestCommitApiUrl(owner, repo, tool.path || tool.name), {}, 1000 * 60 * 60 * 6)
-          const lastModified = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
-          return { ...tool, lastModified }
-        } catch {
-          return tool
-        }
-      }),
-    )
-
-    tools.value = [...datedManual, ...datedAutoTools]
-  } catch (loadError) {
-    console.error('Failed to load tools:', loadError)
-    error.value = manual.length ? '' : t('error.unable_load') || 'Unable to load tools.'
-    tools.value = [...manual]
-    loading.value = false
-
-    if (!manual.length) {
-      return
+    if (!tools.value.length) {
+      tools.value = [...manual]
     }
-  } finally {
-    hasLoaded.value = true
-  }
+
+    try {
+      const data = await fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/contents`), {}, 1000 * 60 * 15)
+      const autoTools = Array.isArray(data)
+        ? data
+            .filter((item) => item.type === 'dir')
+            .map((directory) => ({
+              name: directory.name,
+              path: directory.path || directory.name,
+              html_url: directory.html_url || buildFolderHtmlUrl(directory.name),
+              lastModified: null,
+              showDownload: true,
+              isManual: false,
+            }))
+        : []
+
+      tools.value = [...manual, ...autoTools]
+      writeSnapshot(SNAPSHOT_KEY, tools.value, LIST_SNAPSHOT_TTL)
+      loading.value = false
+
+      const datedManual = manual.map((item) => ({ ...item }))
+      await enrichItemsWithLatestDate(datedManual, {
+        fetchCommit: ({ owner: targetOwner, repo: targetRepo }) =>
+          fetchWithCache(buildLatestCommitApiUrl(targetOwner, targetRepo), {}, 1000 * 60 * 60 * 6),
+        getRepoUrl: (item) => item._repoUrl || resolveRepoUrl(item),
+        hasDate: (item) => !!item?.lastModified,
+        assignDate: (item, value) => {
+          item.lastModified = value
+        },
+      })
+
+      const datedAutoTools = await Promise.all(
+        autoTools.map(async (tool) => {
+          try {
+            const commit = await fetchWithCache(buildLatestCommitApiUrl(owner, repo, tool.path || tool.name), {}, 1000 * 60 * 60 * 6)
+            const lastModified = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
+            return { ...tool, lastModified }
+          } catch {
+            return tool
+          }
+        }),
+      )
+
+      tools.value = [...datedManual, ...datedAutoTools]
+      writeSnapshot(SNAPSHOT_KEY, tools.value, LIST_SNAPSHOT_TTL)
+    } catch (loadError) {
+      console.error('Failed to load tools:', loadError)
+      if (!tools.value.length) {
+        tools.value = [...manual]
+      }
+      if (!tools.value.length) {
+        error.value = t('error.unable_load') || 'Unable to load tools.'
+      }
+      if (tools.value.length) {
+        writeSnapshot(SNAPSHOT_KEY, tools.value, LIST_SNAPSHOT_TTL)
+      }
+      loading.value = false
+    } finally {
+      hasLoaded.value = true
+      loadPromise = null
+    }
+
+    return tools.value
+  })()
+
+  return loadPromise
 }
 
 function downloadRepo(tool) {
@@ -219,6 +253,8 @@ function downloadRepo(tool) {
 onMounted(() => {
   fetchTools()
 })
+
+restoreToolsSnapshot()
 
 function ensureLoaded() {
   return fetchTools()

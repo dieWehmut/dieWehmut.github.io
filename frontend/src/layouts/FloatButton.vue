@@ -82,20 +82,30 @@ const languageBadges = computed(() => {
 // sidebar collapse state
 const sidebarCollapsed = ref(false);
 let lastSidebarPointerToggleAt = 0;
+let sidebarToggleFrame = 0;
+
+function applySidebarCollapsed(nextCollapsed) {
+	try {
+		document.documentElement.classList.toggle('sidebar-collapsed', nextCollapsed);
+	} catch (e) {}
+
+	try {
+		localStorage.setItem('sidebarCollapsed', nextCollapsed ? '1' : '0');
+	} catch (e) {}
+}
 
 function toggleSidebar() {
 	const nextCollapsed = !sidebarCollapsed.value;
 	sidebarCollapsed.value = nextCollapsed;
 
-	try {
-		document.documentElement.classList.toggle('sidebar-collapsed', nextCollapsed);
-	} catch (e) {}
+	if (sidebarToggleFrame) {
+		window.cancelAnimationFrame(sidebarToggleFrame);
+	}
 
-	window.setTimeout(() => {
-		try {
-			localStorage.setItem('sidebarCollapsed', nextCollapsed ? '1' : '0');
-		} catch (e) {}
-	}, 0);
+	sidebarToggleFrame = window.requestAnimationFrame(() => {
+		applySidebarCollapsed(nextCollapsed);
+		sidebarToggleFrame = 0;
+	});
 }
 
 function handleSidebarPointerDown(event) {
@@ -120,12 +130,16 @@ onMounted(() => {
 		const stored = localStorage.getItem('sidebarCollapsed');
 		if (stored === '1') {
 			sidebarCollapsed.value = true;
-			document.documentElement.classList.add('sidebar-collapsed');
+			applySidebarCollapsed(true);
 		}
 	} catch (e) {}
 });
 
-onBeforeUnmount(() => {});
+onBeforeUnmount(() => {
+	if (sidebarToggleFrame) {
+		window.cancelAnimationFrame(sidebarToggleFrame);
+	}
+});
 </script>
 
 <template>
