@@ -200,19 +200,17 @@ onMounted(() => {
    Layout props (width, padding, margin) are set WITHOUT transition so the reflow
    happens once instantly. Only transform + opacity are animated for smooth visuals. */
 html.sidebar-collapsed .sidebar {
+  display: none;
   width: 0;
   min-width: 0;
   max-width: 0;
   padding: 0;
   margin-left: 0;
   margin-right: 0;
-  opacity: 0;
-  transform: translateX(-10px);
   border-color: transparent !important;
   box-shadow: none !important;
   pointer-events: none;
   overflow: hidden;
-  clip-path: inset(0 100% 0 0);
 }
 html.sidebar-collapsed .avatar {
   width: 0;

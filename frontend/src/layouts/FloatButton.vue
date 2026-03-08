@@ -81,13 +81,38 @@ const languageBadges = computed(() => {
 });
 // sidebar collapse state
 const sidebarCollapsed = ref(false);
+let lastSidebarPointerToggleAt = 0;
 
 function toggleSidebar() {
-	sidebarCollapsed.value = !sidebarCollapsed.value;
- 	try {
- 		document.documentElement.classList.toggle('sidebar-collapsed', sidebarCollapsed.value);
- 		localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value ? '1' : '0');
- 	} catch (e) {}
+	const nextCollapsed = !sidebarCollapsed.value;
+	sidebarCollapsed.value = nextCollapsed;
+
+	try {
+		document.documentElement.classList.toggle('sidebar-collapsed', nextCollapsed);
+	} catch (e) {}
+
+	window.setTimeout(() => {
+		try {
+			localStorage.setItem('sidebarCollapsed', nextCollapsed ? '1' : '0');
+		} catch (e) {}
+	}, 0);
+}
+
+function handleSidebarPointerDown(event) {
+	if (event.pointerType === 'mouse' && event.button !== 0) {
+		return;
+	}
+
+	lastSidebarPointerToggleAt = Date.now();
+	toggleSidebar();
+}
+
+function handleSidebarClick() {
+	if (Date.now() - lastSidebarPointerToggleAt < 320) {
+		return;
+	}
+
+	toggleSidebar();
 }
 
 onMounted(() => {
@@ -99,6 +124,8 @@ onMounted(() => {
 		}
 	} catch (e) {}
 });
+
+onBeforeUnmount(() => {});
 </script>
 
 <template>
@@ -169,7 +196,10 @@ onMounted(() => {
 			<button
 				class="btt-button sidebar-toggle max-[640px]:!hidden"
 				:class="{ active: sidebarCollapsed }"
-				@click="toggleSidebar"
+				@pointerdown.prevent="handleSidebarPointerDown"
+				@click="handleSidebarClick"
+				@keydown.enter.prevent="toggleSidebar"
+				@keydown.space.prevent="toggleSidebar"
 				:aria-label="t('float.toggleSidebar')"
 				:title="t('float.toggleSidebar')"
 			>
@@ -205,7 +235,7 @@ onMounted(() => {
 	/* CSS variable definitions for button sizing/spacing (used in calc() throughout) */
 	--btn-size: 44px;
 	--btn-padding: 3px;
-	--float-gap: 6px;
+	--float-gap: 4px;
 	--float-step: calc(var(--btn-size) + var(--float-gap));
 	/* slot indices (overridden by .has-back) */
 	--back-slot: -1;
@@ -264,16 +294,19 @@ onMounted(() => {
 	background: rgba(255,255,255,0.48);
 	border: 1px solid rgba(255,255,255,0.4);
 	color: rgba(59, 76, 184, 0.85);
-	box-shadow: 0 8px 30px rgba(180,160,220,0.14), inset 0 1px 0 rgba(255,255,255,0.2);
+	box-shadow: 0 6px 18px rgba(180,160,220,0.12), inset 0 1px 0 rgba(255,255,255,0.18);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	transition: transform 90ms ease, box-shadow 120ms ease, background-color 120ms ease, opacity 90ms ease, border-color 120ms ease;
+	transition: transform 45ms ease-out, box-shadow 70ms ease-out, background-color 70ms ease-out, opacity 45ms ease-out, border-color 70ms ease-out;
 	position: absolute;
 	right: 0;
-	backdrop-filter: blur(8px) saturate(120%);
-	-webkit-backdrop-filter: blur(8px) saturate(120%);
+	touch-action: manipulation;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: transparent;
+	will-change: transform, opacity;
 }
 
 /* pink/purple glow effect */
@@ -291,30 +324,30 @@ onMounted(() => {
 	pointer-events: none;
 	border-radius: 14px;
 	background: radial-gradient(40% 40% at 20% 20%, rgba(124,58,237,0.12), transparent 20%), radial-gradient(30% 30% at 80% 80%, rgba(124,58,237,0.06), transparent 20%);
-	filter: blur(10px) saturate(150%);
+	filter: blur(8px) saturate(120%);
 	opacity: 0;
-	transition: opacity 240ms ease, transform 240ms ease;
+	transition: opacity 120ms ease, transform 120ms ease;
 }
 .btt-button:hover::after,
-.btt-button:focus::after {
+.btt-button:focus-visible::after {
 	opacity: 1;
 	transform: translate(-50%, -50%) scale(1.02);
 }
 
 /* unified click effect: match sidebar-toggle active scale */
 .btt-button:active {
-	transform: scale(0.82) !important;
+	transform: scale(0.94) !important;
 }
 
 .settings-button { background: rgba(255,255,255,0.38); color: rgba(59, 76, 184, 0.85); border-color: rgba(255,255,255,0.35); }
-.settings-button:hover { transform: scale(1.06); box-shadow: 0 12px 32px rgba(124, 58, 237, 0.16); background: rgba(124, 58, 237, 0.08); color: rgba(124, 58, 237, 0.95); border-color: rgba(124, 58, 237, 0.22); }
+.settings-button:hover { transform: scale(1.03); box-shadow: 0 10px 22px rgba(124, 58, 237, 0.12); background: rgba(124, 58, 237, 0.08); color: rgba(124, 58, 237, 0.95); border-color: rgba(124, 58, 237, 0.22); }
 .settings-button svg path { stroke: currentColor !important; stroke-width: 1.2 !important; }
 
 /* language toggle show/hide animation */
 .lang-toggle {
 	opacity: 0;
 	transform: translateY(8px) scale(0.92);
-	transition: transform 140ms ease, opacity 120ms ease;
+	transition: transform 80ms ease-out, opacity 70ms ease-out;
 	pointer-events: none;
 }
 .lang-toggle.visible {
@@ -327,7 +360,7 @@ onMounted(() => {
 .clean-toggle {
 	opacity: 0;
 	transform: translateY(8px) scale(0.92);
-	transition: transform 140ms ease, opacity 120ms ease;
+	transition: transform 80ms ease-out, opacity 70ms ease-out;
 	pointer-events: none;
 }
 .clean-toggle.visible {
@@ -342,20 +375,20 @@ onMounted(() => {
 /* reorder buttons to avoid overlap: use 56px step (48px button + 8px gap) */
 .sidebar-toggle { bottom: calc(var(--float-step) * var(--sidebar-slot)); }
 .sidebar-toggle svg {
-	transition: transform 90ms ease;
+	transition: transform 60ms ease-out;
 }
 .sidebar-toggle.active svg {
 	transform: rotate(180deg);
 }
 /* bounce-in when toggled */
 .sidebar-toggle {
-	transition: transform 90ms ease,
-              box-shadow 260ms ease,
-              background-color 260ms ease,
-							opacity 100ms ease;
+	transition: transform 45ms ease-out,
+			      box-shadow 70ms ease-out,
+			      background-color 70ms ease-out,
+						opacity 45ms ease-out;
 }
 .sidebar-toggle:active {
-  transform: scale(0.82) !important;
+  transform: scale(0.94) !important;
 }
 .settings-button { bottom: calc(var(--float-step) * var(--settings-slot)); }
 .lang-toggle { bottom: calc(var(--float-step) * var(--lang-slot)); }
@@ -372,9 +405,9 @@ onMounted(() => {
 }
 
 @media (hover: hover) {
-	.btt-button:hover, .btt-button:focus {
-		transform: scale(1.06);
-		box-shadow: 0 12px 32px rgba(124, 58, 237, 0.16);
+	.btt-button:hover, .btt-button:focus-visible {
+		transform: scale(1.03);
+		box-shadow: 0 10px 22px rgba(124, 58, 237, 0.12);
 		background: rgba(124, 58, 237, 0.08);
 		border-color: rgba(124, 58, 237, 0.22);
 		color: rgba(124, 58, 237, 0.95);
@@ -382,19 +415,23 @@ onMounted(() => {
 	}
 }
 
+.btt-button:focus {
+	outline: none;
+}
+
 /* rotating gear */
 .settings-button svg { transform-origin: 50% 50%; }
 .settings-button.rotating svg {
-	animation: spin 2s linear infinite;
+	animation: none;
 }
 .settings-button.rotating:hover svg {
-	animation-play-state: paused;
+	animation: none;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* language options container (absolute positioned inside float) */
-.lang-options { position: absolute; right: 0; bottom: calc(var(--float-step) * var(--lang-slot)); height: 44px; pointer-events: none; transition: bottom 380ms cubic-bezier(.22,1,.36,1); }
+.lang-options { position: absolute; right: 0; bottom: calc(var(--float-step) * var(--lang-slot)); height: 44px; pointer-events: none; transition: bottom 120ms ease-out; }
 .lang-options.open { pointer-events: auto; }
 .lang-options .lang-btn {
 	position: absolute;
@@ -410,7 +447,7 @@ onMounted(() => {
 	color: #3b4cb8;
 	border: none;
 	opacity: 0;
-	transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 160ms linear;
+	transition: transform 90ms ease-out, opacity 70ms linear;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -444,8 +481,8 @@ onMounted(() => {
 .lang-btn:hover {
 	/* hover: slightly enlarge rather than shift up */
 	animation: none;
-	transform: scale(1.06) !important;
-	box-shadow: 0 14px 30px rgba(6,10,20,0.12);
+	transform: scale(1.03) !important;
+	box-shadow: 0 10px 22px rgba(6,10,20,0.10);
 }
 
 @keyframes float {
@@ -519,9 +556,9 @@ onMounted(() => {
 	.float-container {
 		right: 4px;
 		bottom: 4px;
-		--btn-size: 36px;
+		--btn-size: 38px;
 		--btn-padding: 2px;
-		--float-gap: 4px;
+		--float-gap: 3px;
 	}
 
 	.lang-options .lang-btn {
@@ -531,6 +568,28 @@ onMounted(() => {
 	.btt-button svg {
 		width: 18px;
 		height: 18px;
+	}
+
+	.btt-button {
+		box-shadow: 0 4px 12px rgba(180,160,220,0.10), inset 0 1px 0 rgba(255,255,255,0.14);
+	}
+
+	.btt-button::after {
+		display: none;
+	}
+}
+
+@media (hover: none) {
+	.btt-button::after {
+		display: none;
+	}
+
+	.btt-button,
+	.lang-btn,
+	.lang-toggle,
+	.clean-toggle,
+	.sidebar-toggle {
+		transition: transform 45ms ease-out, opacity 45ms ease-out, background-color 60ms ease-out, border-color 60ms ease-out, box-shadow 60ms ease-out;
 	}
 }
 

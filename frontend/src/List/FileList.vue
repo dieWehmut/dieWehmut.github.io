@@ -38,6 +38,7 @@ const copiedLinks = reactive({})
 const loading = ref(true)
 const error = ref('')
 const defaultBranch = ref('main')
+const hasLoadedRoot = ref(false)
 
 const normalizedQuery = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -167,6 +168,10 @@ function getFileExtension(fileName) {
 
 async function loadContents(path = '') {
   const isRoot = !path
+  if (isRoot && hasLoadedRoot.value) {
+    return
+  }
+
   if (isRoot) {
     loading.value = true
     error.value = ''
@@ -202,6 +207,7 @@ async function loadContents(path = '') {
       entriesRoot.value = items.filter((item) => item.type === 'dir').sort((left, right) => left.name.localeCompare(right.name))
       entriesMap[''] = []
       loading.value = false
+      hasLoadedRoot.value = true
       window.setTimeout(() => {
         fetchFolderDates()
       }, 0)
@@ -285,6 +291,10 @@ onMounted(() => {
   loadContents('')
 })
 
+function ensureLoaded() {
+  return loadContents('')
+}
+
 watch(normalizedQuery, async (queryValue) => {
   if (!queryValue) {
     return
@@ -300,5 +310,5 @@ watch(normalizedQuery, async (queryValue) => {
   })
 })
 
-defineExpose({ filesCount, matchedFilesCount, loading, error })
+defineExpose({ filesCount, matchedFilesCount, loading, error, ensureLoaded })
 </script>

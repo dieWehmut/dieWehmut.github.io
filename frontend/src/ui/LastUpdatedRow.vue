@@ -4,8 +4,7 @@
       <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
     </svg>
     <div :class="contentClass">
-      <span :class="labelClass">{{ t('sidebar.lastUpdated') }}</span>
-      <span :class="dateClass">{{ displayDate }}</span>
+      <span :class="labelClass">{{ t('sidebar.lastUpdated') }}</span><span :class="dateClass">{{ displayDate }}</span><template v-if="placement === 'footer'"><span class="shrink-0 text-inherit">|</span><a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener" class="shrink-0 whitespace-nowrap text-inherit hover:underline">萌ICP备20260803</a></template>
     </div>
   </div>
 </template>
@@ -29,7 +28,7 @@ const isLoading = ref(true)
 
 const wrapperClass = computed(() => {
   if (props.placement === 'footer') {
-    return 'mt-1.5 inline-flex flex-wrap items-center justify-center gap-2 text-[15px] leading-none text-[#3b4cb8] max-[640px]:mt-1 max-[640px]:text-[15px]'
+    return 'mt-1.5 inline-flex items-center justify-center gap-2 text-[15px] leading-none text-[#3b4cb8] max-[640px]:mt-1 max-[640px]:text-[12px]'
   }
 
   return 'grid grid-cols-[18px_1fr] items-start gap-x-2 text-[13px] text-[#3b4cb8]/60'
@@ -37,14 +36,14 @@ const wrapperClass = computed(() => {
 
 const iconClass = computed(() => {
   return props.placement === 'footer'
-    ? 'h-[18px] w-[18px] shrink-0 fill-current'
+    ? 'h-[18px] w-[18px] shrink-0 fill-current max-[640px]:h-[14px] max-[640px]:w-[14px]'
     : 'mt-0.5 h-4 w-4 fill-[#3b4cb8]/60'
 })
 
 const contentClass = computed(() => {
   return props.placement === 'footer'
-    ? 'flex items-center gap-2 max-[640px]:flex-wrap max-[640px]:justify-center'
-    : 'flex flex-wrap items-center gap-2'
+    ? 'flex flex-nowrap items-center gap-2'
+    : 'flex flex-wrap items-center gap-[3px]'
 })
 
 const labelClass = computed(() => {

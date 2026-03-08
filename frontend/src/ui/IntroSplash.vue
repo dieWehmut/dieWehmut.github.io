@@ -1,6 +1,6 @@
 <template>
-  <div class="intro-splash fixed inset-0 z-[6000] flex items-center justify-center overflow-hidden" @click="$emit('skip')" role="dialog" aria-label="Entry animation">
-    <div class="splash-layer relative w-full max-w-[1100px] px-4 py-6 max-[640px]:px-3 max-[640px]:py-4 box-border" :class="{ ready: backgroundReady }">
+  <div class="intro-splash fixed inset-0 z-[6000] flex items-center justify-center overflow-hidden" :class="{ ready: backgroundReady }" @click="$emit('skip')" role="dialog" aria-label="Entry animation">
+    <div class="splash-layer relative w-full max-w-[1100px] px-4 py-6 max-[640px]:px-3 max-[640px]:py-4 box-border">
         <!-- Two concentric semi-ring arcs -->
         <div class="rings absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <span class="semi-ring outer absolute rounded-full"></span>
@@ -118,7 +118,11 @@ onBeforeUnmount(() => {
   background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.36));
   backdrop-filter: blur(10px) saturate(1.05);
 }
-.splash-inner { transform-origin: center center; animation: splashIn 900ms cubic-bezier(.16,.9,.2,1) both }
+.intro-splash.ready {
+  animation: introOverlayExit 680ms cubic-bezier(.22,1,.36,1) forwards;
+}
+.splash-layer { transform-origin: center center; animation: splashIn 900ms cubic-bezier(.16,.9,.2,1) both; }
+.splash-inner { transform-origin: center center; }
 .splash-logo { text-shadow: 0 6px 18px rgba(0,0,0,0.6); display:inline-block; position: relative }
 
 .splash-emblem svg { filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5)) }
@@ -126,10 +130,19 @@ onBeforeUnmount(() => {
 .splash-loader .dot { width:10px; height:10px; background: linear-gradient(180deg,#fff,#e6f3ff); border-radius:50%; opacity:0.95; transform: translateY(0); animation: loaderBounce 1000ms infinite cubic-bezier(.2,.9,.2,1) }
 .splash-loader .dot:nth-child(2){ animation-delay: 120ms }
 .splash-loader .dot:nth-child(3){ animation-delay: 260ms }
-.splash-layer.ready .dot { animation-play-state: paused; opacity:0.6; transform: scale(0.9) }
+.intro-splash.ready .dot { animation-play-state: paused; opacity:0.6; transform: scale(0.9) }
 .splash-logo { animation: titleIn 900ms cubic-bezier(.16,.9,.2,1) both }
 .splash-sub { animation: subIn 900ms cubic-bezier(.2,.9,.2,1) both; animation-delay: 120ms }
-.splash-layer.ready .splash-inner { animation: splashExit 700ms ease forwards; animation-delay: 260ms }
+.intro-splash.ready .splash-layer {
+  animation: splashExit 680ms cubic-bezier(.22,1,.36,1) forwards;
+}
+.intro-splash.ready .semi-ring,
+.intro-splash.ready .float-particles li,
+.intro-splash.ready .splash-logo,
+.intro-splash.ready .splash-sub,
+.intro-splash.ready .splash-logo::after {
+  animation-play-state: paused;
+}
 .splash-logo .char { display:inline-block; opacity:0; transform: translateY(8px) scale(0.98); font-weight:800 }
 .splash-logo .char:nth-child(odd) { color: #fff }
 .splash-logo .char:nth-child(even) { color: #f3f9ff }
@@ -145,7 +158,9 @@ onBeforeUnmount(() => {
 @keyframes subIn { 0% { opacity:0; transform: translateY(6px) } 100% { opacity:1; transform: translateY(0) } }
 @keyframes titlePulse { 0% { transform: scale(1) } 50% { transform: scale(1.02) } 100% { transform: scale(1) } }
 
-@keyframes splashExit { 0% { opacity:1; transform: translateY(0) scale(1) } 60% { opacity:0.9; transform: translateY(-16px) scale(1.06) } 100% { opacity:0; transform: translateY(-40px) scale(1.12) } }
+@keyframes splashExit { 0% { opacity:1; transform: translateY(0) scale(1) } 100% { opacity:0; transform: translateY(-12px) scale(1.02) } }
+
+@keyframes introOverlayExit { 0% { opacity:1 } 100% { opacity:0 } }
 
 @keyframes charIn { 0% { opacity:0; transform: translateY(8px) scale(0.98) } 60% { opacity:1; transform: translateY(-6px) scale(1.02) } 100% { opacity:1; transform: translateY(0) scale(1) } }
 

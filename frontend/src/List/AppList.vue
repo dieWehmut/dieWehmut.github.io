@@ -32,6 +32,7 @@ const apps = ref([])
 const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
+const hasLoaded = ref(false)
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -142,6 +143,10 @@ function handleDownload(item) {
 }
 
 async function loadApps() {
+  if (hasLoaded.value) {
+    return
+  }
+
   loading.value = true
   error.value = ''
 
@@ -181,6 +186,7 @@ async function loadApps() {
   } finally {
     apps.value = [...manualAppItems, ...autoApps]
     loading.value = false
+    hasLoaded.value = true
 
     await enrichItemsWithLatestDate(manualAppItems, {
       fetchCommit: ({ owner, repo }) => fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
@@ -193,5 +199,9 @@ onMounted(() => {
   loadApps()
 })
 
-defineExpose({ apps, filteredApps, loading, error })
+function ensureLoaded() {
+  return loadApps()
+}
+
+defineExpose({ apps, filteredApps, loading, error, ensureLoaded })
 </script>

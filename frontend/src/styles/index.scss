@@ -33,7 +33,7 @@ body,
 }
 
 body {
-  background: #020617;
+  background: linear-gradient(135deg, #f4c8da 0%, #d5afe6 52%, #c0b2ff 100%);
 }
 
 a {
@@ -46,18 +46,4 @@ input,
 textarea,
 select {
   font: inherit;
-}
-
-/* Smooth transitions when toggling sidebar collapsed state.
-   Only animate compositor-friendly properties (transform, opacity)
-   to avoid layout thrashing caused by width/margin transitions
-   combined with backdrop-blur on section cards. */
-.sidebar {
-	transition: transform 150ms cubic-bezier(.2,.9,.2,1), opacity 120ms ease;
-	will-change: transform, opacity;
-}
-
-html.sidebar-collapsed .sidebar {
-	transform: translateX(-24px);
-	opacity: 0;
 }

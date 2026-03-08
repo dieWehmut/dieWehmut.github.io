@@ -103,9 +103,27 @@ export async function enrichItemsWithLatestDate(items, options) {
   <div class="space-y-3 max-[640px]:space-y-2">
     <div
       v-if="loading"
-      class="rounded-3xl border border-white/40 bg-white/[0.42] px-5 py-8 text-center text-sm text-[#3b4cb8]/55 backdrop-blur-sm max-[640px]:rounded-2xl max-[640px]:px-3 max-[640px]:py-5 max-[640px]:text-xs"
+      class="rounded-[26px] border border-white/34 bg-white/[0.24] px-3 py-3 backdrop-blur-[2px] max-[640px]:rounded-2xl max-[640px]:px-2 max-[640px]:py-2.5"
     >
-      {{ loadingText }}
+      <div class="flex flex-col gap-3 rounded-[22px] border border-white/24 bg-white/[0.12] px-3 py-3 max-[640px]:gap-2 max-[640px]:rounded-[18px] max-[640px]:px-2 max-[640px]:py-2">
+        <div class="flex items-center gap-3 max-[640px]:gap-2">
+          <span class="skeleton-block skeleton-icon max-[640px]:h-8 max-[640px]:w-8" />
+
+          <div class="min-w-0 flex-1 space-y-2">
+            <span class="skeleton-block skeleton-line skeleton-line--title" />
+            <span class="skeleton-block skeleton-line skeleton-line--description" />
+          </div>
+
+          <span class="skeleton-block skeleton-badge max-[640px]:hidden" />
+        </div>
+
+        <div class="flex items-center gap-2 max-[640px]:gap-1.5">
+          <span class="skeleton-block skeleton-action max-[640px]:grow" />
+          <span class="skeleton-block skeleton-action max-[640px]:grow" />
+        </div>
+      </div>
+
+      <p class="mt-2 px-1 text-center text-xs text-[#3b4cb8]/50">{{ loadingText }}</p>
     </div>
 
     <div
@@ -117,7 +135,7 @@ export async function enrichItemsWithLatestDate(items, options) {
 
     <div
       v-else-if="!items.length"
-      class="rounded-3xl border border-white/40 bg-white/[0.42] px-5 py-8 text-center text-sm text-[#3b4cb8]/50 backdrop-blur-sm max-[640px]:rounded-2xl max-[640px]:px-3 max-[640px]:py-5 max-[640px]:text-xs"
+      class="rounded-3xl border border-white/38 bg-white/[0.34] px-5 py-8 text-center text-sm text-[#3b4cb8]/50 backdrop-blur-sm max-[640px]:rounded-2xl max-[640px]:px-3 max-[640px]:py-5 max-[640px]:text-xs"
     >
       {{ emptyText }}
     </div>
@@ -126,7 +144,7 @@ export async function enrichItemsWithLatestDate(items, options) {
       <article
         v-for="item in items"
         :key="item.key"
-        class="item-card rounded-3xl border border-white/40 bg-white/[0.42] shadow-[0_8px_32px_rgba(180,160,220,0.12)] backdrop-blur-sm max-[640px]:rounded-2xl"
+        class="item-card rounded-3xl border border-white/38 bg-white/[0.38] shadow-[0_8px_32px_rgba(180,160,220,0.1)] backdrop-blur-sm max-[640px]:rounded-2xl"
       >
         <div
           class="item-row flex flex-col gap-4 rounded-[inherit] p-3 sm:flex-row sm:items-center sm:justify-between max-[640px]:gap-2 max-[640px]:p-2"
@@ -382,6 +400,54 @@ function getActionClass(action, baseClass) {
   transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease, transform 220ms cubic-bezier(.2,.9,.2,1);
 }
 
+.skeleton-block {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(59, 76, 184, 0.12);
+}
+
+.skeleton-block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 10%, rgba(255, 255, 255, 0.58) 48%, transparent 88%);
+  transform: translateX(-140%);
+  animation: skeleton-sweep 1.35s ease-in-out infinite;
+}
+
+.skeleton-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+.skeleton-line {
+  height: 10px;
+}
+
+.skeleton-line--title {
+  width: min(280px, 70%);
+  height: 14px;
+}
+
+.skeleton-line--description {
+  width: min(420px, 88%);
+}
+
+.skeleton-badge {
+  width: 74px;
+  height: 26px;
+  border-radius: 999px;
+}
+
+.skeleton-action {
+  min-width: 88px;
+  height: 30px;
+  border-radius: 12px;
+}
+
 .item-row:focus-visible,
 .child-row:focus-visible {
   outline: none;
@@ -407,6 +473,22 @@ function getActionClass(action, baseClass) {
     background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(255, 255, 255, 0.5));
     box-shadow: 0 8px 24px rgba(180, 160, 220, 0.12);
     transform: translateY(-1px);
+  }
+}
+
+@keyframes skeleton-sweep {
+  from {
+    transform: translateX(-140%);
+  }
+
+  to {
+    transform: translateX(140%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block::after {
+    animation: none;
   }
 }
 </style>

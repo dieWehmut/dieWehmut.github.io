@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-screen overflow-x-clip text-[#3b4cb8]">
+  <div class="relative isolate min-h-screen overflow-x-clip text-[#3b4cb8]">
     <DynamicBackground @ready="onBackgroundReady" />
     <SnowCanvas v-if="showSnowCanvas" :density-scale="snowDensityScale" />
     <SakuraCanvas v-if="showHeavyEffects" :density-scale="sakuraDensityScale" />
@@ -12,7 +12,7 @@
           <SearchBar
             ref="searchBarRef"
             v-model="query"
-            :enter-ready="!showIntro"
+            :enter-ready="true"
             @submit="openFirst"
             @clear="onClear"
           />
@@ -20,10 +20,10 @@
       </header>
 
       <div class="home-layout mx-auto flex w-full max-w-[2000px] flex-1 items-start gap-4 px-4 py-5 sm:px-6 lg:px-8 max-[1000px]:flex-col max-[640px]:gap-2.5 max-[640px]:px-0 max-[640px]:py-3">
-        <SideBar :enter-ready="!showIntro" :show-last-updated="showLastUpdatedInSidebar" />
+        <SideBar :enter-ready="true" :show-last-updated="showLastUpdatedInSidebar" />
 
-        <main class="min-w-0 flex-1 max-[640px]:w-full">
-          <div class="flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none translate-y-3 opacity-0' : 'translate-y-0 opacity-100'">
+        <main class="content-rail min-w-0 flex-1 max-[640px]:w-full">
+          <div class="sections-stack flex flex-col gap-2 max-[640px]:gap-1.5 transition-all duration-500" :class="showIntro ? 'pointer-events-none' : 'pointer-events-auto'">
             <section id="section-pages" v-show="showPagesSection" :class="sectionCardClass" :style="sectionDelayStyle(0)">
               <button type="button" :class="sectionToggleButtonClass" @click="toggleSection('pages')">
                 <div :class="sectionToggleInnerClass">
@@ -181,7 +181,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, unref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, unref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowDown, ArrowUp, Collection, Cpu, Flag, FolderOpened, Monitor } from '@element-plus/icons-vue'
 import SearchBar from '../ui/SearchBar.vue'
@@ -266,7 +266,7 @@ const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMo
 const showHeavyEffects = computed(() => showSnowCanvas.value && !showIntro.value)
 const snowDensityScale = computed(() => (isMobile.value ? 0.05 : 0.12))
 const sakuraDensityScale = computed(() => (isMobile.value ? 0.1 : 0.24))
-const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.48] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-xl transition duration-500 max-[640px]:rounded-2xl'
+const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.48] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-xl max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
 const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-0.5 max-[640px]:pb-2.5'
@@ -366,6 +366,17 @@ function onClear() {
   query.value = ''
 }
 
+async function preloadListData() {
+  await nextTick()
+  await Promise.allSettled([
+    pageListRef.value?.ensureLoaded?.(),
+    toolListRef.value?.ensureLoaded?.(),
+    gameListRef.value?.ensureLoaded?.(),
+    appListRef.value?.ensureLoaded?.(),
+    fileListRef.value?.ensureLoaded?.(),
+  ])
+}
+
 function hideIntro() {
   showIntro.value = false
   showDeferredUi.value = true
@@ -386,7 +397,7 @@ function onBackgroundReady() {
     return
   }
 
-  window.setTimeout(() => hideIntro(), prefersReducedMotion.value ? 80 : 220)
+  window.setTimeout(() => hideIntro(), prefersReducedMotion.value ? 140 : 720)
 }
 
 function handleGlobalHotkeys(event) {
@@ -507,6 +518,9 @@ onMounted(() => {
   window.requestAnimationFrame(() => {
     observeFooterVisibility()
   })
+
+  // Ensure every list is fetched on first load without requiring scroll interaction.
+  preloadListData()
 })
 
 onBeforeUnmount(() => {
@@ -538,13 +552,33 @@ html.sidebar-collapsed .home-layout {
   gap: 0;
 }
 
+.content-rail {
+  transition: none;
+}
+
+.sections-stack {
+  transition: none;
+}
+
 .section-card {
   contain: layout paint;
+  transform-origin: left center;
+  transition: none;
+}
+
+@media (min-width: 1001px) {
+  html.sidebar-collapsed .content-rail {
+    transform: none;
+  }
+
+  html.sidebar-collapsed .section-card {
+    transform: none;
+  }
 }
 
 .section-toggle-enter-active,
 .section-toggle-leave-active {
-  transition: opacity 220ms ease, transform 220ms ease;
+  transition: opacity 260ms ease, transform 260ms ease;
 }
 
 .section-toggle-enter-from,

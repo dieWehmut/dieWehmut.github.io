@@ -29,6 +29,7 @@ const pages = ref([])
 const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
+const hasLoaded = ref(false)
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -85,6 +86,10 @@ const displayItems = computed(() => {
 })
 
 async function loadPages() {
+  if (hasLoaded.value) {
+    return
+  }
+
   loading.value = true
   error.value = ''
 
@@ -96,6 +101,7 @@ async function loadPages() {
     error.value = t('error.unable_load') || 'Unable to load pages.'
   } finally {
     loading.value = false
+    hasLoaded.value = true
   }
 }
 
@@ -103,5 +109,9 @@ onMounted(() => {
   loadPages()
 })
 
-defineExpose({ pagesCount, matchedCount, hasMatches, displayedPages, loading, error })
+function ensureLoaded() {
+  return loadPages()
+}
+
+defineExpose({ pagesCount, matchedCount, hasMatches, displayedPages, loading, error, ensureLoaded })
 </script>

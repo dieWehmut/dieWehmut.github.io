@@ -32,6 +32,7 @@ const tools = ref([])
 const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
+const hasLoaded = ref(false)
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -127,6 +128,10 @@ function shouldShowDownload(tool) {
 }
 
 async function fetchTools() {
+  if (hasLoaded.value) {
+    return
+  }
+
   loading.value = true
   error.value = ''
 
@@ -186,6 +191,8 @@ async function fetchTools() {
     if (!manual.length) {
       return
     }
+  } finally {
+    hasLoaded.value = true
   }
 }
 
@@ -213,5 +220,9 @@ onMounted(() => {
   fetchTools()
 })
 
-defineExpose({ tools, displayedTools, loading, error })
+function ensureLoaded() {
+  return fetchTools()
+}
+
+defineExpose({ tools, displayedTools, loading, error, ensureLoaded })
 </script>

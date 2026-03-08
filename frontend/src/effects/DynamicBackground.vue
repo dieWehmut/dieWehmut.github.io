@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-root fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+  <div class="bg-root fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
     <div class="bg-base"></div>
     <div class="bg-blur bg-blur--a"></div>
     <div class="bg-blur bg-blur--b"></div>

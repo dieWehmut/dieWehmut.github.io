@@ -24,7 +24,7 @@ func getenv(key, fallback string) string {
 }
 
 func main() {
-    port := getenv("PORT", "8080")
+    port := getenv("PORT", "7860")
     githubToken := getenv("GITHUB_TOKEN", "")
     githubAPIBase := getenv("GITHUB_API_BASE", "https://api.github.com")
 

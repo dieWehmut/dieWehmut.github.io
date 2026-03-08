@@ -48,19 +48,16 @@ function loadOptionalUiFont() {
     connection?.saveData ||
     connection?.effectiveType === "slow-2g" ||
     connection?.effectiveType === "2g";
-  const isSmallScreen = window.matchMedia?.("(max-width: 640px)").matches;
 
-  if (slowConnection || isSmallScreen) {
+  if (slowConnection) {
     return;
   }
 
-  scheduleIdleTask(() => {
-    import("./styles/fonts/index.scss")
-      .then(() => {
-        document.documentElement.classList.add("fonts-loaded");
-      })
-      .catch(() => {});
-  }, 3000);
+  import("./styles/fonts/index.scss")
+    .then(() => {
+      document.documentElement.classList.add("fonts-loaded");
+    })
+    .catch(() => {});
 }
 
 function loadAnalytics() {

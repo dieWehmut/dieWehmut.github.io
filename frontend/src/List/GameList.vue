@@ -32,6 +32,7 @@ const games = ref([])
 const loading = ref(true)
 const error = ref('')
 const copiedLinks = reactive({})
+const hasLoaded = ref(false)
 
 const normalizedFilter = computed(() => (props.filterQuery || '').trim().toLowerCase())
 
@@ -142,6 +143,10 @@ function handleDownload(item) {
 }
 
 async function loadGames() {
+  if (hasLoaded.value) {
+    return
+  }
+
   loading.value = true
   error.value = ''
 
@@ -181,6 +186,7 @@ async function loadGames() {
   } finally {
     games.value = [...manualGameItems, ...autoGames]
     loading.value = false
+    hasLoaded.value = true
 
     await enrichItemsWithLatestDate(manualGameItems, {
       fetchCommit: ({ owner, repo }) => fetchWithCache(getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest`), {}, 1000 * 60 * 60 * 6),
@@ -193,5 +199,9 @@ onMounted(() => {
   loadGames()
 })
 
-defineExpose({ games, filteredGames, loading, error })
+function ensureLoaded() {
+  return loadGames()
+}
+
+defineExpose({ games, filteredGames, loading, error, ensureLoaded })
 </script>

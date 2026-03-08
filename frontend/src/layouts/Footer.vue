@@ -1,21 +1,23 @@
 <template>
-  <div class="footer max-w-[1080px] mx-auto px-3 pt-[18px] pb-7 text-center !bg-transparent max-[640px]:px-0.5">
-    <div class="footer-meta flex flex-col items-center gap-1">
-    <div class="survival-time inline-flex flex-wrap items-center justify-center gap-2 text-[15px] leading-none !text-[#3b4cb8] max-[640px]:text-[15px]">
-      <svg class="h-[18px] w-[18px] shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+  <div class="footer max-w-[1080px] mx-auto px-3 pt-[18px] pb-7 text-center !bg-transparent max-[640px]:px-1">
+    <div class="footer-meta flex flex-col items-center gap-1.5">
+    <div class="survival-time inline-flex flex-wrap items-center justify-center gap-1 text-[15px] leading-none !text-[#3b4cb8] max-[640px]:text-[12px]">
+      <svg class="h-[18px] w-[18px] shrink-0 fill-current max-[640px]:h-[14px] max-[640px]:w-[14px]" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 11.59V7a1 1 0 00-2 0v6a1 1 0 00.29.71l3 3a1 1 0 001.41-1.41z" />
       </svg>
       <span>{{ t('footer.uptime') }}:</span>
-      <span class="font-bold px-1">{{ time.days }}</span>d
-      <span class="font-bold px-1">{{ time.hours }}</span>h
-      <span class="font-bold px-1">{{ time.minutes }}</span>m
-      <span class="font-bold px-1">{{ time.seconds }}</span>s
+      <span class="font-bold">{{ time.days }}</span>d
+      <span class="font-bold">{{ time.hours }}</span>h
+      <span class="font-bold">{{ time.minutes }}</span>m
+      <span class="font-bold">{{ time.seconds }}</span>s
+      <span class="max-[640px]:hidden inline-flex items-center shrink-0">|<a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener">萌ICP备20260803</a></span>
     </div>
 
     <LastUpdatedRow v-if="showLastUpdated" class="!mt-0" placement="footer" />
 
-    <div class="copyright text-xs text-[#3b4cb8]/80 font-medium leading-none whitespace-nowrap max-[640px]:w-full max-[640px]:px-0 max-[640px]:text-[11px]">
-      © {{ copyrightYear }} {{ githubUser }}.All Rights Reserved.|<a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener">萌ICP备20260803号</a>
+    <div class="copyright inline-flex items-center gap-1 text-[15px] text-[#3b4cb8]/80 font-medium leading-none max-[640px]:text-[12px]">
+      <span>©</span>
+      <span>{{ copyrightYear }} {{ githubUser }}.All Rights Reserved.</span>
     </div>
     </div>
   </div>
@@ -112,6 +114,13 @@ onBeforeUnmount(() => {
 .copyright,
 .record {
   text-shadow: 0 1px 4px rgba(180,160,220,0.15);
+}
+.survival-time a {
+  color: inherit;
+  text-decoration: none;
+}
+.survival-time a:hover {
+  text-decoration: underline;
 }
 .copyright a {
   color: inherit;

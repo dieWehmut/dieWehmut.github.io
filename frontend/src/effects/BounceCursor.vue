@@ -55,23 +55,14 @@ function updateHoverState(target) {
   }
 }
 
-let pendingRaf = 0
-let lastMoveEvent = null
-
-function flushMove() {
-  pendingRaf = 0
-  const e = lastMoveEvent
-  if (!e) return
+function applyMove(e) {
   x.value = e.clientX
   y.value = e.clientY
   updateHoverState(e.target)
 }
 
 function onMouseMove(e) {
-  lastMoveEvent = e
-  if (!pendingRaf) {
-    pendingRaf = requestAnimationFrame(flushMove)
-  }
+  applyMove(e)
 }
 
 function onMouseLeave() {
@@ -85,7 +76,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (pendingRaf) cancelAnimationFrame(pendingRaf)
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mouseleave', onMouseLeave)
   document.documentElement.classList.remove('heart-bounce-active')
@@ -149,14 +139,5 @@ onBeforeUnmount(() => {
   cursor: none !important;
 }
 
-/* Also cover float controls and custom buttons so native cursor is hidden there too */
-:global(html.heart-bounce-active .btt-button),
-:global(html.heart-bounce-active .lang-btn),
-:global(html.heart-bounce-active .sidebar-toggle),
-:global(html.heart-bounce-active .settings-button),
-:global(html.heart-bounce-active .lang-toggle),
-:global(html.heart-bounce-active .clean-toggle),
-:global(html.heart-bounce-active .float-container) {
-  cursor: none !important;
-}
+/* Keep native cursor on float controls to avoid visible pointer lag on tiny buttons. */
 </style>
