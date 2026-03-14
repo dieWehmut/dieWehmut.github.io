@@ -30,10 +30,21 @@ jobs:
         working-directory: frontend
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Inject API base
         working-directory: frontend
         env:
-          VITE_API_BASE: https://dieWehmut-nexus-backend.hf.space
+          API_PROXY_BASE: ${{ secrets.API_PROXY_BASE }}
+        run: |
+          mkdir -p public
+          if [ -z "$API_PROXY_BASE" ]; then
+            echo "API_PROXY_BASE is required for GitHub Pages"
+            exit 1
+          fi
+          BASE_TRIMMED="${API_PROXY_BASE%/}"
+          printf "window.__API_BASE__ = \"%s\";" "$BASE_TRIMMED" > public/api-base.js
+
+      - name: Build
+        working-directory: frontend
         run: pnpm build
 
       - name: Deploy
