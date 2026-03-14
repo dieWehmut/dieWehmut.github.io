@@ -193,8 +193,8 @@ async function fetchTools() {
         },
       })
 
-      const datedAutoTools = await Promise.all(
-        autoTools.map(async (tool) => {
+      const datedAutoTools = await runWithConcurrency(
+        autoTools.map((tool) => async () => {
           try {
             const commit = await fetchWithCache(buildLatestCommitApiUrl(owner, repo, tool.path || tool.name), {}, 1000 * 60 * 60 * 6)
             const lastModified = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
@@ -203,6 +203,8 @@ async function fetchTools() {
             return tool
           }
         }),
+        4,
+        700,
       )
 
       tools.value = [...datedManual, ...datedAutoTools]
@@ -261,4 +263,44 @@ function ensureLoaded() {
 }
 
 defineExpose({ tools, displayedTools, loading, error, ensureLoaded })
+
+function runWithConcurrency(tasks, limit, idleDelayMs) {
+  if (!tasks.length) {
+    return Promise.resolve([])
+  }
+
+  let index = 0
+  let completed = 0
+  const results = new Array(tasks.length)
+
+  const workers = Array.from({ length: Math.min(limit, tasks.length) }).map(async () => {
+    while (index < tasks.length) {
+      const taskIndex = index
+      index += 1
+      results[taskIndex] = await tasks[taskIndex]()
+      completed += 1
+      if (completed % limit === 0) {
+        await idleYield(idleDelayMs)
+      }
+    }
+  })
+
+  return Promise.all(workers).then(() => results)
+}
+
+function idleYield(delayMs) {
+  if (typeof window === 'undefined') {
+    return Promise.resolve()
+  }
+
+  if (typeof window.requestIdleCallback === 'function') {
+    return new Promise((resolve) => {
+      window.requestIdleCallback(() => resolve(), { timeout: Math.max(200, Number(delayMs) || 0) })
+    })
+  }
+
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, Math.min(800, Math.max(0, Number(delayMs) || 0)))
+  })
+}
 </script>

@@ -33,14 +33,14 @@ jobs:
       - name: Inject API base
         working-directory: frontend
         env:
-          API_PROXY_BASE: ${{ secrets.API_PROXY_BASE }}
+          HF_SPACE_URL: ${{ secrets.HF_SPACE_URL }}
         run: |
           mkdir -p public
-          if [ -z "$API_PROXY_BASE" ]; then
-            echo "API_PROXY_BASE is required for GitHub Pages"
+          if [ -z "$HF_SPACE_URL" ]; then
+            echo "HF_SPACE_URL is required for GitHub Pages"
             exit 1
           fi
-          BASE_TRIMMED="${API_PROXY_BASE%/}"
+          BASE_TRIMMED="${HF_SPACE_URL%/}"
           printf "window.__API_BASE__ = \"%s\";" "$BASE_TRIMMED" > public/api-base.js
 
       - name: Build

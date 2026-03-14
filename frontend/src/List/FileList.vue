@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { copyTextWithToast, formatListDate } from '../ui/ItemList.vue'
 import ItemList from '../ui/ItemList.vue'
@@ -43,8 +43,10 @@ const hasLoadedRoot = ref(false)
 const SNAPSHOT_KEY = 'files:list'
 let repoMetaPromise = null
 const loadPromises = new Map()
+let filterTimer = null
 
 const normalizedQuery = computed(() => (props.filterQuery || '').trim().toLowerCase())
+const repoInfo = computed(() => parseRepo(props.repoUrl))
 
 const filteredEntriesRoot = computed(() => {
   if (!normalizedQuery.value) {
@@ -74,78 +76,91 @@ const filesCount = computed(() => entriesRoot.value.length)
 const viewableExtensions = new Set(['PDF', 'MD', 'TXT', 'PNG', 'JPG', 'JPEG', 'SVG', 'HTML', 'HTM', 'GIF'])
 
 const displayItems = computed(() => {
-  return filteredEntriesRoot.value.map((folder) => ({
-    key: folder.path,
-    title: folder.name,
-    icon: 'folder',
-    date: folderDates[folder.path] ? formatListDate(folderDates[folder.path], { pad: true }) : '',
-    onClick: () => toggleDir(folder),
-    actions: [
-      {
-        key: openDirs[folder.path] ? 'collapse' : 'expand',
-        label: openDirs[folder.path] ? t('action.collapse') : t('action.expand'),
-        icon: openDirs[folder.path] ? 'collapse' : 'expand',
-        onClick: () => toggleDir(folder),
-      },
-      {
-        key: 'repo',
-        label: t('action.repo'),
-        icon: 'repo',
-        href: getFolderUrl(folder),
-      },
-      {
-        key: 'copy',
-        label: copiedLinks[getFolderUrl(folder)] ? t('action.copied') : t('action.copy'),
-        icon: 'copy',
-        active: !!copiedLinks[getFolderUrl(folder)],
-        onClick: () => copyTextWithToast(getFolderUrl(folder), copiedLinks, { copiedKey: getFolderUrl(folder), duration: 3000 }),
-      },
-    ],
-    children: openDirs[folder.path]
-      ? loadingDirs[folder.path]
-        ? [
-            {
-              key: `${folder.path}__loading`,
-              title: `${t('common.loading')}...`,
-              icon: 'file',
-              meta: t('nav.files'),
-              actions: [],
-            },
-          ]
-        : getFilteredFilesForFolder(folder.path).map((file) => ({
-            key: file.path,
-            title: file.name,
-            icon: 'file',
-            badges: file.extension ? [file.extension] : [],
-            onClick: isViewable(file) ? () => openFile(blobUrlFor(file)) : undefined,
-            actions: [
-              ...(isViewable(file)
-                ? [
-                    {
-                      key: 'view',
-                      label: t('action.view'),
-                      icon: 'view',
-                      href: blobUrlFor(file),
-                    },
-                  ]
-                : []),
+  return filteredEntriesRoot.value.map((folder) => {
+    const folderUrl = getFolderUrl(folder)
+    const isOpen = openDirs[folder.path]
+    const hasLoading = loadingDirs[folder.path]
+    const date = folderDates[folder.path] ? formatListDate(folderDates[folder.path], { pad: true }) : ''
+
+    return {
+      key: folder.path,
+      title: folder.name,
+      icon: 'folder',
+      date,
+      onClick: () => toggleDir(folder),
+      actions: [
+        {
+          key: isOpen ? 'collapse' : 'expand',
+          label: isOpen ? t('action.collapse') : t('action.expand'),
+          icon: isOpen ? 'collapse' : 'expand',
+          onClick: () => toggleDir(folder),
+        },
+        {
+          key: 'repo',
+          label: t('action.repo'),
+          icon: 'repo',
+          href: folderUrl,
+        },
+        {
+          key: 'copy',
+          label: copiedLinks[folderUrl] ? t('action.copied') : t('action.copy'),
+          icon: 'copy',
+          active: !!copiedLinks[folderUrl],
+          onClick: () => copyTextWithToast(folderUrl, copiedLinks, { copiedKey: folderUrl, duration: 3000 }),
+        },
+      ],
+      children: isOpen
+        ? hasLoading
+          ? [
               {
-                key: 'download',
-                label: t('action.download'),
-                icon: 'download',
-                href: rawUrlFor(file),
+                key: `${folder.path}__loading`,
+                title: `${t('common.loading')}...`,
+                icon: 'file',
+                meta: t('nav.files'),
+                actions: [],
               },
-              {
-                key: 'copy',
-                label: copiedLinks[blobUrlFor(file)] ? t('action.copied') : t('action.copy'),
-                icon: 'copy',
-                active: !!copiedLinks[blobUrlFor(file)],
-                onClick: () => copyTextWithToast(blobUrlFor(file), copiedLinks, { copiedKey: blobUrlFor(file), duration: 3000 }),
-              },
-            ],
-          }))
-      : [],
-  }))
+            ]
+          : getFilteredFilesForFolder(folder.path).map((file) => {
+              const fileBlobUrl = blobUrlFor(file)
+              const fileRawUrl = rawUrlFor(file)
+              const viewable = isViewable(file)
+
+              return {
+                key: file.path,
+                title: file.name,
+                icon: 'file',
+                badges: file.extension ? [file.extension] : [],
+                onClick: viewable ? () => openFile(fileBlobUrl) : undefined,
+                actions: [
+                  ...(viewable
+                    ? [
+                        {
+                          key: 'view',
+                          label: t('action.view'),
+                          icon: 'view',
+                          href: fileBlobUrl,
+                        },
+                      ]
+                    : []),
+                  {
+                    key: 'download',
+                    label: t('action.download'),
+                    icon: 'download',
+                    href: fileRawUrl,
+                  },
+                  {
+                    key: 'copy',
+                    label: copiedLinks[fileBlobUrl] ? t('action.copied') : t('action.copy'),
+                    icon: 'copy',
+                    active: !!copiedLinks[fileBlobUrl],
+                    onClick: () => copyTextWithToast(fileBlobUrl, copiedLinks, { copiedKey: fileBlobUrl, duration: 3000 }),
+                  },
+                ],
+              }
+            })
+        : [],
+    }
+  })
 })
 
 function parseRepo(urlValue) {
@@ -208,7 +223,7 @@ async function ensureRepoMetaLoaded() {
     return repoMetaPromise
   }
 
-  const { owner, repo } = parseRepo(props.repoUrl)
+  const { owner, repo } = repoInfo.value
 
   repoMetaPromise = (async () => {
     try {
@@ -250,7 +265,7 @@ async function loadContents(path = '') {
       loadingDirs[path] = true
     }
 
-    const { owner, repo } = parseRepo(props.repoUrl)
+    const { owner, repo } = repoInfo.value
 
     try {
       await ensureRepoMetaLoaded()
@@ -274,9 +289,9 @@ async function loadContents(path = '') {
         loading.value = false
         hasLoadedRoot.value = true
         persistFileSnapshot()
-        window.setTimeout(() => {
+        idleYield(800).then(() => {
           fetchFolderDates()
-        }, 0)
+        })
         return entriesRoot.value
       }
 
@@ -302,24 +317,24 @@ async function loadContents(path = '') {
 }
 
 async function fetchFolderDates() {
-  const { owner, repo } = parseRepo(props.repoUrl)
+  const { owner, repo } = repoInfo.value
 
-  await Promise.all(
-    entriesRoot.value.map(async (folder) => {
-      try {
-        const commit = await fetchWithCache(
-          getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest?path=${encodeURIComponent(folder.path)}`),
-          {},
-          1000 * 60 * 60 * 6,
-        )
-        if (commit?.commit) {
-          folderDates[folder.path] = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
-          persistFileSnapshot()
-        }
-      } catch {
+  const tasks = entriesRoot.value.map((folder) => async () => {
+    try {
+      const commit = await fetchWithCache(
+        getBackendApiUrl(`/api/github/repos/${owner}/${repo}/commits/latest?path=${encodeURIComponent(folder.path)}`),
+        {},
+        1000 * 60 * 60 * 6,
+      )
+      if (commit?.commit) {
+        folderDates[folder.path] = commit?.commit?.committer?.date || commit?.commit?.author?.date || null
+        persistFileSnapshot()
       }
-    }),
-  )
+    } catch {
+    }
+  })
+
+  await runWithConcurrency(tasks, 4, 800)
 }
 
 function getFilteredFilesForFolder(folderPath) {
@@ -336,17 +351,17 @@ function isViewable(file) {
 }
 
 function rawUrlFor(file) {
-  const { owner, repo } = parseRepo(props.repoUrl)
+  const { owner, repo } = repoInfo.value
   return file.download_url || `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch.value}/${file.path}`
 }
 
 function blobUrlFor(file) {
-  const { owner, repo } = parseRepo(props.repoUrl)
+  const { owner, repo } = repoInfo.value
   return file.html_url || `https://github.com/${owner}/${repo}/blob/${defaultBranch.value}/${file.path}`
 }
 
 function getFolderUrl(folder) {
-  const { owner, repo } = parseRepo(props.repoUrl)
+  const { owner, repo } = repoInfo.value
   return folder.html_url || `https://github.com/${owner}/${repo}/tree/${defaultBranch.value}/${folder.path}`
 }
 
@@ -372,20 +387,72 @@ function ensureLoaded() {
   return loadContents('')
 }
 
-watch(normalizedQuery, async (queryValue) => {
-  if (!queryValue) {
-    return
+watch(normalizedQuery, (queryValue) => {
+  if (filterTimer) {
+    window.clearTimeout(filterTimer)
   }
 
-  const foldersToLoad = filteredEntriesRoot.value.filter((folder) => !entriesMap[folder.path])
-  await Promise.all(foldersToLoad.map((folder) => loadContents(folder.path)))
+  filterTimer = window.setTimeout(async () => {
+    if (!queryValue) {
+      return
+    }
 
-  filteredEntriesRoot.value.forEach((folder) => {
-    if (getFilteredFilesForFolder(folder.path).length > 0) {
-      openDirs[folder.path] = true
+    const foldersToLoad = filteredEntriesRoot.value.filter((folder) => !entriesMap[folder.path])
+    const tasks = foldersToLoad.map((folder) => () => loadContents(folder.path))
+    await runWithConcurrency(tasks, 3, 500)
+
+    filteredEntriesRoot.value.forEach((folder) => {
+      if (getFilteredFilesForFolder(folder.path).length > 0) {
+        openDirs[folder.path] = true
+      }
+    })
+  }, 180)
+})
+
+onBeforeUnmount(() => {
+  if (filterTimer) {
+    window.clearTimeout(filterTimer)
+  }
+})
+
+function runWithConcurrency(tasks, limit, idleDelayMs) {
+  if (!tasks.length) {
+    return Promise.resolve()
+  }
+
+  let index = 0
+  let completed = 0
+
+  const workers = Array.from({ length: Math.min(limit, tasks.length) }).map(async () => {
+    while (index < tasks.length) {
+      const taskIndex = index
+      index += 1
+      await tasks[taskIndex]()
+      completed += 1
+      if (completed % limit === 0) {
+        await idleYield(idleDelayMs)
+      }
     }
   })
-})
+
+  return Promise.all(workers)
+}
+
+function idleYield(delayMs) {
+  if (typeof window === 'undefined') {
+    return Promise.resolve()
+  }
+
+  if (typeof window.requestIdleCallback === 'function') {
+    return new Promise((resolve) => {
+      window.requestIdleCallback(() => resolve(), { timeout: Math.max(200, Number(delayMs) || 0) })
+    })
+  }
+
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, Math.min(800, Math.max(0, Number(delayMs) || 0)))
+  })
+}
 
 defineExpose({ filesCount, matchedFilesCount, loading, error, ensureLoaded })
 </script>

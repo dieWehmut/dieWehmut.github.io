@@ -74,28 +74,69 @@ export async function enrichItemsWithLatestDate(items, options) {
     assignDate = (item, value) => {
       item.date = value
     },
+    concurrency = 4,
+    idleDelayMs = 600,
   } = options
 
-  await Promise.all(
-    items.map(async (item) => {
-      if (hasDate(item)) {
-        return
-      }
+  const tasks = items.map((item) => async () => {
+    if (hasDate(item)) {
+      return
+    }
 
-      const repo = parseGitHubRepo(getRepoUrl(item))
-      if (!repo) {
-        return
-      }
+    const repo = parseGitHubRepo(getRepoUrl(item))
+    if (!repo) {
+      return
+    }
 
-      try {
-        const commit = await fetchCommit(repo)
-        if (commit?.commit) {
-          assignDate(item, commit?.commit?.committer?.date || commit?.commit?.author?.date || null)
-        }
-      } catch {
+    try {
+      const commit = await fetchCommit(repo)
+      if (commit?.commit) {
+        assignDate(item, commit?.commit?.committer?.date || commit?.commit?.author?.date || null)
       }
-    }),
-  )
+    } catch {
+    }
+  })
+
+  await runWithConcurrency(tasks, Math.max(1, Number(concurrency) || 1), idleDelayMs)
+}
+
+function runWithConcurrency(tasks, limit, idleDelayMs) {
+  if (!tasks.length) {
+    return Promise.resolve()
+  }
+
+  let index = 0
+  let completed = 0
+
+  const workers = Array.from({ length: Math.min(limit, tasks.length) }).map(async () => {
+    while (index < tasks.length) {
+      const taskIndex = index
+      index += 1
+      await tasks[taskIndex]()
+      completed += 1
+      if (completed % limit === 0) {
+        await idleYield(idleDelayMs)
+      }
+    }
+  })
+
+  return Promise.all(workers)
+}
+
+function idleYield(delayMs) {
+  if (typeof window === 'undefined') {
+    return Promise.resolve()
+  }
+
+  if (typeof window.requestIdleCallback === 'function') {
+    return new Promise((resolve) => {
+      window.requestIdleCallback(() => resolve(), { timeout: Math.max(200, Number(delayMs) || 0) })
+    })
+  }
+
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, Math.min(800, Math.max(0, Number(delayMs) || 0)))
+  })
 }
 </script>
 

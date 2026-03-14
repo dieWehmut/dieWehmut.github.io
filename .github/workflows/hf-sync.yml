@@ -21,21 +21,32 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_SPACE_URL: ${{ secrets.HF_SPACE_URL }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE_GIT_URL: ${{ secrets.HF_SPACE_GIT_URL }}
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "github-actions"
 
-          if [ -z "$HF_SPACE_URL" ]; then
-            echo "HF_SPACE_URL is required"
-            exit 1
-          fi
           if [ -z "$HF_USERNAME" ]; then
             echo "HF_USERNAME is required"
             exit 1
           fi
 
-          SPACE_URL="${HF_SPACE_URL#https://}"
-          SPACE_URL="${SPACE_URL#http://}"
+          if [ -n "$HF_SPACE_GIT_URL" ]; then
+            SPACE_URL="${HF_SPACE_GIT_URL#https://}"
+            SPACE_URL="${SPACE_URL#http://}"
+          else
+            if [ -z "$HF_SPACE_URL" ]; then
+              echo "HF_SPACE_URL is required when HF_SPACE_GIT_URL is not set"
+              exit 1
+            fi
+            if [[ "$HF_SPACE_URL" == *huggingface.co/spaces/* ]]; then
+              SPACE_URL="${HF_SPACE_URL#https://}"
+              SPACE_URL="${SPACE_URL#http://}"
+            else
+              echo "HF_SPACE_GIT_URL is required when HF_SPACE_URL is not a huggingface.co/spaces URL"
+              exit 1
+            fi
+          fi
 
           git clone "https://$HF_USERNAME:$HF_TOKEN@$SPACE_URL" hf-space
 
