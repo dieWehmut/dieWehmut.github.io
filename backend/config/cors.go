@@ -37,7 +37,7 @@ func AllowedOrigins() []string {
 func CORSConfig() cors.Config {
     return cors.Config{
         AllowOrigins:     AllowedOrigins(),
-        AllowMethods:     []string{"GET", "OPTIONS"},
+        AllowMethods:     []string{"GET", "POST", "OPTIONS"},
         AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
         ExposeHeaders:    []string{"Content-Length"},
         AllowCredentials: false,
