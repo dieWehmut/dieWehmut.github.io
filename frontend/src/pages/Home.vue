@@ -271,7 +271,7 @@ const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMo
 const showHeavyEffects = computed(() => showSnowCanvas.value && mainContentVisible.value)
 const snowDensityScale = computed(() => (isMobile.value ? 0.05 : 0.12))
 const sakuraDensityScale = computed(() => (isMobile.value ? 0.1 : 0.24))
-const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.48] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-xl max-[640px]:rounded-2xl'
+const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.58] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-sm max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
 const sectionContentClass = 'px-4 pb-4 sm:px-5 sm:pb-5 max-[640px]:px-0.5 max-[640px]:pb-2.5'

@@ -2,11 +2,11 @@
     "rewrites": [
         {
             "source": "/api/ping",
-            "destination": "/api/proxy?target=/ping"
+            "destination": "/api/proxy?target=/api/ping"
         },
         {
             "source": "/api/:path*",
-            "destination": "/api/proxy?target=/:path*"
+            "destination": "/api/proxy?target=/api/:path*"
         }
     ]
 }

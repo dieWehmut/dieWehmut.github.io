@@ -1,10 +1,10 @@
 <template>
-  <nav class="sidebar sticky w-[300px] shrink-0 !bg-white/[0.48] !border !border-white/40 rounded-3xl px-[18px] py-[14px] overflow-hidden !shadow-none z-[1100] mr-0 will-change-[opacity,transform]" :class="{ 'entering': enterReady }" aria-label="目录">
+  <nav class="sidebar sticky w-[300px] shrink-0 !bg-white/[0.48] !border !border-white/40 rounded-3xl px-[18px] py-[14px] overflow-hidden !shadow-none z-[1100] mr-0" :class="{ 'entering': enterReady }" aria-label="目录">
     <!-- About Me Section -->
     <div class="about-me mb-3 flex flex-col items-center max-[1000px]:items-stretch max-[1000px]:gap-3 max-[1000px]:mb-0">
       <div class="mobile-top-row max-[1000px]:grid max-[1000px]:items-start max-[1000px]:gap-4">
       <div class="avatar-container mb-2 shrink-0 max-[1000px]:mb-0">
-        <img :src="avatarUrl" alt="Avatar" class="avatar w-[240px] h-[240px] rounded-full shadow-[0_8px_20px_rgba(59,76,184,0.12)] transition-[transform,box-shadow,filter] duration-[260ms] will-change-[transform,box-shadow]" />
+        <img :src="avatarUrl" alt="Avatar" class="avatar w-[240px] h-[240px] rounded-full shadow-[0_8px_20px_rgba(59,76,184,0.12)] transition-[transform,box-shadow,filter] duration-[260ms]" />
       </div>
       <div class="about-content px-2 w-full m-0 text-left flex-1 min-w-0 max-[1000px]:px-0 max-[1000px]:pt-0">
             <h3 class="name text-[28px] font-bold !text-[#3b4cb8] mt-2 mb-1.5 max-[1000px]:mt-0">dieWehmut</h3>

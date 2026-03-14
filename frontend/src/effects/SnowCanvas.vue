@@ -20,10 +20,10 @@ let H = 0
 let dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────────
-const COUNT        = 180    // 雪的基础密度
+const COUNT        = 80     // 雪的基础密度
 const AREA         = 420    // density reference area (px²/particle)
 const MIN_R        = 2.1    // min radius px (logical)
-const MAX_R        = 6.8    // max radius px (logical)
+const MAX_R        = 5.5    // max radius px (logical)
 const SPEED_BASE   = 0.78   // base fall speed (logical px/frame) – gentle drift
 // ───────────────────────────────────────────────────────────────────────────
 

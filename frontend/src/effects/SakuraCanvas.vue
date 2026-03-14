@@ -28,9 +28,9 @@ let ctx = null
 let W = 0, H = 0, dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────
-const PETAL_COUNT      = 48
+const PETAL_COUNT      = 20
 const MIN_SIZE         = 14
-const MAX_SIZE         = 32
+const MAX_SIZE         = 28
 const FALL_SPEED       = 0.72
 const DRIFT_SPEED      = -0.52
 const ROTATION_SP      = 0.016
@@ -136,13 +136,8 @@ function drawPetalShape(p, x, y, scale) {
   )
   ctx.closePath()
 
-  // ── radial gradient: lighter center, richer edges ──
-  const grad = ctx.createRadialGradient(0, -s * 0.05, s * 0.04, 0, 0, s * 0.88)
-  grad.addColorStop(0,    `hsla(${h}, 92%, 97%, ${p.opacity})`)
-  grad.addColorStop(0.3,  `hsla(${h}, 88%, ${p.lightness + 5}%, ${p.opacity})`)
-  grad.addColorStop(0.7,  `hsla(${h}, 80%, ${p.lightness + 1}%, ${p.opacity})`)
-  grad.addColorStop(1,    `hsla(${h}, 76%, ${p.lightness - 4}%, ${p.opacity * 0.82})`)
-  ctx.fillStyle = grad
+  // ── solid fill with slight alpha for depth ──
+  ctx.fillStyle = `hsla(${h}, 84%, ${p.lightness}%, ${p.opacity})`
   ctx.fill()
 
   // ── center vein (crease) ──
@@ -151,30 +146,6 @@ function drawPetalShape(p, x, y, scale) {
   ctx.beginPath()
   ctx.moveTo(0, s * 0.6)
   ctx.quadraticCurveTo(s * 0.01, 0, 0, -s * 0.42)
-  ctx.stroke()
-
-  // ── secondary veins ──
-  ctx.strokeStyle = `hsla(${h}, 38%, ${p.lightness - 12}%, ${p.opacity * 0.1})`
-  ctx.lineWidth = 0.3
-  ctx.beginPath()
-  ctx.moveTo(0, s * 0.28)
-  ctx.quadraticCurveTo(s * 0.14, -s * 0.08, s * 0.2, -s * 0.38)
-  ctx.stroke()
-  ctx.beginPath()
-  ctx.moveTo(0, s * 0.28)
-  ctx.quadraticCurveTo(-s * 0.14, -s * 0.08, -s * 0.2, -s * 0.38)
-  ctx.stroke()
-
-  // ── edge highlight (light catching one side) ──
-  ctx.strokeStyle = `hsla(${h}, 60%, 97%, ${p.opacity * 0.12})`
-  ctx.lineWidth = 0.6
-  ctx.beginPath()
-  ctx.moveTo(0, s * 0.88)
-  ctx.bezierCurveTo(
-    s * (0.48 + asym), s * 0.32,
-    s * (0.62 + asym), -s * 0.12,
-    s * 0.3, -s * (0.68 - nd * 0.3)
-  )
   ctx.stroke()
 
   ctx.restore()
@@ -209,7 +180,7 @@ function triggerBurst() {
     })
   }
   // extra sparkle petals
-  const sparkles = Math.min(18, collected.length * 3)
+  const sparkles = Math.min(8, collected.length * 2)
   for (let i = 0; i < sparkles; i++) {
     const p = mkPetal(false)
     p.size = rand(5, 14)

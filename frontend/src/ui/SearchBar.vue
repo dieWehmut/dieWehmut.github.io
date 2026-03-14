@@ -1,6 +1,6 @@
 <template>
   <div class="search w-[min(960px,92vw)] mx-auto rounded-xl border-0 bg-transparent px-2 py-0.5 shadow-none max-[640px]:w-full max-[640px]:px-0 max-[640px]:py-0.5" :class="{ 'entering': enterReady }">
-    <div class="search-shell flex items-center gap-3 rounded-2xl border border-white/40 bg-white/[0.48] px-4 py-2 shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(180,160,220,0.12)] backdrop-blur-xl backdrop-saturate-[118%] transition-all duration-200 max-[640px]:gap-2 max-[640px]:rounded-xl max-[640px]:px-2.5 max-[640px]:py-1.5">
+    <div class="search-shell flex items-center gap-3 rounded-2xl border border-white/40 bg-white/[0.58] px-4 py-2 shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(180,160,220,0.12)] backdrop-blur-sm backdrop-saturate-[118%] transition-all duration-200 max-[640px]:gap-2 max-[640px]:rounded-xl max-[640px]:px-2.5 max-[640px]:py-1.5">
       <Search class="search-icon h-[18px] w-[18px] shrink-0" />
       <input
         id="global-search-input"
@@ -138,7 +138,6 @@ defineExpose({ focusInput })
 
 .search {
   transition: opacity 420ms cubic-bezier(.16,.9,.2,1), transform 420ms cubic-bezier(.16,.9,.2,1);
-  will-change: opacity, transform;
 }
 
 .search:not(.entering) {
@@ -165,14 +164,13 @@ defineExpose({ focusInput })
   border-radius: 10px;
   background: radial-gradient(40% 40% at 20% 20%, rgba(124,58,237,0.12), transparent 20%),
               radial-gradient(30% 30% at 80% 80%, rgba(124,58,237,0.06), transparent 20%);
-  filter: blur(10px) saturate(150%);
+  filter: saturate(150%);
   opacity: 0;
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
 .nav-btn {
   transition: transform 220ms cubic-bezier(.2,.9,.2,1), background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, color 220ms ease;
-  will-change: transform;
 }
 
 .nav-btn:hover,

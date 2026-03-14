@@ -113,5 +113,5 @@ const app = createApp(App);
 app.use(i18n);
 
 app.mount("#app");
-loadOptionalUiFont();
+scheduleIdleTask(loadOptionalUiFont, 3000);
 loadAnalytics();

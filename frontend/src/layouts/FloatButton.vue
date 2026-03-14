@@ -286,7 +286,6 @@ onMounted(() => {
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
-	will-change: transform, opacity;
 }
 
 /* pink/purple glow effect */

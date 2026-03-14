@@ -27,6 +27,9 @@ func NewRouter(githubService *service.GitHubService, pagesService *service.Pages
 	engine.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
+	engine.GET("/api/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
 
 	// root path is used by some deployment hosts (e.g. HuggingFace Spaces) to
 	// verify that the container is running. return a simple success message

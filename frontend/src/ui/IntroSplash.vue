@@ -31,7 +31,7 @@
         </div>
 
         <ul class="float-particles absolute inset-0 m-0 p-0 list-none pointer-events-none" aria-hidden="true">
-          <li v-for="n in 22" :key="n" :style="particleStyle(n)"></li>
+          <li v-for="n in 10" :key="n" :style="particleStyle(n)"></li>
         </ul>
       </div>
   </div>
@@ -72,7 +72,7 @@ function shapeFor(i) {
 
 function particleStyle(i) {
   // richer variety for particles
-  const total = 22;
+  const total = 10;
   const left = Math.round((i / total) * 100) + ((i % 5) - 2) * 2; // staggered horizontal start
   const delay = (i % 7) * 160 + Math.floor(Math.random() * 220);
   const size = 4 + (i % 6) * 3; // 4..19
@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
 /* background overlay */
 .intro-splash {
   background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.36));
-  backdrop-filter: blur(10px) saturate(1.05);
+  backdrop-filter: blur(4px);
   will-change: opacity;
 }
 .intro-splash.ready {

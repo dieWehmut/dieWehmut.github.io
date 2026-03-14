@@ -34,7 +34,7 @@
 
 .bg-blur {
   border-radius: 999px;
-  filter: blur(100px);
+  filter: blur(60px);
   opacity: 0.88;
   mix-blend-mode: screen;
   animation: drift 22s ease-in-out infinite alternate;
@@ -87,7 +87,7 @@
 .bg-ribbon {
   inset: auto;
   border-radius: 999px;
-  filter: blur(54px);
+  filter: blur(36px);
   opacity: 0.48;
   transform: rotate(-12deg);
   mix-blend-mode: soft-light;
@@ -126,7 +126,7 @@
   width: 68vw;
   height: 140vh;
   background: linear-gradient(90deg, transparent 0%, rgba(255, 230, 245, 0.32) 48%, transparent 100%);
-  filter: blur(18px);
+  filter: blur(10px);
   transform: rotate(18deg);
   mix-blend-mode: soft-light;
   animation: sheenSweep 18s ease-in-out infinite;
