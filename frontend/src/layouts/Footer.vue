@@ -10,12 +10,6 @@
       <span class="font-bold">{{ time.hours }}</span>h
       <span class="font-bold">{{ time.minutes }}</span>m
       <span class="font-bold">{{ time.seconds }}</span>s
-      <span class="inline-flex items-center gap-1 shrink-0">|</span>
-      <svg class="h-[18px] w-[18px] shrink-0 fill-current max-[640px]:h-[14px] max-[640px]:w-[14px]" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 5c-5.05 0-9.27 3.11-11 7 1.73 3.89 5.95 7 11 7s9.27-3.11 11-7c-1.73-3.89-5.95-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-2.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-      </svg>
-      <span>{{ t('footer.visitors') }}:</span>
-      <span class="font-bold">{{ visitorCountText }}</span>
     </div>
 
     <LastUpdatedRow v-if="showLastUpdated" class="!mt-0" placement="footer" />
@@ -33,7 +27,6 @@
 <script setup>
 import { onMounted, onBeforeUnmount, reactive, ref, computed } from "vue";
 import { useI18n } from 'vue-i18n';
-import { getBackendApiUrl } from '../api/backendApi'
 import LastUpdatedRow from '../ui/LastUpdatedRow.vue'
 
 defineProps({
@@ -61,8 +54,6 @@ const currentYear = ref(new Date().getFullYear());
 const copyrightYear = computed(() =>
   startYear === currentYear.value ? String(startYear) : `${startYear}–${currentYear.value}`
 );
-const visitorCount = ref(null)
-const visitorCountText = computed(() => (visitorCount.value == null ? '--' : String(visitorCount.value)))
 
 // 自动推断 GitHub 用户名：优先从 hostname（如 github.io 的子域名）推断，若失败回退到原值
 const githubUser = ref("dieWehmut");
@@ -85,44 +76,9 @@ function tick() {
   time.seconds = String(seconds).padStart(2, "0");
 }
 
-async function requestVisitorStats(path, init) {
-  const response = await fetch(getBackendApiUrl(path), {
-    headers: {
-      Accept: 'application/json',
-    },
-    ...init,
-  })
-
-  if (!response.ok) {
-    throw new Error(`Visitor request failed: ${response.status}`)
-  }
-
-  return response.json()
-}
-
-async function syncVisitorCount() {
-  try {
-    const visitSessionKey = 'nexus:visit-tracked'
-    const hasTrackedVisit = window.sessionStorage.getItem(visitSessionKey) === '1'
-
-    if (!hasTrackedVisit) {
-      const tracked = await requestVisitorStats('/api/stats/visit', { method: 'POST' })
-      visitorCount.value = Number(tracked?.visitors ?? 0)
-      window.sessionStorage.setItem(visitSessionKey, '1')
-      return
-    }
-
-    const stats = await requestVisitorStats('/api/stats')
-    visitorCount.value = Number(stats?.visitors ?? 0)
-  } catch {
-    visitorCount.value = null
-  }
-}
-
 onMounted(() => {
   tick();
   timer = setInterval(tick, 1000);
-  syncVisitorCount()
 
   // 试图从 location.host 推断 GitHub Pages 的用户名（例如 dieWehmut.github.io -> dieWehmut）
   try {

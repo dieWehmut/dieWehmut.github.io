@@ -88,20 +88,9 @@ async function requestFromBackend() {
   return commit?.commit?.committer?.date || commit?.commit?.author?.date || ''
 }
 
-async function requestFromGitHub() {
-  const response = await fetch('https://api.github.com/repos/dieWehmut/dieWehmut.github.io/commits?per_page=1')
-  if (!response.ok) {
-    throw new Error('GitHub request failed')
-  }
-
-  const commits = await response.json()
-  const firstCommit = Array.isArray(commits) ? commits[0] : null
-  return firstCommit?.commit?.committer?.date || firstCommit?.commit?.author?.date || ''
-}
-
 async function loadLastUpdated(attempt = 0) {
   try {
-    const dateValue = (await requestFromBackend()) || (await requestFromGitHub())
+    const dateValue = await requestFromBackend()
     if (dateValue) {
       formattedDate.value = formatDate(dateValue)
       isLoading.value = false

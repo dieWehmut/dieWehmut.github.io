@@ -218,6 +218,22 @@ function isSlowConnection() {
   return !!connection?.saveData || effectiveType === 'slow-2g' || effectiveType === '2g'
 }
 
+function isLowPowerDevice() {
+  if (typeof navigator === 'undefined') {
+    return false
+  }
+
+  const memory = navigator.deviceMemory || 0
+  const cores = navigator.hardwareConcurrency || 0
+  if (memory && memory <= 4) {
+    return true
+  }
+  if (cores && cores <= 4) {
+    return true
+  }
+  return false
+}
+
 function shouldShowIntroInitially() {
   if (typeof window === 'undefined') {
     return false
@@ -248,11 +264,12 @@ const footerRef = shallowRef(null)
 const isMobile = ref(false)
 const prefersReducedMotion = ref(false)
 const footerInView = ref(false)
+const reduceEffects = ref(false)
 
 const showIntro = ref(shouldShowIntroInitially())
 const introExiting = ref(false)
 const mainContentVisible = ref(!showIntro.value)
-const showDeferredUi = ref(!showIntro.value)
+const showDeferredUi = ref(true)
 const backgroundReady = ref(false)
 let introFallbackTimer = null
 let introHideTimer = null
@@ -267,10 +284,11 @@ const showTools = ref(true)
 
 const normalizedQuery = computed(() => query.value.trim().toLowerCase())
 const hasQuery = computed(() => normalizedQuery.value.length > 0)
-const showSnowCanvas = computed(() => backgroundReady.value && !prefersReducedMotion.value)
+const effectsAllowed = computed(() => !prefersReducedMotion.value && !reduceEffects.value && !isMobile.value)
+const showSnowCanvas = computed(() => backgroundReady.value && effectsAllowed.value)
 const showHeavyEffects = computed(() => showSnowCanvas.value && mainContentVisible.value)
-const snowDensityScale = computed(() => (isMobile.value ? 0.05 : 0.12))
-const sakuraDensityScale = computed(() => (isMobile.value ? 0.1 : 0.24))
+const snowDensityScale = computed(() => (reduceEffects.value ? 0.04 : isMobile.value ? 0.05 : 0.12))
+const sakuraDensityScale = computed(() => (reduceEffects.value ? 0.08 : isMobile.value ? 0.1 : 0.24))
 const sectionCardClass = 'section-card overflow-hidden rounded-[28px] border border-white/40 bg-white/[0.58] shadow-[0_8px_32px_rgba(180,160,220,0.14)] backdrop-blur-sm max-[640px]:rounded-2xl'
 const sectionToggleButtonClass = 'flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5 max-[640px]:gap-2 max-[640px]:px-2.5 max-[640px]:py-2.5'
 const sectionToggleInnerClass = 'flex min-w-0 items-center gap-3 max-[640px]:gap-2'
@@ -511,6 +529,7 @@ onMounted(() => {
   window.addEventListener('open-section', handleOpenSection)
 
   prefersReducedMotion.value = !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  reduceEffects.value = isSlowConnection() || isLowPowerDevice()
 
   if (window.matchMedia) {
     mediaQuery = window.matchMedia('(max-width: 1000px)')

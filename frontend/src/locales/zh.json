@@ -42,8 +42,7 @@
     "collapse": "收起"
   },
   "footer": {
-    "uptime": "运行时间",
-    "visitors": "访客数"
+    "uptime": "运行时间"
   },
   "languages": {
     "zh": "中文",

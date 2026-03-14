@@ -10,14 +10,12 @@ import (
 type Router struct {
 	github *GitHubHandler
 	pages  *PagesHandler
-	stats  *StatsHandler
 }
 
-func NewRouter(githubService *service.GitHubService, pagesService *service.PagesService, visitorService *service.VisitorService) *gin.Engine {
+func NewRouter(githubService *service.GitHubService, pagesService *service.PagesService) *gin.Engine {
 	r := &Router{
 		github: NewGitHubHandler(githubService),
 		pages:  NewPagesHandler(pagesService),
-		stats:  NewStatsHandler(visitorService),
 	}
 
 	engine := gin.New()
@@ -44,8 +42,6 @@ func NewRouter(githubService *service.GitHubService, pagesService *service.Pages
 		})
 	})
 	engine.GET("/api/pages", r.pages.ListPages)
-	engine.GET("/api/stats", r.stats.GetStats)
-	engine.POST("/api/stats/visit", r.stats.TrackVisit)
 
 	engine.GET("/api/github/user/:username", r.github.GetUser)
 	engine.GET("/api/github/repos/:owner/:repo", r.github.GetRepo)

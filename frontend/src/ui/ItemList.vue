@@ -443,8 +443,6 @@ function getActionClass(action, baseClass) {
 
 .item-card {
   contain: layout paint style;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 164px;
 }
 
 .skeleton-block {
