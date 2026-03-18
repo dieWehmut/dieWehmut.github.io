@@ -22,7 +22,7 @@ func NewPagesService(repo repository.GitHubRepository) *PagesService {
 }
 
 var dateOverrides = map[string]string{
-    "story-timeline":"2026-03-07"
+    "story-timeline":"2025-10-10",
     "kotoba-hitomi": "2025-04-25",
     "profile":       "2025-08-16",
     "notes":         "2025-08-20",

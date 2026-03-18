@@ -8,16 +8,16 @@ import (
 )
 
 type Router struct {
-	github *GitHubHandler
-	pages  *PagesHandler
-	stats  *StatsHandler
+	github   *GitHubHandler
+	pages    *PagesHandler
+	watching *WatchingHandler
 }
 
-func NewRouter(githubService *service.GitHubService, pagesService *service.PagesService, visitorService *service.VisitorService) *gin.Engine {
+func NewRouter(githubService *service.GitHubService, pagesService *service.PagesService, watchingService *service.WatchingService) *gin.Engine {
 	r := &Router{
-		github: NewGitHubHandler(githubService),
-		pages:  NewPagesHandler(pagesService),
-		stats:  NewStatsHandler(visitorService),
+		github:   NewGitHubHandler(githubService),
+		pages:    NewPagesHandler(pagesService),
+		watching: NewWatchingHandler(watchingService),
 	}
 
 	engine := gin.New()
@@ -44,8 +44,14 @@ func NewRouter(githubService *service.GitHubService, pagesService *service.Pages
 		c.JSON(200, gin.H{"status": "pong"})
 	})
 	engine.GET("/api/pages", r.pages.ListPages)
-	engine.GET("/api/stats", r.stats.GetStats)
-	engine.POST("/api/stats/visit", r.stats.TrackVisit)
+
+	// 实时在线人数相关路由
+	engine.GET("/api/watching/stream", r.watching.HandleSSEStream)
+	engine.POST("/api/watching/ping", r.watching.HandlePing)
+	engine.GET("/api/watching/count", r.watching.GetCurrentCount)
+
+	// 兼容性路由（可选）
+	engine.GET("/api/stats", r.watching.GetStats)
 
 	engine.GET("/api/github/user/:username", r.github.GetUser)
 	engine.GET("/api/github/repos/:owner/:repo", r.github.GetRepo)
