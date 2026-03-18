@@ -1,0 +1,1 @@
+window.__API_BASE__ = "https://dieWehmut-nexus-backend.hf.space";
