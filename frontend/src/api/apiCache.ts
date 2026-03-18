@@ -7,6 +7,10 @@
 const PREFIX = 'nw:apiCache:';
 const pendingRequests = new Map<string, Promise<unknown>>();
 
+// Async localStorage write queue
+const writeQueue = new Map<string, string>();
+let writeScheduled = false;
+
 type CacheRecord<T = unknown> = {
   ts: number;
   ttl: number;
@@ -67,12 +71,41 @@ function getCache(key: string, options: { allowExpired?: boolean } = {}) {
   }
 }
 
+function scheduleWrite() {
+  if (writeScheduled) return;
+  writeScheduled = true;
+
+  // Use requestIdleCallback if available, otherwise fallback to setTimeout
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(flushWrites, { timeout: 1000 });
+  } else {
+    setTimeout(flushWrites, 0);
+  }
+}
+
+function flushWrites() {
+  writeScheduled = false;
+  if (typeof localStorage === 'undefined') return;
+
+  for (const [key, value] of writeQueue) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      // Silently ignore localStorage errors (quota exceeded, etc.)
+    }
+  }
+  writeQueue.clear();
+}
+
 function setCache(key: string, value: unknown, ttl = 0, etag?: string) {
   try {
     const record = _makeRecord(value, ttl, etag);
     memory.set(key, record);
+
     if (typeof localStorage !== 'undefined') {
-      try { localStorage.setItem(PREFIX + key, JSON.stringify(record)); } catch (e) {}
+      // Queue the write for async processing
+      writeQueue.set(PREFIX + key, JSON.stringify(record));
+      scheduleWrite();
     }
   } catch (e) {}
 }

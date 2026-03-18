@@ -28,7 +28,15 @@ let ctx = null
 let W = 0, H = 0, dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────
-const PETAL_COUNT      = 48
+const PETAL_COUNT = (() => {
+  if (typeof navigator === 'undefined') return 48
+  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent)
+  const cores = navigator.hardwareConcurrency || 4
+
+  if (isMobile) return 24
+  if (cores <= 2) return 32
+  return 48
+})()
 const MIN_SIZE         = 14
 const MAX_SIZE         = 32
 const FALL_SPEED       = 0.72
@@ -46,6 +54,7 @@ let collected = []
 let burstPetals = []
 let hoveringPetal = false
 let pickCooldown = 0
+let rafPending = false
 
 function targetPetalCount() {
   return Math.max(12, Math.round(PETAL_COUNT * props.densityScale))
@@ -355,8 +364,14 @@ function frame() {
 }
 
 function onMouseMove(e) {
-  mouse.x = e.clientX
-  mouse.y = e.clientY
+  if (!rafPending) {
+    rafPending = true
+    requestAnimationFrame(() => {
+      mouse.x = e.clientX
+      mouse.y = e.clientY
+      rafPending = false
+    })
+  }
 }
 function onMouseLeave() {
   mouse.x = -99999

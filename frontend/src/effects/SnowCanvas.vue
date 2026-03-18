@@ -91,15 +91,31 @@ function frame() {
     }
   }
 
-  // ── draw snowflakes (batched by opacity range to reduce state switches) ──
-  ctx.fillStyle = 'rgba(255,255,255,0.78)'
+  // ── draw snowflakes using batched Path2D rendering ──
+  // Group particles by opacity range for efficient batch rendering
   const TAU = Math.PI * 2
+  const opacityGroups = new Map()
+
+  // Group particles by rounded opacity (0.1 precision)
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i]
-    ctx.globalAlpha = p.opacity
-    ctx.beginPath()
-    ctx.arc(p.x, p.y, p.r, 0, TAU)
-    ctx.fill()
+    const roundedOpacity = Math.round(p.opacity * 10) / 10
+    if (!opacityGroups.has(roundedOpacity)) {
+      opacityGroups.set(roundedOpacity, [])
+    }
+    opacityGroups.get(roundedOpacity).push(p)
+  }
+
+  // Render each opacity group in batch
+  ctx.fillStyle = 'rgb(255, 255, 255)'
+  for (const [opacity, group] of opacityGroups) {
+    ctx.globalAlpha = opacity
+    const path = new Path2D()
+    for (const p of group) {
+      path.moveTo(p.x + p.r, p.y)
+      path.arc(p.x, p.y, p.r, 0, TAU)
+    }
+    ctx.fill(path)
   }
   ctx.globalAlpha = 1
 

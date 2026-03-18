@@ -1,11 +1,11 @@
 <template>
   <div class="search w-[min(960px,92vw)] mx-auto rounded-xl border-0 bg-transparent px-2 py-0.5 shadow-none max-[640px]:w-full max-[640px]:px-0 max-[640px]:py-0.5" :class="{ 'entering': enterReady }">
-    <div class="search-shell flex items-center gap-3 rounded-2xl border border-white/40 bg-white/[0.48] px-4 py-2 shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(180,160,220,0.12)] backdrop-blur-xl backdrop-saturate-[118%] transition-all duration-200 max-[640px]:gap-2 max-[640px]:rounded-xl max-[640px]:px-2.5 max-[640px]:py-1.5">
+    <div class="search-shell flex items-center gap-3 rounded-2xl border border-white/40 bg-white/75 px-4 py-2 shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(180,160,220,0.12)] transition-all duration-200 max-[640px]:gap-2 max-[640px]:rounded-xl max-[640px]:px-2.5 max-[640px]:py-1.5">
       <Search class="search-icon h-[18px] w-[18px] shrink-0" />
       <input
         id="global-search-input"
         ref="inputRef"
-        v-model="innerValue"
+        v-model="localValue"
         type="text"
         :placeholder="placeholderText"
         class="search-field min-w-0 flex-1 border-0 bg-transparent p-0 text-[15px] font-medium tracking-[0.01em] text-[#3b4cb8] outline-none placeholder:text-[#3b4cb8]/40 max-[640px]:text-sm"
@@ -43,6 +43,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Search } from '@element-plus/icons-vue'
+import { useDebounceFn } from '@vueuse/core'
 
 const props = defineProps({
   modelValue: {
@@ -57,8 +58,20 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'submit', 'clear'])
 
 const innerValue = ref(props.modelValue)
-watch(() => props.modelValue, v => (innerValue.value = v))
-watch(innerValue, v => emit('update:modelValue', v))
+const localValue = ref(props.modelValue)
+
+const debouncedEmit = useDebounceFn((value) => {
+  emit('update:modelValue', value)
+}, 300)
+
+watch(() => props.modelValue, v => {
+  innerValue.value = v
+  localValue.value = v
+})
+watch(localValue, v => {
+  innerValue.value = v
+  debouncedEmit(v)
+})
 
 const { t } = useI18n()
 const placeholderText = computed(() => t('search.hint'))
@@ -79,6 +92,7 @@ function focusInput() {
 }
 
 function clearInput() {
+  localValue.value = ''
   innerValue.value = ''
   emit('clear')
   focusInput()
