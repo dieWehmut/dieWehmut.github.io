@@ -40,6 +40,9 @@ func NewRouter(githubService *service.GitHubService, pagesService *service.Pages
 			"status":  "ok",
 		})
 	})
+	engine.GET("/api/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "pong"})
+	})
 	engine.GET("/api/pages", r.pages.ListPages)
 	engine.GET("/api/stats", r.stats.GetStats)
 	engine.POST("/api/stats/visit", r.stats.TrackVisit)
