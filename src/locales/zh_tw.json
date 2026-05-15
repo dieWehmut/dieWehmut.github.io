@@ -6,10 +6,8 @@
     "hint": "搜尋 ..."
   },
   "sidebar": {
-    "bio": "南京大學（蘇州校區）智能科學與技術 本科生",
     "lastUpdated": "最後更新：",
-    "followers": "{count} 個關注者",
-    "location": "中國 蘇州"
+    "followers": "{count} 個關注者"
   },
   "nav": {
     "pages": "網站",

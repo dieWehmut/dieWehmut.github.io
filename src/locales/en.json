@@ -6,10 +6,8 @@
     "hint": "Search ..."
   },
   "sidebar": {
-    "bio": "Undergraduate in Intelligent Science and Technology, Nanjing University, Suzhou Campus",
     "lastUpdated": "Last updated: ",
-    "followers": "{count} followers",
-    "location": "Suzhou, China"
+    "followers": "{count} followers"
   },
   "nav": {
     "pages": "Websites",

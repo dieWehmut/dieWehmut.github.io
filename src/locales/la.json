@@ -6,10 +6,8 @@
     "hint": "Quaere ..."
   },
   "sidebar": {
-    "bio": "Studens baccalaurei in Scientia Intelligentiae et Technologia, Universitas Nanjing, Campus Suzhou",
     "lastUpdated": "Ultima renovatio: ",
-    "followers": "{count} sequaces",
-    "location": "Suzhou, Sinarum"
+    "followers": "{count} sequaces"
   },
   "nav": {
     "pages": "Situs",

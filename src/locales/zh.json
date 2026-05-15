@@ -6,10 +6,8 @@
     "hint": "搜索 ..."
   },
   "sidebar": {
-    "bio": "南京大学（苏州校区）智能科学与技术 本科生",
     "lastUpdated": "最后更新：",
-    "followers": "{count} 个关注者",
-    "location": "中国 苏州"
+    "followers": "{count} 个关注者"
   },
   "nav": {
     "pages": "网站",

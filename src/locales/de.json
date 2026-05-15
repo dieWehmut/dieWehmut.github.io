@@ -6,10 +6,8 @@
     "hint": "Suche ..."
   },
   "sidebar": {
-    "bio": "Bachelor in Intelligent Science and Technology, Nanjing University, Suzhou Campus",
     "lastUpdated": "Zuletzt aktualisiert: ",
-    "followers": "{count} Follower",
-    "location": "Suzhou, China"
+    "followers": "{count} Follower"
   },
   "nav": {
     "pages": "Websites",

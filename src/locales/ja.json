@@ -6,10 +6,8 @@
     "hint": "検索 ..."
   },
   "sidebar": {
-    "bio": "南京大学（蘇州キャンパス）知能科学技術 学士",
     "lastUpdated": "最終更新：",
-    "followers": "{count} フォロワー",
-    "location": "中国 蘇州"
+    "followers": "{count} フォロワー"
   },
   "nav": {
     "pages": "サイト",

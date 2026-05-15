@@ -7,7 +7,6 @@
       </div>
       <div class="about-content">
             <h3 class="name">dieWehmut</h3>
-              <p class="bio">{{ t('sidebar.bio') }}</p>
 
           <!-- Contact / GitHub block -->
           <div class="contact">
@@ -28,12 +27,6 @@
 
 
             <div class="contact-meta">
-              <div class="meta-item">
-                <svg class="icon icon--pin" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" />
-                </svg>
-                <span>{{ t('sidebar.location') }}</span>
-              </div>
               <div class="meta-item">
                 <svg class="icon icon--mail" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
@@ -238,7 +231,6 @@ html.sidebar-collapsed .sidebar {
 /* hide text content so only a small avatar/icon remains */
 html.sidebar-collapsed .about-content,
 html.sidebar-collapsed .name,
-html.sidebar-collapsed .bio,
 html.sidebar-collapsed .contact,
 html.sidebar-collapsed .nav-list,
 html.sidebar-collapsed .follow-row,
@@ -301,14 +293,6 @@ html.sidebar-collapsed .avatar {
   font-weight: 700;
   color: #ffffff !important;
   margin: 8px 0 6px 0;
-}
-
-.bio {
-  font-size: 13px;
-  color: rgba(255,255,255,0.92) !important;
-  line-height: 1.45;
-  margin-bottom: 12px;
-  max-width: 240px;
 }
 
 .exposed-section h4 {

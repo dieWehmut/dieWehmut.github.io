@@ -400,7 +400,7 @@ a.action-btn {
 
 /* ── Sidebar readability ── */
 .sidebar { color: #ffffff !important; }
-.sidebar .name, .sidebar .nav-btn, .sidebar .follow-text, .sidebar .bio,
+  .sidebar .name, .sidebar .nav-btn, .sidebar .follow-text,
 .sidebar .about-content, .sidebar .meta-item, .sidebar .email-link {
   color: #ffffff !important; text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
 }
@@ -431,7 +431,6 @@ html.sidebar-collapsed .app__header { padding-left: 0 !important; padding-right:
   display: block !important; padding-top: 6px !important; padding-bottom: 6px !important; overflow: hidden !important; height: auto !important;
 }
 .sidebar-collapsed .sidebar .avatar-container,
-.sidebar-collapsed .sidebar .about-content .bio,
 .sidebar-collapsed .sidebar .about-content .contact,
 .sidebar-collapsed .sidebar .nav-list, .sidebar-collapsed .sidebar .contact-meta,
 .sidebar-collapsed .sidebar .follow-row, .sidebar-collapsed .sidebar .github-btn { display: none !important; }
