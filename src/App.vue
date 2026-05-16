@@ -4,36 +4,44 @@
     <ParticleCanvas />
     <SakuraCanvas />
     <BounceCursor />
-        <!-- Entry splash overlay -->
-        <IntroSplash v-if="showIntro" :background-ready="backgroundReady" @skip="skipIntro" />
+      <ParticleCanvas />
+      <SakuraCanvas />
+      <BounceCursor />
     <el-container class="app">
-      <el-header class="app__header" height="80px">
-        <SearchBar
-          ref="searchBarRef"
-          v-model="query"
-          @submit="openFirst"
-          @clear="onClear"
-          :enter-ready="!showIntro"
-        />
-      </el-header>
+      <SideBar v-if="!(isMobile && query.trim())" :enter-ready="true" />
+      <div class="content">
+        <el-header class="app__header" height="80px">
+                  <div class="app__main">
+                    <SearchBar
+                      ref="searchBarRef"
+                      v-model="query"
+                      @submit="openFirst"
+                      @clear="onClear"
+                      :enter-ready="true"
+                    />
+                  </div>
+              </el-header>
 
-      <div class="layout">
-  <SideBar v-if="!(isMobile && query.trim())" :enter-ready="!showIntro" />
+        <div class="layout">
+          <el-main>
+              <div class="app__center">
+                <Home
+                  ref="homeRef"
+                  :query="query"
+                  :enter-ready="true"
+                />
+              </div>
+          </el-main>
 
-        <el-main>
-          <Home
-              ref="homeRef"
-              :query="query"
-              :enter-ready="!showIntro"
-            />
-        </el-main>
+          <!-- right column placeholder (if you add a RightBar, place it here) -->
+        </div>
 
-        <!-- right column placeholder (if you add a RightBar, place it here) -->
+        <el-footer class="app__footer" height="auto">
+          <div class="app__main">
+            <Footer />
+          </div>
+        </el-footer>
       </div>
-
-      <el-footer class="app__footer" height="auto">
-        <Footer />
-      </el-footer>
     <!-- global float button (fixed to viewport bottom-right) -->
     <FloatButton />
     </el-container>
@@ -50,7 +58,6 @@ import BounceCursor from './components/BounceCursor.vue'
 import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
 import SideBar from './components/SideBar.vue'
-import IntroSplash from './components/IntroSplash.vue'
 import FloatButton from './components/FloatButton.vue'
 
 const query = ref('')
@@ -92,39 +99,7 @@ onMounted(() => {
 const isMobile = ref(false)
 let _mq = null
 
-// Intro splash state
-const showIntro = ref(true)
-function hideIntro() {
-  showIntro.value = false
-  // clear any pending fallback timer
-  try { if (introFallbackTimer) { clearTimeout(introFallbackTimer); introFallbackTimer = null } } catch (e) {}
-}
-function skipIntro() {
-  // allow users to click to skip immediate
-  hideIntro()
-}
-
-// track whether background signaled ready and provide a max fallback
-const backgroundReady = ref(false)
-let introFallbackTimer = null
-
-function onBackgroundReady() {
-  backgroundReady.value = true
-  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const exitDelay = prefersReduced ? 120 : 420
-  // short delay to allow the background crossfade to settle, then hide
-  setTimeout(() => hideIntro(), exitDelay)
-  if (introFallbackTimer) { clearTimeout(introFallbackTimer); introFallbackTimer = null }
-}
-
-// Max fallback: if background doesn't signal ready in time, hide the splash anyway
-onMounted(() => {
-  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const maxWait = prefersReduced ? 800 : 5000
-  introFallbackTimer = setTimeout(() => {
-    if (!backgroundReady.value) hideIntro()
-  }, maxWait)
-})
+// intro/background removed: no splash or video fallback logic
 
 function handleMqChange(e) {
   isMobile.value = e.matches
@@ -159,7 +134,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .app {
   /* reserve space for left/right fixed sidebars so they don't overlap main content */
-  --sidebar-left-gap: 32px; /* left sidebar occupied width + gap */
+  --sidebar-width: 300px;
+  --sidebar-left-gap: 32px; /* extra gap between sidebar and main content */
   --sidebar-right-gap: 32px; /* placeholder for a right sidebar if present */
     /* layout padding-top used by sidebar sticky offset to align with main content */
     --layout-padding-top: 20px;
@@ -168,8 +144,14 @@ onBeforeUnmount(() => {
   min-height: 100vh;
   background: transparent;
   color: #2c2c2c;
-  padding-left: var(--sidebar-left-gap);
+  padding-left: 0;
   padding-right: var(--sidebar-right-gap);
+}
+
+/* main content wrapper shifted to the right of the fixed sidebar */
+.content {
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
 }
 
 /* Entry splash overlay */
@@ -184,7 +166,7 @@ onBeforeUnmount(() => {
 .app__header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   /* 固定在页面顶部，不随滚动移动 */
   position: sticky;
   top: 0;
@@ -199,17 +181,22 @@ onBeforeUnmount(() => {
 }
 
 .app__main {
-  max-width: 1080px;
-  margin: 0 auto;
   width: 100%;
-  /* ensure main content stays centered inside the padded area */
   box-sizing: border-box;
 }
 
+  /* inner centered container used by the main column to constrain content width */
+  .app__center {
+    max-width: 1080px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
 .layout {
-  /* total width roughly = left(320) + main(max 1080) + right(320) */
-  max-width: 2000px;
-  margin: 0 auto;
+  /* layout stretches full width of .content (fills to page right) */
+  max-width: none;
+  margin: 0;
   display: flex;
   align-items: flex-start;
   gap: 0px;
@@ -262,6 +249,19 @@ onBeforeUnmount(() => {
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+/* When sidebar is collapsed ensure content fills full viewport */
+html.sidebar-collapsed .content {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+html.sidebar-collapsed .app__header .app__main,
+html.sidebar-collapsed .app__footer .app__main {
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 </style>
@@ -424,11 +424,12 @@ html.sidebar-collapsed .layout .el-main {
   margin-right: 0 !important; margin-left: 0 !important; padding-left: 0 !important; padding-right: 0 !important;
   width: min(960px, 92vw) !important; max-width: 960px !important;
 }
-html.sidebar-collapsed .app { padding-left: 0 !important; padding-right: 0 !important; --sidebar-left-gap: 0 !important; --sidebar-right-gap: 0 !important; }
+html.sidebar-collapsed .app { padding-left: 0 !important; padding-right: 0 !important; --sidebar-left-gap: 0 !important; --sidebar-right-gap: 0 !important; --sidebar-width: 0 !important; }
 html.sidebar-collapsed .app__header { padding-left: 0 !important; padding-right: 0 !important; }
 
 .sidebar-collapsed .sidebar {
-  display: block !important; padding-top: 6px !important; padding-bottom: 6px !important; overflow: hidden !important; height: auto !important;
+  display: none !important;
+  padding-top: 0 !important; padding-bottom: 0 !important; overflow: hidden !important; height: 0 !important;
 }
 .sidebar-collapsed .sidebar .avatar-container,
 .sidebar-collapsed .sidebar .about-content .contact,

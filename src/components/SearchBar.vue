@@ -76,8 +76,7 @@ defineExpose({ focusInput })
 
 <style scoped>
 .search {
-  width: min(960px, 92vw);
-  margin: 0 auto;
+  width: 100%;
   padding: 6px 8px;
   /* make the search container sit on a dark translucent header for legibility */
   background: rgba(255,255,255,0.02);
@@ -92,6 +91,15 @@ defineExpose({ focusInput })
   box-shadow: none !important;
   transition: all 0.2s ease;
   padding: 8px 16px;
+}
+
+/* ensure the outer el-input element fills available width */
+.search :deep(.el-input) {
+  width: 100% !important;
+}
+
+.search-input :deep(.el-input__inner) {
+  width: 100% !important;
 }
 
 .search-input :deep(.el-input__wrapper):hover {

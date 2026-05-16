@@ -176,6 +176,13 @@ onMounted(() => {
 .sidebar {
   transition: opacity 460ms cubic-bezier(.16,.9,.2,1), transform 460ms cubic-bezier(.16,.9,.2,1);
   will-change: opacity, transform;
+  position: fixed;
+  left: calc(-1 * var(--sidebar-left-gap, 32px));
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  overflow: auto;
+  z-index: 1100;
 }
 
 .sidebar:not(.entering) {
@@ -192,23 +199,25 @@ onMounted(() => {
 
 .sidebar {
   /* participate in layout (sticky) so left+main(+right) align as a group */
-  position: sticky;
-  /* slightly higher position so all content (including last-updated) is visible */
-  top: calc(var(--header-height, 80px) + 8px);
-  width: 300px;
+  position: fixed;
+  left: 0;
+  /* pin sidebar to the top of the viewport and fill height */
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width, 300px);
   /* translucent background (lightened) to improve legibility over video without being too dark */
   background: rgba(0,0,0,0.30) !important;
   border: 1px solid rgba(255,255,255,0.04) !important;
   border-radius: 14px;
   padding: 14px 18px;
-  /* ensure all content is visible without scrollbar */
-  overflow: visible;
-  max-height: calc(100vh - var(--header-height, 80px) - 16px);
+  /* ensure all content is visible and the sidebar fills viewport height */
+  overflow: auto;
+  max-height: 100vh;
   /* push shadow to left only so right edge appears flush with main content */
   box-shadow: none !important;
   z-index: 1100;
-  /* pull the sidebar flush to the left edge of the page, compensating for .app padding */
-  margin-left: calc(-1 * var(--sidebar-left-gap, 32px));
+  /* pull the sidebar flush to the left edge of the page */
+  margin-left: 0;
   /* remove right side rounding so it can visually butt up against the main content */
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -218,14 +227,18 @@ onMounted(() => {
   margin-right: 0;
 }
 
-/* Collapsed sidebar state: triggered by adding `sidebar-collapsed` to <html> */
+/* Collapsed sidebar state: triggered by adding `sidebar-collapsed` to <html>
+   Hide sidebar fully (no visible sliver or shadow) while keeping layout vars adjusted. */
 html.sidebar-collapsed .sidebar {
-  width: 72px; /* narrow strip for collapsed state */
-  padding: 12px;
+  width: 0 !important;
+  padding: 0 !important;
   margin-left: calc(-1 * var(--sidebar-left-gap, 32px));
-  border-top-right-radius: 14px;
-  border-bottom-right-radius: 14px;
-  overflow: hidden;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  overflow: hidden !important;
+  transform: translateX(-110%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* hide text content so only a small avatar/icon remains */
