@@ -6,7 +6,7 @@
     "hint": "Suche ..."
   },
   "sidebar": {
-    "lastUpdated": "Zuletzt aktualisiert: ",
+    "lastUpdated": "Zuletzt commit: ",
     "followers": "{count} Follower"
   },
   "nav": {

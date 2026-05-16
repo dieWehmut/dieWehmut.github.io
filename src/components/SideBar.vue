@@ -265,10 +265,10 @@ html.sidebar-collapsed .avatar {
 
 .about-me {
   margin-bottom: 12px;
-  text-align: left;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .avatar-container {
@@ -297,8 +297,8 @@ html.sidebar-collapsed .avatar {
   padding: 0 8px;
   /* keep about text tidy and readable */
   max-width: 240px;
-  margin: 0;
-  text-align: left;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .name {
@@ -306,6 +306,7 @@ html.sidebar-collapsed .avatar {
   font-weight: 700;
   color: #ffffff !important;
   margin: 8px 0 6px 0;
+  text-align: center;
 }
 
 .exposed-section h4 {
@@ -376,6 +377,8 @@ html.sidebar-collapsed .avatar {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: center;
+  text-align: center;
 }
   .github-btn {
   display: inline-flex;
@@ -417,6 +420,7 @@ html.sidebar-collapsed .avatar {
 .follow-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   color: rgba(255,255,255,0.92) !important;
   font-size: 13px;
@@ -430,11 +434,14 @@ html.sidebar-collapsed .avatar {
   gap: 6px;
   font-size: 13px;
   color: rgba(255,255,255,0.92) !important;
+  align-items: center;
+  text-align: center;
 }
 .meta-item {
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: center;
 }
 .email-link {
   color: inherit;
@@ -446,12 +453,13 @@ html.sidebar-collapsed .avatar {
   color: rgba(255,255,255,0.85) !important;
   font-size: 13px;
   /* Use grid so icon occupies left column and text occupies right column.
-     When the text wraps to a new line it will align under the text column (not the icon). */
+     Center the whole row visually. */
   display: grid;
-  grid-template-columns: 20px 1fr;
+  grid-template-columns: 20px auto;
   column-gap: 8px;
   align-items: center;
-  /* allow the text column to wrap internally */
+  justify-content: center;
+  width: auto;
 }
 .last-updated-row .icon--clock {
   width: 16px;

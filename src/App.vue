@@ -218,6 +218,12 @@ onBeforeUnmount(() => {
   margin-right: calc(-1 * var(--sidebar-right-gap, 32px));
 }
 
+/* make header/footer inner container align with main's right edge compensation */
+.app__header .app__main,
+.app__footer .app__main {
+  margin-right: calc(-1 * var(--sidebar-right-gap, 32px));
+}
+
 /* Responsive: collapse side padding on narrower screens so mobile layout works */
 @media (max-width: 1400px) {
   .app {

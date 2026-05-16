@@ -6,7 +6,7 @@
     "hint": "搜尋 ..."
   },
   "sidebar": {
-    "lastUpdated": "最後更新：",
+     "lastUpdated": "最近 commit：",
     "followers": "{count} 個關注者"
   },
   "nav": {

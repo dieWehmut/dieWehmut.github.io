@@ -6,7 +6,7 @@
     "hint": "Quaere ..."
   },
   "sidebar": {
-    "lastUpdated": "Ultima renovatio: ",
+    "lastUpdated": "Ultima commit: ",
     "followers": "{count} sequaces"
   },
   "nav": {
