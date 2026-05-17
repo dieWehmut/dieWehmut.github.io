@@ -3,13 +3,13 @@ import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { useI18n } from 'vue-i18n';
 import { Collection, Link, ArrowUp, Platform, Cpu, Flag, Monitor, FolderOpened } from "@element-plus/icons-vue";
 import PageItem from "../components/PageItem.vue";
-import PagesAutoLoader from "../components/PagesAutoLoader.vue";
 import ReleasesAutoLoader from "../components/ReleasesAutoLoader.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
 import FileItem from "../components/FileItem.vue";
+import ServiceItem from "../components/ServiceItem.vue";
 
-import Tools from "../components/Tools.vue";
+import Tools from "./ToolsItem.vue";
 
 const props = defineProps({
   query: {
@@ -23,7 +23,7 @@ const props = defineProps({
 });
 import { useContent } from "../data/content";
 
-const { games, apps, files } = useContent();
+const { games, apps, files, tools, pages, services } = useContent();
 
 // helpers: parse dates and get latest version date for an item
 function parseDateSafe(d) {
@@ -75,6 +75,23 @@ const filteredFiles = computed(() => {
     .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 });
 
+const filteredPages = computed(() => {
+  const q = normalizedQuery.value;
+  const list = !q
+    ? (pages.value || []).slice()
+    : (pages.value || []).filter((page) => {
+        const name = (page.displayName || page.name || '').toLowerCase();
+        const repo = (page.repoUrl || '').toLowerCase();
+        const url = (page.url || '').toLowerCase();
+        return name.includes(q) || repo.includes(q) || url.includes(q);
+      });
+  return list.slice().sort((a, b) => {
+    const ta = Date.parse(a.date) || 0;
+    const tb = Date.parse(b.date) || 0;
+    return tb - ta;
+  });
+});
+
 const matchedFilesCount = computed(() => {
   // Use FileItem's exposed matchedFilesCount if available
   const fileItemCount = fileItemRef.value?.matchedFilesCount?.value;
@@ -91,10 +108,8 @@ const filteredTools = computed(() => toolsRef.value?.displayedTools || [])
 const totalToolsCount = computed(() => toolsList.value.length)
 const matchedToolsCount = computed(() => filteredTools.value.length)
 
-// Pages: read PagesAutoLoader exposed data
-const pagesAutoLoaderRef = ref(null)
-const totalPagesCount = computed(() => pagesAutoLoaderRef.value?.pagesCount ?? 0)
-const matchedPagesCount = computed(() => pagesAutoLoaderRef.value?.matchedCount ?? 0)
+const totalPagesCount = computed(() => (pages.value || []).length)
+const matchedPagesCount = computed(() => filteredPages.value.length)
 
 // Releases: read ReleasesAutoLoader exposed data
 const releasesAutoLoaderRef = ref(null)
@@ -121,6 +136,7 @@ const showGames = ref(true);
 const showApps = ref(true);
 const showFiles = ref(true);
 const showTools = ref(true);
+const showServices = ref(true);
 
 function handleOpenSection(e) {
   const name = e?.detail;
@@ -145,11 +161,11 @@ onBeforeUnmount(() => {
 watch(normalizedQuery, (q) => {
   try {
     if (q && q.length > 0) {
-      showPages.value = true;
       showGames.value = true;
       showApps.value = true;
       showFiles.value = true;
       showTools.value = true;
+      showServices.value = true;
     }
   } catch (e) {
     // ignore
@@ -181,7 +197,13 @@ function copyFirstResult() {
 }
 
 function firstVersion() {
-  // Check games first
+  // Services first
+  const s = filteredServices.value[0];
+  if (s) {
+    const url = s.url || s.html_url || s.repo_url;
+    if (url) return { url };
+  }
+  // Then games
   const g = filteredGames.value[0];
   if (g) {
     const url = g.url || g.html_url || g.repo_url;
@@ -220,10 +242,54 @@ defineExpose({ openFirstResult, copyFirstResult });
 
 // i18n helper for template
 const { t } = useI18n();
+
+// Services filtering
+const filteredServices = computed(() => {
+  const q = normalizedQuery.value;
+  if (!q) return services.value || [];
+  return (services.value || []).filter(s => {
+    const name = (s.name || '').toLowerCase();
+    const url = (s.url || '').toLowerCase();
+    return name.includes(q) || url.includes(q);
+  });
+});
+
+const totalServicesCount = computed(() => (services.value || []).length);
+const matchedServicesCount = computed(() => filteredServices.value.length);
 </script>
 
 <template>
   <div class="home" :class="{ 'entering': enterReady }">
+
+    <el-card id="section-services" v-if="!hasQuery || matchedServicesCount > 0" shadow="never" class="home__card">
+      <template #header>
+        <div class="card-header" @click="showServices = !showServices" style="cursor: pointer;">
+          <div class="card-header-left">
+            <el-icon class="section-icon"><Link /></el-icon><span>{{ t('nav.services') || 'Services' }}</span>
+            <el-text size="small" type="info">
+              {{ t('common.totalFormat', { count: totalServicesCount }) }}
+              <template v-if="hasQuery">
+                , {{ t('common.matchedFormat', { count: matchedServicesCount }) }}
+              </template>
+            </el-text>
+          </div>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showServices" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
+        </div>
+      </template>
+
+      <transition name="section-toggle">
+        <div v-show="showServices" class="section-body">
+          <div class="services-list">
+            <ServiceItem v-for="s in filteredServices" :key="s.key || s.url" :service="s" />
+          </div>
+        </div>
+      </transition>
+    </el-card>
 
     <el-card id="section-pages" v-if="!hasQuery || matchedPagesCount > 0" shadow="never" class="home__card">
       <template #header>
@@ -237,17 +303,9 @@ const { t } = useI18n();
             </el-icon>
             <span>{{ t('nav.pages') }}</span>
             <el-text size="small" type="info">
-              <template v-if="pagesAutoLoaderRef?.loading?.value">
-                {{ t('common.loading') }}...
-              </template>
-              <template v-else-if="pagesAutoLoaderRef?.error?.value">
-                {{ t('error.unable_load') }}
-              </template>
-              <template v-else>
-                {{ t('common.totalFormat', { count: totalPagesCount }) }}
-                <template v-if="hasQuery">
-                  , {{ t('common.matchedFormat', { count: matchedPagesCount }) }}
-                </template>
+              {{ t('common.totalFormat', { count: totalPagesCount }) }}
+              <template v-if="hasQuery">
+                , {{ t('common.matchedFormat', { count: matchedPagesCount }) }}
               </template>
             </el-text>
           </div>
@@ -262,38 +320,20 @@ const { t } = useI18n();
 
       <transition name="section-toggle">
         <div v-show="showPages" class="section-body">
-          <PagesAutoLoader ref="pagesAutoLoaderRef" :filter-query="normalizedQuery" />
-        </div>
-      </transition>
-    </el-card>
-
-  <el-card id="section-tools" v-if="!hasQuery || filteredTools.length > 0" shadow="never" class="home__card">
-      <template #header>
-        <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
-            <div class="card-header-left">
-            <el-icon class="section-icon"><Cpu /></el-icon><span>{{ t('nav.tools') }}</span>
-            <el-text size="small" type="info">
-              {{ t('common.totalFormat', { count: totalToolsCount }) }}
-              <template v-if="hasQuery">
-                , {{ t('common.matchedFormat', { count: matchedToolsCount }) }}
-              </template>
-            </el-text>
+          <div class="pages-list">
+            <PageItem
+              v-for="page in filteredPages"
+              :key="page.name"
+              :page-name="page.displayName"
+              :repo-url="page.repoUrl"
+              :version="{ date: page.date, url: page.url }"
+            />
           </div>
-          <el-button type="text" size="small" style="margin-left:8px">
-            <el-icon>
-              <ArrowUp v-if="showTools" />
-              <Collection v-else />
-            </el-icon>
-          </el-button>
-        </div>
-      </template>
-
-      <transition name="section-toggle">
-        <div v-show="showTools" class="section-body">
-          <Tools ref="toolsRef" :filter-query="normalizedQuery" />
         </div>
       </transition>
     </el-card>
+
+
 
   <el-card id="section-games" v-if="(!hasQuery && gamesAutoLoadEnabled) || (hasQuery && filteredGames.length > 0)" shadow="never" class="home__card">
       <template #header>
@@ -396,9 +436,38 @@ const { t } = useI18n();
       </transition>
     </el-card>
 
-  
+      
+  <el-card id="section-tools" v-if="!hasQuery || filteredTools.length > 0" shadow="never" class="home__card">
+      <template #header>
+        <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
+            <div class="card-header-left">
+            <el-icon class="section-icon"><Cpu /></el-icon><span>{{ t('nav.tools') }}</span>
+            <el-text size="small" type="info">
+              {{ t('common.totalFormat', { count: totalToolsCount }) }}
+              <template v-if="hasQuery">
+                , {{ t('common.matchedFormat', { count: matchedToolsCount }) }}
+              </template>
+            </el-text>
+          </div>
+          <el-button type="text" size="small" style="margin-left:8px">
+            <el-icon>
+              <ArrowUp v-if="showTools" />
+              <Collection v-else />
+            </el-icon>
+          </el-button>
+        </div>
+      </template>
 
-    <el-card v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && filteredTools.length === 0" 
+      <transition name="section-toggle">
+        <div v-show="showTools" class="section-body">
+          <Tools ref="toolsRef" :filter-query="normalizedQuery" />
+        </div>
+      </transition>
+    </el-card>
+
+
+
+    <el-card v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && filteredTools.length === 0 && matchedServicesCount === 0" 
       shadow="never"
       class="home__card"
     >
@@ -417,6 +486,18 @@ const { t } = useI18n();
   margin: 0;
   padding-left: 0;
   padding-right: 0;
+}
+
+.pages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .github-card .github-body {

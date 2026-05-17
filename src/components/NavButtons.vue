@@ -1,10 +1,13 @@
 <template>
   <div class="nav-buttons">
+      <button class="nav-btn" @click="go('services')">{{ t('nav.services') }}</button>
   <button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button>
-  <button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button>
   <button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button>
   <button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button>
   <button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button>
+  <button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button>
+
+
   </div>
 </template>
 
@@ -27,6 +30,7 @@ function scrollToSection(id) {
 function go(name) {
   const map = {
     pages: 'section-pages',
+    services: 'section-services',
     games: 'section-games',
     apps: 'section-apps',
     files: 'section-files',

@@ -91,8 +91,7 @@ import { ref, reactive, onMounted, computed, defineExpose } from 'vue'
 import { Download, Link, CopyDocument, Calendar } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
-import { fetchWithCache } from '../utils/apiCache'
-import { getGitHubHeaders } from '../utils/github'
+// API fetching removed — using hard-coded releases
 import { useContent } from '../data/content'
 
 const props = defineProps({
@@ -127,14 +126,22 @@ function matchesItem(item, query) {
 
 const filteredGames = computed(() => {
   const q = normalizedFilter.value
-  if (!q) return games.value
-  return games.value.filter((item) => matchesItem(item, q))
+  const list = q ? games.value.filter((item) => matchesItem(item, q)) : games.value.slice()
+  return list.slice().sort((a, b) => {
+    const ta = Date.parse(a.date) || 0
+    const tb = Date.parse(b.date) || 0
+    return tb - ta
+  })
 })
 
 const filteredApps = computed(() => {
   const q = normalizedFilter.value
-  if (!q) return apps.value
-  return apps.value.filter((item) => matchesItem(item, q))
+  const list = q ? apps.value.filter((item) => matchesItem(item, q)) : apps.value.slice()
+  return list.slice().sort((a, b) => {
+    const ta = Date.parse(a.date) || 0
+    const tb = Date.parse(b.date) || 0
+    return tb - ta
+  })
 })
 
 const manualGames = computed(() => {
@@ -350,7 +357,10 @@ function openRepo(item) {
 }
 
 onMounted(() => {
-  loadReleases()
+  // Only use configured manual items (no auto-fetch or extra hardcoded entries)
+  games.value = [...manualGames.value]
+  apps.value = [...manualApps.value]
+  loading.value = false
 })
 
 defineExpose({ games, apps, filteredGames, filteredApps })

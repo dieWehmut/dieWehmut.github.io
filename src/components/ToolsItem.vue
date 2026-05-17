@@ -38,8 +38,7 @@ import { ref, onMounted, reactive, computed, defineExpose } from 'vue'
 import { SetUp, Download, Link, CopyDocument, Calendar } from "@element-plus/icons-vue";
 import { useI18n } from 'vue-i18n'
 import { showCenteredToast } from '../utils/centerToast'
-import { fetchWithCache } from '../utils/apiCache'
-import { getGitHubHeaders } from '../utils/github'
+// API calls removed - using hard-coded tool list
 import { useContent } from '../data/content'
 
 const tools = ref([])
@@ -248,7 +247,8 @@ function formatDateShort(d) {
 }
 
 onMounted(() => {
-  fetchTools()
+  tools.value = [...manualTools.value]
+  loading.value = false
 })
 
 // expose tools array so parent can read counts and filter

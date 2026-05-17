@@ -8,29 +8,30 @@
       <SakuraCanvas />
       <BounceCursor />
     <el-container class="app">
-      <SideBar v-if="!(isMobile && query.trim())" :enter-ready="true" />
-      <div class="content">
-        <el-header class="app__header" height="80px">
-                  <div class="app__main">
-                    <SearchBar
-                      ref="searchBarRef"
-                      v-model="query"
-                      @submit="openFirst"
-                      @clear="onClear"
-                      :enter-ready="true"
-                    />
-                  </div>
-              </el-header>
+      <el-header class="app__header" height="80px">
+        <div class="app__main">
+          <SearchBar
+            ref="searchBarRef"
+            v-model="query"
+            @submit="openFirst"
+            @clear="onClear"
+            :enter-ready="true"
+          />
+        </div>
+      </el-header>
 
+      <SideBar v-if="!(isMobile && query.trim())" :enter-ready="true" />
+
+      <div class="content">
         <div class="layout">
           <el-main>
-              <div class="app__center">
-                <Home
-                  ref="homeRef"
-                  :query="query"
-                  :enter-ready="true"
-                />
-              </div>
+            <div class="app__center">
+              <Home
+                ref="homeRef"
+                :query="query"
+                :enter-ready="true"
+              />
+            </div>
           </el-main>
 
           <!-- right column placeholder (if you add a RightBar, place it here) -->
@@ -254,6 +255,19 @@ onBeforeUnmount(() => {
     margin-right: 0; /* remove negative compensation so main occupies full width */
     padding-right: 0;
     padding-left: 0;
+  }
+
+  /* On small screens, sidebar becomes part of normal flow so content must not reserve sidebar width */
+  .content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .app__header .app__main,
+  .app__footer .app__main {
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 
