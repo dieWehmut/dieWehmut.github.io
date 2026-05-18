@@ -10,17 +10,19 @@
     <el-container class="app">
       <el-header class="app__header" height="80px">
         <div class="app__main">
-          <SearchBar
-            ref="searchBarRef"
-            v-model="query"
-            @submit="openFirst"
-            @clear="onClear"
-            :enter-ready="true"
-          />
+          <div class="app__center">
+            <SearchBar
+              ref="searchBarRef"
+              v-model="query"
+              @submit="openFirst"
+              @clear="onClear"
+              :enter-ready="true"
+            />
+          </div>
         </div>
       </el-header>
 
-      <SideBar v-if="!(isMobile && query.trim())" :enter-ready="true" />
+      <SideBar v-if="!isMobile" :enter-ready="true" />
 
       <div class="content">
         <div class="layout">
@@ -104,6 +106,26 @@ let _mq = null
 
 function handleMqChange(e) {
   isMobile.value = e.matches
+  syncLayoutModeForViewport()
+}
+
+function syncLayoutModeForViewport() {
+  if (typeof document === 'undefined') return
+  const root = document.documentElement
+
+  if (isMobile.value) {
+    // Mobile is always single-column.
+    root.classList.add('sidebar-collapsed')
+    return
+  }
+
+  // Desktop restores the user's saved single/double-column preference.
+  try {
+    const stored = localStorage.getItem('sidebarCollapsed')
+    root.classList.toggle('sidebar-collapsed', stored === '1')
+  } catch (e) {
+    root.classList.remove('sidebar-collapsed')
+  }
 }
 
 onMounted(() => {
@@ -111,6 +133,7 @@ onMounted(() => {
   if (typeof window !== 'undefined' && window.matchMedia) {
     _mq = window.matchMedia('(max-width: 1000px)')
     isMobile.value = _mq.matches
+    syncLayoutModeForViewport()
     try {
       _mq.addEventListener('change', handleMqChange)
     } catch (e) {
@@ -168,6 +191,10 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  /* Desktop: align header block with content block */
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  box-sizing: border-box;
   /* 固定在页面顶部，不随滚动移动 */
   position: sticky;
   top: 0;
@@ -222,6 +249,7 @@ onBeforeUnmount(() => {
 /* make header/footer inner container align with main's right edge compensation */
 .app__header .app__main,
 .app__footer .app__main {
+  box-sizing: border-box;
   margin-right: calc(-1 * var(--sidebar-right-gap, 32px));
 }
 
@@ -268,9 +296,24 @@ onBeforeUnmount(() => {
     margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .app__header {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Ensure header's inner center container becomes full-width on small screens */
+  .app__header .app__center {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
   }
 }
-
 /* When sidebar is collapsed ensure content fills full viewport */
 html.sidebar-collapsed .content {
   margin-left: 0 !important;

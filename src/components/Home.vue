@@ -759,4 +759,23 @@ const matchedServicesCount = computed(() => filteredServices.value.length);
     box-shadow: 0 14px 40px rgba(0,0,0,0.28);
   }
 }
+
+/* Mobile: make card body edge-to-edge and items fill full width */
+@media (max-width: 1000px) {
+  .home__card :deep(.el-card__body) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .pages-list, .services-list {
+    padding: 12px;
+  }
+
+  .pages-list > :deep(*), .services-list > :deep(*) {
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
 </style>

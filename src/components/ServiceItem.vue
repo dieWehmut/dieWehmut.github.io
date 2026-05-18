@@ -96,6 +96,8 @@ function formatDate(d) {
   gap: 16px;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
   padding:10px 12px;
   cursor: pointer;
   outline: none;

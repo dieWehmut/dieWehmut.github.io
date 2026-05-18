@@ -24,6 +24,8 @@ const settingsOpen = ref(false);
 const langPanelOpen = ref(false);
 // clean background mode: hide main UI, leaving only FloatButton visible
 const cleanMode = ref(false);
+const isMobile = ref(false);
+let _mq = null;
 
 function toggleSettings() {
 	settingsOpen.value = !settingsOpen.value;
@@ -58,6 +60,10 @@ onMounted(() => {
   } catch (e) {}
 });
 
+function handleMqChange(e) {
+	isMobile.value = e.matches;
+}
+
 const langs = [
 	// Order is arranged so that when buttons expand to the left,
 	// visual left-to-right sequence becomes: 拉, 德, 日, 英, 繁, 简
@@ -87,6 +93,25 @@ onMounted(() => {
 			document.documentElement.classList.add('sidebar-collapsed');
 		}
 	} catch (e) {}
+	if (typeof window !== 'undefined' && window.matchMedia) {
+		_mq = window.matchMedia('(max-width: 1000px)');
+		isMobile.value = _mq.matches;
+		try {
+			_mq.addEventListener('change', handleMqChange);
+		} catch (e) {
+			_mq.addListener(handleMqChange);
+		}
+	}
+});
+
+onBeforeUnmount(() => {
+	if (_mq) {
+		try {
+			_mq.removeEventListener('change', handleMqChange);
+		} catch (e) {
+			_mq.removeListener(handleMqChange);
+		}
+	}
 });
 </script>
 
@@ -161,6 +186,7 @@ onMounted(() => {
 				@click="toggleSidebar"
 				:aria-label="t('float.toggleSidebar')"
 				:title="t('float.toggleSidebar')"
+				v-if="!isMobile"
 			>
 				<!-- horizontal arrows icon (fa-arrows-alt-h like) -->
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -339,6 +365,14 @@ onMounted(() => {
 .clean-toggle { bottom: calc(var(--float-step) * 4); }
 .clean-toggle.active { background: rgba(255,255,255,0.06); }
 
+/* Mobile: sidebar-toggle is hidden, so compact the vertical stack to remove its reserved gap */
+@media (max-width: 1000px) {
+	.settings-button { bottom: calc(var(--float-step) * 1); }
+	.lang-toggle { bottom: calc(var(--float-step) * 2); }
+	.clean-toggle { bottom: calc(var(--float-step) * 3); }
+	.lang-options { bottom: calc(var(--float-step) * 2); }
+}
+
 @media (hover: hover) {
 	.btt-button:hover, .btt-button:focus {
 		transform: scale(1.06);
@@ -409,6 +443,17 @@ onMounted(() => {
 	to { transform: translateX(0) translateY(-6px) scale(1.02); }
 }
 .lang-btn.active { background: linear-gradient(135deg, rgba(78,168,255,0.95), rgba(102,150,255,0.95)); color: #fff; }
+
+/* Mobile final override: keep language row aligned with the language toggle button */
+@media (max-width: 1000px) {
+	.float-container .settings-button { bottom: calc(var(--float-step) * 1) !important; }
+	.float-container .lang-toggle { bottom: calc(var(--float-step) * 2) !important; }
+	.float-container .clean-toggle { bottom: calc(var(--float-step) * 3) !important; }
+	.float-container .lang-options {
+		right: 0 !important;
+		bottom: calc(var(--float-step) * 2) !important;
+	}
+}
 
 /* reduced motion respect */
 @media (prefers-reduced-motion: reduce) {
