@@ -1,52 +1,41 @@
 <template>
   <div class="nav-buttons">
-      <button class="nav-btn" @click="go('services')">{{ t('nav.services') }}</button>
-  <button class="nav-btn" @click="go('pages')">{{ t('nav.pages') }}</button>
-  <button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button>
-  <button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button>
-  <button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button>
-  <button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button>
-
-
+    <button
+      v-for="item in navItems"
+      :key="item.name"
+      class="nav-btn"
+      :class="{ active: isActive(item.name) }"
+      @click="go(item.name)"
+    >
+      {{ t('nav.' + item.name) }}
+    </button>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
 
-function scrollToSection(id) {
-  const el = document.getElementById(id)
-  if (!el) return
-  const headerOffset = 90
-  const rect = el.getBoundingClientRect()
-  const docTop = window.pageYOffset || document.documentElement.scrollTop
-  const top = rect.top + docTop - headerOffset
-  window.scrollTo({ top, behavior: 'smooth' })
+const navItems = [
+  { name: 'services' },
+  { name: 'pages' },
+  { name: 'games' },
+  { name: 'apps' },
+  { name: 'files' },
+  { name: 'tools' },
+]
+
+function isActive(name) {
+  return route.path === '/' + name
 }
 
 function go(name) {
-  const map = {
-    pages: 'section-pages',
-    services: 'section-services',
-    games: 'section-games',
-    apps: 'section-apps',
-    files: 'section-files',
-    tools: 'section-tools',
-  }
-  const id = map[name]
-  if (!id) return
-  try {
-    window.dispatchEvent(new CustomEvent('open-section', { detail: name }))
-  } catch (e) {}
-  // add small timeout so any listeners can react first
-  setTimeout(() => scrollToSection(id), 120)
+  router.push('/' + name).catch(() => {})
 }
-
-// keep exports simple; no props needed since behavior is self-contained
-onMounted(() => {})
 </script>
 
 <style scoped>
@@ -54,26 +43,29 @@ onMounted(() => {})
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
-  justify-content: center; /* center the nav buttons horizontally */
+  justify-content: center;
 }
 .nav-btn {
   background: rgba(255,255,255,0.06);
   color: rgba(255,255,255,0.96);
   border: none;
-  padding: 4px 8px; /* reduced padding to shrink distance between border and text */
+  padding: 4px 8px;
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
+  position: relative;
+  overflow: visible;
+  transition: background 180ms ease, color 180ms ease;
 }
 .nav-btn:active {
   transform: translateY(1px);
 }
+.nav-btn.active {
+  background: linear-gradient(135deg, rgba(78,168,255,0.85), rgba(102,150,255,0.85));
+  color: #fff;
+}
 
 /* pink glow for nav buttons on hover */
-.nav-btn {
-  position: relative;
-  overflow: visible;
-}
 .nav-btn::after {
   content: '';
   position: absolute;

@@ -43,6 +43,9 @@
   "footer": {
     "uptime": "Uptime"
   },
+  "header": {
+    "latestCommit": "Last commit"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -56,10 +59,18 @@
     "subtitle": "dieWehmut's Nexus"
   },
   "float": {
-    "cleanMode": "Toggle clean mode",
+    "viewMode": "Toggle View",
     "toggleSidebar": "Toggle columns"
   },
   "error": {
     "unable_load": "Unable to load data"
+  },
+  "status": {
+    "checking": "Checking...",
+    "online": "Online",
+    "offline": "Offline",
+    "unreachable": "Unreachable",
+    "highLatency": "High Latency",
+    "timeout": "Timeout"
   }
 }

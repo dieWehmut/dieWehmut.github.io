@@ -43,6 +43,9 @@
   "footer": {
     "uptime": "运行时间"
   },
+  "header": {
+    "latestCommit": "最近 commit"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -56,10 +59,18 @@
     "subtitle": "dieWehmut 的 Nexus"
   },
   "float": {
-    "cleanMode": "切换纯净模式",
+    "viewMode": "切换视图",
     "toggleSidebar": "切换单双栏"
   },
   "error": {
     "unable_load": "无法加载数据"
+  },
+  "status": {
+    "checking": "检测中...",
+    "online": "在线",
+    "offline": "离线",
+    "unreachable": "不可达",
+    "highLatency": "高延迟",
+    "timeout": "超时"
   }
 }

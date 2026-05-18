@@ -43,6 +43,9 @@
   "footer": {
     "uptime": "Betriebszeit"
   },
+  "header": {
+    "latestCommit": "Letzter Commit"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -56,10 +59,18 @@
     "subtitle": "dieWehmut's Nexus"
   },
   "float": {
-    "cleanMode": "Clean-Modus umschalten",
+    "viewMode": "Ansicht wechseln",
     "toggleSidebar": "Spaltenansicht umschalten"
   },
   "error": {
     "unable_load": "Daten konnten nicht geladen werden"
+  },
+  "status": {
+    "checking": "Prüfe...",
+    "online": "Online",
+    "offline": "Offline",
+    "unreachable": "Nicht erreichbar",
+    "highLatency": "Hohe Latenz",
+    "timeout": "Zeitüberschreitung"
   }
 }

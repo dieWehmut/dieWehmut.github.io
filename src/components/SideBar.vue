@@ -6,16 +6,16 @@
         <img :src="avatarUrl" alt="Avatar" class="avatar" />
       </div>
       <div class="about-content">
-            <h3 class="name">dieWehmut</h3>
+            <h3 class="name">{{ displayName }}</h3>
 
           <!-- Contact / GitHub block -->
           <div class="contact">
-            <a class="github-btn" href="https://github.com/dieWehmut" target="_blank" rel="noopener noreferrer">
+            <a class="github-btn" :href="githubUrl" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <!-- GitHub icon (simple) -->
               <span class="icon github-icon" aria-hidden="true">
                 <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.56 7.56 0 018 4.6c.68.003 1.36.092 1.99.27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
               </span>
-              <span class="label">GitHub</span>
+              <span class="github-text">GitHub</span>
             </a>
 
 
@@ -60,14 +60,11 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { fetchWithCache } from '../utils/apiCache';
-import { getGitHubHeaders } from '../utils/github';
+import { useProfile } from '../composables/useProfile';
 const props = defineProps({ enterReady: { type: Boolean, default: true } });
 import { useI18n } from 'vue-i18n';
 
-const avatarUrl = ref('https://github.com/dieWehmut.png');
-const profile = ref({});
-const lastUpdated = ref('2026-03-14');
+const { avatarUrl, displayName, lastUpdated, githubUrl } = useProfile();
 
 function scrollToSection(id) {
   const el = document.getElementById(id);
@@ -95,63 +92,6 @@ function go(name) {
   setTimeout(() => scrollToSection(id), 120);
 }
 
-async function fetchGitHub() {
-  try {
-    // cache profile for 1 hour
-    const data = await fetchWithCache(
-      'https://api.github.com/users/dieWehmut',
-      { headers: getGitHubHeaders() },
-      1000 * 60 * 60
-    )
-    profile.value = data;
-    if (data.avatar_url) avatarUrl.value = data.avatar_url;
-  } catch (e) {
-    // ignore network errors
-  }
-}
-
-onMounted(() => {
-  fetchGitHub();
-});
-
-async function fetchLatestCommit() {
-  try {
-    // Repo: dieWehmut/dieWehmut.github.io (site repo)
-    // cache latest commit for 1 hour
-    const commits = await fetchWithCache(
-      'https://api.github.com/repos/dieWehmut/dieWehmut.github.io/commits?per_page=1',
-      { headers: getGitHubHeaders() },
-      1000 * 60 * 60
-    )
-    if (Array.isArray(commits) && commits.length > 0) {
-      const c = commits[0];
-      const dateStr = c?.commit?.committer?.date || c?.commit?.author?.date;
-      if (dateStr) {
-        lastUpdated.value = formatDateTime(dateStr);
-      }
-    }
-  } catch (e) {
-    // ignore
-  }
-}
-
-function formatDateTime(d) {
-  try {
-    const dt = new Date(d);
-    if (isNaN(dt.valueOf())) return d;
-    // format: YYYY-MM-DD (no time)
-    const Y = dt.getFullYear();
-    const M = String(dt.getMonth() + 1).padStart(2, '0');
-    const D = String(dt.getDate()).padStart(2, '0');
-    return `${Y}-${M}-${D}`;
-  } catch {
-    return d;
-  }
-}
-
-onMounted(() => {
-  fetchLatestCommit();
-});
 
 const { t } = useI18n();
 

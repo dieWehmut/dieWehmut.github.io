@@ -15,7 +15,7 @@ export const tools = ref([
         showDownload: false,
         downloadToast: false,
         downloadToastMessage: 'Open the repository',
-        lastModified: '2026-05-17',
+        lastModified: '2025-10-26',
       },
     ],
   },

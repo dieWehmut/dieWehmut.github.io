@@ -43,6 +43,9 @@
   "footer": {
     "uptime": "稼働時間"
   },
+  "header": {
+    "latestCommit": "最近 commit"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -56,10 +59,18 @@
     "subtitle": "dieWehmut の Nexus"
   },
   "float": {
-    "cleanMode": "クリーンモードを切り替え",
+    "viewMode": "ビュー切替",
     "toggleSidebar": "1列/2列を切り替え"
   },
   "error": {
     "unable_load": "データを読み込めません"
+  },
+  "status": {
+    "checking": "確認中...",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "unreachable": "到達不能",
+    "highLatency": "高遅延",
+    "timeout": "タイムアウト"
   }
 }

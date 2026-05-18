@@ -22,8 +22,8 @@ onBeforeUnmount(() => window.removeEventListener('keyup', handleKey));
 // UI state
 const settingsOpen = ref(false);
 const langPanelOpen = ref(false);
-// clean background mode: hide main UI, leaving only FloatButton visible
-const cleanMode = ref(false);
+import { useViewMode } from '../composables/useViewMode'
+const { viewMode, toggleViewMode } = useViewMode()
 const isMobile = ref(false);
 let _mq = null;
 
@@ -43,21 +43,13 @@ function selectLang(code) {
 }
 
 function toggleCleanMode() {
-	cleanMode.value = !cleanMode.value;
-	try {
-		document.documentElement.classList.toggle('clean-mode', cleanMode.value);
-		localStorage.setItem('cleanMode', cleanMode.value ? '1' : '0');
-	} catch (e) {}
+	toggleViewMode()
 }
 
 onMounted(() => {
-  try {
-    const stored = localStorage.getItem('cleanMode');
-    if (stored === '1') {
-      cleanMode.value = true;
-      document.documentElement.classList.add('clean-mode');
-    }
-  } catch (e) {}
+	try {
+		// viewMode composable handles saved state; nothing to do here
+	} catch (e) {}
 });
 
 function handleMqChange(e) {
@@ -133,18 +125,21 @@ onBeforeUnmount(() => {
 			</button>
 		</div>
 
-		<!-- clean-mode toggle (appears when settings open) -->
+
 			<button
 			class="btt-button clean-toggle"
-			:class="{ visible: settingsOpen, active: cleanMode }"
+			:class="{ visible: settingsOpen, active: viewMode }"
 			@click="toggleCleanMode"
-			:title="t('float.cleanMode')"
-			aria-label="Toggle clean background"
+			:title="t('float.viewMode')"
+			aria-label="Toggle focus view"
 			>
-				<!-- simple eye/eye-off icon: uses a circle to represent visibility -->
+				<!-- Layout grid / focus icon -->
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-					<path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-					<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2"/>
+					<rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+					<rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+					<rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+					<rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+					<circle v-if="viewMode" cx="12" cy="12" r="4" fill="currentColor" opacity="0.7"/>
 				</svg>
 			</button>
 
@@ -174,8 +169,8 @@ onBeforeUnmount(() => {
 			>
 				<!-- replaced gear icon (blue stroke) -->
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-						<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="#4ea8ff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 114.28 16.9l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09c.7 0 1.28-.39 1.51-1A1.65 1.65 0 004.28 6.1l-.06-.06A2 2 0 116.99 3.2l.06.06c.5.5 1.2.66 1.82.33.58-.3 1-.9 1-1.51V3a2 2 0 114 0v.09c0 .61.42 1.21 1 1.51.62.33 1.32.17 1.82-.33l.06-.06A2 2 0 1119.4 8.1l-.06.06c-.3.58-.3 1.3.0 1.82.3.5.9 1 1.51 1H21a2 2 0 110 4h-.09c-.61 0-1.21.42-1.51 1z" stroke="#4ea8ff" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 114.28 16.9l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09c.7 0 1.28-.39 1.51-1A1.65 1.65 0 004.28 6.1l-.06-.06A2 2 0 116.99 3.2l.06.06c.5.5 1.2.66 1.82.33.58-.3 1-.9 1-1.51V3a2 2 0 114 0v.09c0 .61.42 1.21 1 1.51.62.33 1.32.17 1.82-.33l.06-.06A2 2 0 1119.4 8.1l-.06.06c-.3.58-.3 1.3.0 1.82.3.5.9 1 1.51 1H21a2 2 0 110 4h-.09c-.61 0-1.21.42-1.51 1z" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 			</button>
 
@@ -186,7 +181,7 @@ onBeforeUnmount(() => {
 				@click="toggleSidebar"
 				:aria-label="t('float.toggleSidebar')"
 				:title="t('float.toggleSidebar')"
-				v-if="!isMobile"
+				v-if="!isMobile && !viewMode"
 			>
 				<!-- horizontal arrows icon (fa-arrows-alt-h like) -->
 				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -196,13 +191,13 @@ onBeforeUnmount(() => {
 				</svg>
 			</button>
 
-			<!-- back to top button (bottom) -->
+			<!-- back to top button (bottom) — hidden in desktop Focus mode, shown on mobile -->
 			<button
 				class="btt-button back-button"
 				@click="scrollToTop"
 				:title="t('backToTop')"
 				aria-label="Back to top"
-				v-if="visible"
+				v-if="visible && (!viewMode || isMobile)"
 			>
 			<!-- Arrow icon -->
 			<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -226,7 +221,9 @@ onBeforeUnmount(() => {
 	height: auto;
 	}
 
-	.btt-button svg path { stroke: #fff !important; }
+	.btt-button svg path,
+	.btt-button svg rect,
+	.btt-button svg circle { stroke: #fff !important; }
 
 /* ensure correct stacking so language buttons are not obscured */
 .float-container { z-index: 99999 !important; }
@@ -364,6 +361,12 @@ onBeforeUnmount(() => {
 /* clean-mode toggle placed above language toggle */
 .clean-toggle { bottom: calc(var(--float-step) * 4); }
 .clean-toggle.active { background: rgba(255,255,255,0.06); }
+
+/* Focus mode: sidebar-toggle and back-button hidden, compact the stack from bottom */
+html.view-mode .settings-button { bottom: 0; }
+html.view-mode .lang-toggle { bottom: calc(var(--float-step) * 1); }
+html.view-mode .clean-toggle { bottom: calc(var(--float-step) * 2); }
+html.view-mode .lang-options { bottom: calc(var(--float-step) * 1); }
 
 /* Mobile: sidebar-toggle is hidden, so compact the vertical stack to remove its reserved gap */
 @media (max-width: 1000px) {

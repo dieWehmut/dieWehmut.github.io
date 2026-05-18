@@ -9,23 +9,43 @@
       <BounceCursor />
     <el-container class="app">
       <el-header class="app__header" height="80px">
-        <div class="app__main">
-          <div class="app__center">
-            <SearchBar
-              ref="searchBarRef"
-              v-model="query"
-              @submit="openFirst"
-              @clear="onClear"
-              :enter-ready="true"
-            />
+        <div class="app__main app__header-inner">
+          <div class="app__header-left" v-if="viewMode">
+            <img class="app__avatar" :src="avatarUrl" alt="avatar" />
+            <span class="app__name">{{ displayName }}</span>
+          </div>
+          <div class="app__header-center">
+            <div class="app__center">
+              <SearchBar
+                ref="searchBarRef"
+                v-model="query"
+                @submit="openFirst"
+                @clear="onClear"
+                :enter-ready="true"
+              />
+            </div>
+          </div>
+          <div class="app__header-right" v-if="viewMode">
+            <span class="app__commit">{{ t('header.latestCommit') }}: {{ lastUpdated }}</span>
+            <a
+              class="app__github app__github--icon"
+              :href="githubUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.53 2.87 8.38 6.84 9.74.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.39-3.37-1.39-.45-1.18-1.11-1.5-1.11-1.5-.9-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.2 9.2 0 0112 7.07c.85 0 1.71.12 2.51.36 1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9 0 1.38-.01 2.5-.01 2.84 0 .27.18.6.69.49A10.2 10.2 0 0022 12.26C22 6.58 17.52 2 12 2z" fill="currentColor"/>
+              </svg>
+            </a>
           </div>
         </div>
       </el-header>
 
-      <SideBar v-if="!isMobile" :enter-ready="true" />
+      <SideBar v-if="!isMobile && !viewMode" :enter-ready="true" />
 
       <div class="content">
-        <div class="layout">
+        <div class="layout" v-if="!viewMode">
           <el-main>
             <div class="app__center">
               <Home
@@ -37,6 +57,15 @@
           </el-main>
 
           <!-- right column placeholder (if you add a RightBar, place it here) -->
+        </div>
+        <div class="layout layout--section" v-else>
+          <el-main>
+            <RouterView v-slot="{ Component, route: r }">
+              <Transition :name="'focus-fade'" mode="out-in">
+                <component :is="Component" :key="r.path" :query="query" />
+              </Transition>
+            </RouterView>
+          </el-main>
         </div>
 
         <el-footer class="app__footer" height="auto">
@@ -52,7 +81,9 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref, watch, nextTick } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import SearchBar from './components/SearchBar.vue'
 import DynamicBackground from './components/DynamicBackground.vue'
 import ParticleCanvas from './components/ParticleCanvas.vue'
@@ -62,6 +93,14 @@ import Home from './components/Home.vue'
 import Footer from './components/Footer.vue'
 import SideBar from './components/SideBar.vue'
 import FloatButton from './components/FloatButton.vue'
+import { useProfile } from './composables/useProfile'
+import { useViewMode } from './composables/useViewMode'
+
+const { t } = useI18n()
+const { viewMode } = useViewMode()
+const { avatarUrl, displayName, lastUpdated, githubUrl } = useProfile()
+const route = useRoute()
+const router = useRouter()
 
 const query = ref('')
 const searchBarRef = ref(null)
@@ -77,6 +116,78 @@ function openFirst() {
 
 function onClear() {
   query.value = ''
+}
+
+function scrollToSection(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const headerOffset = 90
+  const rect = el.getBoundingClientRect()
+  const docTop = window.pageYOffset || document.documentElement.scrollTop
+  const top = rect.top + docTop - headerOffset
+  window.scrollTo({ top, behavior: 'smooth' })
+}
+
+function routeToSection(path) {
+  const map = {
+    '/': 'services',
+    '/services': 'services',
+    '/pages': 'pages',
+    '/games': 'games',
+    '/apps': 'apps',
+    '/files': 'files',
+    '/tools': 'tools',
+  }
+  return map[path]
+}
+
+async function syncRouteToSection(path) {
+  if (viewMode.value) return
+  const section = routeToSection(path)
+  if (!section) return
+  scrollRouteEnabled = false // disable observer during programmatic scroll
+  try {
+    window.dispatchEvent(new CustomEvent('open-section', { detail: section }))
+  } catch (e) {}
+  await nextTick()
+  setTimeout(() => scrollToSection(`section-${section}`), 80)
+  setTimeout(() => { scrollRouteEnabled = true }, 600) // re-enable after scroll settles
+}
+
+// Scroll-based section detection: auto-update route when scrolling in non-Focus mode
+const sectionNames = ['services', 'pages', 'games', 'apps', 'files', 'tools']
+let sectionObserver = null
+let scrollRouteEnabled = true // disable during programmatic scrolls
+
+function setupSectionObserver() {
+  if (sectionObserver) sectionObserver.disconnect()
+  if (viewMode.value) return
+
+  const options = {
+    root: null,
+    rootMargin: '-80px 0px -50% 0px', // trigger when section enters top half of viewport
+    threshold: 0,
+  }
+
+  sectionObserver = new IntersectionObserver((entries) => {
+    if (!scrollRouteEnabled || viewMode.value) return
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        const id = entry.target.id // e.g. "section-services"
+        const name = id.replace('section-', '')
+        if (sectionNames.includes(name) && route.path !== '/' + name) {
+          router.replace('/' + name).catch(() => {})
+        }
+      }
+    }
+  }, options)
+
+  nextTick(() => {
+    sectionNames.forEach((name) => {
+      const el = document.getElementById(`section-${name}`)
+      if (el) sectionObserver.observe(el)
+    })
+  })
 }
 
 function handleGlobalHotkeys(e) {
@@ -141,10 +252,32 @@ onMounted(() => {
       _mq.addListener(handleMqChange)
     }
   }
+  // Start scroll-based section detection
+  if (!viewMode.value) {
+    nextTick(() => setupSectionObserver())
+  }
+})
+
+watch(
+  () => route.path,
+  (path) => {
+    syncRouteToSection(path)
+  },
+  { immediate: true }
+)
+
+watch(viewMode, (enabled) => {
+  if (!enabled) {
+    syncRouteToSection(route.path)
+    nextTick(() => setupSectionObserver())
+  } else {
+    if (sectionObserver) sectionObserver.disconnect()
+  }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleGlobalHotkeys)
+  if (sectionObserver) sectionObserver.disconnect()
   if (_mq) {
     try {
       _mq.removeEventListener('change', handleMqChange)
@@ -178,6 +311,64 @@ onBeforeUnmount(() => {
   width: calc(100% - var(--sidebar-width));
 }
 
+.view-mode .app__header {
+  margin-left: 0;
+  width: 100%;
+}
+
+.app__footer {
+  background: rgba(4, 8, 22, 0.82);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.view-mode .app__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+/* Smaller footer in Focus mode */
+.view-mode .app__footer :deep(.footer) {
+  padding: 6px 12px 10px;
+}
+
+/* No scroll in Focus mode */
+.view-mode .content {
+  margin-left: 0;
+  width: 100%;
+  padding-bottom: 60px;
+  overflow: hidden;
+}
+
+/* Mobile: view-mode footer back to normal flow */
+@media (max-width: 1000px) {
+  .view-mode .content {
+    padding-bottom: 0;
+    overflow: auto;
+  }
+  .view-mode .app__footer {
+    position: static;
+  }
+
+  /* Hide header side columns on mobile Focus to give search bar full width */
+  .view-mode .app__header-left,
+  .view-mode .app__header-right {
+    display: none;
+  }
+  .view-mode .app__header-inner {
+    gap: 0;
+  }
+  .view-mode .app__header-center {
+    flex: 1;
+    padding: 0;
+  }
+}
+
 /* Entry splash overlay */
 /* intro splash moved into IntroSplash.vue */
 
@@ -195,22 +386,96 @@ onBeforeUnmount(() => {
   margin-left: var(--sidebar-width);
   width: calc(100% - var(--sidebar-width));
   box-sizing: border-box;
-  /* 固定在页面顶部，不随滚动移动 */
   position: sticky;
   top: 0;
   z-index: 2200;
-  /* 半透明浅色背景以提升头部可读性（仍允许背后视频透出），减轻整体黑色感 */
-  background: rgba(0,0,0,0.12) !important;
-  backdrop-filter: blur(6px) saturate(1.05);
-  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+  background: rgba(4, 8, 22, 0.82) !important;
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   padding-top: 10px;
   padding-bottom: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .app__main {
   width: 100%;
   box-sizing: border-box;
+}
+
+.app__header-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app__header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.app__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.24);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.app__avatar:hover {
+  transform: scale(1.15);
+  border-color: rgba(40, 255, 252, 0.7);
+  box-shadow:
+    0 0 20px rgba(40, 255, 252, 0.5),
+    0 0 40px rgba(40, 255, 252, 0.25),
+    0 0 80px rgba(167, 139, 250, 0.2);
+}
+
+.app__name {
+  font-weight: 700;
+  color: rgba(255,255,255,0.96);
+}
+
+.app__header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.app__header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: 220px;
+}
+
+.app__commit {
+  font-size: 12px;
+  color: rgba(255,255,255,0.86);
+}
+
+.app__github {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: transform 0.16s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.app__github:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.16);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.3);
 }
 
   /* inner centered container used by the main column to constrain content width */
@@ -525,17 +790,11 @@ html.sidebar-collapsed .app__header { padding-left: 0 !important; padding-right:
   background: transparent !important; border: none !important; color: #ffffff !important;
 }
 
-/* ── Clean mode ── */
+/* ── View mode transitions ── */
 .sidebar, .home, .app__footer, .app__header, .home__card, .layout, .el-main {
   transition: opacity 360ms cubic-bezier(.2,.9,.2,1), transform 360ms cubic-bezier(.2,.9,.2,1);
   will-change: opacity, transform;
 }
-.clean-mode .sidebar, .clean-mode .home, .clean-mode .app__footer, .clean-mode .app__header,
-.clean-mode .home__card, .clean-mode .layout, .clean-mode .el-main {
-  opacity: 0 !important; transform: translateY(10px) !important; pointer-events: none !important;
-}
-.clean-mode .float-container { display: block !important; visibility: visible !important; pointer-events: auto !important; }
-.clean-mode body, .clean-mode html { height: 100%; }
 
 /* ── Legibility over dynamic backgrounds ── */
 body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-item, .file-item,
@@ -563,6 +822,29 @@ body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-it
   color: #ffffff !important; border: 1px solid rgba(255,255,255,0.08) !important;
 }
 .back-to-top { background-color: rgba(0,0,0,0.5) !important; border-color: rgba(0,0,0,0.5) !important; }
+
+/* ── Route transition: smooth fade + slight slide ── */
+.focus-fade-enter-active,
+.focus-fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.focus-fade-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.focus-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ── Focus mode: hide scrollbar completely on desktop ── */
+@media (min-width: 1001px) {
+  html.view-mode,
+  html.view-mode body {
+    overflow: hidden;
+    height: 100%;
+  }
+}
 
 /* ── Hover/focus affordance ── */
 .action-btn, .repo-link, .repo-button, .link-button, .copy-btn, .nav-btn, .github-btn, .el-button[type="text"] {

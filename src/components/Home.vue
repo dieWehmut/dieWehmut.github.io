@@ -146,6 +146,7 @@ function handleOpenSection(e) {
   if (name === 'apps') showApps.value = true;
   if (name === 'files') showFiles.value = true;
   if (name === 'tools') showTools.value = true;
+  if (name === 'services') showServices.value = true;
 }
 
 if (typeof window !== 'undefined' && window.addEventListener) {

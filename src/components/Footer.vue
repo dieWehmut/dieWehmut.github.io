@@ -10,7 +10,7 @@
     </div>
 
     <div class="copyright">
-      © {{ copyrightYear }} {{ githubUser }} |
+      © {{ copyrightYear }} <a :href="githubProfileUrl" target="_blank" rel="noopener noreferrer">{{ githubUser }}</a> |
       <a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener">萌ICP备20260803号</a>
     </div>
   </div>
@@ -41,6 +41,7 @@ const copyrightYear = computed(() =>
 
 // 自动推断 GitHub 用户名：优先从 hostname（如 github.io 的子域名）推断，若失败回退到原值
 const githubUser = ref("dieWehmut");
+const githubProfileUrl = computed(() => `https://github.com/${githubUser.value}`);
 
 let timer = null;
 function tick() {

@@ -43,6 +43,9 @@
   "footer": {
     "uptime": "Tempus online"
   },
+  "header": {
+    "latestCommit": "Ultima commit"
+  },
   "languages": {
     "zh": "中文",
     "zh_tw": "繁體",
@@ -56,10 +59,18 @@
     "subtitle": "Nexus dieWehmut"
   },
   "float": {
-    "cleanMode": "Muta modum mundum",
+    "viewMode": "Mutare Visum",
     "toggleSidebar": "Commutare columnas"
   },
   "error": {
     "unable_load": "Data onerare non potest"
+  },
+  "status": {
+    "checking": "Probans...",
+    "online": "Coniunctus",
+    "offline": "Seiunctus",
+    "unreachable": "Inaccessibilis",
+    "highLatency": "Mora longa",
+    "timeout": "Tempus excedit"
   }
 }
