@@ -755,6 +755,25 @@ html.sidebar-collapsed .layout .el-main {
 html.sidebar-collapsed .app { padding-left: 0 !important; padding-right: 0 !important; --sidebar-left-gap: 0 !important; --sidebar-right-gap: 0 !important; --sidebar-width: 0 !important; }
 html.sidebar-collapsed .app__header { padding-left: 0 !important; padding-right: 0 !important; }
 
+/* Smooth sidebar toggle animation */
+.content,
+.app__header,
+.layout,
+.layout .el-main,
+.el-main {
+  transition: margin-left 0.35s cubic-bezier(.4,0,.2,1),
+              width 0.35s cubic-bezier(.4,0,.2,1),
+              max-width 0.35s cubic-bezier(.4,0,.2,1),
+              padding-left 0.35s cubic-bezier(.4,0,.2,1),
+              padding-right 0.35s cubic-bezier(.4,0,.2,1) !important;
+}
+
+.sidebar {
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1),
+              opacity 0.3s ease,
+              width 0.35s cubic-bezier(.4,0,.2,1) !important;
+}
+
 .sidebar-collapsed .sidebar {
   display: none !important;
   padding-top: 0 !important; padding-bottom: 0 !important; overflow: hidden !important; height: 0 !important;

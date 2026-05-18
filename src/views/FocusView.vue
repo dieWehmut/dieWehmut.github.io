@@ -286,15 +286,19 @@ const rightItems = computed(() => {
 })
 
 function cardStyle(idx, total, side) {
-  if (total <= 1) return { '--card-idx': idx, '--delay': idx * 80 + 'ms' }
+  if (total <= 1) return { '--card-idx': idx, '--delay': idx * 80 + 'ms', '--line-angle': '0deg' }
   const t = total === 1 ? 0.5 : idx / (total - 1)
   // Top cards pushed outward more, middle cards slightly inward — inverted ellipse feel
   const offset = Math.sin(t * Math.PI) * 30
   const ml = side === 'left' ? `${offset}px` : '0'
   const mr = side === 'right' ? `${offset}px` : '0'
+  // Angle lines toward center: top cards angle down, bottom cards angle up
+  const maxAngle = 35
+  const angle = (t - 0.5) * maxAngle * (side === 'left' ? -1 : 1)
   return {
     '--card-idx': idx,
     '--delay': idx * 80 + 'ms',
+    '--line-angle': `${angle.toFixed(1)}deg`,
     marginLeft: ml,
     marginRight: mr,
   }
@@ -403,29 +407,48 @@ onBeforeUnmount(() => {
   aspect-ratio: 1 / 1;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.3);
-  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s ease, border-color 0.4s ease;
-  cursor: pointer;
-}
-
-.focus-sphere:hover {
-  transform: scale(1.06);
-  border-color: rgba(40, 255, 252, 0.4);
+  border: 1px solid rgba(40, 255, 252, 0.4);
   box-shadow:
     0 0 40px rgba(40, 255, 252, 0.2),
     0 0 80px rgba(40, 255, 252, 0.12),
     0 0 120px rgba(167, 139, 250, 0.1),
     inset 0 0 60px rgba(40, 255, 252, 0.08);
+  transform: scale(1.06);
+  transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.focus-sphere:hover {
+  transform: scale(1.12);
+  border-color: rgba(16, 230, 120, 0.8);
+  box-shadow:
+    0 0 30px rgba(16, 230, 120, 0.45),
+    0 0 70px rgba(16, 230, 120, 0.3),
+    0 0 120px rgba(16, 230, 120, 0.18),
+    0 0 200px rgba(40, 255, 252, 0.12),
+    inset 0 0 80px rgba(16, 230, 120, 0.15);
 }
 
 .focus-sphere:hover .focus-sphere__orbit {
-  opacity: 1;
-  filter: drop-shadow(0 0 10px rgba(40, 255, 252, 0.4));
+  filter: drop-shadow(0 0 20px rgba(16, 230, 120, 0.65));
 }
 
 .focus-sphere:hover .focus-sphere__ball {
-  filter: drop-shadow(0 0 80px rgba(40, 255, 252, 0.7)) drop-shadow(0 0 30px rgba(40, 255, 252, 0.5));
+  filter: drop-shadow(0 0 100px rgba(16, 230, 120, 0.9)) drop-shadow(0 0 40px rgba(16, 230, 120, 0.6));
+}
+
+/* ── When hovering center sphere, all connector dots light up instantly ── */
+.focus-layout:has(.focus-sphere:hover) .focus-fd {
+  box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
+  transition: box-shadow 0.15s ease-out;
+}
+.focus-layout:has(.focus-sphere:hover) .focus-fd::before {
+  opacity: 0.9;
+  width: 260px;
+  transition: opacity 0.15s ease-out, width 0.15s ease-out;
+}
+.focus-layout:has(.focus-sphere:hover) .focus-fd::after {
+  opacity: 0.9;
+  animation-duration: 1s;
 }
 
 .focus-sphere__ball {
@@ -433,9 +456,9 @@ onBeforeUnmount(() => {
   height: auto;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 60px rgba(40, 255, 252, 0.5)) drop-shadow(0 0 20px rgba(40, 255, 252, 0.35));
-  animation: sphereFloat 6s ease-in-out infinite;
-  transition: filter 0.4s ease;
+  filter: drop-shadow(0 0 80px rgba(40, 255, 252, 0.7)) drop-shadow(0 0 30px rgba(40, 255, 252, 0.5));
+  animation: sphereSpin 20s linear infinite;
+  transition: filter 0.35s ease;
 }
 
 .focus-sphere__orbit {
@@ -448,13 +471,14 @@ onBeforeUnmount(() => {
   object-fit: contain;
   animation: orbitSpin 25s linear infinite;
   z-index: 0;
-  opacity: 0.95;
+  opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(40, 255, 252, 0.3));
   transition: opacity 0.4s ease, filter 0.4s ease;
 }
 
-@keyframes sphereFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+@keyframes sphereSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @keyframes orbitSpin {
@@ -477,16 +501,16 @@ onBeforeUnmount(() => {
 
 .focus-section-title {
   margin: 0;
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: 4px;
+  font-size: 32px;
+  font-weight: 950;
+  letter-spacing: 5px;
   text-align: center;
   line-height: 1.2;
-  background: linear-gradient(135deg, #fff, #a0f0ff);
+  background: linear-gradient(135deg, #ffffff, #c8f8ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 12px rgba(40, 255, 252, 0.6));
+  filter: drop-shadow(0 0 16px rgba(40, 255, 252, 0.8)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
   text-shadow: none;
 }
 
@@ -543,20 +567,28 @@ onBeforeUnmount(() => {
   opacity: 0.5;
 }
 
-/* Left side connectors: line goes right toward center */
+/* Left side connectors: line angles from dot toward center ring */
 .focus-left .focus-fd::before {
   left: 100%;
+  top: 50%;
   width: 220px;
-  background: linear-gradient(to right, currentColor 60%, transparent);
-  transition: opacity 0.3s ease, width 0.3s ease;
+  height: 1px;
+  transform-origin: 0% 50%;
+  transform: translateY(-50%) rotate(var(--line-angle, 0deg));
+  background: linear-gradient(to right, currentColor, currentColor 70%, rgba(40, 255, 252, 0.3) 90%, transparent);
+  transition: opacity 0.3s ease, width 0.3s ease, transform 0.3s ease;
 }
 
-/* Right side connectors: line goes left toward center */
+/* Right side connectors: line angles from dot toward center ring */
 .focus-right .focus-fd::before {
   right: 100%;
+  top: 50%;
   width: 220px;
-  background: linear-gradient(to left, currentColor 60%, transparent);
-  transition: opacity 0.3s ease, width 0.3s ease;
+  height: 1px;
+  transform-origin: 100% 50%;
+  transform: translateY(-50%) rotate(var(--line-angle, 0deg));
+  background: linear-gradient(to left, currentColor, currentColor 70%, rgba(40, 255, 252, 0.3) 90%, transparent);
+  transition: opacity 0.3s ease, width 0.3s ease, transform 0.3s ease;
 }
 
 /* Hover: connector line deepens, brightens, and stretches */
@@ -642,9 +674,13 @@ onBeforeUnmount(() => {
 }
 
 .focus-card__link:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 0 24px rgba(40, 255, 252, 0.15),
+    0 12px 36px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   background: rgba(4, 8, 22, 0.9);
+  border-color: rgba(40, 255, 252, 0.3);
 }
 
 /* ── Icon: ring + content icon layered ── */
