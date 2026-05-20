@@ -1,12 +1,58 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
-import path from 'path' 
+import path from 'path'
 
 const base = '/';
 
+/** Custom plugin: /api/ping proxy for client-side URL health checks.
+ *  The browser calls /api/ping?url=... (same-origin → no CORS),
+ *  and the dev server forwards the request server-side to the target.
+ *  Because Vite runs on the user's machine, the target sees the user's IP. */
+function pingProxy() {
+  return {
+    name: 'vite-ping-proxy',
+    configureServer(server) {
+      server.middlewares.use('/api/ping', async (req, res) => {
+        const url = new URL(req.url!, `http://${req.headers.host}`).searchParams.get('url')
+        if (!url) {
+          res.writeHead(400, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ ok: false, error: 'Missing ?url=' }))
+          return
+        }
+
+        const t0 = performance.now()
+        try {
+          const ctrl = new AbortController()
+          const t = setTimeout(() => ctrl.abort(), 5000)
+
+          const upstream = await fetch(url, {
+            signal: ctrl.signal,
+            redirect: 'follow',
+          })
+
+          clearTimeout(t)
+          res.writeHead(200, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({
+            ok: true,
+            status: upstream.status,
+            latency: Math.round(performance.now() - t0),
+          }))
+        } catch (err) {
+          res.writeHead(200, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({
+            ok: false,
+            error: (err as any)?.name === 'AbortError' ? 'timeout' : 'unreachable',
+            latency: Math.round(performance.now() - t0),
+          }))
+        }
+      })
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue(), tailwindcss(), pingProxy()],
   resolve: {
     alias: {
       '@assets': path.resolve(__dirname, 'src/assets')

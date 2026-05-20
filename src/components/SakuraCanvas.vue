@@ -21,7 +21,7 @@ let ctx = null
 let W = 0, H = 0, dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────
-const PETAL_COUNT      = 35
+const PETAL_COUNT      = 20
 const MIN_SIZE         = 10
 const MAX_SIZE         = 24
 const FALL_SPEED       = 0.45
@@ -37,7 +37,7 @@ const mouse = { x: -99999, y: -99999 }
 let petals = []
 let collected = []
 let burstPetals = []
-let hoveringPetal = false
+let _cursorState = 'none'
 let pickCooldown = 0
 
 function rand(a, b) { return a + Math.random() * (b - a) }
@@ -313,21 +313,20 @@ function frame() {
     b.opacity = origOp
   }
 
-  // ── cursor class management ──
-  if (collected.length > 0) {
-    if (!document.documentElement.classList.contains('sakura-grabbing')) {
-      document.documentElement.classList.add('sakura-grabbing')
-      document.documentElement.classList.remove('sakura-hover')
-    }
-  } else if (foundHover !== hoveringPetal) {
-    hoveringPetal = foundHover
-    if (foundHover) {
-      document.documentElement.classList.add('sakura-hover')
+  // ── cursor class management (only touch DOM when state changes) ──
+  const nextState = collected.length > 0 ? 'grabbing' : foundHover ? 'hover' : 'none'
+  if (nextState !== _cursorState) {
+    _cursorState = nextState
+    const cls = document.documentElement.classList
+    if (nextState === 'grabbing') {
+      cls.add('sakura-grabbing')
+      cls.remove('sakura-hover')
+    } else if (nextState === 'hover') {
+      cls.add('sakura-hover')
+      cls.remove('sakura-grabbing')
     } else {
-      document.documentElement.classList.remove('sakura-hover')
+      cls.remove('sakura-hover', 'sakura-grabbing')
     }
-  } else if (!foundHover && collected.length === 0) {
-    document.documentElement.classList.remove('sakura-hover', 'sakura-grabbing')
   }
 
   animId = requestAnimationFrame(frame)
@@ -340,8 +339,8 @@ function onMouseMove(e) {
 function onMouseLeave() {
   mouse.x = -99999
   mouse.y = -99999
-  hoveringPetal = false
-  document.documentElement.classList.remove('sakura-hover')
+  _cursorState = 'none'
+  document.documentElement.classList.remove('sakura-hover', 'sakura-grabbing')
 }
 
 // Global click: scatter any collected petals (click still passes through to UI)

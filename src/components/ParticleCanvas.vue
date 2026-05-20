@@ -13,7 +13,7 @@ let H = 0
 let dpr = 1
 
 // ── tuning ─────────────────────────────────────────────────────────────────
-const COUNT        = 120    // 雪的密度
+const COUNT        = 80     // 雪的密度
 const AREA         = 800    // density reference area (px²/particle)
 const MIN_R        = 1.5    // min radius px (logical)
 const MAX_R        = 4.5    // max radius px (logical)

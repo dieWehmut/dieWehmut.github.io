@@ -17,32 +17,111 @@ export function useUrlStatus() {
 
     statusMap[url] = { status: 'checking' }
 
+    // In dev mode, use the Vite /api/ping proxy — same-origin request,
+    // server-side forward from the user's machine → target sees user's real IP.
+    // In production, fall back to direct fetch (CORS → no-cors).
+    if (import.meta.env.DEV) {
+      await checkViaProxy(url)
+    } else {
+      await checkDirect(url)
+    }
+  }
+
+  /** Dev mode: call same-origin /api/ping proxy for real HTTP status */
+  async function checkViaProxy(url: string) {
     const controller = new AbortController()
     pending.set(url, controller)
 
-    const t0 = performance.now()
-
     try {
-      const timeoutId = setTimeout(() => controller.abort(), 5000)
+      const timeoutId = setTimeout(() => controller.abort(), 6000)
 
-      await fetch(url, {
-        mode: 'no-cors',
+      const res = await fetch('/api/ping?url=' + encodeURIComponent(url), {
         signal: controller.signal,
       })
 
       clearTimeout(timeoutId)
-      const latency = Math.round(performance.now() - t0)
+      const data = await res.json()
 
-      if (latency < 1000) {
-        statusMap[url] = { status: 'online', latency }
-      } else {
-        statusMap[url] = { status: 'highLatency', latency }
-      }
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
+      if (data.ok && data.status === 200) {
+        const latency: number = data.latency
+        if (latency < 1000) {
+          statusMap[url] = { status: 'online', latency }
+        } else {
+          statusMap[url] = { status: 'highLatency', latency }
+        }
+      } else if (data.ok) {
+        // Server responded, but not 200
+        statusMap[url] = { status: 'offline' }
+      } else if (data.error === 'timeout') {
         statusMap[url] = { status: 'timeout' }
       } else {
         statusMap[url] = { status: 'unreachable' }
+      }
+    } catch (_err: any) {
+      if (_err.name === 'AbortError') {
+        statusMap[url] = { status: 'timeout' }
+      } else {
+        statusMap[url] = { status: 'unreachable' }
+      }
+    } finally {
+      pending.delete(url)
+    }
+  }
+
+  /** Production: direct fetch — CORS first, then no-cors fallback */
+  async function checkDirect(url: string) {
+    const controller = new AbortController()
+    pending.set(url, controller)
+
+    const t0 = performance.now()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+
+    try {
+      const response = await fetch(url, { signal: controller.signal })
+      clearTimeout(timeoutId)
+      const latency = Math.round(performance.now() - t0)
+
+      if (response.status === 200) {
+        if (latency < 1000) {
+          statusMap[url] = { status: 'online', latency }
+        } else {
+          statusMap[url] = { status: 'highLatency', latency }
+        }
+      } else {
+        statusMap[url] = { status: 'offline' }
+      }
+    } catch (corsErr: any) {
+      clearTimeout(timeoutId)
+
+      if (corsErr.name === 'AbortError') {
+        statusMap[url] = { status: 'timeout' }
+        pending.delete(url)
+        return
+      }
+
+      // CORS blocked — fall back to no-cors
+      try {
+        const noCorsCtrl = new AbortController()
+        pending.set(url, noCorsCtrl)
+        const t1 = performance.now()
+        const noCorsTimeoutId = setTimeout(() => noCorsCtrl.abort(), 5000)
+
+        await fetch(url, { mode: 'no-cors', signal: noCorsCtrl.signal })
+
+        clearTimeout(noCorsTimeoutId)
+        const latency = Math.round(performance.now() - t1)
+
+        if (latency < 1000) {
+          statusMap[url] = { status: 'online', latency }
+        } else {
+          statusMap[url] = { status: 'highLatency', latency }
+        }
+      } catch (noCorsErr: any) {
+        if (noCorsErr.name === 'AbortError') {
+          statusMap[url] = { status: 'timeout' }
+        } else {
+          statusMap[url] = { status: 'unreachable' }
+        }
       }
     } finally {
       pending.delete(url)

@@ -1,7 +1,7 @@
 <template>
   <div class="focus-view">
     <!-- Desktop: 3-column layout with elliptical card stagger -->
-    <div class="focus-layout">
+    <div class="focus-layout" :class="{ 'sphere-hovered': sphereHovered }">
       <!-- Left cards -->
       <div class="focus-col focus-left">
         <div
@@ -10,6 +10,8 @@
           class="focus-card"
           :class="'focus-card--l' + idx"
           :style="cardStyle(idx, leftItems.length, 'left')"
+          @mouseenter="onCardEnter"
+          @mouseleave="onCardLeave"
         >
           <!-- Connector dot -->
           <span class="focus-fd" :class="'focus-fd--l' + (idx % 3)"></span>
@@ -45,7 +47,7 @@
 
       <!-- Center sphere -->
       <div class="focus-center">
-        <div class="focus-sphere">
+        <div class="focus-sphere" @mouseenter="sphereHovered = true" @mouseleave="sphereHovered = false">
           <img :src="yBgImg" alt="" class="focus-sphere__orbit" />
           <img :src="sphereImg" alt="" class="focus-sphere__ball" />
           <div class="focus-sphere__label">
@@ -69,6 +71,8 @@
           class="focus-card"
           :class="'focus-card--r' + idx"
           :style="cardStyle(idx, rightItems.length, 'right')"
+          @mouseenter="onCardEnter"
+          @mouseleave="onCardLeave"
         >
           <!-- Connector dot -->
           <span class="focus-fd focus-fd--right" :class="'focus-fd--r' + (idx % 3)"></span>
@@ -143,7 +147,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useContent } from '../data/content'
@@ -166,6 +170,11 @@ import ico6 from '../assets/focus/ico6.png'
 
 const rings = [c1, c2, c3, c4, c5, c6]
 const icons = [ico1, ico2, ico3, ico4, ico5, ico6]
+
+const sphereHovered = ref(false)
+
+function onCardEnter(e) { e.currentTarget.classList.add('card-hovered') }
+function onCardLeave(e) { e.currentTarget.classList.remove('card-hovered') }
 
 const props = defineProps({
   section: { type: String, default: 'services' },
@@ -297,7 +306,7 @@ function cardStyle(idx, total, side) {
   const angle = (t - 0.5) * maxAngle * (side === 'left' ? -1 : 1)
   return {
     '--card-idx': idx,
-    '--delay': idx * 80 + 'ms',
+    '--delay': idx * 30 + 'ms',
     '--line-angle': `${angle.toFixed(1)}deg`,
     marginLeft: ml,
     marginRight: mr,
@@ -330,25 +339,8 @@ function openItem(item) {
   }
 }
 
-// ── Disable scroll wheel in desktop Focus view ──
-const isDesktop = ref(true)
-let _wheelMq = null
-function handleWheel(e) {
-  if (isDesktop.value) {
-    e.preventDefault()
-  }
-}
-onMounted(() => {
-  _wheelMq = window.matchMedia('(max-width: 1000px)')
-  const update = () => { isDesktop.value = !_wheelMq.matches }
-  isDesktop.value = !_wheelMq.matches
-  _wheelMq.addEventListener('change', update)
-  window.addEventListener('wheel', handleWheel, { passive: false })
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('wheel', handleWheel)
-  if (_wheelMq) _wheelMq.removeEventListener('change', () => {})
-})
+// Scrolling is prevented via CSS overflow:hidden on html.view-mode body
+// No JS wheel listener needed — removing it improves scroll performance
 </script>
 
 <style scoped>
@@ -362,7 +354,6 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
-  overflow: hidden;
 }
 
 .focus-layout {
@@ -437,16 +428,16 @@ onBeforeUnmount(() => {
 }
 
 /* ── When hovering center sphere, all connector dots light up instantly ── */
-.focus-layout:has(.focus-sphere:hover) .focus-fd {
+.focus-layout.sphere-hovered .focus-fd {
   box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
   transition: box-shadow 0.15s ease-out;
 }
-.focus-layout:has(.focus-sphere:hover) .focus-fd::before {
+.focus-layout.sphere-hovered .focus-fd::before {
   opacity: 0.9;
   width: 260px;
   transition: opacity 0.15s ease-out, width 0.15s ease-out;
 }
-.focus-layout:has(.focus-sphere:hover) .focus-fd::after {
+.focus-layout.sphere-hovered .focus-fd::after {
   opacity: 0.9;
   animation-duration: 1s;
 }
@@ -592,14 +583,14 @@ onBeforeUnmount(() => {
 }
 
 /* Hover: connector line deepens, brightens, and stretches */
-.focus-card:has(.focus-card__link:hover) .focus-fd::before {
+.focus-card.card-hovered .focus-fd::before {
   opacity: 0.9;
   width: 260px;
 }
-.focus-card:has(.focus-card__link:hover) .focus-fd {
+.focus-card.card-hovered .focus-fd {
   box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
 }
-.focus-card:has(.focus-card__link:hover) .focus-fd::after {
+.focus-card.card-hovered .focus-fd::after {
   opacity: 0.9;
   animation-duration: 1.2s;
 }
@@ -647,7 +638,7 @@ onBeforeUnmount(() => {
 .focus-card {
   position: relative;
   padding: 3px 0;
-  animation: cardSlideIn 0.5s ease both;
+  animation: cardSlideIn 0.28s ease both;
   animation-delay: var(--delay, 0ms);
 }
 
@@ -665,10 +656,8 @@ onBeforeUnmount(() => {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-  background: rgba(4, 8, 22, 0.82);
+  background: rgba(4, 8, 22, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
@@ -679,7 +668,7 @@ onBeforeUnmount(() => {
     0 0 24px rgba(40, 255, 252, 0.15),
     0 12px 36px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  background: rgba(4, 8, 22, 0.9);
+  background: rgba(4, 8, 22, 0.96);
   border-color: rgba(40, 255, 252, 0.3);
 }
 
