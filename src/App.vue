@@ -1,12 +1,9 @@
 <template>
   <el-config-provider :button="{ autoInsertSpace: true }">
-        <DynamicBackground @ready="onBackgroundReady" />
+    <DynamicBackground @ready="onBackgroundReady" />
     <ParticleCanvas />
     <SakuraCanvas />
     <BounceCursor />
-      <ParticleCanvas />
-      <SakuraCanvas />
-      <BounceCursor />
     <el-container class="app">
       <el-header class="app__header" height="80px">
         <div class="app__main app__header-inner">
@@ -61,7 +58,7 @@
         <div class="layout layout--section" v-else>
           <el-main>
             <RouterView v-slot="{ Component, route: r }">
-              <Transition :name="'focus-fade'" mode="out-in">
+              <Transition :name="'focus-fade'">
                 <component :is="Component" :key="r.path" :query="query" />
               </Transition>
             </RouterView>
@@ -342,7 +339,6 @@ onBeforeUnmount(() => {
   margin-left: 0;
   width: 100%;
   padding-bottom: 60px;
-  overflow: hidden;
 }
 
 /* Mobile: view-mode footer back to normal flow */
@@ -812,7 +808,6 @@ html.sidebar-collapsed .app__header { padding-left: 0 !important; padding-right:
 /* ── View mode transitions ── */
 .sidebar, .home, .app__footer, .app__header, .home__card, .layout, .el-main {
   transition: opacity 360ms cubic-bezier(.2,.9,.2,1), transform 360ms cubic-bezier(.2,.9,.2,1);
-  will-change: opacity, transform;
 }
 
 /* ── Legibility over dynamic backgrounds ── */
@@ -845,15 +840,15 @@ body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-it
 /* ── Route transition: smooth fade + slight slide ── */
 .focus-fade-enter-active,
 .focus-fade-leave-active {
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.12s ease, transform 0.12s ease;
 }
 .focus-fade-enter-from {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(6px);
 }
 .focus-fade-leave-to {
   opacity: 0;
-  transform: translateY(-8px);
+  transform: translateY(-4px);
 }
 
 /* ── Focus mode: hide scrollbar completely on desktop ── */

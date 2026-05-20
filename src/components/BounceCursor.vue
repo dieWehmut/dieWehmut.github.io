@@ -37,6 +37,9 @@ function isTextInputLike(el) {
   return !!el.closest?.('input, textarea, select, [contenteditable="true"]')
 }
 
+let rafId = null
+let _lastTarget = null
+
 function updateHoverState(target) {
   const root = document.documentElement
   if (!target || isTextInputLike(target)) {
@@ -56,12 +59,22 @@ function updateHoverState(target) {
 }
 
 function onMouseMove(e) {
-  x.value = e.clientX
-  y.value = e.clientY
-  updateHoverState(e.target)
+  // Defer to rAF so position updates don't cause layout thrashing on every pixel
+  if (rafId) return
+  rafId = requestAnimationFrame(() => {
+    rafId = null
+    x.value = e.clientX
+    y.value = e.clientY
+  })
+  // Check hover state only when the target element actually changes
+  if (e.target !== _lastTarget) {
+    _lastTarget = e.target
+    updateHoverState(e.target)
+  }
 }
 
 function onMouseLeave() {
+  _lastTarget = null
   visible.value = false
   document.documentElement.classList.remove('heart-bounce-active')
 }
@@ -75,6 +88,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mouseleave', onMouseLeave)
   document.documentElement.classList.remove('heart-bounce-active')
+  if (rafId) cancelAnimationFrame(rafId)
 })
 </script>
 
