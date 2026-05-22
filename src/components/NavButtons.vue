@@ -57,6 +57,10 @@ function go(name) {
   overflow: visible;
   transition: background 180ms ease, color 180ms ease;
 }
+.nav-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
 .nav-btn:active {
   transform: translateY(1px);
 }

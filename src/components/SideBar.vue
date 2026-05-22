@@ -211,8 +211,8 @@ html.sidebar-collapsed .avatar {
 }
 
 .avatar {
-  width: 240px;
-  height: 240px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   box-shadow: 0 8px 20px rgba(64,158,255,0.12);
   transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms ease, filter 260ms ease;

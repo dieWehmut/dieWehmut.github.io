@@ -21,7 +21,7 @@
       </template>
     </el-input>
   <!-- Show the nav buttons beneath the search when input is empty (also for desktop) -->
-  <NavButtons v-if="!innerValue" class="mobile-nav" />
+  <NavButtons v-if="!innerValue" class="search-nav" />
   </div>
 </template>
 
@@ -176,6 +176,10 @@ defineExpose({ focusInput })
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+.search-nav {
+  margin-top: -4px;
 }
 
 /* Mobile: lower the search bar slightly so it's not too close to the top */
