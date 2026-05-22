@@ -482,6 +482,11 @@ onBeforeUnmount(() => {
     box-sizing: border-box;
   }
 
+  /* Header: allow the search bar to fill the full width, not be constrained */
+  .app__header .app__center {
+    max-width: none;
+  }
+
 .layout {
   /* layout stretches full width of .content (fills to page right) */
   max-width: none;

@@ -2,8 +2,24 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
+import fs from 'fs'
 
 const base = '/';
+
+/** Custom plugin: copies the built index.html to 404.html so GitHub Pages
+ *  serves the SPA for unknown paths (e.g. /services) instead of a 404. */
+function copy404Plugin() {
+  return {
+    name: 'vite-copy-404',
+    closeBundle() {
+      const distIndex = path.resolve(__dirname, 'dist', 'index.html')
+      const dist404 = path.resolve(__dirname, 'dist', '404.html')
+      if (fs.existsSync(distIndex)) {
+        fs.copyFileSync(distIndex, dist404)
+      }
+    },
+  }
+}
 
 /** Custom plugin: /api/ping proxy for client-side URL health checks.
  *  The browser calls /api/ping?url=... (same-origin → no CORS),
@@ -52,7 +68,7 @@ function pingProxy() {
 }
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), pingProxy()],
+  plugins: [vue(), tailwindcss(), pingProxy(), copy404Plugin()],
   resolve: {
     alias: {
       '@assets': path.resolve(__dirname, 'src/assets')

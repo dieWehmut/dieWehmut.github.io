@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-const viewMode = ref(true)
+const viewMode = ref(false)
 let initialized = false
 
 function applyViewMode(enabled: boolean) {
@@ -24,8 +24,8 @@ function initViewMode() {
   initialized = true
   try {
     const stored = localStorage.getItem('viewMode')
-    // Default to Focus mode; only disable if user explicitly chose classic mode
-    if (stored === '0') viewMode.value = false
+    // Default to classic (Home) mode; only enable Focus if user explicitly chose it
+    if (stored === '1') viewMode.value = true
   } catch (e) {}
   if (typeof document !== 'undefined') {
     document.documentElement.classList.toggle('view-mode', viewMode.value)
