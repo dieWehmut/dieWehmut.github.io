@@ -1,19 +1,20 @@
 <template>
   <div
+    ref="cursorRef"
     v-show="visible"
     class="heart-bounce-cursor"
-    :style="{ left: `${x}px`, top: `${y}px` }"
     aria-hidden="true"
   >
-    <div class="ripple" aria-hidden="true"></div>
+    <div class="heart-bounce-cursor__icon">
+      <div class="ripple" aria-hidden="true"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const x = ref(-9999)
-const y = ref(-9999)
+const cursorRef = ref(null)
 const visible = ref(false)
 
 const CLICKABLE_SELECTOR = [
@@ -39,6 +40,8 @@ function isTextInputLike(el) {
 
 let rafId = null
 let _lastTarget = null
+let pendingX = -9999
+let pendingY = -9999
 
 function updateHoverState(target) {
   const root = document.documentElement
@@ -59,13 +62,18 @@ function updateHoverState(target) {
 }
 
 function onMouseMove(e) {
-  // Defer to rAF so position updates don't cause layout thrashing on every pixel
+  pendingX = e.clientX
+  pendingY = e.clientY
+
   if (rafId) return
   rafId = requestAnimationFrame(() => {
     rafId = null
-    x.value = e.clientX
-    y.value = e.clientY
+    const el = cursorRef.value
+    if (el) {
+      el.style.transform = `translate3d(${pendingX - 12}px, ${pendingY - 20}px, 0)`
+    }
   })
+
   // Check hover state only when the target element actually changes
   if (e.target !== _lastTarget) {
     _lastTarget = e.target
@@ -95,15 +103,26 @@ onBeforeUnmount(() => {
 <style scoped>
 .heart-bounce-cursor {
   position: fixed;
+  left: 0;
+  top: 0;
   width: 24px;
   height: 24px;
-  transform: translate(-12px, -20px);
+  transform: translate3d(-9999px, -9999px, 0);
   pointer-events: none;
   z-index: 2147483647 !important;
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.heart-bounce-cursor__icon {
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-repeat: no-repeat;
   background-size: contain;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ff69b4'/%3E%3C/svg%3E");
   animation: heartBounce 560ms ease-in-out infinite;
+  will-change: transform;
 }
 
 .heart-bounce-cursor .ripple {
@@ -129,9 +148,9 @@ onBeforeUnmount(() => {
 }
 
 @keyframes heartBounce {
-  0%, 100% { transform: translate(-12px, -20px) scale(1); }
-  35% { transform: translate(-12px, -24px) scale(1.08); }
-  60% { transform: translate(-12px, -18px) scale(0.96); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  35% { transform: translate3d(0, -4px, 0) scale(1.08); }
+  60% { transform: translate3d(0, 2px, 0) scale(0.96); }
 }
 
 :global(html.heart-bounce-active a),

@@ -1,7 +1,7 @@
 <template>
   <div class="focus-view">
     <!-- Desktop: 3-column layout with elliptical card stagger -->
-    <div class="focus-layout" :class="{ 'sphere-hovered': sphereHovered }">
+    <div class="focus-layout">
       <!-- Left cards -->
       <div class="focus-col focus-left">
         <div
@@ -10,8 +10,6 @@
           class="focus-card"
           :class="'focus-card--l' + idx"
           :style="cardStyle(idx, leftItems.length, 'left')"
-          @mouseenter="onCardEnter"
-          @mouseleave="onCardLeave"
         >
           <!-- Connector dot -->
           <span class="focus-fd" :class="'focus-fd--l' + (idx % 3)"></span>
@@ -47,7 +45,7 @@
 
       <!-- Center sphere -->
       <div class="focus-center">
-        <div class="focus-sphere" @mouseenter="sphereHovered = true" @mouseleave="sphereHovered = false">
+        <div class="focus-sphere">
           <img :src="yBgImg" alt="" class="focus-sphere__orbit" />
           <img :src="sphereImg" alt="" class="focus-sphere__ball" />
           <div class="focus-sphere__label">
@@ -71,8 +69,6 @@
           class="focus-card"
           :class="'focus-card--r' + idx"
           :style="cardStyle(idx, rightItems.length, 'right')"
-          @mouseenter="onCardEnter"
-          @mouseleave="onCardLeave"
         >
           <!-- Connector dot -->
           <span class="focus-fd focus-fd--right" :class="'focus-fd--r' + (idx % 3)"></span>
@@ -147,7 +143,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useContent } from '../data/content'
@@ -170,11 +166,6 @@ import ico6 from '../assets/focus/ico6.png'
 
 const rings = [c1, c2, c3, c4, c5, c6]
 const icons = [ico1, ico2, ico3, ico4, ico5, ico6]
-
-const sphereHovered = ref(false)
-
-function onCardEnter(e) { e.currentTarget.classList.add('card-hovered') }
-function onCardLeave(e) { e.currentTarget.classList.remove('card-hovered') }
 
 const props = defineProps({
   section: { type: String, default: 'services' },
@@ -406,6 +397,8 @@ function openItem(item) {
     inset 0 0 60px rgba(40, 255, 252, 0.08);
   transform: scale(1.06);
   transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease, border-color 0.35s ease;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .focus-sphere:hover {
@@ -428,16 +421,16 @@ function openItem(item) {
 }
 
 /* ── When hovering center sphere, all connector dots light up instantly ── */
-.focus-layout.sphere-hovered .focus-fd {
+.focus-layout:has(.focus-sphere:hover) .focus-fd {
+  --line-scale: 1.18;
   box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
   transition: box-shadow 0.15s ease-out;
 }
-.focus-layout.sphere-hovered .focus-fd::before {
+.focus-layout:has(.focus-sphere:hover) .focus-fd::before {
   opacity: 0.9;
-  width: 260px;
-  transition: opacity 0.15s ease-out, width 0.15s ease-out;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
-.focus-layout.sphere-hovered .focus-fd::after {
+.focus-layout:has(.focus-sphere:hover) .focus-fd::after {
   opacity: 0.9;
   animation-duration: 1s;
 }
@@ -450,6 +443,8 @@ function openItem(item) {
   filter: drop-shadow(0 0 80px rgba(40, 255, 252, 0.7)) drop-shadow(0 0 30px rgba(40, 255, 252, 0.5));
   animation: sphereSpin 20s linear infinite;
   transition: filter 0.35s ease;
+  will-change: transform, filter;
+  backface-visibility: hidden;
 }
 
 .focus-sphere__orbit {
@@ -465,6 +460,8 @@ function openItem(item) {
   opacity: 1;
   filter: drop-shadow(0 0 4px rgba(40, 255, 252, 0.3));
   transition: opacity 0.4s ease, filter 0.4s ease;
+  will-change: transform, filter;
+  backface-visibility: hidden;
 }
 
 @keyframes sphereSpin {
@@ -544,6 +541,7 @@ function openItem(item) {
   background: rgb(40, 255, 252);
   z-index: 2;
   pointer-events: none;
+  --line-scale: 1;
 }
 
 /* Connector line from dot toward center sphere */
@@ -565,9 +563,10 @@ function openItem(item) {
   width: 220px;
   height: 1px;
   transform-origin: 0% 50%;
-  transform: translateY(-50%) rotate(var(--line-angle, 0deg));
+  transform: translateY(-50%) rotate(var(--line-angle, 0deg)) scaleX(var(--line-scale, 1));
   background: linear-gradient(to right, currentColor, currentColor 70%, rgba(40, 255, 252, 0.3) 90%, transparent);
-  transition: opacity 0.3s ease, width 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  will-change: opacity, transform;
 }
 
 /* Right side connectors: line angles from dot toward center ring */
@@ -577,20 +576,23 @@ function openItem(item) {
   width: 220px;
   height: 1px;
   transform-origin: 100% 50%;
-  transform: translateY(-50%) rotate(var(--line-angle, 0deg));
+  transform: translateY(-50%) rotate(var(--line-angle, 0deg)) scaleX(var(--line-scale, 1));
   background: linear-gradient(to left, currentColor, currentColor 70%, rgba(40, 255, 252, 0.3) 90%, transparent);
-  transition: opacity 0.3s ease, width 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  will-change: opacity, transform;
 }
 
 /* Hover: connector line deepens, brightens, and stretches */
-.focus-card.card-hovered .focus-fd::before {
-  opacity: 0.9;
-  width: 260px;
+.focus-card:hover .focus-fd {
+  --line-scale: 1.18;
 }
-.focus-card.card-hovered .focus-fd {
+.focus-card:hover .focus-fd::before {
+  opacity: 0.9;
+}
+.focus-card:hover .focus-fd {
   box-shadow: 0 0 16px currentColor, 0 0 32px currentColor;
 }
-.focus-card.card-hovered .focus-fd::after {
+.focus-card:hover .focus-fd::after {
   opacity: 0.9;
   animation-duration: 1.2s;
 }
@@ -659,14 +661,16 @@ function openItem(item) {
   background: rgba(4, 8, 22, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+  transition: transform 0.18s cubic-bezier(.2,.9,.2,1), background-color 0.18s ease, border-color 0.18s ease;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .focus-card__link:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow:
-    0 0 24px rgba(40, 255, 252, 0.15),
-    0 12px 36px rgba(0, 0, 0, 0.5),
+    0 8px 28px rgba(0, 0, 0, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   background: rgba(4, 8, 22, 0.96);
   border-color: rgba(40, 255, 252, 0.3);
@@ -693,6 +697,8 @@ function openItem(item) {
   animation: ringSpin 14s linear infinite;
   animation-delay: calc(var(--card-idx, 0) * -2s);
   transition: animation-duration 0.5s ease;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* Hover: ring spins faster (like sample's play2 animation) */
@@ -708,6 +714,8 @@ function openItem(item) {
   z-index: 1;
   filter: drop-shadow(0 0 6px rgba(40, 255, 252, 0.3));
   transition: transform 0.5s ease;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* Hover flip animation (like sample's rotateY(360deg)) */
