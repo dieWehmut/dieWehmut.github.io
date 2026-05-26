@@ -173,12 +173,12 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { services, pages, games, apps, files, tools } = useContent()
+const { services, pages, games, apps, tools } = useContent()
 const { statusMap, checkUrls } = useUrlStatus()
 const router = useRouter()
 const route = useRoute()
 
-const allSections = ['services', 'pages', 'games', 'apps', 'files', 'tools']
+const allSections = ['services', 'pages', 'games', 'apps', 'tools']
 
 function listFor(section) {
   switch (section) {
@@ -186,7 +186,6 @@ function listFor(section) {
     case 'pages': return pages.value || []
     case 'games': return (games.value || []).flatMap(g => g.manualItems || [])
     case 'apps': return (apps.value || []).flatMap(a => a.manualItems || [])
-    case 'files': return files.value || []
     case 'tools': return (tools.value || []).flatMap(t => t.manualItems || [])
   }
   return []

@@ -12,10 +12,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useMotionPreferences } from '../composables/useMotionPreferences'
 
 const cursorRef = ref(null)
 const visible = ref(false)
+const { canUsePointerEffects } = useMotionPreferences()
 
 const CLICKABLE_SELECTOR = [
   'button',
@@ -42,6 +44,7 @@ let rafId = null
 let _lastTarget = null
 let pendingX = -9999
 let pendingY = -9999
+let eventsBound = false
 
 function updateHoverState(target) {
   const root = document.documentElement
@@ -87,14 +90,39 @@ function onMouseLeave() {
   document.documentElement.classList.remove('heart-bounce-active')
 }
 
-onMounted(() => {
+function bindEvents() {
+  if (eventsBound || !canUsePointerEffects.value) return
   window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('mouseleave', onMouseLeave, { passive: true })
+  eventsBound = true
+}
+
+function unbindEvents() {
+  if (!eventsBound) return
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mouseleave', onMouseLeave)
+  eventsBound = false
+}
+
+function syncPointerEffects() {
+  if (!canUsePointerEffects.value) {
+    visible.value = false
+    _lastTarget = null
+    document.documentElement.classList.remove('heart-bounce-active')
+    unbindEvents()
+    return
+  }
+  bindEvents()
+}
+
+watch(canUsePointerEffects, syncPointerEffects, { immediate: true })
+
+onMounted(() => {
+  syncPointerEffects()
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('mousemove', onMouseMove)
-  window.removeEventListener('mouseleave', onMouseLeave)
+  unbindEvents()
   document.documentElement.classList.remove('heart-bounce-active')
   if (rafId) cancelAnimationFrame(rafId)
 })

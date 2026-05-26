@@ -13,12 +13,14 @@
  * - Clicking ANYWHERE scatters all collected petals (no threshold).
  * - Canvas is always pointer-events:none so clicks pass through to UI.
  */
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useMotionPreferences } from '../composables/useMotionPreferences'
 
 const canvasRef = ref(null)
 let animId = null
 let ctx = null
 let W = 0, H = 0, dpr = 1
+const { canAnimate, prefersReducedMotion, hasFinePointer } = useMotionPreferences()
 
 // ── tuning ─────────────────────────────────────────────────────────────
 const PETAL_COUNT      = 20
@@ -39,8 +41,15 @@ let collected = []
 let burstPetals = []
 let _cursorState = 'none'
 let pickCooldown = 0
+let eventsBound = false
 
 function rand(a, b) { return a + Math.random() * (b - a) }
+
+function petalCount() {
+  if (prefersReducedMotion.value) return 8
+  if (!hasFinePointer.value) return 12
+  return PETAL_COUNT
+}
 
 function mkPetal(initScatter = false) {
   const size = rand(MIN_SIZE, MAX_SIZE)
@@ -227,9 +236,9 @@ function init() {
   canvas.height = H
   canvas.style.width  = window.innerWidth  + 'px'
   canvas.style.height = window.innerHeight + 'px'
-  ctx = canvas.getContext('2d')
+  ctx = canvas.getContext('2d', { alpha: true })
   ctx.scale(dpr, dpr)
-  petals = Array.from({ length: PETAL_COUNT }, () => mkPetal(true))
+  petals = Array.from({ length: petalCount() }, () => mkPetal(true))
 }
 
 function frame() {
@@ -350,6 +359,47 @@ function onGlobalClick() {
   }
 }
 
+function bindEvents() {
+  if (eventsBound) return
+  if (hasFinePointer.value) {
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    window.addEventListener('mouseleave', onMouseLeave, { passive: true })
+    window.addEventListener('mousedown', onGlobalClick, { passive: true })
+  }
+  window.addEventListener('resize', onResize, { passive: true })
+  eventsBound = true
+}
+
+function unbindEvents() {
+  if (!eventsBound) return
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mouseleave', onMouseLeave)
+  window.removeEventListener('resize', onResize)
+  window.removeEventListener('mousedown', onGlobalClick)
+  eventsBound = false
+}
+
+function start() {
+  if (!canvasRef.value || animId || !canAnimate.value) return
+  init()
+  bindEvents()
+  animId = requestAnimationFrame(frame)
+}
+
+function stop() {
+  if (animId) cancelAnimationFrame(animId)
+  animId = null
+  unbindEvents()
+}
+
+function syncAnimationState() {
+  if (!canAnimate.value) {
+    stop()
+    return
+  }
+  start()
+}
+
 let resizeTimer = null
 function onResize() {
   clearTimeout(resizeTimer)
@@ -367,21 +417,14 @@ function onResize() {
   }, 120)
 }
 
+watch(canAnimate, syncAnimationState, { immediate: true })
+
 onMounted(() => {
-  init()
-  animId = requestAnimationFrame(frame)
-  window.addEventListener('mousemove',  onMouseMove,  { passive: true })
-  window.addEventListener('mouseleave', onMouseLeave, { passive: true })
-  window.addEventListener('resize',     onResize,     { passive: true })
-  window.addEventListener('mousedown',  onGlobalClick, { passive: true })
+  syncAnimationState()
 })
 
 onBeforeUnmount(() => {
-  if (animId) cancelAnimationFrame(animId)
-  window.removeEventListener('mousemove',  onMouseMove)
-  window.removeEventListener('mouseleave', onMouseLeave)
-  window.removeEventListener('resize',     onResize)
-  window.removeEventListener('mousedown',  onGlobalClick)
+  stop()
   clearTimeout(resizeTimer)
   document.documentElement.classList.remove('sakura-hover', 'sakura-grabbing')
 })

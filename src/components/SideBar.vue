@@ -3,7 +3,9 @@
     <!-- About Me Section -->
     <div class="about-me">
       <div class="avatar-container">
-        <img :src="avatarUrl" alt="Avatar" class="avatar" />
+        <a class="avatar-link" :href="githubUrl" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <img :src="avatarUrl" alt="Avatar" class="avatar" />
+        </a>
       </div>
       <div class="about-content">
             <h3 class="name">{{ displayName }}</h3>
@@ -52,7 +54,6 @@
         <li><button class="nav-btn" @click="go('tools')">{{ t('nav.tools') }}</button></li>
         <li><button class="nav-btn" @click="go('games')">{{ t('nav.games') }}</button></li>
         <li><button class="nav-btn" @click="go('apps')">{{ t('nav.apps') }}</button></li>
-        <li><button class="nav-btn" @click="go('files')">{{ t('nav.files') }}</button></li>
       </ul>
     </nav>
   </nav>
@@ -82,7 +83,6 @@ function go(name) {
     games: 'section-games',
     apps: 'section-apps',
     tools: 'section-tools',
-    files: 'section-files',
   };
   const id = map[name];
   if (!id) return;
@@ -208,6 +208,16 @@ html.sidebar-collapsed .avatar {
 
 .avatar-container {
   margin-bottom: 8px;
+}
+
+.avatar-link {
+  display: inline-flex;
+  border-radius: 50%;
+}
+
+.avatar-link:focus-visible {
+  outline: 2px solid rgba(64,158,255,0.65);
+  outline-offset: 4px;
 }
 
 .avatar {

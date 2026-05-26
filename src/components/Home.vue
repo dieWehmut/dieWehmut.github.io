@@ -1,12 +1,11 @@
 <script setup>
 import { computed, ref, watch, onBeforeUnmount } from "vue";
 import { useI18n } from 'vue-i18n';
-import { Collection, Link, ArrowUp, Platform, Cpu, Flag, Monitor, FolderOpened } from "@element-plus/icons-vue";
+import { Collection, Link, ArrowUp, Platform, Cpu, Flag, Monitor } from "@element-plus/icons-vue";
 import PageItem from "../components/PageItem.vue";
 import ReleasesAutoLoader from "../components/ReleasesAutoLoader.vue";
 import GameItem from "../components/GameItem.vue";
 import AppItem from "../components/AppItem.vue";
-import FileItem from "../components/FileItem.vue";
 import ServiceItem from "../components/ServiceItem.vue";
 
 import Tools from "./ToolsItem.vue";
@@ -23,7 +22,7 @@ const props = defineProps({
 });
 import { useContent } from "../data/content";
 
-const { games, apps, files, tools, pages, services } = useContent();
+const { games, apps, tools, pages, services } = useContent();
 
 // helpers: parse dates and get latest version date for an item
 function parseDateSafe(d) {
@@ -61,20 +60,6 @@ const filteredApps = computed(() => {
   return exposed || [];
 });
 
-const filteredFiles = computed(() => {
-  const q = normalizedQuery.value;
-  if (!q) {
-    return files.value;
-  }
-  return files.value
-    .filter(
-      (f) =>
-        f.name.toLowerCase().includes(q) ||
-        (f.description || "").toLowerCase().includes(q)
-    )
-    .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-});
-
 const filteredPages = computed(() => {
   const q = normalizedQuery.value;
   const list = !q
@@ -90,15 +75,6 @@ const filteredPages = computed(() => {
     const tb = Date.parse(b.date) || 0;
     return tb - ta;
   });
-});
-
-const matchedFilesCount = computed(() => {
-  // Use FileItem's exposed matchedFilesCount if available
-  const fileItemCount = fileItemRef.value?.matchedFilesCount?.value;
-  if (fileItemCount !== undefined && fileItemCount !== null) {
-    return fileItemCount;
-  }
-  return filteredFiles.value.length;
 });
 
 // Tools: read child component (Tools.vue) exposed data via ref
@@ -127,14 +103,9 @@ const matchedAppsCount = computed(() => {
   return appsReleasesAutoLoaderRef.value?.filteredApps?.length || 0
 })
 
-// Files: read FileItem exposed data
-const fileItemRef = ref(null)
-const totalFilesCount = computed(() => fileItemRef.value?.filesCount ?? 0)
-
 const showPages = ref(true);
 const showGames = ref(true);
 const showApps = ref(true);
-const showFiles = ref(true);
 const showTools = ref(true);
 const showServices = ref(true);
 
@@ -144,7 +115,6 @@ function handleOpenSection(e) {
   if (name === 'pages') showPages.value = true;
   if (name === 'games') showGames.value = true;
   if (name === 'apps') showApps.value = true;
-  if (name === 'files') showFiles.value = true;
   if (name === 'tools') showTools.value = true;
   if (name === 'services') showServices.value = true;
 }
@@ -164,7 +134,6 @@ watch(normalizedQuery, (q) => {
     if (q && q.length > 0) {
       showGames.value = true;
       showApps.value = true;
-      showFiles.value = true;
       showTools.value = true;
       showServices.value = true;
     }
@@ -401,43 +370,6 @@ const matchedServicesCount = computed(() => filteredServices.value.length);
       </transition>
     </el-card>
 
-  <el-card id="section-files" v-if="!hasQuery || matchedFilesCount > 0" shadow="never" class="home__card">
-      <template #header>
-        <div class="card-header" @click="showFiles = !showFiles" style="cursor: pointer;">
-            <div class="card-header-left">
-            <el-icon class="section-icon"><FolderOpened /></el-icon><span>{{ t('nav.files') }}</span>
-            <el-text size="small" type="info">
-              <template v-if="fileItemRef?.loading?.value">
-                {{ t('common.loading') }}...
-              </template>
-              <template v-else-if="fileItemRef?.error?.value">
-                {{ t('error.unable_load') }}
-              </template>
-              <template v-else>
-                {{ t('common.totalFormat', { count: totalFilesCount }) }}
-                <template v-if="hasQuery">
-                  , {{ t('common.matchedFormat', { count: matchedFilesCount }) }}
-                </template>
-              </template>
-            </el-text>
-          </div>
-          <el-button type="text" size="small" style="margin-left:8px">
-            <el-icon>
-              <ArrowUp v-if="showFiles" />
-              <Collection v-else />
-            </el-icon>
-          </el-button>
-        </div>
-      </template>
-
-      <transition name="section-toggle">
-        <div v-show="showFiles" class="section-body">
-          <FileItem ref="fileItemRef" :filter-query="normalizedQuery" />
-        </div>
-      </transition>
-    </el-card>
-
-      
   <el-card id="section-tools" v-if="!hasQuery || filteredTools.length > 0" shadow="never" class="home__card">
       <template #header>
         <div class="card-header" @click="showTools = !showTools" style="cursor: pointer;">
@@ -468,7 +400,7 @@ const matchedServicesCount = computed(() => filteredServices.value.length);
 
 
 
-    <el-card v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && matchedFilesCount === 0 && filteredTools.length === 0 && matchedServicesCount === 0" 
+    <el-card v-if="hasQuery && matchedPagesCount === 0 && filteredGames.length === 0 && filteredApps.length === 0 && filteredTools.length === 0 && matchedServicesCount === 0" 
       shadow="never"
       class="home__card"
     >

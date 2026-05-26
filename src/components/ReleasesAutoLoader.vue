@@ -10,7 +10,7 @@
 
     <div v-else>
       <div v-if="(props.type === 'games' && filteredGames.length === 0) || (props.type === 'apps' && filteredApps.length === 0)" class="empty-state">
-        <el-text type="info">{{ t('common.no_files') }}</el-text>
+        <el-text type="info">{{ t('common.no_match') }}</el-text>
       </div>
 
       <!-- Games Section -->

@@ -3,7 +3,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useMotionPreferences } from '../composables/useMotionPreferences'
 
 const canvasRef = ref(null)
 let animId = null
@@ -11,6 +12,7 @@ let ctx = null
 let W = 0
 let H = 0
 let dpr = 1
+const { canAnimate, prefersReducedMotion, hasFinePointer } = useMotionPreferences()
 
 // ── tuning ─────────────────────────────────────────────────────────────────
 const COUNT        = 80     // 雪的密度
@@ -27,6 +29,7 @@ const LINE_WIDTH   = 1      // grab line width px
 const mouse = { x: -99999, y: -99999, active: false }
 
 let particles = []
+let eventsBound = false
 
 function rand(a, b) { return a + Math.random() * (b - a) }
 
@@ -46,7 +49,12 @@ function mkParticle(initY = false) {
 
 function targetCount() {
   const area = (W / dpr) * (H / dpr)
-  return Math.round(COUNT * area / (AREA * 1000))
+  const density = prefersReducedMotion.value
+    ? 0.35
+    : hasFinePointer.value
+      ? 1
+      : 0.55
+  return Math.max(12, Math.round(COUNT * density * area / (AREA * 1000)))
 }
 
 function init() {
@@ -59,7 +67,7 @@ function init() {
   canvas.height = H
   canvas.style.width  = window.innerWidth  + 'px'
   canvas.style.height = window.innerHeight + 'px'
-  ctx = canvas.getContext('2d')
+  ctx = canvas.getContext('2d', { alpha: true })
   ctx.scale(dpr, dpr)
   const n = targetCount()
   particles = Array.from({ length: n }, () => mkParticle(true))
@@ -128,6 +136,43 @@ function onMouseLeave() {
   mouse.active = false
 }
 
+function bindEvents() {
+  if (eventsBound) return
+  window.addEventListener('mousemove', onMouseMove, { passive: true })
+  window.addEventListener('mouseleave', onMouseLeave, { passive: true })
+  window.addEventListener('resize', onResize, { passive: true })
+  eventsBound = true
+}
+
+function unbindEvents() {
+  if (!eventsBound) return
+  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('mouseleave', onMouseLeave)
+  window.removeEventListener('resize', onResize)
+  eventsBound = false
+}
+
+function start() {
+  if (!canvasRef.value || animId || !canAnimate.value) return
+  init()
+  bindEvents()
+  animId = requestAnimationFrame(frame)
+}
+
+function stop() {
+  if (animId) cancelAnimationFrame(animId)
+  animId = null
+  unbindEvents()
+}
+
+function syncAnimationState() {
+  if (!canAnimate.value) {
+    stop()
+    return
+  }
+  start()
+}
+
 let resizeTimer = null
 function onResize() {
   clearTimeout(resizeTimer)
@@ -149,19 +194,14 @@ function onResize() {
   }, 120)
 }
 
+watch(canAnimate, syncAnimationState, { immediate: true })
+
 onMounted(() => {
-  init()
-  animId = requestAnimationFrame(frame)
-  window.addEventListener('mousemove',  onMouseMove,  { passive: true })
-  window.addEventListener('mouseleave', onMouseLeave, { passive: true })
-  window.addEventListener('resize',     onResize,     { passive: true })
+  syncAnimationState()
 })
 
 onBeforeUnmount(() => {
-  if (animId) cancelAnimationFrame(animId)
-  window.removeEventListener('mousemove',  onMouseMove)
-  window.removeEventListener('mouseleave', onMouseLeave)
-  window.removeEventListener('resize',     onResize)
+  stop()
   clearTimeout(resizeTimer)
 })
 </script>

@@ -33,9 +33,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import bgMp4 from '../assets/bg.mp4'
 import bgWebm from '../assets/bg.webm'
+import { useMotionPreferences } from '../composables/useMotionPreferences'
 
 // states
 const posterSrc = ref('')
@@ -45,6 +46,8 @@ const videoEl = ref(null)
 const started = ref(false) // reactive so template can render <source> only when starting
 const sources = ref([])
 let io = null
+const { canAnimate, hasFinePointer } = useMotionPreferences()
+const shouldLoadVideo = computed(() => canAnimate.value && hasFinePointer.value)
 
 function extractFirstFrame(videoUrl) {
   return new Promise((resolve, reject) => {
@@ -102,6 +105,12 @@ async function startLoading() {
     posterSrc.value = dataUrl
   } catch (e) {
     posterSrc.value = ''
+  }
+
+  if (!shouldLoadVideo.value) {
+    started.value = true
+    try { emit('ready') } catch (e) {}
+    return
   }
 
   // 2) attach video sources and begin loading/playing when ready
@@ -181,6 +190,12 @@ onMounted(() => {
     } else {
       setTimeout(() => startLoading(), 200)
     }
+  }
+})
+
+watch(shouldLoadVideo, (enabled) => {
+  if (enabled && !started.value && container.value) {
+    startLoading()
   }
 })
 

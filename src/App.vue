@@ -8,7 +8,9 @@
       <el-header class="app__header" height="80px">
         <div class="app__main app__header-inner">
           <div class="app__header-left" v-if="viewMode">
-            <img class="app__avatar" :src="avatarUrl" alt="avatar" />
+            <a class="app__avatar-link" :href="githubUrl" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <img class="app__avatar" :src="avatarUrl" alt="avatar" />
+            </a>
             <span class="app__name">{{ displayName }}</span>
           </div>
           <div class="app__header-center">
@@ -132,7 +134,6 @@ function routeToSection(path) {
     '/pages': 'pages',
     '/games': 'games',
     '/apps': 'apps',
-    '/files': 'files',
     '/tools': 'tools',
   }
   return map[path]
@@ -152,7 +153,7 @@ async function syncRouteToSection(path) {
 }
 
 // Scroll-based section detection: auto-update route when scrolling in non-Focus mode
-const sectionNames = ['services', 'pages', 'games', 'apps', 'files', 'tools']
+const sectionNames = ['services', 'pages', 'games', 'apps', 'tools']
 let sectionObserver = null
 let scrollRouteEnabled = true // disable during programmatic scrolls
 
@@ -201,10 +202,6 @@ function handleGlobalHotkeys(e) {
 
   // (Enter key handling for opening first result removed - no Enter-required behavior)
 }
-
-onMounted(() => {
-  window.addEventListener('keydown', handleGlobalHotkeys)
-})
 
 // mobile detection: used to hide sidebar on small screens when searching
 const isMobile = ref(false)
@@ -431,6 +428,16 @@ onBeforeUnmount(() => {
     0 0 80px rgba(167, 139, 250, 0.2);
 }
 
+.app__avatar-link {
+  display: inline-flex;
+  border-radius: 50%;
+}
+
+.app__avatar-link:focus-visible {
+  outline: 2px solid rgba(40, 255, 252, 0.65);
+  outline-offset: 3px;
+}
+
 .app__name {
   font-weight: 700;
   color: rgba(255,255,255,0.96);
@@ -650,8 +657,6 @@ html { scroll-behavior: smooth; }
 .item__actions a.action-btn, .item__actions a.repo-button, .item__actions a.link-button,
 .game-item__actions a.action-btn, .game-item__actions a.repo-button, .game-item__actions a.link-button,
 .app-item__actions a.action-btn, .app-item__actions a.repo-button, .app-item__actions a.link-button,
-.file-item__actions a.action-btn, .file-item__actions a.repo-button,
-.file-item__header .repo-link.action-btn, .file-item__header a.repo-button, .file-item__header a.link-button,
 a.action-btn {
   color: #333 !important; text-decoration: none !important;
 }
@@ -659,13 +664,13 @@ a.action-btn {
   background: transparent; border-color: transparent; transform: translateY(-1px) scale(1.01);
 }
 .action-text, .btn-text { font-weight: 600; font-size: 14px; }
-.item__actions, .game-item__actions, .app-item__actions, .file-list__actions {
+.item__actions, .game-item__actions, .app-item__actions {
   display: flex; gap: 12px; align-items: center;
 }
 
 /* ── Repo-link overrides ── */
 .repo-link, .repo-link.action-btn, .game-item__actions .repo-link,
-.file-item__header .repo-link, .item__actions .repo-link, a.repo-link,
+.item__actions .repo-link, a.repo-link,
 [class*="repo-link"], [class*="repo-link"][data-v-] {
   display: inline-flex !important; align-items: center !important; gap: 8px !important;
   padding: 8px 12px !important; min-height: 36px !important; border-radius: 10px !important;
@@ -677,42 +682,42 @@ a.action-btn {
 .repo-link .el-icon, .repo-link svg, .repo-link .icon, .repo-link .action-icon {
   width: 18px !important; height: 18px !important; fill: currentColor !important; stroke: currentColor !important; color: inherit !important;
 }
-.repo-link:hover, .repo-link.action-btn:hover, .game-item__actions .repo-link:hover, .file-item__header .repo-link:hover {
+.repo-link:hover, .repo-link.action-btn:hover, .game-item__actions .repo-link:hover {
   background: transparent !important; border-color: transparent !important; transform: none !important;
 }
 
 /* ── Card / item transparency ── */
-.game-item, .app-item, .page-item, .file-item, .card, .page-card, .item-card { color: #111417 !important; }
-.game-item *, .app-item *, .page-item *, .file-item *, .card *, .page-card *, .item-card * { color: inherit !important; }
+.game-item, .app-item, .page-item, .card, .page-card, .item-card { color: #111417 !important; }
+.game-item *, .app-item *, .page-item *, .card *, .page-card *, .item-card * { color: inherit !important; }
 
 .version-tag, .item .version-tag, .game-item .version-tag, .page-item .version-tag,
-.file-item .version-tag, .version-info .version-tag {
+.version-info .version-tag {
   background: transparent !important; border-color: transparent !important; color: inherit !important;
   font-weight: 600 !important; border-radius: 8px !important; font-size: 11px !important; padding: 2px 8px !important;
 }
 
-.game-item, .app-item, .page-item, .file-item, .card, .page-card, .item-card,
-.file-item__header, .item-card > .card-body, .app-item__actions, .file-item__actions {
+.game-item, .app-item, .page-item, .card, .page-card, .item-card,
+.item-card > .card-body, .app-item__actions {
   background: transparent !important; border: none !important; box-shadow: none !important;
 }
 .repo-link, .action-btn, .copy-btn { background: transparent !important; border: none !important; }
 
 @media (max-width: 1000px) {
-  .game-item, .app-item, .page-item, .file-item, .card, .page-card, .item-card {
+  .game-item, .app-item, .page-item, .card, .page-card, .item-card {
     background: transparent !important; border: none !important;
   }
 }
 
 /* ── Transparency overrides ── */
-.app-item, .game-item, .page-item, .file-item, .card, .page-card, .item-card,
-.file-item__content, .item, .app-item__actions, .game-item__actions, .file-list__item,
+.app-item, .game-item, .page-item, .card, .page-card, .item-card,
+.item, .app-item__actions, .game-item__actions,
 .sidebar {
   background: transparent !important; border: none !important; box-shadow: none !important;
 }
 .action-btn, .repo-link, .repo-link.action-btn,
 .game-item__actions a.repo-button, .game-item__actions a.link-button,
 .app-item__actions a.repo-button, .app-item__actions a.link-button,
-.file-item__actions .repo-link, .repo-link[data-v-08e32229] {
+.repo-link[data-v-08e32229] {
   background: transparent !important; border: none !important;
 }
 .search-input :deep(.el-input__wrapper), .search-input :deep(.el-input__inner) {
@@ -816,11 +821,11 @@ html.sidebar-collapsed .app__header { padding-left: 0 !important; padding-right:
 }
 
 /* ── Legibility over dynamic backgrounds ── */
-body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-item, .file-item,
+body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-item,
 .repo-link, .action-text, .btn-text, .page-title, .card-header, .github-body {
   color: #ffffff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.7) !important;
 }
-.home__card, .item, .game-item, .app-item, .page-item, .file-item, .card, .page-card, .item-card {
+.home__card, .item, .game-item, .app-item, .page-item, .card, .page-card, .item-card {
   background: rgba(0,0,0,0.30) !important; border-radius: 10px !important;
   padding: 10px !important; border: 1px solid rgba(255,255,255,0.03) !important;
 }
@@ -831,7 +836,7 @@ body, .home, .home *, .card, .home__card, .item, .game-item, .app-item, .page-it
   fill: rgba(255,255,255,0.95) !important; color: rgba(255,255,255,0.95) !important;
 }
 .home, .home * { color: #ffffff !important; text-shadow: 0 1px 2px rgba(0,0,0,0.55) !important; }
-.home .card-header span, .home .page-title, .game-name, .app-name, .file-name-text, .single-title {
+.home .card-header span, .home .page-title, .game-name, .app-name, .single-title {
   color: #ffffff !important; font-weight: 700 !important; text-shadow: 0 1px 3px rgba(0,0,0,0.65) !important;
 }
 .home .version-info, .home .date, .home .single-date, .home .activity-text, .sidebar .meta-item span {

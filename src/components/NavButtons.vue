@@ -25,7 +25,6 @@ const navItems = [
   { name: 'pages' },
   { name: 'games' },
   { name: 'apps' },
-  { name: 'files' },
   { name: 'tools' },
 ]
 

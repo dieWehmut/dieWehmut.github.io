@@ -14,17 +14,14 @@
     "services": "Services",
     "games": "Games",
     "apps": "Apps",
-    "files": "Files",
     "tools": "Tools"
   },
   "common": {
     "totalFormat": "Total {count} items",
-    "totalFiles": "Total {count} files",
     "versionsCount": "{count} versions",
     "matchedFormat": "matched {count} items",
     "auto_loaded": "Auto-loaded from GitHub",
     "loading": "Loading",
-    "no_files": "No files found",
     "no_match": "No matching content"
   },
   "action": {

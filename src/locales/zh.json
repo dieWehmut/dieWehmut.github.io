@@ -14,17 +14,14 @@
     "services": "服务",
     "games": "游戏",
     "apps": "应用",
-    "files": "文件",
     "tools": "工具"
   },
   "common": {
     "totalFormat": "共 {count} 项",
-    "totalFiles": "共 {count} 个文件",
     "versionsCount": "{count} 个版本",
     "matchedFormat": "匹配 {count} 项",
     "auto_loaded": "从 GitHub 自动加载",
     "loading": "加载中",
-    "no_files": "未找到文件",
     "no_match": "没有匹配的内容"
   },
   "action": {
