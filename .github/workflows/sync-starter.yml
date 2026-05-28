@@ -271,6 +271,7 @@ jobs:
           destination-github-username: 'dieWehmut'
           destination-repository-name: 'diesuwa-starter'
           target-branch: main
+          create-target-branch-if-needed: true
           commit-message: 'sync: update starter template from Nexus'
           user-email: diesehnsucht0@gmail.com
           user-name: dieWehmut
