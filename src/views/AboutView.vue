@@ -2,166 +2,176 @@
   <section class="about-view page-surface">
     <PageHeading title="About" :icon="User" />
 
-    <div class="about-card">
-      <img class="about-card__avatar" :src="avatarUrl" alt="avatar" />
-      <div class="about-card__body">
-        <h2>{{ displayName }}</h2>
-        <p class="about-card__bio" v-html="bioHtml" />
+    <div class="about-layout">
+      <div class="about-content">
+        <section id="contact-me" class="about-section">
+          <h2>Contact Me</h2>
+          <ul class="about-contact-list">
+            <li>
+              <svg class="about-contact-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>GitHub</span>
+              <a :href="githubUrl" target="_blank" rel="noopener noreferrer">{{ githubUrl }}</a>
+            </li>
+            <li>
+              <el-icon class="about-contact-icon"><Message /></el-icon>
+              <span>Email</span>
+              <a :href="`mailto:${siteProfile.email}`">{{ siteProfile.email }}</a>
+            </li>
+          </ul>
+        </section>
+
+        <section id="about-blog" class="about-section">
+          <h2>About This Blog</h2>
+          <p>
+            本站开发提取有模板，欢迎
+            star:
+          </p>
+          <p>
+            <a :href="repoUrl" target="_blank" rel="noopener noreferrer">{{ repoUrl }}</a>
+          </p>
+        </section>
+
+        <section id="copyright" class="about-section">
+          <h2>Copyright</h2>
+          <p>本站内容除特殊说明外，默认遵循署名与非商业使用的转载约定。</p>
+        </section>
+
+        <section id="footnote" class="about-section">
+          <h2>脚注</h2>
+          <p>写作是一种缓慢的自我整理，也是与时间和解的方式。</p>
+        </section>
       </div>
+
+      <ScrollSpySidebar class="about-aside" root-selector=".about-content" heading-selector="h2" />
     </div>
-
-    <dl class="about-meta">
-      <div>
-        <dt>Latest commit</dt>
-        <dd>{{ lastUpdated }}</dd>
-      </div>
-    </dl>
-
-    <section class="about-contact">
-      <h3>Contact Me</h3>
-      <div class="about-contact__links">
-        <a :href="githubUrl" target="_blank" rel="noopener noreferrer">
-          <el-icon><Link /></el-icon>
-          <span>GitHub</span>
-        </a>
-        <a :href="`mailto:${siteProfile.email}`">
-          <el-icon><Message /></el-icon>
-          <span>Email</span>
-        </a>
-      </div>
-    </section>
   </section>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { User, Link, Message } from '@element-plus/icons-vue'
+import { Message, User } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
+import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { useProfile } from '../composables/useProfile'
 import { siteProfile } from '../data'
 
-const { avatarUrl, displayName, lastUpdated, githubUrl } = useProfile()
-
-const bio = `A developer, tinkerer, and lifelong learner.
-
-Building things for the web, exploring infrastructure, and writing about technology, languages, and the occasional stray thought.`
-
-const bioHtml = computed(() =>
-  bio
-    .split('\n\n')
-    .filter(Boolean)
-    .map((p) => `<p>${p.replace(/\n/g, '<br>')}</p>`)
-    .join('')
-)
+const { githubUrl } = useProfile()
+const repoUrl = computed(() => `${githubUrl.value}/dieWehmut.github.io`)
 </script>
 
 <style scoped>
-.about-card {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  padding: 24px 0 34px;
-  border-bottom: 1px solid var(--site-border);
-}
-
-.about-card__avatar {
-  flex-shrink: 0;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-h2 {
-  margin: 0;
-  color: var(--site-text);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 36px;
-}
-
-.about-card__bio :deep(p) {
-  margin: 10px 0 0;
-  max-width: 640px;
-  color: var(--site-muted);
-  font-size: 17px;
-  line-height: 1.7;
-}
-
-.about-meta {
+.about-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-  margin: 28px 0;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 44px;
+  align-items: start;
 }
 
-.about-meta > div {
-  padding: 14px;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
+.about-content {
+  min-width: 0;
 }
 
-dt {
-  color: var(--site-muted);
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-dd {
-  margin: 6px 0 0;
-  color: var(--site-text);
-  font-weight: 800;
-}
-
-.about-contact {
+.about-section {
   margin-top: 34px;
 }
 
-h3 {
-  margin: 0 0 14px;
+.about-section h2 {
+  margin: 0 0 12px;
   color: var(--site-text);
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 24px;
+  font-size: 26px;
+  scroll-margin-top: 120px;
 }
 
-.about-contact__links {
-  display: flex;
-  gap: 14px;
+.about-section p {
+  margin: 0 0 14px;
+  color: var(--site-muted);
+  font-size: 16px;
+  line-height: 1.75;
 }
 
-.about-contact__links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
-  color: var(--site-text);
-  text-decoration: none;
-  font-weight: 800;
-  transition: color 160ms ease, border-color 160ms ease;
+.about-contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
 }
 
-.about-contact__links a:hover,
-.about-contact__links a:focus-visible {
+.about-contact-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
   color: var(--site-accent);
-  border-color: rgba(31, 196, 31, 0.45);
+  flex-shrink: 0;
+}
+
+.about-contact-list li {
+  display: grid;
+  grid-template-columns: 22px 80px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.about-contact-list li:last-child {
+  border-bottom: 0;
+}
+
+.about-contact-list span {
+  color: var(--site-muted);
+  font-weight: 800;
+}
+
+.about-contact-list a,
+.about-section a {
+  color: var(--site-accent);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.about-contact-list a:hover,
+.about-contact-list a:focus-visible,
+.about-section a:hover,
+.about-section a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
   outline: none;
 }
 
-.about-contact__links .el-icon {
-  font-size: 18px;
+.about-aside {
+  align-self: start;
+}
+
+@media (max-width: 900px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-aside {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
-  .about-card {
-    flex-direction: column;
-    align-items: flex-start;
+  .about-section h2 {
+    font-size: 22px;
   }
 
-  .about-card__avatar {
-    width: 112px;
-    height: 112px;
+  .about-contact-list li {
+    grid-template-columns: 22px 1fr;
+    gap: 8px;
+  }
+
+  .about-contact-list span {
+    grid-column: 2;
+  }
+
+  .about-contact-list a {
+    grid-column: 1 / -1;
   }
 }
 </style>

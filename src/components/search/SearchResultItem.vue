@@ -57,9 +57,9 @@ const external = computed(() => /^https?:\/\//.test(props.result.url))
 }
 
 .search-result__icon {
-  margin-top: 5px;
+  margin-top: 3px;
   color: var(--site-muted);
-  font-size: 27px;
+  font-size: 22px;
 }
 
 .search-result__meta {
@@ -68,7 +68,7 @@ const external = computed(() => /^https?:\/\//.test(props.result.url))
   gap: 10px;
   margin-bottom: 2px;
   color: var(--site-muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -77,14 +77,14 @@ h2 {
   margin: 0;
   color: var(--site-text);
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 25px;
+  font-size: 18px;
   transition: color 160ms ease;
 }
 
 p {
   margin: 4px 0 0;
   color: var(--site-muted);
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.55;
 }
 </style>

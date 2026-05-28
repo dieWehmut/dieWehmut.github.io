@@ -2,7 +2,7 @@
   <article class="archive-post" :id="post.id">
     <time class="archive-post__date" :datetime="post.date">{{ shortDate }}</time>
     <div class="archive-post__body">
-      <h2>{{ post.title }}</h2>
+      <h2><RouterLink :to="`/post/${post.id}`">{{ post.title }}</RouterLink></h2>
       <p>{{ post.summary }}</p>
       <div class="archive-post__tags" v-if="post.tags?.length">
         <RouterLink v-for="tag in post.tags" :key="tag" :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="archive-post__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink>
@@ -46,15 +46,26 @@ const shortDate = computed(() => {
 
 h2 {
   margin: 0;
-  color: var(--site-text);
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.2;
+}
+
+h2 a {
+  color: var(--site-text);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+h2 a:hover,
+h2 a:focus-visible {
+  color: var(--site-accent);
+  outline: none;
 }
 
 p {
   margin: 8px 0 0;
   color: var(--site-muted);
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.6;
 }
 

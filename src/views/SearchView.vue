@@ -40,7 +40,7 @@ const results = computed(() => {
 .search-view__empty {
   margin: 30px 0 0;
   color: var(--site-muted);
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 800;
 }
 </style>

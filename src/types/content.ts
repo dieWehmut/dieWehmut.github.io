@@ -8,6 +8,7 @@ export interface ArchivePost {
   tags: string[]
   category?: string
   url?: string
+  body?: string
 }
 
 export interface NoteEntry {
