@@ -5,7 +5,7 @@
       {{ formattedDate }}
     </time>
     <h2 v-if="note.title">{{ note.title }}</h2>
-    <div class="note-card__body" v-html="renderedBody" />
+    <div class="note-card__body markdown-body" v-html="renderedBody" />
   </article>
 </template>
 

@@ -3,7 +3,7 @@
     <div class="note-view__main">
       <div v-if="note" class="note-view__card">
           <h1 class="note-view__title">{{ note.title }}</h1>
-          <div v-if="note.body" class="note-view__body" v-html="renderedBody" />
+          <div v-if="note.body" class="note-view__body markdown-body" v-html="renderedBody" />
           <div v-if="note.date || note.tags?.length" class="note-view__meta-row">
             <time v-if="note.date" class="note-view__meta-date" :datetime="note.date"><el-icon class="note-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink

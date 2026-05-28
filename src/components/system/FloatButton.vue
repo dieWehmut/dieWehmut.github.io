@@ -152,6 +152,7 @@ function toggleTheme() {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   cursor: pointer;
   pointer-events: auto;
+  font-size: 20px;
   transition:
     bottom 200ms ease,
     transform 180ms ease,

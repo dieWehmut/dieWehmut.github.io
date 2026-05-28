@@ -1,8 +1,8 @@
 ## About This Blog
 
-本站开发提取有模板，欢迎 star:
+本站提取有模板，欢迎 star:
 
-[https://github.com/dieWehmut/dieWehmut.github.io](https://github.com/dieWehmut/dieWehmut.github.io)
+[https://github.com/dieWehmut/diesuwa-starter](https://github.com/dieWehmut/diesuwa-starter)
 
 ## Copyright
 

@@ -65,13 +65,13 @@ const navItems = computed(() => allNavItems.filter((item) => item.enabled !== fa
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  min-height: 38px;
-  padding: 0 12px;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
   border: 0;
   border-radius: 0;
   color: var(--site-muted);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
@@ -100,9 +100,9 @@ const navItems = computed(() => allNavItems.filter((item) => item.enabled !== fa
 }
 
 .nav-menu__icon {
-  width: 16px;
-  height: 16px;
-  font-size: 16px;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
 }
 
 @media (max-width: 900px) {

@@ -13,3 +13,19 @@ button:active, a:active, a[href]:active, input[type="button"]:active, input[type
 .clickable:active, [role="button"]:active, label:active, select:active, summary:active {
   cursor: var(--cursor-pointer) !important;
 }
+
+/* Keep heart cursor on hoverable list items and all their descendants */
+.note-item,
+.archive-post,
+.project-item,
+.friend-card,
+.home-view__item,
+.home-view__panel,
+.note-item *,
+.archive-post *,
+.project-item *,
+.friend-card *,
+.home-view__item *,
+.home-view__panel * {
+  cursor: var(--cursor-default) !important;
+}

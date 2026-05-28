@@ -1,5 +1,6 @@
 import { Marked } from 'marked'
 import hljs from 'highlight.js'
+import markedKatex from 'marked-katex-extension'
 
 const marked = new Marked({
   async: false,
@@ -42,6 +43,11 @@ const marked = new Marked({
     },
   },
 })
+
+marked.use(markedKatex({
+  throwOnError: false,
+  output: 'htmlAndMathml',
+}))
 
 export function renderMarkdown(source: string): string {
   if (!source) return ''
