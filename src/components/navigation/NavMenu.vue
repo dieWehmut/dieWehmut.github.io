@@ -58,13 +58,13 @@ const navItems = [
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-height: 50px;
-  padding: 0 14px;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 12px;
   border: 0;
   border-radius: 0;
   color: var(--site-muted);
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
@@ -92,9 +92,9 @@ const navItems = [
 }
 
 .nav-menu__icon {
-  width: 22px;
-  height: 22px;
-  font-size: 22px;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
 }
 
 @media (max-width: 900px) {
@@ -105,9 +105,9 @@ const navItems = [
 
   .nav-menu__item {
     justify-content: center;
-    min-height: 44px;
-    padding: 0 10px;
-    font-size: 18px;
+    min-height: 36px;
+    padding: 0 8px;
+    font-size: 13px;
   }
 }
 </style>

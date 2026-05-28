@@ -9,9 +9,11 @@ import AboutView from './views/AboutView.vue'
 import FriendsView from './views/FriendsView.vue'
 import SearchView from './views/SearchView.vue'
 import TagDetailView from './views/TagDetailView.vue'
+import PostView from './views/PostView.vue'
 import NotFoundView from './views/NotFoundView.vue'
 
 const routes = [
+  { path: '/post/:id', name: 'post-detail', component: PostView },
   { path: '/', name: 'home', component: HomeView },
   { path: '/archive', name: 'archive', component: ArchiveView },
   { path: '/notes', name: 'notes', component: NotesView },

@@ -1,6 +1,7 @@
 <template>
   <section class="home-view page-surface">
-    <div class="home-view__grid">
+    <div class="home-view__main">
+      <div class="home-view__grid">
       <RouterLink class="home-view__panel" to="/notes">
         <span>Notes</span>
         <strong>{{ notesCount }}</strong>
@@ -23,37 +24,105 @@
       </RouterLink>
     </div>
 
-    <section class="home-view__section">
-      <div class="home-view__section-title">
-        <h2>Recent Archive</h2>
-        <RouterLink to="/archive">View all</RouterLink>
-      </div>
-      <ArchivePostItem v-for="post in recentPosts" :key="post.id" :post="post" />
+    <div class="home-view__meta">
+      <span>Last Commit</span>
+      <strong>{{ lastUpdated }}</strong>
+    </div>
+
+    <section class="home-view__feed">
+      <article v-for="item in feedItems" :key="item.id" class="home-view__item">
+        <div class="home-view__item-body">
+          <h2>
+            <RouterLink v-if="item.url && !item.external" :to="item.url">{{ item.title }}</RouterLink>
+            <a v-else-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+            <span v-else>{{ item.title }}</span>
+          </h2>
+          <p v-if="item.description">{{ item.description }}</p>
+          <div v-if="item.date || item.tags?.length" class="home-view__meta-row">
+            <time v-if="item.date" class="home-view__date" :datetime="item.date"><el-icon class="home-view__date-icon"><Calendar /></el-icon>{{ formatDate(item.date) }}</time>
+            <RouterLink v-for="tag in item.tags" :key="tag" class="home-view__tag" :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="home-view__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink>
+          </div>
+        </div>
+      </article>
     </section>
+    </div>
+
+    <ScrollSpySidebar root-selector=".page-surface" />
   </section>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import ArchivePostItem from '../components/content/ArchivePostItem.vue'
-import { infra } from '../data/content/infra'
+import { Calendar, PriceTag } from '@element-plus/icons-vue'
+import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
+import { useProfile } from '../composables/useProfile'
+import { infra } from '../data/site/infra.ts'
 import { getPosts, getProjectEntries, getNotes, getTagGroups } from '../data'
 
-const recentPosts = computed(() => getPosts().slice(0, 3))
 const infraCount = computed(() => (infra.value || []).length)
-const projectCount = computed(() => {
-  const names = getProjectEntries()
-    .map((project) => project.name.trim().toLowerCase())
-    .filter(Boolean)
-
-  return new Set(names).size
-})
+const projectCount = computed(() => getProjectEntries().length)
 const notesCount = computed(() => getNotes().length)
 const tagsCount = computed(() => getTagGroups().length)
+const { lastUpdated } = useProfile()
+
+function timestamp(date) {
+  return Date.parse(date || '') || 0
+}
+
+function formatDate(date) {
+  if (!date) return ''
+  const d = new Date(date)
+  if (Number.isNaN(d.valueOf())) return date
+  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
+}
+
+function excerpt(text, maxLength = 140) {
+  const cleaned = String(text || '').replace(/\s+/g, ' ').trim()
+  if (!cleaned) return ''
+  if (cleaned.length <= maxLength) return cleaned
+  return `${cleaned.slice(0, maxLength - 1)}…`
+}
+
+const feedItems = computed(() => {
+  const postItems = getPosts().map((post) => ({
+    id: `post:${post.id}`,
+    title: post.title,
+    description: excerpt(post.summary, 160),
+    date: post.date,
+    tags: post.tags,
+    url: `/post/${post.id}`,
+    external: false,
+  }))
+
+  const noteItems = getNotes().map((note) => ({
+    id: `note:${note.id}`,
+    title: note.title || excerpt(note.body, 28),
+    description: excerpt(note.body, 160),
+    date: note.date,
+    tags: note.tags || [],
+    url: `/notes#${note.id}`,
+    external: false,
+  }))
+
+  return [...postItems, ...noteItems]
+    .sort((a, b) => timestamp(b.date) - timestamp(a.date))
+    .slice(0, 20)
+})
 </script>
 
 <style scoped>
+.home-view {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.home-view__main {
+  flex: 1;
+  min-width: 0;
+}
+
 .home-view__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -94,36 +163,119 @@ const tagsCount = computed(() => getTagGroups().length)
   font-size: 42px;
 }
 
-.home-view__section-title {
+.home-view__meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 8px;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 0 0 36px;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  color: var(--site-muted);
+  font-weight: 800;
 }
 
-.home-view__section-title h2 {
+.home-view__meta strong {
+  color: var(--site-text);
+  font-size: 16px;
+}
+
+.home-view__feed {
+  border-top: 1px solid var(--site-border);
+}
+
+.home-view__item {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.home-view__item-body h2 {
   margin: 0;
   color: var(--site-text);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 34px;
+  font-size: 20px;
+  line-height: 1.25;
 }
 
-.home-view__section-title a {
-  color: var(--site-accent);
-  font-weight: 800;
+.home-view__item-body h2 a {
+  color: var(--site-text);
   text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.home-view__item-body h2 a:hover,
+.home-view__item-body h2 a:focus-visible {
+  color: var(--site-accent);
+  outline: none;
+}
+
+.home-view__item-body p {
+  margin: 8px 0 0;
+  color: var(--site-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.home-view__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.home-view__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--site-muted);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.home-view__date-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+}
+
+.home-view__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: rgba(190, 190, 190, 0.82);
+  text-decoration: none;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.home-view__tag:hover,
+.home-view__tag:focus-visible {
+  color: var(--site-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
+}
+
+.home-view__tag-icon {
+  width: 13px;
+  height: 13px;
+  font-size: 13px;
 }
 
 @media (max-width: 760px) {
   .home-view__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
 
-@media (max-width: 520px) {
-  .home-view__grid {
-    grid-template-columns: 1fr;
+  .home-view__meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-view__item {
+    gap: 10px;
   }
 }
+
 </style>

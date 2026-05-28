@@ -1,5 +1,5 @@
 <template>
-  <section class="page-surface">
+  <section class="page-surface tag-view">
     <PageHeading title="Tags" :icon="PriceTag" />
 
     <div class="tag-cloud" aria-label="Tag cloud">
@@ -52,26 +52,26 @@ import { getTagGroups } from '../data'
 
 const tagGroups = computed(() => getTagGroups())
 const cloudPalette = [
-  '#0b4f8a',
-  '#d36b08',
-  '#e51a2e',
-  '#0067a6',
-  '#5a18c8',
-  '#13e66d',
-  '#5f198f',
-  '#84570d',
-  '#007664',
-  '#1caa1c',
-  '#c1003f',
-  '#8920d9',
-  '#17a6a6',
-  '#9be315',
-  '#004aa8',
-  '#4b18aa',
-  '#006b28',
-  '#d018d8',
-  '#d38b12',
-  '#960064',
+  '#2dd4bf',
+  '#ff5f8a',
+  '#ff8a34',
+  '#38bdf8',
+  '#a855f7',
+  '#22c55e',
+  '#f59e0b',
+  '#fb7185',
+  '#60a5fa',
+  '#34d399',
+  '#f97316',
+  '#c084fc',
+  '#e11d48',
+  '#84cc16',
+  '#0ea5e9',
+  '#d946ef',
+  '#10b981',
+  '#f43f5e',
+  '#7c3aed',
+  '#22d3ee',
 ]
 
 const CLOUD_TAG_LIMIT = 24
@@ -131,12 +131,27 @@ const cloudTags = computed(() => {
 </script>
 
 <style scoped>
+.tag-view {
+  --tag-accent: #22c7b9;
+  --tag-accent-soft: rgba(34, 199, 185, 0.18);
+  --tag-accent-muted: rgba(34, 199, 185, 0.08);
+  --tag-border: rgba(255, 255, 255, 0.08);
+}
+
+:global([data-theme="light"]) .tag-view {
+  --tag-accent: #1aa59c;
+  --tag-accent-soft: rgba(26, 165, 156, 0.14);
+  --tag-accent-muted: rgba(26, 165, 156, 0.06);
+  --tag-border: rgba(0, 0, 0, 0.1);
+}
+
 .tag-cloud {
   position: relative;
   width: 100%;
-  max-width: 1040px;
-  min-height: clamp(360px, 34vw, 440px);
-  margin: 0 auto 30px;
+  max-width: 1080px;
+  min-height: clamp(340px, 34vw, 460px);
+  margin: 0 auto 36px;
+  padding: 14px 12px;
   overflow: hidden;
 }
 
@@ -147,11 +162,11 @@ const cloudTags = computed(() => {
   color: var(--color);
   font-family: Georgia, 'Times New Roman', serif;
   font-size: var(--size);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.02;
   white-space: nowrap;
   text-decoration: none;
-  text-shadow: 0 0 1px rgba(0, 0, 0, .15);
+  text-shadow: 0 6px 18px rgba(0, 0, 0, .35);
   transform: translate(-50%, -50%) rotate(var(--rotation));
   transform-origin: center;
   transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
@@ -166,7 +181,7 @@ const cloudTags = computed(() => {
 .tag-cloud__tag:focus-visible {
   color: var(--site-text);
   text-decoration: underline;
-  text-decoration-color: var(--site-accent);
+  text-decoration-color: var(--tag-accent);
   text-underline-offset: 4px;
   outline: none;
   opacity: .92;
@@ -175,8 +190,8 @@ const cloudTags = computed(() => {
 
 .tag-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 38px 50px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px 44px;
 }
 
 .tag-card {
@@ -201,7 +216,7 @@ const cloudTags = computed(() => {
 
 .tag-card__link:hover,
 .tag-card__link:focus-visible {
-  color: var(--site-accent);
+  color: var(--tag-accent);
   text-decoration: underline;
   text-underline-offset: 4px;
   outline: none;
@@ -213,42 +228,83 @@ h2 {
   gap: 8px;
   margin: 0;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .tag-card__heading span {
   flex: 0 0 auto;
-  padding: 2px 14px 4px;
+  padding: 2px 12px 4px;
   border-radius: 999px;
-  color: var(--site-accent);
-  background: rgba(31, 196, 31, .12);
+  color: var(--tag-accent);
+  background: var(--tag-accent-soft);
   font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .02em;
 }
 
 ul {
-  margin: 14px 0 0;
-  padding-left: 22px;
+  margin: 12px 0 0;
+  padding: 0;
   color: var(--site-muted);
-  line-height: 1.7;
-  font-size: 17px;
+  line-height: 1.65;
+  font-size: 16px;
+  list-style: none;
 }
 
-li::marker {
-  color: var(--site-accent);
+li {
+  position: relative;
+  margin: 6px 0;
+  padding-left: 14px;
+}
+
+li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--tag-accent);
+}
+
+li a {
+  display: inline-block;
+  max-width: 100%;
+  color: var(--site-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 160ms ease;
+}
+
+li a:hover,
+li a:focus-visible {
+  color: var(--site-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
 }
 
 @media (max-width: 900px) {
   .tag-grid {
     grid-template-columns: 1fr;
+    gap: 26px;
   }
 
   .tag-cloud {
-    min-height: 390px;
+    min-height: 320px;
     margin-top: 4px;
   }
 
   .tag-cloud__tag {
     font-size: var(--mobile-size);
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  ul {
+    font-size: 15px;
   }
 }
 </style>

@@ -1,69 +1,69 @@
 <template>
   <section class="infra-view page-surface">
     <PageHeading class="infra-heading" title="Infra" description="Service endpoints monitoring and status overview." :icon="Cpu" />
-    <div class="infra-orbit" :style="{ '--node-count': String(servicePoints.length) }">
-      <div class="infra-core" aria-label="Infra status summary">
-        <img class="infra-core__orbit" :src="orbitImg" alt="" />
-        <img class="infra-core__sphere" :src="sphereImg" alt="" />
-        <div class="infra-core__text">
-          <p>{{ totalCount }} service endpoints</p>
-          <div class="infra-core__counts">
-            <span>{{ onlineCount }} online</span>
-            <span class="infra-core__counts--offline">{{ offlineCount }} offline</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="infra-ring">
-        <span
-          v-for="point in servicePoints"
-          :key="'line-' + (point.item.key || point.item.name)"
-          class="infra-line"
-          :style="lineStyle(point)"
-        />
-        <a
-          v-for="point in servicePoints"
-          :key="point.item.key || point.item.name"
-          class="infra-node"
-          :class="statusClass(point.item.url)"
-          :style="point.style"
-          :href="point.item.url"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span class="infra-node__inner">
-            <span class="infra-node__orb">
-              <img class="infra-node__orb-ring" :src="rings[point.index % rings.length]" alt="" />
-              <img :src="icoSrc(point.index)" class="infra-node__icon-img" alt="" />
-            </span>
-            <span class="infra-node__text">
-              <strong>{{ point.item.name }}</strong>
-              <small>{{ formatDate(point.item.date) }}</small>
-              <em v-if="statusLabel(point.item.url)" :class="statusClass(point.item.url)">
-                {{ statusLabel(point.item.url) }}
-              </em>
-            </span>
-          </span>
-        </a>
-      </div>
-    </div>
-
-    <div class="infra-mobile-list" aria-label="Infra endpoint list">
-      <article v-for="item in serviceItems" :key="item.key || item.name" class="infra-mobile-item">
-        <div class="infra-mobile-item__main">
-          <el-icon class="infra-mobile-item__icon"><Link /></el-icon>
-          <div class="infra-mobile-item__info">
-            <div class="infra-mobile-item__topline">
-              <h2>{{ item.name }}</h2>
-              <time v-if="item.date" :datetime="item.date">{{ formatDate(item.date) }}</time>
+      <div class="infra-orbit" :style="{ '--node-count': String(servicePoints.length) }">
+        <div class="infra-core" aria-label="Infra status summary">
+          <img class="infra-core__orbit" :src="orbitImg" alt="" />
+          <img class="infra-core__sphere" :src="sphereImg" alt="" />
+          <div class="infra-core__text">
+            <p>{{ totalCount }} service endpoints</p>
+            <div class="infra-core__counts">
+              <span>{{ onlineCount }} online</span>
+              <span class="infra-core__counts--offline">{{ offlineCount }} offline</span>
             </div>
-            <p v-if="statusLabel(item.url)" :class="statusClass(item.url)">
-              {{ statusLabel(item.url) }}
-            </p>
           </div>
         </div>
-        <a :href="item.url" target="_blank" rel="noopener noreferrer">Open</a>
-      </article>
+
+        <div class="infra-ring">
+          <span
+            v-for="point in servicePoints"
+            :key="'line-' + (point.item.key || point.item.name)"
+            class="infra-line"
+            :style="lineStyle(point)"
+          />
+          <a
+            v-for="point in servicePoints"
+            :key="point.item.key || point.item.name"
+            class="infra-node"
+            :class="statusClass(point.item.url)"
+            :style="point.style"
+            :href="point.item.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="infra-node__inner">
+              <span class="infra-node__orb">
+                <img class="infra-node__orb-ring" :src="rings[point.index % rings.length]" alt="" />
+                <img :src="icoSrc(point.index)" class="infra-node__icon-img" alt="" />
+              </span>
+              <span class="infra-node__text">
+                <strong>{{ point.item.name }}</strong>
+                <small>{{ formatDate(point.item.date) }}</small>
+                <em v-if="statusLabel(point.item.url)" :class="statusClass(point.item.url)">
+                  {{ statusLabel(point.item.url) }}
+                </em>
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="infra-mobile-list" aria-label="Infra endpoint list">
+        <article v-for="item in serviceItems" :key="item.key || item.name" class="infra-mobile-item">
+          <div class="infra-mobile-item__main">
+            <el-icon class="infra-mobile-item__icon"><Link /></el-icon>
+            <div class="infra-mobile-item__info">
+              <div class="infra-mobile-item__topline">
+                <h2>{{ item.name }}</h2>
+                <time v-if="item.date" :datetime="item.date">{{ formatDate(item.date) }}</time>
+              </div>
+              <p v-if="statusLabel(item.url)" :class="statusClass(item.url)">
+                {{ statusLabel(item.url) }}
+              </p>
+            </div>
+          </div>
+          <a :href="item.url" target="_blank" rel="noopener noreferrer">Open</a>
+        </article>
     </div>
   </section>
 </template>
@@ -72,7 +72,7 @@
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { Link, Cpu } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
-import { infra } from '../data/content/infra'
+import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
 import sphereImg from '../assets/infra/qiu.png'
 import orbitImg from '../assets/infra/y-bg.png'
@@ -470,6 +470,7 @@ function statusClass(url) {
     min-height: auto;
     margin: 0;
     padding: 0 0 40px;
+    display: block;
   }
 
   .infra-heading {

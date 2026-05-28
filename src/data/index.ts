@@ -1,13 +1,12 @@
 import type { ArchivePost, NoteEntry, ProjectEntry, SearchDocument } from '../types/content'
-import { pages } from './content/page'
-import { games } from './content/game'
-import { apps } from './content/app'
-import { tools } from './content/tool'
-import { infra } from './content/infra'
-import { posts } from './content/posts'
-import { notes } from './content/notes'
-import { friends } from './content/friends'
-import { siteProfile } from './content/profile'
+import { pages } from './site/page'
+import { games } from './site/game'
+import { apps } from './site/app'
+import { tools } from './site/tool'
+import { infra } from './site/infra'
+import { getDocPosts, getDocNotes } from './docs'
+import { friends } from './site/friends'
+import { siteProfile } from './site/profile'
 
 function timestamp(date?: string) {
   return Date.parse(date || '') || 0
@@ -26,11 +25,11 @@ function projectRepo(item: any) {
 }
 
 export function getPosts(): ArchivePost[] {
-  return sortByDate(posts)
+  return sortByDate(getDocPosts())
 }
 
 export function getNotes(): NoteEntry[] {
-  return sortByDate(notes)
+  return sortByDate(getDocNotes())
 }
 
 export function getProjectEntries(): ProjectEntry[] {
@@ -93,7 +92,7 @@ export function getProjectEntries(): ProjectEntry[] {
 
 export function getTagGroups() {
   const groups = new Map<string, ArchivePost[]>()
-  for (const post of posts) {
+  for (const post of getPosts()) {
     for (const tag of post.tags || []) {
       groups.set(tag, [...(groups.get(tag) || []), post])
     }
@@ -110,7 +109,7 @@ export function getTagGroups() {
 
 export function getArchiveGroups() {
   const groups = new Map<string, ArchivePost[]>()
-  for (const post of posts) {
+  for (const post of getPosts()) {
     const year = new Date(post.date).getFullYear().toString()
     groups.set(year, [...(groups.get(year) || []), post])
   }
@@ -121,17 +120,17 @@ export function getArchiveGroups() {
 }
 
 export function getSearchDocuments(): SearchDocument[] {
-  const postDocs: SearchDocument[] = posts.map((post) => ({
+  const postDocs: SearchDocument[] = getPosts().map((post) => ({
     id: `post:${post.id}`,
     type: 'post',
     title: post.title,
     description: post.summary,
-    url: `/archive#${post.id}`,
+    url: `/post/${post.id}`,
     date: post.date,
     tags: post.tags,
   }))
 
-  const noteDocs: SearchDocument[] = notes.map((note) => ({
+  const noteDocs: SearchDocument[] = getNotes().map((note) => ({
     id: `note:${note.id}`,
     type: 'note',
     title: note.title || note.body.slice(0, 40),

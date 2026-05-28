@@ -1,8 +1,8 @@
 export const siteProfile = {
-  title: 'diesw nexus',
-  subtitle: 'diesw nexus',
+  title: 'diesw-nexus',
+  subtitle: 'diesw-nexus',
   description:
-    'A compact index for services, projects, notes, friends, and the small things worth keeping visible.',
+    'Hi!This is dieWehmut.',
   owner: 'dieWehmut',
   email: 'diesehnsucht0@gmail.com',
   startedAt: '2025-08-24T22:00:00+08:00',
