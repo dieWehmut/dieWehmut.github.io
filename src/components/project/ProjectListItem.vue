@@ -48,8 +48,18 @@ const formattedDate = computed(() => {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--site-border);
+  padding: 14px 22px;
+  margin: 0 -22px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: default;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.project-item:hover {
+  border-color: rgba(31, 196, 31, 0.45);
+  background: rgba(31, 196, 31, 0.04);
+  transform: translateY(-2px);
 }
 
 .project-item__main {
@@ -80,6 +90,7 @@ const formattedDate = computed(() => {
 .project-item__name:hover,
 .project-item__name:focus-visible {
   color: var(--site-accent);
+  text-decoration: underline;
   outline: none;
 }
 
@@ -115,6 +126,7 @@ time {
   color: var(--site-accent);
   border-color: rgba(31, 196, 31, 0.45);
   transform: translateY(-1px);
+  text-decoration: none;
   outline: none;
 }
 

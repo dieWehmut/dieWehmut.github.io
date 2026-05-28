@@ -10,19 +10,22 @@
 
     <div class="footer__copyright">
       ©  {{ copyrightYear }}
-      <a :href="githubProfileUrl" target="_blank" rel="noopener noreferrer">diesw</a>
-      <span>|</span>
-      <a href="https://icp.gov.moe/?keyword=20260803" target="_blank" rel="noopener noreferrer">萌ICP备20260803号</a>
+      <a :href="githubProfileUrl" target="_blank" rel="noopener noreferrer">{{ siteConfig.displayName }}</a>
+      <template v-if="siteConfig.icpNumber">
+        <span>|</span>
+        <a :href="`https://icp.gov.moe/?keyword=${siteConfig.icpNumber}`" target="_blank" rel="noopener noreferrer">{{ siteConfig.icpText }}</a>
+      </template>
     </div>
   </footer>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { siteConfig } from '../../data/site/config'
 
-const startAt = new Date('2025-08-24T22:00:00+08:00').getTime()
+const startAt = new Date(siteConfig.startedAt).getTime()
 const currentYear = ref(new Date().getFullYear())
-const githubUser = ref('dieWehmut')
+const githubUser = ref(siteConfig.githubUser)
 
 const time = reactive({
   days: '0',
@@ -112,6 +115,7 @@ a {
 a:hover,
 a:focus-visible {
   color: var(--site-accent);
+  text-decoration: underline;
   outline: none;
 }
 </style>

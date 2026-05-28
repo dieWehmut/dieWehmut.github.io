@@ -4,42 +4,34 @@
 
     <div class="about-layout">
       <div class="about-content">
-        <section id="contact-me" class="about-section">
-          <h2>Contact Me</h2>
-          <ul class="about-contact-list">
-            <li>
-              <svg class="about-contact-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-              <span>GitHub</span>
-              <a :href="githubUrl" target="_blank" rel="noopener noreferrer">{{ githubUrl }}</a>
-            </li>
-            <li>
-              <el-icon class="about-contact-icon"><Message /></el-icon>
-              <span>Email</span>
-              <a :href="`mailto:${siteProfile.email}`">{{ siteProfile.email }}</a>
-            </li>
-          </ul>
-        </section>
+        <div class="about-contact">
+          <h2 id="contact-me">Contact Me</h2>
+          <div class="about-contact__list">
+            <div class="about-contact__item">
+              <div class="about-contact__label">
+                <svg class="about-contact__icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                <span>GitHub</span>
+              </div>
+              <a :href="`https://github.com/${siteConfig.githubUser}`" target="_blank" rel="noopener">
+                https://github.com/{{ siteConfig.githubUser }}
+              </a>
+            </div>
+            <div class="about-contact__divider"></div>
+            <div class="about-contact__item">
+              <div class="about-contact__label">
+                <el-icon class="about-contact__icon"><Message /></el-icon>
+                <span>Email</span>
+              </div>
+              <a :href="`mailto:${siteConfig.email}`">
+                {{ siteConfig.email }}
+              </a>
+            </div>
+          </div>
+        </div>
 
-        <section id="about-blog" class="about-section">
-          <h2>About This Blog</h2>
-          <p>
-            本站开发提取有模板，欢迎
-            star:
-          </p>
-          <p>
-            <a :href="repoUrl" target="_blank" rel="noopener noreferrer">{{ repoUrl }}</a>
-          </p>
-        </section>
-
-        <section id="copyright" class="about-section">
-          <h2>Copyright</h2>
-          <p>本站内容除特殊说明外，默认遵循署名与非商业使用的转载约定。</p>
-        </section>
-
-        <section id="footnote" class="about-section">
-          <h2>脚注</h2>
-          <p>写作是一种缓慢的自我整理，也是与时间和解的方式。</p>
-        </section>
+        <div class="markdown-body" v-html="renderedAbout"></div>
       </div>
 
       <ScrollSpySidebar class="about-aside" root-selector=".about-content" heading-selector="h2" />
@@ -48,15 +40,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { Message, User } from '@element-plus/icons-vue'
+import { User, Message } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { useProfile } from '../composables/useProfile'
-import { siteProfile } from '../data'
+import { renderMarkdown } from '../utils/markdown'
+import { siteConfig } from '../data/site/config'
+import aboutRaw from '../data/site/about.md?raw'
 
-const { githubUrl } = useProfile()
-const repoUrl = computed(() => `${githubUrl.value}/dieWehmut.github.io`)
+const renderedAbout = renderMarkdown(aboutRaw)
 </script>
 
 <style scoped>
@@ -71,79 +62,91 @@ const repoUrl = computed(() => `${githubUrl.value}/dieWehmut.github.io`)
   min-width: 0;
 }
 
-.about-section {
-  margin-top: 34px;
-}
-
-.about-section h2 {
-  margin: 0 0 12px;
-  color: var(--site-text);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 26px;
-  scroll-margin-top: 120px;
-}
-
-.about-section p {
-  margin: 0 0 14px;
-  color: var(--site-muted);
-  font-size: 16px;
-  line-height: 1.75;
-}
-
-.about-contact-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 10px;
-}
-
-.about-contact-icon {
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
-  color: var(--site-accent);
-  flex-shrink: 0;
-}
-
-.about-contact-list li {
-  display: grid;
-  grid-template-columns: 22px 80px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--site-border);
-}
-
-.about-contact-list li:last-child {
-  border-bottom: 0;
-}
-
-.about-contact-list span {
-  color: var(--site-muted);
-  font-weight: 800;
-}
-
-.about-contact-list a,
-.about-section a {
-  color: var(--site-accent);
-  text-decoration: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.about-contact-list a:hover,
-.about-contact-list a:focus-visible,
-.about-section a:hover,
-.about-section a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  outline: none;
-}
-
 .about-aside {
   align-self: start;
+}
+
+.about-contact {
+  margin-bottom: 48px;
+}
+
+.about-contact h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--site-text);
+}
+
+.about-contact__list {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.about-contact__item {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 18px 0;
+  font-size: 15px;
+}
+
+.about-contact__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 140px;
+  color: var(--site-text);
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.about-contact__divider {
+  height: 1px;
+  background: var(--site-border, rgba(255, 255, 255, 0.12));
+}
+
+.about-contact__item a {
+  color: var(--site-accent, #1fc41f);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.about-contact__item a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.about-contact__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--site-muted, #999);
+}
+
+.about-content :deep(h2) {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  color: var(--site-text);
+}
+
+.about-content :deep(p) {
+  color: var(--site-muted, #aaa);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.about-content :deep(a) {
+  color: var(--site-accent, #1fc41f);
+  text-decoration: none;
+}
+
+.about-content :deep(a:hover) {
+  text-decoration: underline;
+  opacity: 0.85;
 }
 
 @media (max-width: 900px) {
@@ -153,25 +156,6 @@ const repoUrl = computed(() => `${githubUrl.value}/dieWehmut.github.io`)
 
   .about-aside {
     display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .about-section h2 {
-    font-size: 22px;
-  }
-
-  .about-contact-list li {
-    grid-template-columns: 22px 1fr;
-    gap: 8px;
-  }
-
-  .about-contact-list span {
-    grid-column: 2;
-  }
-
-  .about-contact-list a {
-    grid-column: 1 / -1;
   }
 }
 </style>

@@ -10,6 +10,15 @@
     "followers": "{count} followers"
   },
   "nav": {
+    "home": "Home",
+    "archive": "Archive",
+    "notes": "Notes",
+    "infra": "Infra",
+    "project": "Project",
+    "tags": "Tags",
+    "about": "About",
+    "friends": "Friends",
+    "search": "Search",
     "pages": "Websites",
     "services": "Services",
     "games": "Games",
@@ -53,7 +62,7 @@
   },
   "intro": {
     "title": "Welcome!",
-    "subtitle": "dieWehmut's Nexus"
+    "subtitle": "{owner}'s Nexus"
   },
   "float": {
     "viewMode": "Toggle View",

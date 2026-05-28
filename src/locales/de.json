@@ -10,6 +10,15 @@
     "followers": "{count} Follower"
   },
   "nav": {
+    "home": "Startseite",
+    "archive": "Archiv",
+    "notes": "Notizen",
+    "infra": "Infrastruktur",
+    "project": "Projekte",
+    "tags": "Tags",
+    "about": "Über",
+    "friends": "Freunde",
+    "search": "Suche",
     "pages": "Websites",
     "services": "Dienste",
     "games": "Spiele",
@@ -56,7 +65,7 @@
   },
   "intro": {
     "title": "Willkommen!",
-    "subtitle": "dieWehmut's Nexus"
+    "subtitle": "{owner}s Nexus"
   },
   "float": {
     "viewMode": "Ansicht wechseln",

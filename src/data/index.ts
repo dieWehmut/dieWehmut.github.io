@@ -97,6 +97,12 @@ export function getTagGroups() {
       groups.set(tag, [...(groups.get(tag) || []), post])
     }
   }
+  for (const note of getNotes()) {
+    for (const tag of note.tags || []) {
+      const entry = { id: note.id, title: note.title, date: note.date, tags: note.tags, summary: note.summary } as ArchivePost
+      groups.set(tag, [...(groups.get(tag) || []), entry])
+    }
+  }
 
   return Array.from(groups.entries())
     .map(([tag, tagPosts]) => ({

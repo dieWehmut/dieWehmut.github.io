@@ -233,12 +233,9 @@ h2 {
 
 .tag-card__heading span {
   flex: 0 0 auto;
-  padding: 2px 12px 4px;
-  border-radius: 999px;
-  color: var(--tag-accent);
-  background: var(--tag-accent-soft);
+  color: var(--site-muted);
   font-weight: 800;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: .02em;
 }
 

@@ -10,6 +10,15 @@
     "followers": "{count} sequaces"
   },
   "nav": {
+    "home": "Domus",
+    "archive": "Archivum",
+    "notes": "Notae",
+    "infra": "Infrastructura",
+    "project": "Proiecta",
+    "tags": "Tituli",
+    "about": "De nobis",
+    "friends": "Amici",
+    "search": "Quaerere",
     "pages": "Situs",
     "services": "Servitia",
     "games": "Ludi",
@@ -56,7 +65,7 @@
   },
   "intro": {
     "title": "Salve!",
-    "subtitle": "Nexus dieWehmut"
+    "subtitle": "Nexus {owner}"
   },
   "float": {
     "viewMode": "Mutare Visum",

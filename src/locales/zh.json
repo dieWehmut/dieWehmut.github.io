@@ -10,6 +10,15 @@
     "followers": "{count} 个关注者"
   },
   "nav": {
+    "home": "首页",
+    "archive": "归档",
+    "notes": "笔记",
+    "infra": "基础设施",
+    "project": "项目",
+    "tags": "标签",
+    "about": "关于",
+    "friends": "友链",
+    "search": "搜索",
     "pages": "网站",
     "services": "服务",
     "games": "游戏",
@@ -53,7 +62,7 @@
   },
   "intro": {
     "title": "欢迎！",
-    "subtitle": "dieWehmut 的 Nexus"
+    "subtitle": "{owner} 的 Nexus"
   },
   "float": {
     "viewMode": "切换视图",

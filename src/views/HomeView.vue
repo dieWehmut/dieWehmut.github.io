@@ -7,12 +7,12 @@
         <strong>{{ notesCount }}</strong>
         <small>short records</small>
       </RouterLink>
-      <RouterLink class="home-view__panel" to="/infra">
+      <RouterLink v-if="siteConfig.enableInfra" class="home-view__panel" to="/infra">
         <span>Infra</span>
         <strong>{{ infraCount }}</strong>
         <small>service endpoints</small>
       </RouterLink>
-      <RouterLink class="home-view__panel" to="/project">
+      <RouterLink v-if="siteConfig.enableProject" class="home-view__panel" to="/project">
         <span>Project</span>
         <strong>{{ projectCount }}</strong>
         <small>websites, apps, games, tools</small>
@@ -58,6 +58,7 @@ import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { useProfile } from '../composables/useProfile'
 import { infra } from '../data/site/infra.ts'
+import { siteConfig } from '../data/site/config'
 import { getPosts, getProjectEntries, getNotes, getTagGroups } from '../data'
 
 const infraCount = computed(() => (infra.value || []).length)
@@ -138,6 +139,7 @@ const feedItems = computed(() => {
   border-color: rgba(31, 196, 31, 0.42);
   background: rgba(31, 196, 31, 0.04);
   transform: translateY(-2px);
+  text-decoration: none;
   outline: none;
 }
 
@@ -179,8 +181,22 @@ const feedItems = computed(() => {
 }
 
 .home-view__item {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--site-border);
+  padding: 20px 22px;
+  margin: 0 -22px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: default;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.home-view__item:hover {
+  border-color: rgba(31, 196, 31, 0.45);
+  background: rgba(31, 196, 31, 0.04);
+  transform: translateY(-2px);
+}
+
+.home-view__item + .home-view__item {
+  margin-top: -1px;
 }
 
 .home-view__item-body h2 {
@@ -199,6 +215,7 @@ const feedItems = computed(() => {
 .home-view__item-body h2 a:hover,
 .home-view__item-body h2 a:focus-visible {
   color: var(--site-accent);
+  text-decoration: underline;
   outline: none;
 }
 

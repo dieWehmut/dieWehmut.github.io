@@ -39,12 +39,15 @@ const shortDate = computed(() => {
   padding: 22px;
   margin: 0 -22px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 160ms ease;
+  border: 1px solid transparent;
+  cursor: default;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
 .archive-post:hover {
-  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(31, 196, 31, 0.45);
+  background: rgba(31, 196, 31, 0.04);
+  transform: translateY(-2px);
 }
 
 .archive-post + .archive-post {

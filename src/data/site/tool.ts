@@ -1,10 +1,11 @@
 import { ref } from 'vue'
+import { siteConfig } from './config'
 
 export const tools = ref([
   {
     name: 'Tools',
     autoLoad: true,
-    owner: 'dieWehmut',
+    owner: siteConfig.githubUser,
     repo: 'renameFile',
     description: 'Static tools list',
     manualItems: [
