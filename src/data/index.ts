@@ -107,6 +107,18 @@ export function getTagGroups() {
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
 }
 
+export function getNoteGroups() {
+  const groups = new Map<string, NoteEntry[]>()
+  for (const note of getNotes()) {
+    const year = new Date(note.date).getFullYear().toString()
+    groups.set(year, [...(groups.get(year) || []), note])
+  }
+
+  return Array.from(groups.entries())
+    .map(([year, yearNotes]) => ({ year, notes: sortByDate(yearNotes) }))
+    .sort((a, b) => Number(b.year) - Number(a.year))
+}
+
 export function getArchiveGroups() {
   const groups = new Map<string, ArchivePost[]>()
   for (const post of getPosts()) {
@@ -133,9 +145,9 @@ export function getSearchDocuments(): SearchDocument[] {
   const noteDocs: SearchDocument[] = getNotes().map((note) => ({
     id: `note:${note.id}`,
     type: 'note',
-    title: note.title || note.body.slice(0, 40),
-    description: note.body,
-    url: `/notes#${note.id}`,
+    title: note.title,
+    description: note.summary,
+    url: `/note/${note.id}`,
     date: note.date,
     tags: note.tags,
   }))

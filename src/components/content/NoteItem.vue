@@ -1,11 +1,11 @@
 <template>
-  <article class="archive-post" :id="post.id" @click="goToPost">
-    <time class="archive-post__date" :datetime="post.date">{{ shortDate }}</time>
-    <div class="archive-post__body">
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.summary }}</p>
-      <div class="archive-post__tags" v-if="post.tags?.length">
-        <span v-for="tag in post.tags" :key="tag" class="archive-post__tag" @click.stop><RouterLink :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="archive-post__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink></span>
+  <article class="note-item" :id="note.id" @click="goToNote">
+    <time class="note-item__date" :datetime="note.date">{{ shortDate }}</time>
+    <div class="note-item__body">
+      <h2>{{ note.title }}</h2>
+      <p>{{ note.summary }}</p>
+      <div class="note-item__tags" v-if="note.tags?.length">
+        <span v-for="tag in note.tags" :key="tag" class="note-item__tag" @click.stop><RouterLink :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="note-item__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink></span>
       </div>
     </div>
   </article>
@@ -15,24 +15,24 @@
 import { computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
-import type { ArchivePost } from '../../types/content'
+import type { NoteEntry } from '../../types/content'
 
-const props = defineProps<{ post: ArchivePost }>()
+const props = defineProps<{ note: NoteEntry }>()
 const router = useRouter()
 
-function goToPost() {
-  router.push(`/post/${props.post.id}`)
-}
-
 const shortDate = computed(() => {
-  const date = new Date(props.post.date)
-  if (Number.isNaN(date.valueOf())) return props.post.date
+  const date = new Date(props.note.date)
+  if (Number.isNaN(date.valueOf())) return props.note.date
   return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
 })
+
+function goToNote() {
+  router.push(`/note/${props.note.id}`)
+}
 </script>
 
 <style scoped>
-.archive-post {
+.note-item {
   display: grid;
   grid-template-columns: 74px minmax(0, 1fr);
   gap: 22px;
@@ -43,15 +43,15 @@ const shortDate = computed(() => {
   transition: background-color 160ms ease;
 }
 
-.archive-post:hover {
+.note-item:hover {
   background: rgba(255, 255, 255, 0.04);
 }
 
-.archive-post + .archive-post {
+.note-item + .note-item {
   border-top: 1px solid var(--site-border);
 }
 
-.archive-post__date {
+.note-item__date {
   color: var(--site-muted);
   font-size: 18px;
   font-weight: 800;
@@ -65,7 +65,7 @@ h2 {
   transition: color 160ms ease;
 }
 
-.archive-post:hover h2 {
+.note-item:hover h2 {
   color: var(--site-accent);
 }
 
@@ -80,7 +80,7 @@ p {
   overflow: hidden;
 }
 
-.archive-post__tags {
+.note-item__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -88,7 +88,7 @@ p {
   font-size: 15px;
 }
 
-.archive-post__tags a {
+.note-item__tags a {
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -97,14 +97,14 @@ p {
   transition: color 160ms ease, text-decoration-color 160ms ease;
 }
 
-.archive-post__tag-icon {
+.note-item__tag-icon {
   width: 13px;
   height: 13px;
   font-size: 13px;
 }
 
-.archive-post__tags a:hover,
-.archive-post__tags a:focus-visible {
+.note-item__tags a:hover,
+.note-item__tags a:focus-visible {
   color: var(--site-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -112,9 +112,11 @@ p {
 }
 
 @media (max-width: 640px) {
-  .archive-post {
+  .note-item {
     grid-template-columns: 1fr;
     gap: 6px;
+    padding: 16px;
+    margin: 0 -16px;
   }
 }
 </style>

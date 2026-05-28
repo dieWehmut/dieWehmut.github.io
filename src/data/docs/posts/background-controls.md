@@ -1,8 +1,6 @@
 ---
-title: Optional motion background
-date: 2025-10-26
-tags: [Motion, Performance]
-summary: Dynamic backgrounds are kept as an explicit preference so the default page stays calm and fast.
-category: Interface
+title: PVE
+date: 2026-4-1
+tags: [Proxmox VE]
 ---
-Dynamic backgrounds are kept as an explicit preference so the default page stays calm and fast.
+

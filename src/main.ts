@@ -4,6 +4,7 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import "element-plus/dist/index.css";
 import "./tailwind.css";
 import "./styles/index.scss";
+import "./styles/markdown/index.scss";
 
 import App from "./App.vue";
 import i18n from "./i18n";

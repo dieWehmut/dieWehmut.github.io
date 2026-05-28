@@ -4,19 +4,18 @@ export interface ArchivePost {
   id: string
   title: string
   date: string
-  summary: string
   tags: string[]
-  category?: string
-  url?: string
+  summary: string
   body?: string
 }
 
 export interface NoteEntry {
   id: string
+  title: string
   date: string
+  tags: string[]
+  summary: string
   body: string
-  title?: string
-  tags?: string[]
 }
 
 export interface FriendLink {
