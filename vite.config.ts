@@ -40,7 +40,7 @@ function pingProxy() {
         const t0 = performance.now()
         try {
           const ctrl = new AbortController()
-          const t = setTimeout(() => ctrl.abort(), 5000)
+          const t = setTimeout(() => ctrl.abort(), 4000)
 
           const upstream = await fetch(url, {
             signal: ctrl.signal,
@@ -48,18 +48,24 @@ function pingProxy() {
           })
 
           clearTimeout(t)
+          const latency = Math.round(performance.now() - t0)
           res.writeHead(200, { 'Content-Type': 'application/json' })
           res.end(JSON.stringify({
             ok: true,
             status: upstream.status,
-            latency: Math.round(performance.now() - t0),
+            latency,
           }))
-        } catch (err) {
+        } catch (err: any) {
+          const latency = Math.round(performance.now() - t0)
+          const isAbort = err?.name === 'AbortError'
+          const code = err?.cause?.code || err?.code || ''
+          // ECONNREFUSED / ENOTFOUND → server is definitely offline
+          const isConnRefused = code === 'ECONNREFUSED' || code === 'ENOTFOUND' || code === 'EAI_AGAIN'
           res.writeHead(200, { 'Content-Type': 'application/json' })
           res.end(JSON.stringify({
             ok: false,
-            error: (err as any)?.name === 'AbortError' ? 'timeout' : 'unreachable',
-            latency: Math.round(performance.now() - t0),
+            error: isAbort && !isConnRefused ? 'timeout' : 'offline',
+            latency,
           }))
         }
       })
@@ -75,6 +81,10 @@ export default defineConfig({
     }
   },
   server: {
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
     // Dev proxy to allow loading GitHub's contributions SVG locally.
     // This proxies /api/contributions -> https://github.com/users/dieWehmut/contributions
     proxy: {
@@ -117,6 +127,11 @@ export default defineConfig({
         }
       }
     }
+  },
+  preview: {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   base,
   build: {

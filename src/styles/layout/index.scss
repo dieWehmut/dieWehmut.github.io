@@ -1,0 +1,69 @@
+:root {
+  color-scheme: dark;
+  --site-sidebar-width: 230px;
+  --site-mobile-header-height: 62px;
+  --site-content-width: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-width: 0;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--site-text);
+  background: var(--site-bg);
+  font-family:
+    "LXGW WenKai",
+    "LXGW WenKai Screen",
+    "Noto Serif SC",
+    "Microsoft YaHei",
+    system-ui,
+    sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+#app {
+  min-height: 100vh;
+  background: var(--site-bg);
+}
+
+
+.page-surface {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1180px) {
+  :root {
+    --site-sidebar-width: 220px;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --site-sidebar-width: min(82vw, 320px);
+  }
+
+  body {
+    background: var(--site-bg);
+  }
+}
