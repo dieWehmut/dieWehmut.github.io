@@ -31,6 +31,9 @@ jobs:
           # Remove files that should not be in the template
           rm -rf prompt/ sample/ dist/ .env.local .claude/
 
+          # --- Use the starter-readme.md as the template README ---
+          cp src/data/site/starter-readme.md README.md
+
           # --- Replace config.ts with placeholder values ---
           cat > src/data/site/config.ts << 'CONFIGEOF'
           /**
@@ -52,7 +55,7 @@ jobs:
             subtitle: 'my-nexus',
             description: 'Hi! This is my personal site.',
             siteUrl: 'https://example.com',
-            startedAt: '2025-01-01T00:00:00+00:00',
+            startedAt: '2026-05-01T00:00:00+08:00',
 
             // --- External Services ---
             googleAnalyticsId: '',
@@ -91,13 +94,20 @@ jobs:
           import type { FriendLink } from '../../types/content'
 
           export const friends: FriendLink[] = [
-            // Add your friend links here
+            {
+              id: 'nexus-author',
+              name: 'diesw',
+              description: 'Nexus template author',
+              url: 'https://diesw.tech',
+              avatar: 'https://github.com/dieWehmut.png',
+            },
+            // Add your friend links here:
             // {
             //   id: 'friend-1',
             //   name: 'Friend Name',
             //   description: 'A short description',
             //   url: 'https://friend-site.com',
-            //   avatar: 'https://github.com/friend.png',
+            //   avatar: 'https://github.com/friend-username.png',
             // },
           ]
           EOF
@@ -187,90 +197,58 @@ jobs:
           cat > src/data/docs/posts/hello-world.md << 'EOF'
           ---
           title: Hello World
-          date: 2025-01-01
-          tags: intro, welcome
+          date: 2026-05-01
+          tags: [intro, welcome]
           ---
 
           # Hello World
 
           Welcome to your new Nexus site! Edit or replace this post to get started.
+
+          ## Markdown Features
+
+          This template supports full GitHub-flavored Markdown:
+
+          - **Bold**, *italic*, ~~strikethrough~~
+          - `inline code` and fenced code blocks with syntax highlighting
+          - [Links](https://github.com), images, tables
+          - Blockquotes, task lists, details/summary
+
+          ### Math Support
+
+          Inline math: $E = mc^2$
+
+          Display math:
+
+          $$
+          \sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+          $$
+
+          ### Code Block
+
+          ```javascript
+          function greet(name) {
+            console.log(`Hello, ${name}!`)
+          }
+          ```
           EOF
 
           cat > src/data/docs/notes/sample-note.md << 'EOF'
           ---
           title: Sample Note
-          date: 2025-01-01
-          tags: note
+          date: 2026-05-01
+          tags: [note]
           type: note
           ---
 
           This is a sample note. Replace it with your own content.
           EOF
 
-          # --- Replace GITHUB_USER in vite.config.ts ---
-          sed -i "s/const GITHUB_USER = 'dieWehmut'/const GITHUB_USER = 'your-github-username'/" vite.config.ts
+          # --- Remove the starter-readme source file from template ---
+          rm -f src/data/site/starter-readme.md
 
           # --- Remove the sync-starter workflow itself from the template ---
           rm -f .github/workflows/sync-starter.yml
-
-          # --- Update README for the template ---
-          cat > README.md << 'READMEEOF'
-          # Nexus Starter
-
-          A personal website / blog template built with Vue 3 + Vite + TailwindCSS.
-
-          ## Quick Start
-
-          1. **Use this template** — click "Use this template" on GitHub or clone the repo.
-          2. **Configure** — edit `src/data/site/config.ts` with your personal info.
-          3. **About page** — edit `src/data/site/about.md` with your own content (Markdown).
-          4. **Add content** — put Markdown posts in `src/data/docs/posts/` and notes in `src/data/docs/notes/`.
-          5. **Add projects** — edit files in `src/data/site/` (apps, games, tools, pages, infra, friends).
-          6. **Environment** — copy `.env.example` to `.env.local` and fill in your Giscus config.
-          7. **Dev** — `npm install && npm run dev`
-          8. **Deploy** — push to GitHub and enable Pages (the included workflow handles it).
-
-          ## Features
-
-          - 🌙 Dark / Light theme
-          - 🌸 Animated backgrounds (particles, sakura, snow)
-          - 📝 Markdown blog posts & notes with frontmatter
-          - 🗂️ Project showcase (websites, apps, games, tools) — optional
-          - 🏗️ Infrastructure status dashboard — optional
-          - 🔍 Client-side search
-          - 💬 Giscus comments (GitHub Discussions)
-          - 🌐 i18n (zh, en, ja, de, la, zh_tw)
-          - 📱 Responsive mobile layout
-
-          ## Project Structure
-
-          ```
-          src/
-          ├── data/
-          │   ├── site/
-          │   │   ├── config.ts    ← your personal config (start here!)
-          │   │   ├── about.md     ← about page content (Markdown)
-          │   │   ├── profile.ts
-          │   │   ├── app.ts
-          │   │   ├── game.ts
-          │   │   ├── page.ts
-          │   │   ├── tool.ts
-          │   │   ├── infra.ts
-          │   │   └── friends.ts
-          │   └── docs/
-          │       ├── posts/       ← blog posts (.md)
-          │       └── notes/       ← short notes (.md)
-          ├── components/
-          ├── composables/
-          ├── layouts/
-          ├── views/
-          └── styles/
-          ```
-
-          ## License
-
-          MIT
-          READMEEOF
 
       - name: Push to starter repo
         uses: cpina/github-action-push-to-another-repository@main

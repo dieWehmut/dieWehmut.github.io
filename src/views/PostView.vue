@@ -3,7 +3,7 @@
     <div class="post-view__main">
       <div v-if="post" class="post-view__card">
           <h1 class="post-view__title">{{ post.title }}</h1>
-          <div v-if="post.body" class="post-view__body" v-html="renderedBody" />
+          <div v-if="post.body" class="post-view__body markdown-body" v-html="renderedBody" />
           <div v-if="post.date || post.tags?.length" class="post-view__meta-row">
             <time v-if="post.date" class="post-view__meta-date" :datetime="post.date"><el-icon class="post-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink
