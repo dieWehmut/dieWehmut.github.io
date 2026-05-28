@@ -244,22 +244,34 @@ jobs:
           This is a sample note. Replace it with your own content.
           EOF
 
-          # --- Remove the starter-readme source file from template ---
+          # --- Create docs/ folder with translated READMEs ---
+          mkdir -p docs
+          cp src/data/site/starter-readme.zh-TW.md docs/README.zh-TW.md
+          cp src/data/site/starter-readme.en.md docs/README.en.md
+
+          # --- Remove the starter-readme source files from template ---
           rm -f src/data/site/starter-readme.md
+          rm -f src/data/site/starter-readme.zh-TW.md
+          rm -f src/data/site/starter-readme.en.md
 
           # --- Remove the sync-starter workflow itself from the template ---
           rm -f .github/workflows/sync-starter.yml
 
       - name: Push to starter repo
-        uses: cpina/github-action-push-to-another-repository@main
         env:
-          API_TOKEN_GITHUB: ${{ secrets.STARTER_PUSH_TOKEN }}
-        with:
-          source-directory: '.'
-          destination-github-username: 'dieWehmut'
-          destination-repository-name: 'diesuwa-starter'
-          target-branch: main
-          create-target-branch-if-needed: true
-          commit-message: 'sync: update starter template from Nexus'
-          user-email: diesehnsucht0@gmail.com
-          user-name: dieWehmut
+          STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
+        run: |
+          set -e
+          git config --global user.email "diesehnsucht0@gmail.com"
+          git config --global user.name "dieWehmut"
+          tmp_dir=$(mktemp -d)
+          git clone --depth 1 "https://x-access-token:${STARTER_PUSH_TOKEN}@github.com/dieWehmut/diesuwa-starter.git" "$tmp_dir"
+          rsync -a --delete --exclude='.git' ./ "$tmp_dir"/
+          cd "$tmp_dir"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to push."
+            exit 0
+          fi
+          git commit -m "sync: update starter template from Nexus"
+          git push origin main --force
