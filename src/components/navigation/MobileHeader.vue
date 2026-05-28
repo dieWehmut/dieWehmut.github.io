@@ -23,7 +23,7 @@ defineEmits(['toggle-menu'])
   gap: 12px;
   min-height: var(--site-mobile-header-height);
   padding: 10px 14px;
-  background: rgba(18, 18, 18, 0.92);
+  background: var(--site-sidebar-bg);
   border-bottom: 1px solid var(--site-border);
   backdrop-filter: blur(12px);
 }
