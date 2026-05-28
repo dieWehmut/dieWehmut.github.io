@@ -166,7 +166,7 @@ const cloudTags = computed(() => {
   line-height: 1.02;
   white-space: nowrap;
   text-decoration: none;
-  text-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+  text-shadow: none;
   transform: translate(-50%, -50%) rotate(var(--rotation));
   transform-origin: center;
   transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;

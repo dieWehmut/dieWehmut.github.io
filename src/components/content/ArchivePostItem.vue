@@ -95,7 +95,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  color: rgba(190, 190, 190, 0.82);
+  color: var(--site-tag-color);
   text-decoration: none;
   transition: color 160ms ease, text-decoration-color 160ms ease;
 }
