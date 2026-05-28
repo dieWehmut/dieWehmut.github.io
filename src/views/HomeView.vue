@@ -77,18 +77,11 @@ function formatDate(date) {
   return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
 }
 
-function excerpt(text, maxLength = 140) {
-  const cleaned = String(text || '').replace(/\s+/g, ' ').trim()
-  if (!cleaned) return ''
-  if (cleaned.length <= maxLength) return cleaned
-  return `${cleaned.slice(0, maxLength - 1)}…`
-}
-
 const feedItems = computed(() => {
   const postItems = getPosts().map((post) => ({
     id: `post:${post.id}`,
     title: post.title,
-    description: excerpt(post.summary, 160),
+    description: post.summary,
     date: post.date,
     tags: post.tags,
     url: `/post/${post.id}`,
@@ -97,11 +90,11 @@ const feedItems = computed(() => {
 
   const noteItems = getNotes().map((note) => ({
     id: `note:${note.id}`,
-    title: note.title || excerpt(note.body, 28),
-    description: excerpt(note.body, 160),
+    title: note.title,
+    description: note.summary,
     date: note.date,
-    tags: note.tags || [],
-    url: `/notes#${note.id}`,
+    tags: note.tags,
+    url: `/note/${note.id}`,
     external: false,
   }))
 
@@ -214,6 +207,10 @@ const feedItems = computed(() => {
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .home-view__meta-row {

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './views/HomeView.vue'
 import ArchiveView from './views/ArchiveView.vue'
 import NotesView from './views/NotesView.vue'
+import NoteView from './views/NoteView.vue'
 import InfraView from './views/InfraView.vue'
 import ProjectView from './views/ProjectView.vue'
 import TagsView from './views/TagsView.vue'
@@ -14,6 +15,7 @@ import NotFoundView from './views/NotFoundView.vue'
 
 const routes = [
   { path: '/post/:id', name: 'post-detail', component: PostView },
+  { path: '/note/:id', name: 'note-detail', component: NoteView },
   { path: '/', name: 'home', component: HomeView },
   { path: '/archive', name: 'archive', component: ArchiveView },
   { path: '/notes', name: 'notes', component: NotesView },

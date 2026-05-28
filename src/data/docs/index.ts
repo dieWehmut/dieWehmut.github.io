@@ -1,4 +1,5 @@
 import type { ArchivePost, NoteEntry } from '../../types/content'
+import { excerptFromMarkdown } from '../../utils/markdown'
 
 type DocMeta = {
   id?: string
@@ -16,9 +17,7 @@ type ParsedDoc = {
   title: string
   date: string
   tags: string[]
-  summary?: string
   body: string
-  category?: string
 }
 
 const rawDocs = import.meta.glob('./**/*.md', { eager: true, as: 'raw' }) as Record<string, string>
@@ -57,23 +56,6 @@ function parseTags(raw?: string) {
     .filter(Boolean)
 }
 
-function toPlainText(text: string) {
-  return text
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/`[^`]*`/g, '')
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-    .replace(/\[[^\]]*\]\([^)]*\)/g, '$1')
-    .replace(/[#>*_~]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-function excerpt(text: string, maxLength = 140) {
-  const clean = toPlainText(text)
-  if (clean.length <= maxLength) return clean
-  return `${clean.slice(0, maxLength - 1)}…`
-}
-
 function docIdFromPath(path: string) {
   const filename = path.split('/').pop() || ''
   return filename.replace(/\.md$/i, '')
@@ -83,22 +65,12 @@ const parsedDocs: ParsedDoc[] = Object.entries(rawDocs).map(([path, raw]) => {
   const { data, content } = parseFrontmatter(raw)
   const type = data.type === 'note' || path.includes('/notes/') ? 'note' : 'post'
   const id = data.id || docIdFromPath(path)
-  const title = data.title || (type === 'post' ? id : '')
+  const title = data.title || id
   const date = data.date || ''
   const tags = parseTags(data.tags)
   const body = content.trim()
-  const summary = data.summary || excerpt(body)
 
-  return {
-    id,
-    type,
-    title,
-    date,
-    tags,
-    summary,
-    body,
-    category: data.category,
-  }
+  return { id, type, title, date, tags, body }
 })
 
 export function getDocPosts(): ArchivePost[] {
@@ -106,11 +78,10 @@ export function getDocPosts(): ArchivePost[] {
     .filter((doc) => doc.type === 'post')
     .map((doc) => ({
       id: doc.id,
-      title: doc.title || doc.id,
+      title: doc.title,
       date: doc.date,
-      summary: doc.summary || '',
       tags: doc.tags,
-      category: doc.category,
+      summary: excerptFromMarkdown(doc.body),
       body: doc.body,
     }))
 }
@@ -120,9 +91,10 @@ export function getDocNotes(): NoteEntry[] {
     .filter((doc) => doc.type === 'note')
     .map((doc) => ({
       id: doc.id,
+      title: doc.title,
       date: doc.date,
-      title: doc.title || undefined,
-      body: toPlainText(doc.body),
-      tags: doc.tags.length ? doc.tags : undefined,
+      tags: doc.tags,
+      summary: excerptFromMarkdown(doc.body),
+      body: doc.body,
     }))
 }
