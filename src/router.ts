@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { siteConfig } from './data/site/config'
 import HomeView from './views/HomeView.vue'
 import ArchiveView from './views/ArchiveView.vue'
 import NotesView from './views/NotesView.vue'
@@ -19,8 +20,8 @@ const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/archive', name: 'archive', component: ArchiveView },
   { path: '/notes', name: 'notes', component: NotesView },
-  { path: '/infra', name: 'infra', component: InfraView },
-  { path: '/project', name: 'project', component: ProjectView },
+  { path: '/infra', name: 'infra', component: InfraView, meta: { requiresInfra: true } },
+  { path: '/project', name: 'project', component: ProjectView, meta: { requiresProject: true } },
   { path: '/tags', name: 'tags', component: TagsView },
   { path: '/tags/:tag', name: 'tag-detail', component: TagDetailView },
   { path: '/about', name: 'about', component: AboutView },
@@ -37,6 +38,11 @@ const router = createRouter({
     if (to.hash) return { el: to.hash, top: 24, behavior: 'smooth' }
     return { top: 0, behavior: 'smooth' }
   },
+})
+
+router.beforeEach((to) => {
+  if (to.meta.requiresInfra && !siteConfig.enableInfra) return '/'
+  if (to.meta.requiresProject && !siteConfig.enableProject) return '/'
 })
 
 export default router

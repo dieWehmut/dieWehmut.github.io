@@ -10,12 +10,14 @@
       <el-icon class="nav-menu__icon">
         <component :is="item.icon" />
       </el-icon>
-      <span>{{ item.label }}</span>
+      <span>{{ t(item.labelKey) }}</span>
     </RouterLink>
   </nav>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import {
   Collection,
@@ -28,20 +30,25 @@ import {
   Search,
   User,
 } from '@element-plus/icons-vue'
+import { siteConfig } from '../../data/site/config'
 
 defineEmits(['navigate'])
 
-const navItems = [
-  { name: 'home', label: 'Home', to: '/', icon: House },
-  { name: 'archive', label: 'Archive', to: '/archive', icon: Collection },
-  { name: 'notes', label: 'Notes', to: '/notes', icon: Notebook },
-  { name: 'infra', label: 'Infra', to: '/infra', icon: Cpu },
-  { name: 'project', label: 'Project', to: '/project', icon: FolderOpened },
-  { name: 'tags', label: 'Tags', to: '/tags', icon: PriceTag },
-  { name: 'about', label: 'About', to: '/about', icon: User },
-  { name: 'friends', label: 'Friends', to: '/friends', icon: Connection },
-  { name: 'search', label: 'Search', to: '/search', icon: Search },
+const { t } = useI18n()
+
+const allNavItems = [
+  { name: 'home', labelKey: 'nav.home', to: '/', icon: House },
+  { name: 'archive', labelKey: 'nav.archive', to: '/archive', icon: Collection },
+  { name: 'notes', labelKey: 'nav.notes', to: '/notes', icon: Notebook },
+  { name: 'infra', labelKey: 'nav.infra', to: '/infra', icon: Cpu, enabled: siteConfig.enableInfra },
+  { name: 'project', labelKey: 'nav.project', to: '/project', icon: FolderOpened, enabled: siteConfig.enableProject },
+  { name: 'tags', labelKey: 'nav.tags', to: '/tags', icon: PriceTag },
+  { name: 'about', labelKey: 'nav.about', to: '/about', icon: User },
+  { name: 'friends', labelKey: 'nav.friends', to: '/friends', icon: Connection },
+  { name: 'search', labelKey: 'nav.search', to: '/search', icon: Search },
 ]
+
+const navItems = computed(() => allNavItems.filter((item) => item.enabled !== false))
 </script>
 
 <style scoped>
@@ -80,6 +87,7 @@ const navItems = [
   color: var(--site-text);
   background: rgba(255, 255, 255, 0.055);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+  text-decoration: none;
   outline: none;
 }
 

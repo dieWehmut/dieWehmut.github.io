@@ -6,6 +6,9 @@ import fs from 'fs'
 
 const base = '/';
 
+// GitHub username used in dev-server proxies (contributions graph, trophy)
+const GITHUB_USER = 'dieWehmut';
+
 /** Custom plugin: copies the built index.html to 404.html so GitHub Pages
  *  serves the SPA for unknown paths (e.g. /services) instead of a 404. */
 function copy404Plugin() {
@@ -86,13 +89,13 @@ export default defineConfig({
       'Access-Control-Allow-Origin': '*',
     },
     // Dev proxy to allow loading GitHub's contributions SVG locally.
-    // This proxies /api/contributions -> https://github.com/users/dieWehmut/contributions
+    // This proxies /api/contributions -> https://github.com/users/<GITHUB_USER>/contributions
     proxy: {
       '/api/contributions': {
         target: 'https://github.com',
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api\/contributions/, '/users/dieWehmut/contributions'),
+        rewrite: (path) => path.replace(/^\/api\/contributions/, `/users/${GITHUB_USER}/contributions`),
         // shorten proxy timeouts in dev to avoid long waits if upstream is unreachable
         proxyTimeout: 5000,
         timeout: 5000,
@@ -113,7 +116,7 @@ export default defineConfig({
         target: 'https://github-profile-trophy.vercel.app',
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api\/trophy/, '/?username=dieWehmut&theme=tokyonight&no-frame=true&margin-w=10&margin-h=10'),
+        rewrite: (path) => path.replace(/^\/api\/trophy/, `/?username=${GITHUB_USER}&theme=tokyonight&no-frame=true&margin-w=10&margin-h=10`),
         proxyTimeout: 5000,
         timeout: 5000,
         onError(err, req, res) {

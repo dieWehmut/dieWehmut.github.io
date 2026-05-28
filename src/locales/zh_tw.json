@@ -10,6 +10,15 @@
     "followers": "{count} 個關注者"
   },
   "nav": {
+    "home": "首頁",
+    "archive": "歸檔",
+    "notes": "筆記",
+    "infra": "基礎設施",
+    "project": "專案",
+    "tags": "標籤",
+    "about": "關於",
+    "friends": "友鏈",
+    "search": "搜尋",
     "pages": "網站",
     "services": "服務",
     "games": "遊戲",
@@ -56,7 +65,7 @@
   },
   "intro": {
     "title": "歡迎！",
-    "subtitle": "dieWehmut 的 Nexus"
+    "subtitle": "{owner} 的 Nexus"
   },
   "float": {
     "viewMode": "切換視圖",

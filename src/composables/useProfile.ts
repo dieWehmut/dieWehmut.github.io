@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 import { fetchWithCache } from '../utils/apiCache'
 import { getGitHubHeaders } from '../utils/github'
+import { siteConfig } from '../data/site/config'
 
-const avatarUrl = ref('https://github.com/dieWehmut.png')
-const displayName = ref('dieWehmut')
+const avatarUrl = ref(`https://github.com/${siteConfig.githubUser}.png`)
+const displayName = ref(siteConfig.githubUser)
 const lastUpdated = ref('2026-03-14')
-const githubUrl = ref('https://github.com/dieWehmut')
+const githubUrl = ref(`https://github.com/${siteConfig.githubUser}`)
 let initialized = false
 
 function formatDate(d: string) {
@@ -24,7 +25,7 @@ function formatDate(d: string) {
 async function loadProfile() {
   try {
     const data = await fetchWithCache(
-      'https://api.github.com/users/dieWehmut',
+      `https://api.github.com/users/${siteConfig.githubUser}`,
       { headers: getGitHubHeaders() },
       1000 * 60 * 60
     )
@@ -38,7 +39,7 @@ async function loadProfile() {
 async function loadLatestCommit() {
   try {
     const commits = await fetchWithCache(
-      'https://api.github.com/repos/dieWehmut/dieWehmut.github.io/commits?per_page=1',
+      `https://api.github.com/repos/${siteConfig.githubUser}/${siteConfig.githubRepo}/commits?per_page=1`,
       { headers: getGitHubHeaders() },
       1000 * 60 * 60
     )

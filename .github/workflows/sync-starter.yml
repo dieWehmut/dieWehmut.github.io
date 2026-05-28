@@ -1,0 +1,276 @@
+name: Sync Starter Template
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync-starter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare template
+        run: |
+          set -e
+
+          # Remove files that should not be in the template
+          rm -rf prompt/ sample/ dist/ .env.local .claude/
+
+          # --- Replace config.ts with placeholder values ---
+          cat > src/data/site/config.ts << 'CONFIGEOF'
+          /**
+           * Site-wide personal configuration.
+           * All personal / private data is centralized here.
+           * ⚠️  Modify this file to personalize your site.
+           */
+
+          export const siteConfig = {
+            // --- Identity ---
+            githubUser: 'your-github-username',
+            githubRepo: 'your-github-username.github.io',
+            owner: 'your-name',
+            displayName: 'your-name',
+            email: 'you@example.com',
+
+            // --- Site Meta ---
+            title: 'my-nexus',
+            subtitle: 'my-nexus',
+            description: 'Hi! This is my personal site.',
+            siteUrl: 'https://example.com',
+            startedAt: '2025-01-01T00:00:00+00:00',
+
+            // --- External Services ---
+            googleAnalyticsId: '',
+
+            // --- ICP Filing (optional, set empty to hide) ---
+            icpNumber: '',
+            icpText: '',
+
+            // --- Feature Flags (set false to hide page & nav entry) ---
+            enableInfra: false,
+            enableProject: false,
+
+            // --- Social Links ---
+            links: [
+              { label: 'GitHub', url: 'https://github.com/your-github-username' },
+              { label: 'Website', url: 'https://example.com' },
+            ],
+          }
+
+          export default siteConfig
+          CONFIGEOF
+
+          # --- Replace about.md with example ---
+          cat > src/data/site/about.md << 'ABOUTEOF'
+          ## About This Blog
+
+          This site is built with the [Nexus Starter](https://github.com/dieWehmut/diesuwa-starter) template.
+
+          ## Copyright
+
+          All content on this site is subject to a CC-BY-NC license unless otherwise stated.
+          ABOUTEOF
+
+          # --- Replace data files with example content ---
+          cat > src/data/site/friends.ts << 'EOF'
+          import type { FriendLink } from '../../types/content'
+
+          export const friends: FriendLink[] = [
+            // Add your friend links here
+            // {
+            //   id: 'friend-1',
+            //   name: 'Friend Name',
+            //   description: 'A short description',
+            //   url: 'https://friend-site.com',
+            //   avatar: 'https://github.com/friend.png',
+            // },
+          ]
+          EOF
+
+          cat > src/data/site/app.ts << 'EOF'
+          import { ref } from 'vue'
+
+          export const apps = ref([
+            {
+              name: 'Apps',
+              autoLoad: true,
+              description: 'Static apps list',
+              manualItems: [
+                // Add your apps here
+              ],
+            },
+          ])
+
+          export default apps
+          EOF
+
+          cat > src/data/site/game.ts << 'EOF'
+          import { ref } from 'vue'
+
+          export const games = ref([
+            {
+              name: 'Games',
+              autoLoad: true,
+              description: 'Static games list',
+              manualItems: [
+                // Add your game projects here
+              ],
+            },
+          ])
+
+          export default games
+          EOF
+
+          cat > src/data/site/infra.ts << 'EOF'
+          import { ref } from 'vue'
+
+          const initialInfra = [
+            // Add your infrastructure endpoints here
+            // { name: 'Service Name', key: 'service', url: 'https://service.example.com', date: '2025-01-01' },
+          ]
+
+          initialInfra.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+          export const infra = ref(initialInfra)
+
+          export default infra
+          EOF
+
+          cat > src/data/site/page.ts << 'EOF'
+          import { ref } from 'vue'
+
+          export const pages = ref([
+            // Add your website projects here
+          ])
+
+          export default pages
+          EOF
+
+          cat > src/data/site/tool.ts << 'EOF'
+          import { ref } from 'vue'
+          import { siteConfig } from './config'
+
+          export const tools = ref([
+            {
+              name: 'Tools',
+              autoLoad: true,
+              owner: siteConfig.githubUser,
+              repo: '',
+              description: 'Static tools list',
+              manualItems: [
+                // Add your tool projects here
+              ],
+            },
+          ])
+
+          export default tools
+          EOF
+
+          # --- Replace docs with a sample post ---
+          rm -rf src/data/docs/notes/*.md src/data/docs/posts/*.md
+
+          cat > src/data/docs/posts/hello-world.md << 'EOF'
+          ---
+          title: Hello World
+          date: 2025-01-01
+          tags: intro, welcome
+          ---
+
+          # Hello World
+
+          Welcome to your new Nexus site! Edit or replace this post to get started.
+          EOF
+
+          cat > src/data/docs/notes/sample-note.md << 'EOF'
+          ---
+          title: Sample Note
+          date: 2025-01-01
+          tags: note
+          type: note
+          ---
+
+          This is a sample note. Replace it with your own content.
+          EOF
+
+          # --- Replace GITHUB_USER in vite.config.ts ---
+          sed -i "s/const GITHUB_USER = 'dieWehmut'/const GITHUB_USER = 'your-github-username'/" vite.config.ts
+
+          # --- Remove the sync-starter workflow itself from the template ---
+          rm -f .github/workflows/sync-starter.yml
+
+          # --- Update README for the template ---
+          cat > README.md << 'READMEEOF'
+          # Nexus Starter
+
+          A personal website / blog template built with Vue 3 + Vite + TailwindCSS.
+
+          ## Quick Start
+
+          1. **Use this template** — click "Use this template" on GitHub or clone the repo.
+          2. **Configure** — edit `src/data/site/config.ts` with your personal info.
+          3. **About page** — edit `src/data/site/about.md` with your own content (Markdown).
+          4. **Add content** — put Markdown posts in `src/data/docs/posts/` and notes in `src/data/docs/notes/`.
+          5. **Add projects** — edit files in `src/data/site/` (apps, games, tools, pages, infra, friends).
+          6. **Environment** — copy `.env.example` to `.env.local` and fill in your Giscus config.
+          7. **Dev** — `npm install && npm run dev`
+          8. **Deploy** — push to GitHub and enable Pages (the included workflow handles it).
+
+          ## Features
+
+          - 🌙 Dark / Light theme
+          - 🌸 Animated backgrounds (particles, sakura, snow)
+          - 📝 Markdown blog posts & notes with frontmatter
+          - 🗂️ Project showcase (websites, apps, games, tools) — optional
+          - 🏗️ Infrastructure status dashboard — optional
+          - 🔍 Client-side search
+          - 💬 Giscus comments (GitHub Discussions)
+          - 🌐 i18n (zh, en, ja, de, la, zh_tw)
+          - 📱 Responsive mobile layout
+
+          ## Project Structure
+
+          ```
+          src/
+          ├── data/
+          │   ├── site/
+          │   │   ├── config.ts    ← your personal config (start here!)
+          │   │   ├── about.md     ← about page content (Markdown)
+          │   │   ├── profile.ts
+          │   │   ├── app.ts
+          │   │   ├── game.ts
+          │   │   ├── page.ts
+          │   │   ├── tool.ts
+          │   │   ├── infra.ts
+          │   │   └── friends.ts
+          │   └── docs/
+          │       ├── posts/       ← blog posts (.md)
+          │       └── notes/       ← short notes (.md)
+          ├── components/
+          ├── composables/
+          ├── layouts/
+          ├── views/
+          └── styles/
+          ```
+
+          ## License
+
+          MIT
+          READMEEOF
+
+      - name: Push to starter repo
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.STARTER_PUSH_TOKEN }}
+        with:
+          source-directory: '.'
+          destination-github-username: 'dieWehmut'
+          destination-repository-name: 'diesuwa-starter'
+          target-branch: main
+          commit-message: 'sync: update starter template from Nexus'
+          user-email: diesehnsucht0@gmail.com
+          user-name: dieWehmut

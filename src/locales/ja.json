@@ -10,6 +10,15 @@
     "followers": "{count} フォロワー"
   },
   "nav": {
+    "home": "ホーム",
+    "archive": "アーカイブ",
+    "notes": "ノート",
+    "infra": "インフラ",
+    "project": "プロジェクト",
+    "tags": "タグ",
+    "about": "概要",
+    "friends": "フレンド",
+    "search": "検索",
     "pages": "サイト",
     "services": "サービス",
     "games": "ゲーム",
@@ -56,7 +65,7 @@
   },
   "intro": {
     "title": "ようこそ！",
-    "subtitle": "dieWehmut の Nexus"
+    "subtitle": "{owner} の Nexus"
   },
   "float": {
     "viewMode": "ビュー切替",
