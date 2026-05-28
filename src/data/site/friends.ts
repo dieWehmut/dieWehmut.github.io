@@ -22,5 +22,11 @@ export const friends: FriendLink[] = [
     url: 'https://fufu142857.github.io/',
     avatar: 'https://github.com/fufu142857.png',
   },
-
+  {
+    id: '',
+    name: 'ken1301225',
+    description: 'NJU IST',
+    url: 'https://ken1301225.github.io/',
+    avatar: 'https://github.com/ken1301225.png',
+  }
 ]
