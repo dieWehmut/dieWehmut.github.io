@@ -8,6 +8,9 @@ import "./styles/index.scss";
 import App from "./App.vue";
 import i18n from "./i18n";
 import router from "./router";
+import { initThemePreference } from "./composables/useThemePreference";
+
+initThemePreference();
 
 const app = createApp(App);
 app.use(ElementPlus);

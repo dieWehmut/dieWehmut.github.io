@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import CopyToast from '../components/CopyToast.vue'
+import CopyToast from '../components/system/CopyToast.vue'
 import i18n from '../i18n'
 
 export function showCenteredToast(messageOrKey, { type = 'success', duration = 2500 } = {}) {

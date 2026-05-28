@@ -5,17 +5,27 @@ export type StatusKind = 'checking' | 'online' | 'offline' | 'unreachable' | 'hi
 export interface UrlStatus {
   status: StatusKind
   latency?: number
+  httpStatus?: number
+}
+
+interface CheckOptions {
+  force?: boolean
 }
 
 export function useUrlStatus() {
   const statusMap = reactive<Record<string, UrlStatus>>({})
   const pending = new Map<string, AbortController>()
+  const batchTimers = new Set<ReturnType<typeof setTimeout>>()
 
-  async function checkUrl(url: string) {
+  async function checkUrl(url: string, options: CheckOptions = {}) {
     if (!url || url === '#') return
-    if (statusMap[url] && statusMap[url].status !== 'checking') return
+    if (pending.has(url)) return
+    if (!options.force && statusMap[url] && statusMap[url].status !== 'checking') return
 
-    statusMap[url] = { status: 'checking' }
+    // Only show "checking" on initial load; on refresh, keep the old status visible
+    if (!statusMap[url]) {
+      statusMap[url] = { status: 'checking' }
+    }
 
     // In dev mode, use the Vite /api/ping proxy — same-origin request,
     // server-side forward from the user's machine → target sees user's real IP.
@@ -40,20 +50,27 @@ export function useUrlStatus() {
       })
 
       clearTimeout(timeoutId)
-      const data = await res.json()
+      if (!res.ok) {
+        statusMap[url] = { status: 'offline', httpStatus: res.status }
+        return
+      }
 
-      if (data.ok && data.status === 200) {
+      const data = await res.json()
+      const httpStatus = Number(data.status)
+
+      if (data.ok && httpStatus >= 200 && httpStatus < 300) {
         const latency: number = data.latency
         if (latency < 1000) {
-          statusMap[url] = { status: 'online', latency }
+          statusMap[url] = { status: 'online', latency, httpStatus }
         } else {
-          statusMap[url] = { status: 'highLatency', latency }
+          statusMap[url] = { status: 'highLatency', latency, httpStatus }
         }
-      } else if (data.ok) {
-        // Server responded, but not 200
-        statusMap[url] = { status: 'offline' }
+      } else if (Number.isFinite(httpStatus)) {
+        statusMap[url] = { status: 'offline', httpStatus }
       } else if (data.error === 'timeout') {
         statusMap[url] = { status: 'timeout' }
+      } else if (data.error === 'offline') {
+        statusMap[url] = { status: 'offline' }
       } else {
         statusMap[url] = { status: 'unreachable' }
       }
@@ -81,14 +98,14 @@ export function useUrlStatus() {
       clearTimeout(timeoutId)
       const latency = Math.round(performance.now() - t0)
 
-      if (response.status === 200) {
+      if (response.ok) {
         if (latency < 1000) {
-          statusMap[url] = { status: 'online', latency }
+          statusMap[url] = { status: 'online', latency, httpStatus: response.status }
         } else {
-          statusMap[url] = { status: 'highLatency', latency }
+          statusMap[url] = { status: 'highLatency', latency, httpStatus: response.status }
         }
       } else {
-        statusMap[url] = { status: 'offline' }
+        statusMap[url] = { status: 'offline', httpStatus: response.status }
       }
     } catch (corsErr: any) {
       clearTimeout(timeoutId)
@@ -128,14 +145,20 @@ export function useUrlStatus() {
     }
   }
 
-  function checkUrls(urls: string[]) {
+  function checkUrls(urls: string[], options: CheckOptions = {}) {
     const unique = [...new Set(urls.filter(u => u && u !== '#'))]
     let i = 0
     const batch = () => {
       const chunk = unique.slice(i, i + 3)
-      chunk.forEach(u => checkUrl(u))
+      chunk.forEach(u => checkUrl(u, options))
       i += 3
-      if (i < unique.length) setTimeout(batch, 400)
+      if (i < unique.length) {
+        const timer = setTimeout(() => {
+          batchTimers.delete(timer)
+          batch()
+        }, 400)
+        batchTimers.add(timer)
+      }
     }
     batch()
   }
@@ -143,6 +166,8 @@ export function useUrlStatus() {
   onBeforeUnmount(() => {
     pending.forEach(ctrl => ctrl.abort())
     pending.clear()
+    batchTimers.forEach(timer => clearTimeout(timer))
+    batchTimers.clear()
   })
 
   return { statusMap, checkUrls, checkUrl }
