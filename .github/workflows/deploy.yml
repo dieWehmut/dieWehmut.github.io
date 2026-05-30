@@ -16,6 +16,19 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      VITE_GISCUS_REPO: ${{ vars.VITE_GISCUS_REPO }}
+      VITE_GISCUS_REPO_ID: ${{ vars.VITE_GISCUS_REPO_ID }}
+      VITE_GISCUS_CATEGORY: ${{ vars.VITE_GISCUS_CATEGORY }}
+      VITE_GISCUS_CATEGORY_ID: ${{ vars.VITE_GISCUS_CATEGORY_ID }}
+      VITE_GISCUS_MAPPING: ${{ vars.VITE_GISCUS_MAPPING }}
+      VITE_GISCUS_STRICT: ${{ vars.VITE_GISCUS_STRICT }}
+      VITE_GISCUS_REACTIONS_ENABLED: ${{ vars.VITE_GISCUS_REACTIONS_ENABLED }}
+      VITE_GISCUS_INPUT_POSITION: ${{ vars.VITE_GISCUS_INPUT_POSITION }}
+      VITE_GISCUS_THEME: ${{ vars.VITE_GISCUS_THEME }}
+      VITE_GISCUS_LANG: ${{ vars.VITE_GISCUS_LANG }}
+
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -37,6 +50,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # 调试时可开启，确认变量是否注入成功
+      # - name: Debug env
+      #   run: |
+      #     echo "REPO=$VITE_GISCUS_REPO"
+      #     echo "THEME=$VITE_GISCUS_THEME"
 
       - name: Build
         run: pnpm run build

@@ -18,7 +18,7 @@ export const friends: FriendLink[] = [
   {
     id: '',
     name: 'fugod',
-    description: 'ZJU Turing',
+    description: 'fufu142857',
     url: 'https://fufu142857.github.io/',
     avatar: 'https://github.com/fufu142857.png',
   },
