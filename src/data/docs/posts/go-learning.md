@@ -1,6 +1,6 @@
 ---
-title: Golang学习笔记
-date: 2026-01-20
+title: Golang学习
+date: 2026/01/20 - 2026/03/02
 tags: [Golang]
 ---
 
@@ -8,17 +8,12 @@ tags: [Golang]
 
 <!-- Generated content starts below -->
 
-<details open><summary><big><big><b> 2026</b></big></big></summary>
-
-<details open><summary><big><b> 2026-01</b></big></summary>
-
-<details><summary><b>2026-01-20 | Tuesday</b></summary>
-
+#### 2026-01-20 | Tuesday
 
 > 好几个月前就配了环境，也ai写了点调ai的api的代码测试，今天开始系统了解和学习go语言
 
 > **初步认识:**
-*   go像cpp那样有{}，又像python那样没有";" ,神了
+*   go像cpp那样有{}，又像python那样没有";"
 *   大小写就能区分public和private
 *   并发似乎不错 goroutine和channel
 *   面向接口编程(IOP)吗 鸭子类型
@@ -37,15 +32,12 @@ tags: [Golang]
 - `name4, name5 := value1, value2` //多变量声明
 - `_, name6 := value3, value4` //丢弃变量
 
-<details>
-<summary><b>day1.go</b></summary>
-
 ```go
 package main
 
 import(
 	"io"
-	"fmt" 
+	"fmt"
 	"os"
 	"log"
 )
@@ -75,12 +67,8 @@ func main(){
 	log.Panicf( "%s %s", v1,v2)
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-21 | Wednesday</b></summary>
-
+#### 2026-01-21 | Wednesday
 
 > 今天开发前端太久了，快零点了才开始学go，整理一下输入输出吧,顺便用ai整理一下日记排版
 
@@ -116,9 +104,6 @@ func main(){
 # 快速文件读写
 - **W**:`os.WriteFile("demo.txt", []byte("数据"), 0644)`
 - **R**:`content, err := os.ReadFile("xxx.txt")`
-
-<details>
-<summary><b>day2.go</b></summary>
 
 ```go
 package main
@@ -159,26 +144,19 @@ func main(){
 	fmt.Printf("Read from file:\n%s", string(readData))
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-22 | Thursday</b></summary>
-
+#### 2026-01-22 | Thursday
 
 > 开发React网页花了七八个小时，今天只剩14min。。。
 
 # 数组
 
 - 还是得习惯 数据类型放最后。。。
-- 声明: `var arr [5]int` 
+- 声明: `var arr [5]int`
 - 神秘声明：a:=[3]int{1,2,3}
 - b:=[2][3]int{[3]int{1,2,3}, [3]int{4,5,6}}
 - c:=[2][3]int{{1,2,3}, {4,5,6}}
 - 数组之间赋值是值赋值:把数组作为参数传入函数时，传入的是数组的副本，而不是它的指针  .
-
-<details>
-<summary><b>day3.go</b></summary>
 
 ```go
 package main
@@ -197,12 +175,8 @@ func main(){
 	}
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-23 | Friday</b></summary>
-
+#### 2026-01-23 | Friday
 
 > 最早的一集。但是学不了那么多了，明天要开会讨论另外一个项目。。。
 > 悲伤，拖到了23点
@@ -228,9 +202,6 @@ type Result struct {
 }
 ```
 
-<details>
-<summary><b>day4.go</b></summary>
-
 ```go
 package main
 
@@ -244,13 +215,13 @@ func f(a *[4] int){
 }
 
 func printSlice(s [] int){
-	fmt.Printf("len=%d,cap-%d,slice=%v\n",len(s),cap(s),s) 
+	fmt.Printf("len=%d,cap-%d,slice=%v\n",len(s),cap(s),s)
 }
 
 func main(){
 	var arr = [4] int {1,2,3,4}
 	f(&arr)
-	fmt.Println(arr) 
+	fmt.Println(arr)
 
 	var slice1 [] int
 	slice2:= [] int {}
@@ -261,16 +232,10 @@ func main(){
 	printSlice(slice3)
 	printSlice(slice4)
 
-
-
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-24 | Saturday</b></summary>
-
+#### 2026-01-24 | Saturday
 
 > 最悲伤的一集
 
@@ -296,9 +261,6 @@ p4 := struct {
     Age int
 } {Name:"匿名", Age:33}
 ```
-
-<details>
-<summary><b>day5.go</b></summary>
 
 ```go
 package main
@@ -354,15 +316,9 @@ func toJson(res*Result){
 	fmt.Println("json data :",string(jsons))
 }
 
-
-
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-25 | Sunday</b></summary>
-
+#### 2026-01-25 | Sunday
 
 > 又只剩15min
 
@@ -371,9 +327,6 @@ func toJson(res*Result){
 - 声明: `var m map[string]int` //未初始化
 - 简写: `m := make(map[string]int)`
 - 也是像 数组切片一样可直接打印的。神了
-
-<details>
-<summary><b>day6.go</b></summary>
 
 ```go
 package main
@@ -388,12 +341,8 @@ func main() {
 	fmt.Println("Map contents:", m)
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-26 | Monday</b></summary>
-
+#### 2026-01-26 | Monday
 
 > 继续学map，然后再学一点
 > 原来可以写分号？？？？写cpp写麻了。。。这挺好，有python的简洁，又有cpp的{}\n> {} 必须写
@@ -407,11 +356,11 @@ func main() {
 ## 声明/类型/结构
 
 - var const struct map type interface
-- func package import 
+- func package import
 
 ## 流程控制
 
-- if else 
+- if else
 - for range
 - switch case default fallthrough
 - break contiune goto select
@@ -435,9 +384,6 @@ func main() {
 
 - JSON 里的 number 默认是 float64，不是 int
 - JSON 在 Go 里一律是 []byte
-
-<details>
-<summary><b>day7.go</b></summary>
 
 ```go
 package main
@@ -590,7 +536,7 @@ func learn_AnonymousFunction(){
     }
 }
 func main(){
-	
+
 	learn_map()
 	learn_interface_json_loop()
 	learn_iota()
@@ -599,12 +545,8 @@ func main(){
 	learn_AnonymousFunction()
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-27 | Tuesday</b></summary>
-
+#### 2026-01-27 | Tuesday
 
 > go 中没有while！！！只有for循环，可以模拟while
 
@@ -624,9 +566,6 @@ func main(){
 - 但函数 + 闭包是另一回事
 - 闭包获取变量相当于引用传递，而非值传递，但是注意函数传参是值复制
 - defer 只对当前协程有效
-
-<details>
-<summary><b>day8.go</b></summary>
 
 ```go
 package main
@@ -706,12 +645,8 @@ func main(){
 	learn_defer_Exit()
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-28 | Wednesday</b></summary>
-
+#### 2026-01-28 | Wednesday
 
 > 跟着go tour走一遍
 > 无隐式类型转换，要显式实现
@@ -723,9 +658,6 @@ func main(){
 - 有多个 case 同时就绪，会随机选择一个执行。
 - 加了 default，且所有 channel 都阻塞，则执行 default
 - 没有 default，则 select 阻塞，直到有 case 可执行。
-
-<details>
-<summary><b>day9.go</b></summary>
 
 ```go
 package main
@@ -742,20 +674,16 @@ func main(){
 	fmt.Println(a,math.Pi,cmplx.Sqrt(-5+12i))
 	switch{
 		case a<50:
-			fmt.Println("a<50")	
+			fmt.Println("a<50")
 		case a<80:
-			fmt.Println("a<80")	
+			fmt.Println("a<80")
 		default:
 			fmt.Println("a>=80")
 	}
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-29 | Thursday</b></summary>
-
+#### 2026-01-29 | Thursday
 
 > 继续跟着go tour走一遍
 
@@ -764,9 +692,6 @@ func main(){
 - 每个case都是通道
 - 如果任意某个通道可以进行，它就执行，其他通道被忽略
 - 如果多个case都可以进行，则随机选择一个执行，否则执行default（如果有的话，没有则阻塞等待）
-
-<details>
-<summary><b>day10.go</b></summary>
 
 ```go
 package main
@@ -806,11 +731,8 @@ func main(){
 
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-01-30 | Friday</b></summary>
+#### 2026-01-30 | Friday
 
 # 接口
 
@@ -848,8 +770,6 @@ func (f File) Write(data string) {
     fmt.Println("Writing data:", data)
 }
 ```
-<details>
-<summary><b>day11.go</b></summary>
 
 ```go
 package main
@@ -900,7 +820,7 @@ func learn_interface(){
 
 	var shape1 Shape =new(Circle)//new 只能给类型分配零值内存，不能接受字面值
 	shape1.call()
-	
+
 	shape2:=&Circle{Radius:2}//和c不同,shape2是指针
 	shape2.name="shape2"
 	fmt.Println(shape2.Perimeter())
@@ -910,13 +830,10 @@ func main() {
 	learn_interface()
 }
 ```
-</details>
 
-</details>
+#### 2026-01-31 | Saturday
 
-<details><summary><b>2026-01-31 | Saturday</b></summary>
-
-# 把map当作集合使用 
+# 把map当作集合使用
 
 ```
 set := make(map[string]struct{})
@@ -1013,9 +930,6 @@ type State interface {
 }
 ```
 
-<details>
-<summary><b>day12.go</b></summary>
-
 ```go
 package main
 
@@ -1067,15 +981,8 @@ func main(){
 	learn_Stringer()
 }
 ```
-</details>
 
-</details>
-
-</details>
-
-<details open><summary><big><b> 2026-02</b></big></summary>
-
-<details><summary><b>2026-02-01 | Sunday</b></summary>
+#### 2026-02-01 | Sunday
 
 # 泛型
 
@@ -1148,9 +1055,6 @@ func SafeMax[T Number](slice []T) (T, error) {
 - panic:导致程序崩溃并输出堆栈信息
 - recover:捕获panic，从panic中恢复，必须在defer函数中调用
 
-<details>
-<summary><b>day1.go</b></summary>
-
 ```go
 package main
 
@@ -1176,7 +1080,7 @@ func (e*DivideError)Is(target error)bool{
 	return  ok
 }
 func learn_error(){
-	
+
 	err:=errors.New("this is an error")
 	fmt.Println(err)
 	wrap:=fmt.Errorf("error:%w",err)
@@ -1198,7 +1102,7 @@ func learn_error(){
 		fmt.Printf("%T\n",err)
 		return
 	}
-	
+
 	fmt.Println(ans)
 
 }
@@ -1215,11 +1119,8 @@ func main(){
 	learn_panic_recover()
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-02-02 | Monday</b></summary>
+#### 2026-02-02 | Monday
 
 # GMP
 - G：goroutine，待执行的任务
@@ -1246,12 +1147,9 @@ func main(){
 - RWMutex：多读单写
 - 推荐 Lock 后 defer Unlock
 
-
 # 文件处理
 
 ## os
-<details>
-<summary><b>day2.go</b></summary>
 
 ```go
 package main
@@ -1307,11 +1205,8 @@ func main(){
         learn_CreateFile()
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-02-03 | Tuesday</b></summary>
+#### 2026-02-03 | Tuesday
 
 # %
 - 余数的符号与被除数（左操作数）一致
@@ -1355,10 +1250,6 @@ fmt.Println(-5 % -2) // -1
 ## Split
 
 - 根据正则表达式分割字符串
-  
-
-<details>
-<summary><b>day3.go</b></summary>
 
 ```go
 package main
@@ -1398,11 +1289,8 @@ func main(){
 
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-02-04 | Wednesday</b></summary>
+#### 2026-02-04 | Wednesday
 
 # "继承"与多态的实现
 
@@ -1436,8 +1324,6 @@ var speaker Speaker
 speaker = &dog
 speaker.Speak() // 多态调用
 ```
-<details>
-<summary><b>day4.go</b></summary>
 
 ```go
 package main
@@ -1470,24 +1356,19 @@ func main() {
         Vehicle: Vehicle{Brand: "Honda"},
         Model:  "Civic",
     }
-    
+
     v.Start() // Toyota started
     c.Start() // Honda Civic car started
     c.Vehicle.Start() // Honda started
 }
 ```
-</details>
 
-</details>
+#### 2026-02-07 | Saturday
 
-<details><summary><b>2026-02-07 | Saturday</b></summary>
-
-# string 
+# string
 
 - 索引 (s[i]) → 底层表示（byte）
 - range → 语义层（字符 / rune）
-<details>
-<summary><b>day5.go</b></summary>
 
 ```go
 package main
@@ -1506,17 +1387,14 @@ func main(){
 	learn_rune_byte()
 }
 ```
-</details>
 
-</details>
-
-<details><summary><b>2026-02-08 | Sunday</b></summary>
+#### 2026-02-08 | Sunday
 
 # 坑
 
 - 左大括号 { 不能单独放一行
 - 简短声明的变量只能在函数内部使用
-  
+
 ```
 // 错误示例
 myvar := 1    // syntax error: non-declaration statement outside function body
@@ -1547,7 +1425,7 @@ func main() {
 ```
 
 - 不能使用简短声明来设置字段的值
-  
+
 ```
 // 错误示例
 type info struct {
@@ -1578,19 +1456,18 @@ func main() {
     fmt.Printf("info: %+v\n", data)
 }
 ```
-<details>
-<summary><b>day6.go</b></summary>
 
 ```go
 package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 func learn_Gin(){
 	router:=gin.Default()
 	router.GET("/ping",func(c*gin.Context){
-		c.JSON(200,gin.H{
+		c.JSON(http.StatusOK,gin.H{
 			"message":"pong",
 		})
 	})
@@ -1601,11 +1478,103 @@ func main(){
 
 }
 ```
-</details>
 
-</details>
+#### 2026-03-02 | Monday
 
-</details>
+# 坑
 
-</details>
+- 显式类型的变量无法使用 nil 来初始化
+
+nil 是 interface、function、pointer、map、slice 和 channel 类型变量的默认初始值
+
+```
+// 错误示例
+func main() {
+    var x = nil    // error: use of untyped nil
+    _ = x
+}
+// 正确示例
+func main() {
+    var x interface{} = nil
+    _ = x
+}
+```
+
+- 允许对值为 nil 的 slice 添加元素，但对值为 nil 的 map 添加元素则会造成运行时 panic
+
+```
+// map 错误示例
+func main() {
+    var m map[string]int
+    m["one"] = 1        // error: panic: assignment to entry in nil map
+    // m := make(map[string]int)// map 的正确声明，分配了实际的内存
+}
+// slice 正确示例
+func main() {
+    var s []int
+    s = append(s, 1)
+}
+```
+
+- 建 map 类型的变量时可以指定容量，但不能像 slice 一样使用 cap() 来检测分配空间的大小：
+
+```
+// 错误示例
+func main() {
+    m := make(map[string]int, 99)
+    println(cap(m))     // error: invalid argument m1 (type map[string]int) for cap
+}
+```
+
+- string 类型的变量值不能为 nil
+
+```
+// 错误示例
+func main() {
+    var s string = nil    // cannot use nil as type string in assignment
+    if s == nil {    // invalid operation: s == nil (mismatched types string and nil)
+        s = "default"
+    }
+}
+// 正确示例
+func main() {
+    var s string    // 字符串类型的零值是空串 ""
+    if s == "" {
+        s = "default"
+    }
+}
+```
+
+-  Array 类型的值作为函数参数
+
+在 C/C++ 中，数组（名）是指针。将数组作为参数传进函数时，相当于传递了数组内存地址的引用，在函数内部会改变该数组的值。
+
+在 Go 中，数组是值。作为参数传进函数时，传递的是数组的原始值拷贝，此时在函数内部是无法更新该数组的
+
+直接传递指向这个数组的指针类型:
+```
+// 传址会修改原数据
+func main() {
+    x := [3]int{1,2,3}
+
+    func(arr *[3]int) {
+        (*arr)[0] = 7
+        fmt.Println(arr)    // &[7 2 3]
+    }(&x)
+    fmt.Println(x)    // [7 2 3]
+}
+```
+
+直接使用 slice：即使函数内部得到的是 slice 的值拷贝，但依旧会更新 slice 的原始数据（底层 array）
+```
+// 会修改 slice 的底层 array，从而修改 slice
+func main() {
+    x := []int{1, 2, 3}
+    func(arr []int) {
+        arr[0] = 7
+        fmt.Println(x)    // [7 2 3]
+    }(x)
+    fmt.Println(x)    // [7 2 3]
+}
+```
 

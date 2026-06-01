@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <div class="markdown-body" v-html="renderedAbout"></div>
+        <MarkdownContent class="markdown-body" :source="aboutRaw" />
       </div>
 
       <ScrollSpySidebar class="about-aside" root-selector=".about-content" heading-selector="h2" />
@@ -39,15 +39,13 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { User, Message } from '@element-plus/icons-vue'
+import MarkdownContent from '../components/content/MarkdownContent.vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { renderMarkdown } from '../utils/markdown'
 import { siteConfig } from '../data/site/config'
 import aboutRaw from '../data/site/about.md?raw'
-
-const renderedAbout = renderMarkdown(aboutRaw)
 </script>
 
 <style scoped>

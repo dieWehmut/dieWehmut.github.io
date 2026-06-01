@@ -20,7 +20,11 @@ type ParsedDoc = {
   body: string
 }
 
-const rawDocs = import.meta.glob('./**/*.md', { eager: true, as: 'raw' }) as Record<string, string>
+const rawDocs = import.meta.glob('./**/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>
 
 function stripQuotes(value: string) {
   return value.replace(/^['"]|['"]$/g, '')

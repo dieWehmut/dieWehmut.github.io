@@ -25,35 +25,41 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { PriceTag, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { getPosts, getNotes } from '../data'
+import type { TagContentEntry } from '../types/content'
+import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 
 const route = useRoute()
 const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
 
-const posts = computed(() => {
-  const matchTag = (tags) => (tags || []).some((t) => t.toLowerCase() === tag.value.toLowerCase())
+const posts = computed<TagContentEntry[]>(() => {
+  const matchTag = (tags: string[]) => tags.some((t) => t.toLowerCase() === tag.value.toLowerCase())
   const matchedPosts = getPosts().filter((post) => matchTag(post.tags))
   const matchedNotes = getNotes()
     .filter((note) => matchTag(note.tags))
-    .map((note) => ({ id: note.id, title: note.title, date: note.date, tags: note.tags, summary: note.summary, _isNote: true }))
-  return [...matchedPosts, ...matchedNotes].sort((a, b) => Date.parse(b.date || '') - Date.parse(a.date || ''))
+    .map((note): TagContentEntry => ({
+      id: note.id,
+      title: note.title,
+      date: note.date,
+      tags: note.tags,
+      summary: note.summary,
+      _isNote: true,
+    }))
+  return [...matchedPosts, ...matchedNotes].sort((a, b) => getDateSortTimestamp(b.date) - getDateSortTimestamp(a.date))
 })
 
-function postUrl(post) {
+function postUrl(post: TagContentEntry): string {
   if (post._isNote) return `/note/${post.id}`
   return `/post/${post.id}`
 }
 
-function formattedDate(dateStr) {
-  if (!dateStr) return ''
-  const d = new Date(dateStr)
-  if (Number.isNaN(d.valueOf())) return dateStr
-  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
+function formattedDate(dateStr?: string): string {
+  return formatTimelineDate(dateStr)
 }
 </script>
 

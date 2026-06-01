@@ -5,7 +5,7 @@
       {{ formattedDate }}
     </time>
     <h2 v-if="note.title">{{ note.title }}</h2>
-    <div class="note-card__body markdown-body" v-html="renderedBody" />
+    <MarkdownContent class="note-card__body markdown-body" :source="note.body" />
   </article>
 </template>
 
@@ -13,7 +13,7 @@
 import { computed } from 'vue'
 import { Calendar } from '@element-plus/icons-vue'
 import type { NoteEntry } from '../../types/content'
-import { renderMarkdown } from '../../utils/markdown'
+import MarkdownContent from './MarkdownContent.vue'
 
 const props = defineProps<{ note: NoteEntry }>()
 
@@ -23,7 +23,6 @@ const formattedDate = computed(() => {
   return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
 })
 
-const renderedBody = computed(() => renderMarkdown(props.note.body))
 </script>
 
 <style scoped>

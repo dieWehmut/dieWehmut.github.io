@@ -1,14 +1,10 @@
 <template>
   <section class="archive-view page-surface">
     <div class="archive-view__main">
-      <PageHeading title="Archive" description="All posts grouped by year." :icon="Collection" />
+      <PageHeading title="Archive" :icon="Collection" />
 
-      <section v-for="group in archiveGroups" :key="group.year" class="archive-year">
-        <div class="archive-year__heading">
-          <h2>{{ group.year }}</h2>
-          <span>{{ group.posts.length }} posts</span>
-        </div>
-        <ArchivePostItem v-for="post in group.posts" :key="post.id" :post="post" />
+      <section class="archive-view__feed">
+        <FeedEntryCard v-for="post in posts" :key="post.id" :entry="postEntry(post)" />
       </section>
     </div>
 
@@ -16,15 +12,26 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { Collection } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
-import ArchivePostItem from '../components/content/ArchivePostItem.vue'
+import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { getArchiveGroups } from '../data'
+import { getPosts } from '../data'
+import type { ArchivePost } from '../types/content'
 
-const archiveGroups = computed(() => getArchiveGroups())
+const posts = computed(() => getPosts())
+
+function postEntry(post: ArchivePost) {
+  return {
+    title: post.title,
+    description: post.summary,
+    date: post.date,
+    tags: post.tags,
+    url: `/post/${post.id}`,
+  }
+}
 </script>
 
 <style scoped>
@@ -39,29 +46,8 @@ const archiveGroups = computed(() => getArchiveGroups())
   min-width: 0;
 }
 
-.archive-year + .archive-year {
-  margin-top: 42px;
-}
-
-.archive-year__heading {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  margin: 0;
-  color: var(--site-text);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 42px;
-}
-
-.archive-year__heading span {
-  padding: 5px 12px;
-  border-radius: 10px;
-  color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.08);
-  font-weight: 800;
+.archive-view__feed {
+  border-top: 1px solid var(--site-border);
+  margin-top: 8px;
 }
 </style>

@@ -16,14 +16,13 @@ import { computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import type { NoteEntry } from '../../types/content'
+import { formatTimelineShortDate } from '../../utils/date'
 
 const props = defineProps<{ note: NoteEntry }>()
 const router = useRouter()
 
 const shortDate = computed(() => {
-  const date = new Date(props.note.date)
-  if (Number.isNaN(date.valueOf())) return props.note.date
-  return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+  return formatTimelineShortDate(props.note.date)
 })
 
 function goToNote() {

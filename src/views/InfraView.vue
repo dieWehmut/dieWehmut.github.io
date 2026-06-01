@@ -1,6 +1,6 @@
 <template>
   <section class="infra-view page-surface">
-    <PageHeading class="infra-heading" title="Infra" description="Service endpoints monitoring and status overview." :icon="Cpu" />
+    <PageHeading class="infra-heading" title="Infra" :icon="Cpu" />
       <div class="infra-orbit" :style="{ '--node-count': String(servicePoints.length) }">
         <div class="infra-core" aria-label="Infra status summary">
           <img class="infra-core__orbit" :src="orbitImg" alt="" />
@@ -38,7 +38,10 @@
               </span>
               <span class="infra-node__text">
                 <strong>{{ point.item.name }}</strong>
-                <small>{{ formatDate(point.item.date) }}</small>
+                <time v-if="point.item.date" class="infra-node__date" :datetime="point.item.date">
+                  <el-icon class="infra-node__date-icon"><Calendar /></el-icon>
+                  {{ formatDate(point.item.date) }}
+                </time>
                 <em v-if="statusLabel(point.item.url)" :class="statusClass(point.item.url)">
                   {{ statusLabel(point.item.url) }}
                 </em>
@@ -55,7 +58,10 @@
             <div class="infra-mobile-item__info">
               <div class="infra-mobile-item__topline">
                 <h2>{{ item.name }}</h2>
-                <time v-if="item.date" :datetime="item.date">{{ formatDate(item.date) }}</time>
+                <time v-if="item.date" class="infra-mobile-item__date" :datetime="item.date">
+                  <el-icon class="infra-mobile-item__date-icon"><Calendar /></el-icon>
+                  {{ formatDate(item.date) }}
+                </time>
               </div>
               <p v-if="statusLabel(item.url)" :class="statusClass(item.url)">
                 {{ statusLabel(item.url) }}
@@ -70,7 +76,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
-import { Link, Cpu } from '@element-plus/icons-vue'
+import { Link, Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
@@ -399,10 +405,20 @@ function statusClass(url) {
   white-space: nowrap;
 }
 
-.infra-node__text small {
+.infra-node__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--site-muted);
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 800;
   white-space: nowrap;
+}
+
+.infra-node__date-icon {
+  width: 12px;
+  height: 12px;
+  font-size: 12px;
 }
 
 .infra-node__text em {
@@ -549,10 +565,19 @@ function statusClass(url) {
   color: var(--site-accent);
 }
 
-.infra-mobile-item time {
+.infra-mobile-item__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--site-muted);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
+}
+
+.infra-mobile-item__date-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
 }
 
 .infra-mobile-item p {

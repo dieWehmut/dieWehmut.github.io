@@ -17,15 +17,15 @@ button:active, a:active, a[href]:active, input[type="button"]:active, input[type
 /* Keep heart cursor on hoverable list items and all their descendants */
 .note-item,
 .archive-post,
+.feed-entry-card,
 .project-item,
 .friend-card,
-.home-view__item,
 .home-view__panel,
 .note-item *,
 .archive-post *,
+.feed-entry-card *,
 .project-item *,
 .friend-card *,
-.home-view__item *,
 .home-view__panel * {
   cursor: var(--cursor-default) !important;
 }

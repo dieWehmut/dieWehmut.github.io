@@ -1,0 +1,13 @@
+[
+  {
+    "id": "sample-capture",
+    "image": "/capture-assets/standalone/sample.jpg",
+    "title": "Sample standalone capture",
+    "summary": "Replace this placeholder entry with your own standalone image metadata.",
+    "tags": [
+      "capture"
+    ],
+    "standalone": true,
+    "hidden": true
+  }
+]

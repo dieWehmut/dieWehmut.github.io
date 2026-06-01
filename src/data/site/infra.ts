@@ -1,6 +1,7 @@
 import { ref } from 'vue'
+import type { InfraEntry } from '../../types/content'
 
-const initialInfra = [
+const initialInfra: InfraEntry[] = [
   {name: 'Server Status', key: 'hass', url: 'https://nezha.hc-dsw-nexus.me', date: '2026-04-10' },
   { name: 'PVE Controller', key: 'pve', url: 'https://pve.diesw.tech', date: '2026-04-03' },
   { name: 'GitLab Server', key: 'gitlab', url: 'https://git.diesw.tech', date: '2026-05-12' },
