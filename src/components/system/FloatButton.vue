@@ -187,7 +187,7 @@ function toggleTheme() {
 }
 
 .float-controls__settings {
-  bottom: 54px;
+  bottom: 50px;
   transition: bottom 200ms ease;
 }
 
@@ -208,27 +208,27 @@ function toggleTheme() {
 }
 
 .float-controls__opt-theme {
-  bottom: 108px;
+  bottom: 100px;
 }
 
 .float-controls.is-top-hidden .float-controls__opt-theme {
-  bottom: 54px;
+  bottom: 50px;
 }
 
 .float-controls__opt-language {
-  bottom: 162px;
+  bottom: 150px;
 }
 
 .float-controls.is-top-hidden .float-controls__opt-language {
-  bottom: 108px;
+  bottom: 100px;
 }
 
 .float-controls__opt-dynamic {
-  bottom: 216px;
+  bottom: 200px;
 }
 
 .float-controls.is-top-hidden .float-controls__opt-dynamic {
-  bottom: 162px;
+  bottom: 150px;
 }
 
 .float-controls__opt-dynamic.is-visible,
@@ -253,7 +253,7 @@ function toggleTheme() {
 .float-controls__langs {
   position: absolute;
   right: 54px;
-  bottom: 162px;
+  bottom: 150px;
   display: flex;
   gap: 10px;
   opacity: 0;
@@ -263,7 +263,7 @@ function toggleTheme() {
 }
 
 .float-controls.is-top-hidden .float-controls__langs {
-  bottom: 108px;
+  bottom: 100px;
 }
 
 .float-controls__langs.is-open {
@@ -288,14 +288,17 @@ function toggleTheme() {
 
   .float-controls__langs {
     right: 54px;
-    bottom: 162px;
-    width: 152px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    bottom: 150px;
+    display: grid;
+    grid-template-columns: repeat(3, 44px);
+    column-gap: 8px;
+    row-gap: 6px;
+    width: auto;
+    justify-content: end;
   }
 
   .float-controls.is-top-hidden .float-controls__langs {
-    bottom: 108px;
+    bottom: 100px;
   }
 }
 

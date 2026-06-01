@@ -11,6 +11,7 @@ dist
 dist-ssr
 *.local
 .vscode/
+public/capture-assets/
 # Environment variables
 .env
 .env.local

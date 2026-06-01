@@ -4,8 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "capture:sync": "node scripts/generate-capture.mjs",
+    "dev": "npm run capture:sync && vite",
+    "assets:push": "node scripts/sync-assets-repo.mjs",
+    "typecheck": "vue-tsc --noEmit",
+    "build": "npm run capture:sync && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

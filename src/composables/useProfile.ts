@@ -3,6 +3,24 @@ import { fetchWithCache } from '../utils/apiCache'
 import { getGitHubHeaders } from '../utils/github'
 import { siteConfig } from '../data/site/config'
 
+interface GitHubUserProfile {
+  avatar_url?: string
+  name?: string
+  login?: string
+  html_url?: string
+}
+
+interface GitHubCommit {
+  commit?: {
+    committer?: {
+      date?: string
+    }
+    author?: {
+      date?: string
+    }
+  }
+}
+
 const avatarUrl = ref(`https://github.com/${siteConfig.githubUser}.png`)
 const displayName = ref(siteConfig.githubUser)
 const lastUpdated = ref('2026-03-14')
@@ -24,7 +42,7 @@ function formatDate(d: string) {
 
 async function loadProfile() {
   try {
-    const data = await fetchWithCache(
+    const data = await fetchWithCache<GitHubUserProfile>(
       `https://api.github.com/users/${siteConfig.githubUser}`,
       { headers: getGitHubHeaders() },
       1000 * 60 * 60
@@ -38,7 +56,7 @@ async function loadProfile() {
 
 async function loadLatestCommit() {
   try {
-    const commits = await fetchWithCache(
+    const commits = await fetchWithCache<GitHubCommit[]>(
       `https://api.github.com/repos/${siteConfig.githubUser}/${siteConfig.githubRepo}/commits?per_page=1`,
       { headers: getGitHubHeaders() },
       1000 * 60 * 60

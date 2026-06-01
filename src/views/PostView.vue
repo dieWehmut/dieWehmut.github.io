@@ -3,7 +3,7 @@
     <div class="post-view__main">
       <div v-if="post" class="post-view__card">
           <h1 class="post-view__title">{{ post.title }}</h1>
-          <div v-if="post.body" class="post-view__body markdown-body" v-html="renderedBody" />
+          <MarkdownContent v-if="post.body" class="post-view__body markdown-body" :source="post.body" />
           <div v-if="post.date || post.tags?.length" class="post-view__meta-row">
             <time v-if="post.date" class="post-view__meta-date" :datetime="post.date"><el-icon class="post-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink
@@ -28,9 +28,10 @@
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
+import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts } from '../data'
-import { renderMarkdown } from '../utils/markdown'
+import { formatTimelineDate } from '../utils/date'
 
 const route = useRoute()
 
@@ -41,15 +42,9 @@ const post = computed(() => {
 
 const formattedDate = computed(() => {
   if (!post.value) return ''
-  const d = new Date(post.value.date)
-  if (Number.isNaN(d.valueOf())) return post.value.date
-  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
+  return formatTimelineDate(post.value.date)
 })
 
-const renderedBody = computed(() => {
-  if (!post.value?.body) return ''
-  return renderMarkdown(post.value.body)
-})
 </script>
 
 <style scoped>
@@ -318,4 +313,3 @@ const renderedBody = computed(() => {
   }
 }
 </style>
-

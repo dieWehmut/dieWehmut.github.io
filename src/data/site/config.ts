@@ -1,3 +1,5 @@
+import type { SiteConfig } from '../../types/content'
+
 /**
  * Site-wide personal configuration.
  * All personal / private data is centralized here.
@@ -5,7 +7,7 @@
  * needs to be modified.
  */
 
-export const siteConfig = {
+export const siteConfig: SiteConfig = {
   // --- Identity ---
   githubUser: 'dieWehmut',
   githubRepo: 'dieWehmut.github.io',

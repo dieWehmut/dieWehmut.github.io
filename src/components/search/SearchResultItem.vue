@@ -16,13 +16,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Connection, Cpu, Document, FolderOpened, Memo } from '@element-plus/icons-vue'
+import { Camera, Connection, Cpu, Document, FolderOpened, Memo } from '@element-plus/icons-vue'
 import type { SearchDocument } from '../../types/content'
 
 const props = defineProps<{ result: SearchDocument }>()
 
 const icon = computed(() => {
   if (props.result.type === 'note') return Memo
+  if (props.result.type === 'capture') return Camera
   if (props.result.type === 'friend') return Connection
   if (props.result.type === 'project') return FolderOpened
   if (props.result.type === 'infra') return Cpu

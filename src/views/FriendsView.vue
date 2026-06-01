@@ -1,6 +1,6 @@
 <template>
   <section class="page-surface">
-    <PageHeading title="Friends" description="Those written into this small corner of the web." :icon="Connection" />
+    <PageHeading title="Friends" :icon="Connection" />
 
     <div class="friends-grid">
       <FriendCard v-for="friend in friends" :key="friend.id" :friend="friend" />

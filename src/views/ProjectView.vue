@@ -1,7 +1,7 @@
 <template>
   <section class="project-view page-surface">
     <div class="project-view__main">
-      <PageHeading title="Project" description="Websites, games, apps, and tools grouped into one catalog." :icon="FolderOpened" />
+      <PageHeading title="Project" :icon="FolderOpened" />
 
       <section v-for="group in projectGroups" :key="group.key" class="project-group">
         <div class="project-group__heading">

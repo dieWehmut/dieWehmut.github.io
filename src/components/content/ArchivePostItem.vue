@@ -16,6 +16,7 @@ import { computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import type { ArchivePost } from '../../types/content'
+import { formatTimelineShortDate } from '../../utils/date'
 
 const props = defineProps<{ post: ArchivePost }>()
 const router = useRouter()
@@ -25,9 +26,7 @@ function goToPost() {
 }
 
 const shortDate = computed(() => {
-  const date = new Date(props.post.date)
-  if (Number.isNaN(date.valueOf())) return props.post.date
-  return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+  return formatTimelineShortDate(props.post.date)
 })
 </script>
 

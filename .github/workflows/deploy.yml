@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      DIESW_ASSETS_DIR: ${{ github.workspace }}/.cache/diesw-assets
       VITE_GISCUS_REPO: ${{ vars.VITE_GISCUS_REPO }}
       VITE_GISCUS_REPO_ID: ${{ vars.VITE_GISCUS_REPO_ID }}
       VITE_GISCUS_CATEGORY: ${{ vars.VITE_GISCUS_CATEGORY }}
@@ -36,6 +37,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Checkout assets repository
+        uses: actions/checkout@v4
+        with:
+          repository: dieWehmut/diesw-assets
+          token: ${{ secrets.DIESW_ASSETS_TOKEN }}
+          path: .cache/diesw-assets
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

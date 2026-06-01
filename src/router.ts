@@ -3,6 +3,7 @@ import { siteConfig } from './data/site/config'
 import HomeView from './views/HomeView.vue'
 import ArchiveView from './views/ArchiveView.vue'
 import NotesView from './views/NotesView.vue'
+import CaptureView from './views/CaptureView.vue'
 import NoteView from './views/NoteView.vue'
 import InfraView from './views/InfraView.vue'
 import ProjectView from './views/ProjectView.vue'
@@ -20,6 +21,7 @@ const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/archive', name: 'archive', component: ArchiveView },
   { path: '/notes', name: 'notes', component: NotesView },
+  { path: '/capture', name: 'capture', component: CaptureView },
   { path: '/infra', name: 'infra', component: InfraView, meta: { requiresInfra: true } },
   { path: '/project', name: 'project', component: ProjectView, meta: { requiresProject: true } },
   { path: '/tags', name: 'tags', component: TagsView },

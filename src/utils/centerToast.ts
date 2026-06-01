@@ -2,26 +2,36 @@ import { createApp } from 'vue'
 import CopyToast from '../components/system/CopyToast.vue'
 import i18n from '../i18n'
 
-export function showCenteredToast(messageOrKey, { type = 'success', duration = 2500 } = {}) {
+type ToastType = 'success' | 'error' | 'info' | 'warning'
+
+interface ToastOptions {
+  type?: ToastType
+  duration?: number
+}
+
+export function showCenteredToast(
+  messageOrKey: string,
+  { type = 'success', duration = 2500 }: ToastOptions = {}
+): void {
   try {
-    // resolve translation key if it exists in i18n
     let text = messageOrKey
     try {
-      if (typeof messageOrKey === 'string' && i18n && i18n.global && i18n.global.te(messageOrKey)) {
-        text = i18n.global.t(messageOrKey)
+      if (i18n?.global?.te(messageOrKey)) {
+        text = String(i18n.global.t(messageOrKey))
       }
-    } catch (e) {
-      // ignore translation errors and use raw message
-    }
+    } catch {}
 
-    // remove previous toast if present
     try {
       if (window.__centered_toast_app) {
-        try { window.__centered_toast_app.app.unmount() } catch(e) {}
-        try { window.__centered_toast_app.container.remove() } catch(e) {}
+        try {
+          window.__centered_toast_app.app.unmount()
+        } catch {}
+        try {
+          window.__centered_toast_app.container.remove()
+        } catch {}
         delete window.__centered_toast_app
       }
-    } catch (e) {}
+    } catch {}
 
     const container = document.createElement('div')
     container.id = 'centered-toast'
@@ -34,18 +44,21 @@ export function showCenteredToast(messageOrKey, { type = 'success', duration = 2
       onClose: () => {
         try {
           app.unmount()
-        } catch (e) {}
-        try { container.remove() } catch (e) {}
-        try { delete window.__centered_toast_app } catch (e) {}
-      }
+        } catch {}
+        try {
+          container.remove()
+        } catch {}
+        try {
+          delete window.__centered_toast_app
+        } catch {}
+      },
     })
+
     app.use(i18n)
     app.mount(container)
-
-    // keep reference so subsequent toasts can clear previous
     window.__centered_toast_app = { app, container }
-  } catch (e) {
-    console.error('showCenteredToast error', e)
+  } catch (error) {
+    console.error('showCenteredToast error', error)
   }
 }
 

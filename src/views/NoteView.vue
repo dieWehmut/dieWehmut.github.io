@@ -3,7 +3,7 @@
     <div class="note-view__main">
       <div v-if="note" class="note-view__card">
           <h1 class="note-view__title">{{ note.title }}</h1>
-          <div v-if="note.body" class="note-view__body markdown-body" v-html="renderedBody" />
+          <MarkdownContent v-if="note.body" class="note-view__body markdown-body" :source="note.body" />
           <div v-if="note.date || note.tags?.length" class="note-view__meta-row">
             <time v-if="note.date" class="note-view__meta-date" :datetime="note.date"><el-icon class="note-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink
@@ -28,9 +28,10 @@
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
+import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getNotes } from '../data'
-import { renderMarkdown } from '../utils/markdown'
+import { formatTimelineDate } from '../utils/date'
 
 const route = useRoute()
 
@@ -41,15 +42,9 @@ const note = computed(() => {
 
 const formattedDate = computed(() => {
   if (!note.value) return ''
-  const d = new Date(note.value.date)
-  if (Number.isNaN(d.valueOf())) return note.value.date
-  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
+  return formatTimelineDate(note.value.date)
 })
 
-const renderedBody = computed(() => {
-  if (!note.value?.body) return ''
-  return renderMarkdown(note.value.body)
-})
 </script>
 
 <style scoped>

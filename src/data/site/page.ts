@@ -1,6 +1,7 @@
 import { ref } from 'vue'
+import type { WebsiteEntry } from '../../types/content'
 
-export const pages = ref([
+export const pages = ref<WebsiteEntry[]>([
   {
     name: 'kotoba-hitomi',
     displayName: 'kotoba-hitomi',

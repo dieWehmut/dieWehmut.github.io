@@ -10,7 +10,7 @@
       <el-icon class="nav-menu__icon">
         <component :is="item.icon" />
       </el-icon>
-      <span>{{ t(item.labelKey) }}</span>
+      <span>{{ labelFor(item.labelKey, item.fallbackLabel) }}</span>
     </RouterLink>
   </nav>
 </template>
@@ -20,6 +20,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import {
+  Camera,
   Collection,
   Connection,
   Cpu,
@@ -37,18 +38,24 @@ defineEmits(['navigate'])
 const { t } = useI18n()
 
 const allNavItems = [
-  { name: 'home', labelKey: 'nav.home', to: '/', icon: House },
-  { name: 'archive', labelKey: 'nav.archive', to: '/archive', icon: Collection },
-  { name: 'notes', labelKey: 'nav.notes', to: '/notes', icon: Notebook },
-  { name: 'infra', labelKey: 'nav.infra', to: '/infra', icon: Cpu, enabled: siteConfig.enableInfra },
-  { name: 'project', labelKey: 'nav.project', to: '/project', icon: FolderOpened, enabled: siteConfig.enableProject },
-  { name: 'tags', labelKey: 'nav.tags', to: '/tags', icon: PriceTag },
-  { name: 'about', labelKey: 'nav.about', to: '/about', icon: User },
-  { name: 'friends', labelKey: 'nav.friends', to: '/friends', icon: Connection },
-  { name: 'search', labelKey: 'nav.search', to: '/search', icon: Search },
+  { name: 'home', labelKey: 'nav.home', fallbackLabel: 'Home', to: '/', icon: House },
+  { name: 'archive', labelKey: 'nav.archive', fallbackLabel: 'Archive', to: '/archive', icon: Collection },
+  { name: 'notes', labelKey: 'nav.notes', fallbackLabel: 'Notes', to: '/notes', icon: Notebook },
+  { name: 'capture', labelKey: 'nav.capture', fallbackLabel: 'Capture', to: '/capture', icon: Camera },
+  { name: 'infra', labelKey: 'nav.infra', fallbackLabel: 'Infra', to: '/infra', icon: Cpu, enabled: siteConfig.enableInfra },
+  { name: 'project', labelKey: 'nav.project', fallbackLabel: 'Project', to: '/project', icon: FolderOpened, enabled: siteConfig.enableProject },
+  { name: 'tags', labelKey: 'nav.tags', fallbackLabel: 'Tags', to: '/tags', icon: PriceTag },
+  { name: 'about', labelKey: 'nav.about', fallbackLabel: 'About', to: '/about', icon: User },
+  { name: 'friends', labelKey: 'nav.friends', fallbackLabel: 'Friends', to: '/friends', icon: Connection },
+  { name: 'search', labelKey: 'nav.search', fallbackLabel: 'Search', to: '/search', icon: Search },
 ]
 
 const navItems = computed(() => allNavItems.filter((item) => item.enabled !== false))
+
+function labelFor(key, fallbackLabel) {
+  const value = t(key)
+  return value === key ? fallbackLabel : value
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <section class="not-found page-surface">
-    <PageHeading title="Not Found" description="This route is not part of the current site map." :icon="Warning" />
+    <PageHeading title="Not Found" :icon="Warning" />
     <RouterLink class="not-found__link" to="/">Return home</RouterLink>
   </section>
 </template>

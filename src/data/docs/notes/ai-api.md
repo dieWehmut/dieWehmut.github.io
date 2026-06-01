@@ -2,7 +2,7 @@
 
 title: 中转 Claude Code / Codex 配置
 date: 2026-05-18
-tags: [API, Codex, Claude, Deepseek, AgentRouter, OpenAI]
+tags: [API, Codex, Claude, Deepseek, AgentRouter, OpenAI,Anthropic]
 ---
 
 ## Claude Code配置目录
@@ -46,7 +46,8 @@ C:\Users\你的用户名\.codex\auth.json
     "ANTHROPIC_AUTH_TOKEN": "sk-xx",
     "ANTHROPIC_API_KEY": "sk-xx"
   },
-  "model": "opus[1m]"
+  "model": "claude-opus-4-6",
+  "effortLevel": "max"
 }
 ```
 
@@ -56,22 +57,17 @@ C:\Users\你的用户名\.codex\auth.json
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
-
     "ANTHROPIC_AUTH_TOKEN": "sk-xx",
     "ANTHROPIC_API_KEY": "sk-xx",
-
     "ANTHROPIC_MODEL": "deepseek-v4-pro[1m]",
-
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro[1m]",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-
-    "ANTHROPIC_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-pro[1m]",
+    "ANTHROPIC_CODE_SUBAGENT_MODEL": "deepseek-v4-pro[1m]",
     "ANTHROPIC_CODE_EFFORT_LEVEL": "max"
   },
-
   "model": "deepseek-v4-pro[1m]",
-  "effortLevel": "high"
+  "effortLevel": "xhigh"
 }
 ```
 
@@ -82,17 +78,17 @@ model = "gpt-5.5"
 
 model_provider = "cm"
 
-review_model = "gpt-5.3-codex"
+review_model = "gpt-5.5"
 
 personality = "none"
 
 model_reasoning_effort = "xhigh"
 
-plan_mode_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "xhigh"
 
 model_reasoning_summary = "detailed"
 
-model_verbosity = "medium"
+model_verbosity = "high"
 
 model_supports_reasoning_summaries = true
 
@@ -123,6 +119,7 @@ name = "OpenAI"
 base_url = "https://your-api.example.com"
 
 wire_api = "responses"
+
 ```
 
 ```json

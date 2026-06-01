@@ -1,14 +1,10 @@
 <template>
   <section class="notes-view page-surface">
     <div class="notes-view__main">
-      <PageHeading title="Notes" description="Short dated notes and operational reminders." :icon="Notebook" />
+      <PageHeading title="Notes" :icon="Notebook" />
 
-      <section v-for="group in noteGroups" :key="group.year" class="notes-year">
-        <div class="notes-year__heading">
-          <h2>{{ group.year }}</h2>
-          <span>{{ group.notes.length }} notes</span>
-        </div>
-        <NoteItem v-for="note in group.notes" :key="note.id" :note="note" />
+      <section class="notes-view__feed">
+        <FeedEntryCard v-for="note in notes" :key="note.id" :entry="noteEntry(note)" />
       </section>
     </div>
 
@@ -16,15 +12,26 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { Notebook } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
-import NoteItem from '../components/content/NoteItem.vue'
+import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { getNoteGroups } from '../data'
+import { getNotes } from '../data'
+import type { NoteEntry } from '../types/content'
 
-const noteGroups = computed(() => getNoteGroups())
+const notes = computed(() => getNotes())
+
+function noteEntry(note: NoteEntry) {
+  return {
+    title: note.title,
+    description: note.summary,
+    date: note.date,
+    tags: note.tags,
+    url: `/note/${note.id}`,
+  }
+}
 </script>
 
 <style scoped>
@@ -39,29 +46,8 @@ const noteGroups = computed(() => getNoteGroups())
   min-width: 0;
 }
 
-.notes-year + .notes-year {
-  margin-top: 42px;
-}
-
-.notes-year__heading {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  margin: 0;
-  color: var(--site-text);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 42px;
-}
-
-.notes-year__heading span {
-  padding: 5px 12px;
-  border-radius: 10px;
-  color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.08);
-  font-weight: 800;
+.notes-view__feed {
+  border-top: 1px solid var(--site-border);
+  margin-top: 8px;
 }
 </style>
