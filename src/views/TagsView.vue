@@ -33,6 +33,14 @@
           </h2>
           <span>x {{ group.count }}</span>
         </div>
+        <div v-if="group.captures?.length" class="tag-card__captures">
+          <CaptureAssetCard
+            v-for="capture in group.captures.slice(0, 2)"
+            :key="capture.id"
+            :asset="capture"
+            @preview="openCapturePreview(group.captures, capture)"
+          />
+        </div>
         <ul>
           <li v-for="post in group.posts.slice(0, 5)" :key="post.id">
             <RouterLink :to="`/archive#${post.id}`">{{ post.title }}</RouterLink>
@@ -44,13 +52,18 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
+import CaptureAssetCard from '../components/capture/CaptureAssetCard.vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { getTagGroups } from '../data'
+import { openImagePreviewGallery } from '../utils/imagePreview'
 
-const tagGroups = computed(() => getTagGroups())
+const captureTagCounts = ref(new Map())
+const captureTagPreviews = ref(new Map())
+
+const tagGroups = computed(() => mergeCaptureTags(getTagGroups()))
 const cloudPalette = [
   '#2dd4bf',
   '#ff5f8a',
@@ -128,20 +141,59 @@ const cloudTags = computed(() => {
     }
   })
 })
+
+function mergeCaptureTags(baseGroups) {
+  const byTag = new Map(baseGroups.map((group) => [group.tag, {
+    ...group,
+    postCount: group.count,
+    captureCount: 0,
+    captures: captureTagPreviews.value.get(group.tag) || [],
+  }]))
+
+  for (const [tag, count] of captureTagCounts.value.entries()) {
+    const group = byTag.get(tag) || {
+      tag,
+      posts: [],
+      count: 0,
+      postCount: 0,
+      captureCount: 0,
+      captures: [],
+    }
+    group.captureCount = count
+    group.captures = captureTagPreviews.value.get(tag) || []
+    group.count = (group.postCount || group.posts.length) + count
+    byTag.set(tag, group)
+  }
+
+  return Array.from(byTag.values()).sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
+}
+
+function openCapturePreview(captures, capture) {
+  openImagePreviewGallery(
+    captures.map((item) => ({ src: item.image, alt: item.title || item.tags?.join(', ') || '' })),
+    captures.findIndex((item) => item.id === capture.id)
+  )
+}
+
+onMounted(async () => {
+  const { getCaptureTagCounts, getCaptureTagPreviews } = await import('../data/capture')
+  captureTagCounts.value = getCaptureTagCounts()
+  captureTagPreviews.value = getCaptureTagPreviews(2)
+})
 </script>
 
 <style scoped>
 .tag-view {
-  --tag-accent: #22c7b9;
-  --tag-accent-soft: rgba(34, 199, 185, 0.18);
-  --tag-accent-muted: rgba(34, 199, 185, 0.08);
+  --tag-accent: var(--site-accent);
+  --tag-accent-soft: rgba(31, 196, 31, 0.18);
+  --tag-accent-muted: rgba(31, 196, 31, 0.08);
   --tag-border: rgba(255, 255, 255, 0.08);
 }
 
 :global([data-theme="light"]) .tag-view {
-  --tag-accent: #1aa59c;
-  --tag-accent-soft: rgba(26, 165, 156, 0.14);
-  --tag-accent-muted: rgba(26, 165, 156, 0.06);
+  --tag-accent: var(--site-accent);
+  --tag-accent-soft: rgba(31, 196, 31, 0.14);
+  --tag-accent-muted: rgba(31, 196, 31, 0.06);
   --tag-border: rgba(0, 0, 0, 0.1);
 }
 
@@ -246,6 +298,12 @@ ul {
   line-height: 1.65;
   font-size: 16px;
   list-style: none;
+}
+
+.tag-card__captures {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 li {

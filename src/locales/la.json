@@ -24,7 +24,8 @@
     "games": "Ludi",
     "apps": "Applicationes",
     "files": "Fasciculi",
-    "tools": "Instrumenta"
+    "tools": "Instrumenta",
+    "capture": "Captura"
   },
   "common": {
     "totalFormat": "Total {count} elementa",
@@ -81,5 +82,22 @@
     "unreachable": "Inaccessibilis",
     "highLatency": "Mora longa",
     "timeout": "Tempus excedit"
+  },
+  "capture": {
+    "title": "Captura",
+    "empty": "Nullae imagines capturae inventae.",
+    "editor": "Editor",
+    "localDev": "Editio localis",
+    "editorDisabled": "Inhabilis",
+    "editorUnavailable": "Editor non praesto",
+    "uploadImage": "Imaginem onerare",
+    "deleteImage": "Imaginem delere",
+    "confirmDelete": "{title} delere?",
+    "deleteDialogTitle": "Imaginem delere",
+    "cancelDelete": "Relinque",
+    "confirmDeleteAction": "Delere",
+    "loadMore": "Plura onerare",
+    "uploadFailed": "Oneratio defecit.",
+    "deleteFailed": "Deletio defecit."
   }
 }

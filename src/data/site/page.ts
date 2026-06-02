@@ -51,13 +51,6 @@ export const pages = ref<WebsiteEntry[]>([
     date: '2025-11-13',
     url: 'https://music-converter.hc-dsw-nexus.me',
   },
-  {
-    name: 'monogatari',
-    displayName: 'monogatari',
-    repoUrl: 'https://github.com/dieWehmut/monogatari',
-    date: '2026-03-14',
-    url: 'https://monogatari.diesw.tech',
-  },
 ])
 
 export default pages

@@ -24,7 +24,8 @@
     "games": "Spiele",
     "apps": "Apps",
     "files": "Dateien",
-    "tools": "Werkzeuge"
+    "tools": "Werkzeuge",
+    "capture": "Capture"
   },
   "common": {
     "totalFormat": "Insgesamt {count} Elemente",
@@ -81,5 +82,22 @@
     "unreachable": "Nicht erreichbar",
     "highLatency": "Hohe Latenz",
     "timeout": "Zeitüberschreitung"
+  },
+  "capture": {
+    "title": "Capture",
+    "empty": "Keine Capture-Bilder gefunden.",
+    "editor": "Editor",
+    "localDev": "Lokale Entwicklung aktiv",
+    "editorDisabled": "Deaktiviert",
+    "editorUnavailable": "Editor nicht verfügbar",
+    "uploadImage": "Bild hochladen",
+    "deleteImage": "Bild löschen",
+    "confirmDelete": "{title} löschen?",
+    "deleteDialogTitle": "Bild löschen",
+    "cancelDelete": "Abbrechen",
+    "confirmDeleteAction": "Löschen",
+    "loadMore": "Mehr laden",
+    "uploadFailed": "Upload fehlgeschlagen.",
+    "deleteFailed": "Löschen fehlgeschlagen."
   }
 }

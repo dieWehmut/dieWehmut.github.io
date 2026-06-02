@@ -24,7 +24,8 @@
     "games": "ゲーム",
     "apps": "アプリ",
     "files": "ファイル",
-    "tools": "ツール"
+    "tools": "ツール",
+    "capture": "キャプチャ"
   },
   "common": {
     "totalFormat": "合計 {count} 項目",
@@ -81,5 +82,22 @@
     "unreachable": "到達不能",
     "highLatency": "高遅延",
     "timeout": "タイムアウト"
+  },
+  "capture": {
+    "title": "キャプチャ",
+    "empty": "キャプチャ画像はまだありません。",
+    "editor": "編集",
+    "localDev": "ローカル開発で編集可能",
+    "editorDisabled": "無効",
+    "editorUnavailable": "編集不可",
+    "uploadImage": "画像をアップロード",
+    "deleteImage": "画像を削除",
+    "confirmDelete": "{title} を削除しますか？",
+    "deleteDialogTitle": "画像を削除",
+    "cancelDelete": "キャンセル",
+    "confirmDeleteAction": "削除",
+    "loadMore": "さらに読み込む",
+    "uploadFailed": "アップロードに失敗しました。",
+    "deleteFailed": "削除に失敗しました。"
   }
 }

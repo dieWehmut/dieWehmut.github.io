@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "capture:sync": "node scripts/generate-capture.mjs",
-    "dev": "npm run capture:sync && vite",
+    "dev": "pnpm run capture:sync && vite",
     "assets:push": "node scripts/sync-assets-repo.mjs",
     "typecheck": "vue-tsc --noEmit",
-    "build": "npm run capture:sync && vite build",
+    "build": "pnpm run capture:sync && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

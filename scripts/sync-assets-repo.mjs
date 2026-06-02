@@ -6,6 +6,43 @@ import process from 'node:process'
 const rootDir = process.cwd()
 const defaultAssetsDir = path.resolve(rootDir, '..', 'diesw-assets')
 const assetsDir = path.resolve(rootDir, process.env.DIESW_ASSETS_DIR?.trim() || defaultAssetsDir)
+const docsDir = path.join(rootDir, 'src', 'data', 'docs')
+
+function ensureDir(dirPath) {
+  fs.mkdirSync(dirPath, { recursive: true })
+}
+
+function walkFiles(dirPath) {
+  if (!fs.existsSync(dirPath)) return []
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true })
+  const files = []
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name)
+    if (entry.isDirectory()) {
+      files.push(...walkFiles(fullPath))
+      continue
+    }
+    if (entry.isFile()) files.push(fullPath)
+  }
+  return files
+}
+
+function isMarkdown(filePath) {
+  return filePath.toLowerCase().endsWith('.md')
+}
+
+function mirrorDocsImagesToAssetsRepo() {
+  const targetDocsDir = path.join(assetsDir, 'docs')
+  fs.rmSync(targetDocsDir, { recursive: true, force: true })
+  const docFiles = walkFiles(docsDir)
+  for (const filePath of docFiles) {
+    if (isMarkdown(filePath)) continue
+    const relativePath = path.relative(docsDir, filePath)
+    const destinationPath = path.join(targetDocsDir, relativePath)
+    ensureDir(path.dirname(destinationPath))
+    fs.copyFileSync(filePath, destinationPath)
+  }
+}
 
 function fail(message) {
   console.error(message)
@@ -35,6 +72,8 @@ if (!fs.existsSync(assetsDir)) {
 if (!fs.existsSync(path.join(assetsDir, '.git'))) {
   fail(`Assets directory is not a git repository: ${assetsDir}`)
 }
+
+mirrorDocsImagesToAssetsRepo()
 
 const porcelain = runGit(['status', '--porcelain'], { cwd: assetsDir, capture: true })
 if (!porcelain) {

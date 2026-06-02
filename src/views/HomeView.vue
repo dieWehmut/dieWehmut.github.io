@@ -14,6 +14,10 @@
           <span>Infra</span>
           <strong>{{ infraCount }}</strong>
         </RouterLink>
+        <RouterLink class="home-view__panel" to="/capture">
+          <span>Capture</span>
+          <strong>{{ captureCount ?? '...' }}</strong>
+        </RouterLink>
         <RouterLink v-if="siteConfig.enableProject" class="home-view__panel" to="/project">
           <span>Project</span>
           <strong>{{ projectCount }}</strong>
@@ -39,7 +43,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { useProfile } from '../composables/useProfile'
@@ -56,6 +60,7 @@ const projectCount = computed(() => {
 const postsCount = computed(() => getPosts().length)
 const notesCount = computed(() => getNotes().length)
 const tagsCount = computed(() => getTagGroups().length)
+const captureCount = ref(null)
 const { lastUpdated } = useProfile()
 
 function timestamp(date) {
@@ -86,6 +91,11 @@ const feedItems = computed(() => {
   return [...postItems, ...noteItems]
     .sort((a, b) => timestamp(b.date) - timestamp(a.date))
     .slice(0, 20)
+})
+
+onMounted(async () => {
+  const { getCaptureAssets } = await import('../data/capture')
+  captureCount.value = getCaptureAssets().length
 })
 </script>
 

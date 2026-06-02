@@ -9,6 +9,7 @@ export interface ArchivePost {
   tags: string[]
   summary: string
   body?: string
+  assetPaths?: string[]
 }
 
 export interface NoteEntry {
@@ -18,6 +19,7 @@ export interface NoteEntry {
   tags: string[]
   summary: string
   body: string
+  assetPaths?: string[]
 }
 
 export interface CaptureSourceRef {
@@ -30,7 +32,7 @@ export interface CaptureSourceRef {
 export interface CaptureAsset {
   id: string
   image: string
-  title: string
+  title?: string
   date?: string
   tags: string[]
   summary?: string
@@ -146,7 +148,10 @@ export interface WebsiteEntry {
 export interface TagGroup {
   tag: string
   posts: ArchivePost[]
+  captures?: CaptureAsset[]
   count: number
+  postCount?: number
+  captureCount?: number
 }
 
 export interface NoteGroup {

@@ -6,7 +6,7 @@
     "hint": "搜尋 ..."
   },
   "sidebar": {
-     "lastUpdated": "最近 commit：",
+    "lastUpdated": "最近 commit：",
     "followers": "{count} 個關注者"
   },
   "nav": {
@@ -24,7 +24,8 @@
     "games": "遊戲",
     "apps": "應用",
     "files": "文件",
-    "tools": "工具"
+    "tools": "工具",
+    "capture": "圖集"
   },
   "common": {
     "totalFormat": "共 {count} 項",
@@ -81,5 +82,22 @@
     "unreachable": "不可達",
     "highLatency": "高延遲",
     "timeout": "逾時"
+  },
+  "capture": {
+    "title": "圖集",
+    "empty": "暫無圖集資源。",
+    "editor": "編輯",
+    "localDev": "本機開發可編輯",
+    "editorDisabled": "已停用",
+    "editorUnavailable": "編輯不可用",
+    "uploadImage": "上傳圖片",
+    "deleteImage": "刪除圖片",
+    "confirmDelete": "刪除 {title}？",
+    "deleteDialogTitle": "刪除圖片",
+    "cancelDelete": "取消",
+    "confirmDeleteAction": "刪除",
+    "loadMore": "載入更多",
+    "uploadFailed": "上傳失敗。",
+    "deleteFailed": "刪除失敗。"
   }
 }

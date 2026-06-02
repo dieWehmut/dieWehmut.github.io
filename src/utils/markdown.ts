@@ -1,6 +1,7 @@
 import { Marked } from 'marked'
 import hljs from 'highlight.js'
 import markedKatex from 'marked-katex-extension'
+import { openImagePreviewGallery } from './imagePreview'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -13,8 +14,10 @@ const GLOBAL_ALLOWED_ATTRS = new Set(['class', 'id', 'title', 'lang', 'dir', 'ar
 const PER_TAG_ALLOWED_ATTRS: Record<string, Set<string>> = {
   a: new Set(['href', 'target', 'rel']),
   button: new Set(['type', 'data-copy-code']),
-  img: new Set(['src', 'alt', 'width', 'height', 'loading']),
+  img: new Set(['src', 'alt', 'width', 'height', 'loading', 'decoding']),
 }
+const MARKDOWN_CACHE_LIMIT = 24
+const renderedMarkdownCache = new Map<string, string>()
 
 function escapeHtml(value: string): string {
   return value
@@ -85,19 +88,23 @@ const marked = new Marked({
   breaks: false,
   renderer: {
     code({ text, lang }) {
-      const validLang = lang && hljs.getLanguage(lang) ? lang : ''
-      let highlighted: string
-      if (validLang) {
-        highlighted = hljs.highlight(text, { language: validLang }).value
-      } else {
-        highlighted = hljs.highlightAuto(text).value
-      }
+      const requestedLang = (lang || '').trim().split(/\s+/)[0]
+      const validLang = requestedLang && hljs.getLanguage(requestedLang) ? requestedLang : ''
+      const highlighted = validLang
+        ? hljs.highlight(text, { language: validLang }).value
+        : escapeHtml(text)
       const langClass = validLang ? ` language-${validLang}` : ''
       const langLabel = validLang || ''
       const headerHtml = langLabel
         ? `<div class="md-code-header"><span class="md-code-lang">${escapeHtml(langLabel)}</span><button class="md-code-copy" type="button" data-copy-code>Copy</button></div>`
         : `<div class="md-code-header"><span class="md-code-lang"></span><button class="md-code-copy" type="button" data-copy-code>Copy</button></div>`
       return `<div class="md-code-block">${headerHtml}<pre><code class="hljs${langClass}">${highlighted}</code></pre></div>`
+    },
+    image({ href, title, text }) {
+      const src = escapeHtml(href || '')
+      const alt = escapeHtml(text || '')
+      const titleAttr = title ? ` title="${escapeHtml(title)}"` : ''
+      return `<img src="${src}" alt="${alt}"${titleAttr} loading="lazy" decoding="async">`
     },
     heading({ tokens, depth }) {
       const text = this.parser.parseInline(tokens)
@@ -128,7 +135,18 @@ marked.use(markedKatex({
 
 export function renderMarkdown(source: string): string {
   if (!source) return ''
-  return sanitizeHtml(marked.parse(source) as string)
+  const cached = renderedMarkdownCache.get(source)
+  if (cached !== undefined) return cached
+
+  const rendered = sanitizeHtml(marked.parse(source) as string)
+  renderedMarkdownCache.set(source, rendered)
+
+  if (renderedMarkdownCache.size > MARKDOWN_CACHE_LIMIT) {
+    const oldestKey = renderedMarkdownCache.keys().next().value
+    if (oldestKey !== undefined) renderedMarkdownCache.delete(oldestKey)
+  }
+
+  return rendered
 }
 
 export function bindMarkdownInteractions(root: ParentNode | null | undefined): () => void {
@@ -151,6 +169,16 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   const onClick = async (event: Event) => {
     const target = event.target
     if (!(target instanceof HTMLElement)) return
+
+    const image = target.closest<HTMLImageElement>('img')
+    if (image?.src) {
+      event.preventDefault()
+      const images = Array.from(root.querySelectorAll<HTMLImageElement>('img'))
+        .filter((item) => item.src)
+        .map((item) => ({ src: item.src, alt: item.alt }))
+      openImagePreviewGallery(images, images.findIndex((item) => item.src === image.src))
+      return
+    }
 
     const button = target.closest<HTMLElement>('[data-copy-code]')
     if (!button) return

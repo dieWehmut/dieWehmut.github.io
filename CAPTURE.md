@@ -14,19 +14,24 @@ Override the location with:
 DIESW_ASSETS_DIR=/absolute/path/to/diesw-assets
 ```
 
-## Markdown image references
+## Markdown image sources
 
-To include a note or post image in the `Capture` page, reference it with a site path:
+For note and post images, place the image file next to the markdown file inside `src/data/docs/...`.
 
-```md
-![diagram](/capture-assets/notes/ai-api/diagram.png)
-```
-
-The source file must exist in the private asset repository at:
+Example:
 
 ```text
-diesw-assets/notes/ai-api/diagram.png
+src/data/docs/notes/ai-api.md
+src/data/docs/notes/diagram.png
 ```
+
+Then reference it from markdown with a normal relative path:
+
+```md
+![diagram](./diagram.png)
+```
+
+During `dev` and `build`, the project rewrites that reference to a public path under `/capture-assets/docs/...` and copies the actual file into `public/capture-assets/docs/...`.
 
 ## Standalone images
 
@@ -72,6 +77,14 @@ You can also push the asset repository manually with:
 ```bash
 pnpm assets:push
 ```
+
+Before that push, the sync script mirrors all non-markdown files from `src/data/docs/**` into:
+
+```text
+diesw-assets/docs/**
+```
+
+That keeps local markdown images ignored in the main repository while still publishing them into the private asset repository.
 
 ## CI setup
 
