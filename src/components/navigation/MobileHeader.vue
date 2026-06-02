@@ -5,11 +5,16 @@
         <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
       </svg>
     </button>
+    <button class="mobile-header__toc" type="button" aria-label="Open page timeline" @click="$emit('toggle-toc')">
+      <el-icon><Calendar /></el-icon>
+    </button>
   </header>
 </template>
 
 <script setup>
-defineEmits(['toggle-menu'])
+import { Calendar } from '@element-plus/icons-vue'
+
+defineEmits(['toggle-menu', 'toggle-toc'])
 </script>
 
 <style scoped>
@@ -28,7 +33,8 @@ defineEmits(['toggle-menu'])
   backdrop-filter: blur(12px);
 }
 
-.mobile-header__menu {
+.mobile-header__menu,
+.mobile-header__toc {
   width: 40px;
   height: 40px;
   display: inline-flex;
@@ -38,6 +44,10 @@ defineEmits(['toggle-menu'])
   border-radius: 8px;
   color: var(--site-text);
   background: transparent;
+}
+
+.mobile-header__toc {
+  font-size: 21px;
 }
 
 @media (max-width: 900px) {

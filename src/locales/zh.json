@@ -23,7 +23,8 @@
     "services": "服务",
     "games": "游戏",
     "apps": "应用",
-    "tools": "工具"
+    "tools": "工具",
+    "capture": "图集"
   },
   "common": {
     "totalFormat": "共 {count} 项",
@@ -78,5 +79,22 @@
     "unreachable": "不可达",
     "highLatency": "高延迟",
     "timeout": "超时"
+  },
+  "capture": {
+    "title": "图集",
+    "empty": "暂无图集资源。",
+    "editor": "编辑",
+    "localDev": "本地开发可编辑",
+    "editorDisabled": "已禁用",
+    "editorUnavailable": "编辑不可用",
+    "uploadImage": "上传图片",
+    "deleteImage": "删除图片",
+    "confirmDelete": "删除 {title}？",
+    "deleteDialogTitle": "删除图片",
+    "cancelDelete": "取消",
+    "confirmDeleteAction": "删除",
+    "loadMore": "加载更多",
+    "uploadFailed": "上传失败。",
+    "deleteFailed": "删除失败。"
   }
 }

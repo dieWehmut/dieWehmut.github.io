@@ -1,12 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+
 const rootDir = process.cwd()
 const docsDir = path.join(rootDir, 'src', 'data', 'docs')
 const manifestPath = path.join(rootDir, 'src', 'data', 'capture', 'manifest.json')
 const generatedPath = path.join(rootDir, 'src', 'data', 'capture', 'generated.ts')
 const publicCaptureDir = path.join(rootDir, 'public', 'capture-assets')
+const publicDocsDir = path.join(publicCaptureDir, 'docs')
+const publicStandaloneDir = path.join(publicCaptureDir, 'standalone')
+const publicLocalDir = path.join(publicCaptureDir, 'local')
 const captureUrlPrefix = '/capture-assets/'
+const preservedAssetPrefixes = [`${captureUrlPrefix}standalone/`, `${captureUrlPrefix}local/`]
 
 function toPosix(value) {
   return value.split(path.sep).join('/')
@@ -80,24 +85,41 @@ function docIdFromPath(filePath) {
   return path.basename(filePath, path.extname(filePath))
 }
 
-function parseImages(content) {
+function normalizeDocAssetUrl(docFilePath, assetPath) {
+  if (!assetPath || /^(?:[a-z]+:)?\/\//i.test(assetPath) || assetPath.startsWith('data:')) return assetPath
+  if (assetPath.startsWith(captureUrlPrefix)) return assetPath
+
+  const docsRelativeDir = path.dirname(path.relative(docsDir, docFilePath))
+  const resolved = path.normalize(path.join(docsRelativeDir, assetPath))
+  return `${captureUrlPrefix}docs/${toPosix(resolved)}`
+}
+
+function captureAssetRelativePath(src) {
+  return src.slice(captureUrlPrefix.length)
+}
+
+function parseImages(docFilePath, content) {
   const images = []
   const markdownPattern = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g
   const htmlPattern = /<img\b[^>]*src=['"]([^'"]+)['"][^>]*alt=['"]([^'"]*)['"][^>]*>|<img\b[^>]*alt=['"]([^'"]*)['"][^>]*src=['"]([^'"]+)['"][^>]*>/gi
 
   let match
   while ((match = markdownPattern.exec(content)) !== null) {
+    const src = normalizeDocAssetUrl(docFilePath, match[2].trim())
     images.push({
-      src: match[2].trim(),
+      src,
       alt: match[1].trim(),
     })
   }
 
   while ((match = htmlPattern.exec(content)) !== null) {
-    const src = (match[1] || match[4] || '').trim()
+    const rawSrc = (match[1] || match[4] || '').trim()
     const alt = (match[2] || match[3] || '').trim()
-    if (!src) continue
-    images.push({ src, alt })
+    if (!rawSrc) continue
+    images.push({
+      src: normalizeDocAssetUrl(docFilePath, rawSrc),
+      alt,
+    })
   }
 
   return images
@@ -107,22 +129,20 @@ function isCaptureAssetUrl(src) {
   return src.startsWith(captureUrlPrefix)
 }
 
-function relativeAssetPathFromUrl(src) {
-  return src.slice(captureUrlPrefix.length)
-}
-
-function defaultTitleFromAsset(assetPath, fallbackPrefix) {
-  const base = path.basename(assetPath, path.extname(assetPath)).replace(/[-_]+/g, ' ').trim()
-  if (!base) return fallbackPrefix
-  return base.replace(/\b\w/g, (char) => char.toUpperCase())
-}
-
 function sortByDateDesc(items) {
   return items.slice().sort((a, b) => {
-    const aTime = Date.parse(a.date || '') || 0
-    const bTime = Date.parse(b.date || '') || 0
-    return bTime - aTime || a.title.localeCompare(b.title)
+    const aTime = getSortTimestamp(a.date)
+    const bTime = getSortTimestamp(b.date)
+    return bTime - aTime || (a.title || '').localeCompare(b.title || '')
   })
+}
+
+function getSortTimestamp(date) {
+  if (!date) return 0
+  const normalized = String(date).replace(/\//g, '-')
+  const rangeMatch = normalized.match(/^\s*(\d{4}-\d{2}-\d{2})(?:\s+-\s+(\d{4}-\d{2}-\d{2}))?/)
+  if (rangeMatch) return Date.parse(rangeMatch[1]) || 0
+  return Date.parse(date) || 0
 }
 
 function loadManifest() {
@@ -131,16 +151,62 @@ function loadManifest() {
   return Array.isArray(data) ? data : []
 }
 
+function loadExistingCaptureAssets() {
+  if (!fs.existsSync(generatedPath)) return []
+  const raw = fs.readFileSync(generatedPath, 'utf8')
+  const match = raw.match(/export const generatedCaptureAssets: CaptureAsset\[\] = ([\s\S]*?) as CaptureAsset\[\]/)
+  if (!match) return []
+  const data = JSON.parse(match[1])
+  return Array.isArray(data) ? data : []
+}
+
+function isPreservedCaptureAsset(asset) {
+  const image = String(asset?.image || '')
+  return preservedAssetPrefixes.some((prefix) => image.startsWith(prefix))
+}
+
+function preservedCaptureAssetExists(asset) {
+  const image = String(asset?.image || '')
+  if (!image.startsWith(captureUrlPrefix)) return true
+  const relativePath = captureAssetRelativePath(image)
+  return fs.existsSync(path.join(publicCaptureDir, relativePath))
+}
+
+function normalizeExistingCaptureAsset(asset) {
+  return {
+    id: String(asset.id || asset.image || '').trim(),
+    image: String(asset.image || '').trim(),
+    title: String(asset.title || '').trim(),
+    date: String(asset.date || '').trim(),
+    tags: Array.isArray(asset.tags) ? asset.tags.map((tag) => String(tag).trim()).filter(Boolean) : [],
+    summary: String(asset.summary || '').trim(),
+    sourceRefs: Array.isArray(asset.sourceRefs) ? asset.sourceRefs : [],
+    standalone: asset.standalone !== false,
+  }
+}
+
 function assertFileExists(filePath, label) {
   if (!fs.existsSync(filePath)) {
     throw new Error(`${label} not found: ${filePath}`)
   }
 }
 
-function copyAsset(assetsDir, relativePath) {
-  const sourcePath = path.join(assetsDir, relativePath)
-  const destinationPath = path.join(publicCaptureDir, relativePath)
-  assertFileExists(sourcePath, 'Capture asset')
+function syncDocAsset(docFilePath, imageUrl) {
+  const relativeAssetPath = captureAssetRelativePath(imageUrl)
+  const docRelativePath = relativeAssetPath.replace(/^docs\//, '')
+  const sourcePath = path.join(docsDir, docRelativePath)
+  const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
+  assertFileExists(sourcePath, 'Markdown image')
+  ensureDir(path.dirname(destinationPath))
+  fs.copyFileSync(sourcePath, destinationPath)
+}
+
+function copyStandaloneAsset(assetsDir, imageUrl) {
+  const relativeAssetPath = captureAssetRelativePath(imageUrl)
+  const standaloneRelative = relativeAssetPath.replace(/^standalone\//, '')
+  const sourcePath = path.join(assetsDir, 'standalone', standaloneRelative)
+  const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
+  assertFileExists(sourcePath, 'Standalone asset')
   ensureDir(path.dirname(destinationPath))
   fs.copyFileSync(sourcePath, destinationPath)
 }
@@ -154,6 +220,7 @@ async function main() {
   const assetsDir = resolveAssetsDir()
   const manifestEntries = loadManifest()
   const manifestByUrl = new Map()
+
   for (const entry of manifestEntries) {
     const image = String(entry.image || '').trim()
     if (!image) continue
@@ -163,10 +230,21 @@ async function main() {
     manifestByUrl.set(image, entry)
   }
 
-  emptyDir(publicCaptureDir)
+  ensureDir(publicCaptureDir)
+  emptyDir(publicDocsDir)
+  ensureDir(publicStandaloneDir)
+  ensureDir(publicLocalDir)
 
   const byImage = new Map()
   const markdownFiles = getMarkdownFiles(docsDir)
+
+  for (const asset of loadExistingCaptureAssets()) {
+    if (!isPreservedCaptureAsset(asset)) continue
+    if (!preservedCaptureAssetExists(asset)) continue
+    const normalized = normalizeExistingCaptureAsset(asset)
+    if (normalized.image) byImage.set(normalized.image, normalized)
+  }
+
   for (const filePath of markdownFiles) {
     const raw = fs.readFileSync(filePath, 'utf8')
     const { data, content } = parseFrontmatter(raw)
@@ -176,21 +254,23 @@ async function main() {
     const date = data.date || ''
     const tags = parseTags(data.tags)
     const url = `/${type}/${id}`
-
     const seenInDoc = new Set()
-    for (const image of parseImages(content)) {
+
+    for (const image of parseImages(filePath, content)) {
       if (!isCaptureAssetUrl(image.src)) continue
       if (seenInDoc.has(image.src)) continue
       seenInDoc.add(image.src)
 
+      const relativePath = captureAssetRelativePath(image.src)
+      if (!relativePath.startsWith('docs/')) continue
+
       const manifestEntry = manifestByUrl.get(image.src)
       if (manifestEntry?.hidden) continue
 
-      const assetPath = relativeAssetPathFromUrl(image.src)
       const existing = byImage.get(image.src) || {
-        id: manifestEntry?.id || assetPath.replace(/[\\/]/g, '-').replace(/\.[^.]+$/i, ''),
+        id: manifestEntry?.id || relativePath.replace(/[\\/]/g, '-').replace(/\.[^.]+$/i, ''),
         image: image.src,
-        title: manifestEntry?.title || image.alt || defaultTitleFromAsset(assetPath, title),
+        title: manifestEntry?.title || image.alt || '',
         date: manifestEntry?.date || date,
         tags: manifestEntry?.tags?.length ? [...manifestEntry.tags] : [...tags],
         summary: manifestEntry?.summary || '',
@@ -198,7 +278,7 @@ async function main() {
         standalone: false,
       }
 
-      existing.title = manifestEntry?.title || existing.title
+      existing.title = manifestEntry?.title || existing.title || image.alt || ''
       existing.date = manifestEntry?.date || existing.date || date
       existing.tags = manifestEntry?.tags?.length ? [...manifestEntry.tags] : existing.tags
       existing.summary = manifestEntry?.summary || existing.summary
@@ -209,24 +289,26 @@ async function main() {
       }
 
       byImage.set(image.src, existing)
+      syncDocAsset(filePath, image.src)
     }
   }
 
-  const needsAssetsDir = byImage.size > 0 || manifestEntries.some((entry) => !entry.hidden)
-  if (needsAssetsDir) {
+  const needsStandaloneAssets = manifestEntries.some((entry) => !entry.hidden && String(entry.image || '').trim())
+  if (needsStandaloneAssets) {
     assertFileExists(assetsDir, 'Assets directory')
-  } else if (!fs.existsSync(assetsDir)) {
-    fs.writeFileSync(generatedPath, toTsModule([]), 'utf8')
-    console.log('No capture assets referenced. Skipped asset sync.')
-    return
   }
 
   for (const entry of manifestEntries) {
     if (entry.hidden) continue
     const image = String(entry.image || '').trim()
     if (!image) continue
-    const assetPath = relativeAssetPathFromUrl(image)
+    const relativePath = captureAssetRelativePath(image)
     const existing = byImage.get(image)
+
+    if (relativePath.startsWith('standalone/')) {
+      copyStandaloneAsset(assetsDir, image)
+    }
+
     if (existing) {
       existing.id = entry.id || existing.id
       existing.title = entry.title || existing.title
@@ -256,10 +338,6 @@ async function main() {
     sourceRefs: asset.sourceRefs.slice().sort((a, b) => a.title.localeCompare(b.title)),
     standalone: asset.sourceRefs.length === 0 ? asset.standalone !== false : false,
   }))
-
-  for (const asset of captureAssets) {
-    copyAsset(assetsDir, relativeAssetPathFromUrl(asset.image))
-  }
 
   fs.writeFileSync(generatedPath, toTsModule(captureAssets), 'utf8')
   console.log(`Generated ${captureAssets.length} capture assets from ${markdownFiles.length} markdown files.`)

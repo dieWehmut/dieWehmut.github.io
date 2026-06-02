@@ -1,7 +1,6 @@
 import type {
   ArchiveGroup,
   ArchivePost,
-  CaptureAsset,
   InfraEntry,
   NoteEntry,
   NoteGroup,
@@ -16,7 +15,6 @@ import { apps } from './site/app'
 import { tools } from './site/tool'
 import { infra } from './site/infra'
 import { getDocPosts, getDocNotes } from './docs'
-import { generatedCaptureAssets } from './capture/generated'
 import { friends } from './site/friends'
 import { siteProfile } from './site/profile'
 import { getDateSortTimestamp, getTimelineYear } from '../utils/date'
@@ -37,16 +35,15 @@ function projectRepo(item: SiteProjectItem): string {
   return item?.repoUrl || item?.repo_url || item?.html_url || item?.url || ''
 }
 
+const posts = sortByDate(getDocPosts())
+const notes = sortByDate(getDocNotes())
+
 export function getPosts(): ArchivePost[] {
-  return sortByDate(getDocPosts())
+  return posts
 }
 
 export function getNotes(): NoteEntry[] {
-  return sortByDate(getDocNotes())
-}
-
-export function getCaptureAssets(): CaptureAsset[] {
-  return sortByDate(generatedCaptureAssets)
+  return notes
 }
 
 export function getProjectEntries(): ProjectEntry[] {
@@ -175,16 +172,6 @@ export function getSearchDocuments(): SearchDocument[] {
     tags: note.tags,
   }))
 
-  const captureDocs: SearchDocument[] = getCaptureAssets().map((asset) => ({
-    id: `capture:${asset.id}`,
-    type: 'capture',
-    title: asset.title,
-    description: asset.summary || asset.sourceRefs.map((item) => item.title).join(' · ') || 'Capture asset',
-    url: '/capture',
-    date: asset.date,
-    tags: asset.tags,
-  }))
-
   const friendDocs: SearchDocument[] = friends.map((friend) => ({
     id: `friend:${friend.id}`,
     type: 'friend',
@@ -213,7 +200,7 @@ export function getSearchDocuments(): SearchDocument[] {
     tags: ['Infra'],
   }))
 
-  return sortByDate([...postDocs, ...noteDocs, ...captureDocs, ...projectDocs, ...infraDocs, ...friendDocs])
+  return sortByDate([...postDocs, ...noteDocs, ...projectDocs, ...infraDocs, ...friendDocs])
 }
 
 export { friends, siteProfile }

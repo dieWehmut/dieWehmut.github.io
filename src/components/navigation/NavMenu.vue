@@ -41,8 +41,8 @@ const allNavItems = [
   { name: 'home', labelKey: 'nav.home', fallbackLabel: 'Home', to: '/', icon: House },
   { name: 'archive', labelKey: 'nav.archive', fallbackLabel: 'Archive', to: '/archive', icon: Collection },
   { name: 'notes', labelKey: 'nav.notes', fallbackLabel: 'Notes', to: '/notes', icon: Notebook },
-  { name: 'capture', labelKey: 'nav.capture', fallbackLabel: 'Capture', to: '/capture', icon: Camera },
   { name: 'infra', labelKey: 'nav.infra', fallbackLabel: 'Infra', to: '/infra', icon: Cpu, enabled: siteConfig.enableInfra },
+  { name: 'capture', labelKey: 'nav.capture', fallbackLabel: 'Capture', to: '/capture', icon: Camera },
   { name: 'project', labelKey: 'nav.project', fallbackLabel: 'Project', to: '/project', icon: FolderOpened, enabled: siteConfig.enableProject },
   { name: 'tags', labelKey: 'nav.tags', fallbackLabel: 'Tags', to: '/tags', icon: PriceTag },
   { name: 'about', labelKey: 'nav.about', fallbackLabel: 'About', to: '/about', icon: User },
@@ -114,15 +114,21 @@ function labelFor(key, fallbackLabel) {
 
 @media (max-width: 900px) {
   .nav-menu {
-    gap: 2px;
+    gap: 3px;
     margin-top: 14px;
   }
 
   .nav-menu__item {
     justify-content: center;
-    min-height: 36px;
-    padding: 0 8px;
-    font-size: 13px;
+    min-height: 40px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .nav-menu__icon {
+    width: 19px;
+    height: 19px;
+    font-size: 19px;
   }
 }
 </style>

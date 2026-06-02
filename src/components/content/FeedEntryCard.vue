@@ -1,5 +1,13 @@
 <template>
-  <article class="feed-entry-card">
+  <article
+    class="feed-entry-card"
+    :class="{ 'is-clickable': !!entry.url }"
+    :role="entry.url ? 'link' : undefined"
+    :tabindex="entry.url ? 0 : undefined"
+    @click="openEntry"
+    @keydown.enter.prevent="openEntry"
+    @keydown.space.prevent="openEntry"
+  >
     <div class="feed-entry-card__body">
       <h2>
         <RouterLink v-if="entry.url && !entry.external" :to="entry.url">{{ entry.title }}</RouterLink>
@@ -17,6 +25,7 @@
           :key="tag"
           class="feed-entry-card__tag"
           :to="`/tags/${encodeURIComponent(tag)}`"
+          @click.stop
         >
           <el-icon class="feed-entry-card__tag-icon"><PriceTag /></el-icon>
           {{ tag }}
@@ -27,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import { formatTimelineDate } from '../../utils/date'
@@ -40,12 +50,26 @@ type FeedEntry = {
   external?: boolean
 }
 
-defineProps<{
+const props = defineProps<{
   entry: FeedEntry
 }>()
+const router = useRouter()
 
 function formatDate(date: string) {
   return formatTimelineDate(date)
+}
+
+function isInteractiveTarget(target: EventTarget | null): boolean {
+  return target instanceof HTMLElement && Boolean(target.closest('a, button'))
+}
+
+function openEntry(event?: MouseEvent | KeyboardEvent) {
+  if (!props.entry.url || isInteractiveTarget(event?.target || null)) return
+  if (props.entry.external) {
+    window.open(props.entry.url, '_blank', 'noopener,noreferrer')
+    return
+  }
+  router.push(props.entry.url)
 }
 </script>
 
@@ -55,14 +79,19 @@ function formatDate(date: string) {
   margin: 0 -22px;
   border: 1px solid transparent;
   border-radius: 8px;
-  cursor: default;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.feed-entry-card:hover {
+.feed-entry-card.is-clickable {
+  cursor: pointer;
+}
+
+.feed-entry-card:hover,
+.feed-entry-card:focus-visible {
   border-color: rgba(31, 196, 31, 0.45);
   background: rgba(31, 196, 31, 0.04);
   transform: translateY(-2px);
+  outline: none;
 }
 
 .feed-entry-card + .feed-entry-card {

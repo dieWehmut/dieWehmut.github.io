@@ -52,7 +52,16 @@
       </div>
 
       <div class="infra-mobile-list" aria-label="Infra endpoint list">
-        <article v-for="item in serviceItems" :key="item.key || item.name" class="infra-mobile-item">
+        <article
+          v-for="item in serviceItems"
+          :key="item.key || item.name"
+          class="infra-mobile-item"
+          role="link"
+          tabindex="0"
+          @click="openInfra(item, $event)"
+          @keydown.enter.prevent="openInfra(item, $event)"
+          @keydown.space.prevent="openInfra(item, $event)"
+        >
           <div class="infra-mobile-item__main">
             <el-icon class="infra-mobile-item__icon"><Link /></el-icon>
             <div class="infra-mobile-item__info">
@@ -68,7 +77,7 @@
               </p>
             </div>
           </div>
-          <a :href="item.url" target="_blank" rel="noopener noreferrer">Open</a>
+          <a :href="item.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
         </article>
     </div>
   </section>
@@ -201,6 +210,15 @@ function statusLabel(url) {
 function statusClass(url) {
   const status = statusMap[url]?.status
   return status ? `is-${status}` : ''
+}
+
+function isInteractiveTarget(target) {
+  return target instanceof HTMLElement && Boolean(target.closest('a, button'))
+}
+
+function openInfra(item, event) {
+  if (!item?.url || isInteractiveTarget(event?.target || null)) return
+  window.open(item.url, '_blank', 'noopener,noreferrer')
 }
 </script>
 
@@ -512,14 +530,16 @@ function statusClass(url) {
   margin: 0 -22px;
   border: 1px solid transparent;
   border-radius: 8px;
-  cursor: default;
+  cursor: pointer;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.infra-mobile-item:hover {
+.infra-mobile-item:hover,
+.infra-mobile-item:focus-visible {
   border-color: rgba(31, 196, 31, 0.45);
   background: rgba(31, 196, 31, 0.04);
   transform: translateY(-2px);
+  outline: none;
 }
 
 .infra-mobile-item__main {

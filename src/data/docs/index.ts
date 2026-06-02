@@ -18,6 +18,7 @@ type ParsedDoc = {
   date: string
   tags: string[]
   body: string
+  assetPaths: string[]
 }
 
 const rawDocs = import.meta.glob('./**/*.md', {
@@ -65,6 +66,64 @@ function docIdFromPath(path: string) {
   return filename.replace(/\.md$/i, '')
 }
 
+function normalizeDocAssetPath(docPath: string, assetPath: string) {
+  if (!assetPath || /^(?:[a-z]+:)?\/\//i.test(assetPath) || assetPath.startsWith('data:')) return assetPath
+  if (assetPath.startsWith('/capture-assets/')) return assetPath
+  if (assetPath.startsWith('/')) return assetPath
+
+  const normalizedDocPath = docPath.replace(/\\/g, '/').replace(/^\.\//, '')
+  const docParts = normalizedDocPath.split('/').filter(Boolean)
+  const docsIndex = docParts.indexOf('docs')
+  const relativeDocParts = docsIndex === -1 ? docParts : docParts.slice(docsIndex + 1)
+  const docDir = relativeDocParts.slice(0, -1)
+  const relativeParts = assetPath.replace(/\\/g, '/').split('/')
+  const resolved = [...docDir]
+
+  for (const part of relativeParts) {
+    if (!part || part === '.') continue
+    if (part === '..') {
+      if (resolved.length > 0) resolved.pop()
+      continue
+    }
+    resolved.push(part)
+  }
+
+  if (!resolved.length) return assetPath
+  return `/capture-assets/docs/${resolved.join('/')}`
+}
+
+function collectDocAssetPaths(docPath: string, body: string) {
+  const found = new Set<string>()
+  const markdownPattern = /!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g
+  const htmlPattern = /<img\b[^>]*src=['"]([^'"]+)['"][^>]*>/gi
+
+  let match: RegExpExecArray | null
+
+  while ((match = markdownPattern.exec(body)) !== null) {
+    const normalized = normalizeDocAssetPath(docPath, match[1].trim())
+    if (normalized.startsWith('/capture-assets/')) found.add(normalized)
+  }
+
+  while ((match = htmlPattern.exec(body)) !== null) {
+    const normalized = normalizeDocAssetPath(docPath, match[1].trim())
+    if (normalized.startsWith('/capture-assets/')) found.add(normalized)
+  }
+
+  return Array.from(found)
+}
+
+function rewriteDocAssetPaths(docPath: string, body: string) {
+  return body
+    .replace(/!\[([^\]]*)\]\(([^)\s]+)([^)]*)\)/g, (_full, alt: string, rawPath: string, suffix: string) => {
+      const normalized = normalizeDocAssetPath(docPath, rawPath.trim())
+      return `![${alt}](${normalized}${suffix || ''})`
+    })
+    .replace(/(<img\b[^>]*src=['"])([^'"]+)(['"][^>]*>)/gi, (_full, prefix: string, rawPath: string, suffix: string) => {
+      const normalized = normalizeDocAssetPath(docPath, rawPath.trim())
+      return `${prefix}${normalized}${suffix}`
+    })
+}
+
 const parsedDocs: ParsedDoc[] = Object.entries(rawDocs).map(([path, raw]) => {
   const { data, content } = parseFrontmatter(raw)
   const type = data.type === 'note' || path.includes('/notes/') ? 'note' : 'post'
@@ -72,9 +131,10 @@ const parsedDocs: ParsedDoc[] = Object.entries(rawDocs).map(([path, raw]) => {
   const title = data.title || id
   const date = data.date || ''
   const tags = parseTags(data.tags)
-  const body = content.trim()
+  const body = rewriteDocAssetPaths(path, content.trim())
+  const assetPaths = collectDocAssetPaths(path, content.trim())
 
-  return { id, type, title, date, tags, body }
+  return { id, type, title, date, tags, body, assetPaths }
 })
 
 export function getDocPosts(): ArchivePost[] {
@@ -87,6 +147,7 @@ export function getDocPosts(): ArchivePost[] {
       tags: doc.tags,
       summary: excerptFromMarkdown(doc.body),
       body: doc.body,
+      assetPaths: doc.assetPaths,
     }))
 }
 
@@ -100,5 +161,6 @@ export function getDocNotes(): NoteEntry[] {
       tags: doc.tags,
       summary: excerptFromMarkdown(doc.body),
       body: doc.body,
+      assetPaths: doc.assetPaths,
     }))
 }

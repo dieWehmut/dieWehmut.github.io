@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import SearchInput from '../components/search/SearchInput.vue'
@@ -20,6 +20,7 @@ import { getSearchDocuments } from '../data'
 import type { SearchDocument, SearchResult } from '../types/content'
 
 const query = ref('')
+const captureDocs = ref<SearchDocument[]>([])
 
 function normalizedIncludes(value: string, queryText: string): boolean {
   return value.toLowerCase().includes(queryText)
@@ -51,7 +52,7 @@ function scoreDocument(doc: SearchDocument, queryText: string): number {
 
 const results = computed(() => {
   const q = query.value.trim().toLowerCase()
-  const docs = getSearchDocuments()
+  const docs = [...getSearchDocuments(), ...captureDocs.value]
   if (!q) return docs.slice(0, 10)
 
   return docs
@@ -66,6 +67,11 @@ const results = computed(() => {
       if (!Number.isNaN(byDate) && byDate !== 0) return byDate
       return a.title.localeCompare(b.title)
     })
+})
+
+onMounted(async () => {
+  const { getCaptureSearchDocuments } = await import('../data/capture')
+  captureDocs.value = getCaptureSearchDocuments()
 })
 </script>
 

@@ -1,19 +1,31 @@
 <template>
   <div class="mobile-layout">
-    <MobileHeader @toggle-menu="openDrawer" />
+    <MobileHeader @toggle-menu="openDrawer" @toggle-toc="openTocDrawer" />
 
     <Transition name="drawer-overlay">
       <button
-        v-if="drawerOpen"
+        v-if="drawerOpen || tocDrawerOpen"
         class="mobile-layout__overlay"
         type="button"
         aria-label="Close menu"
-        @click="closeDrawer"
+        @click="closeDrawers"
       />
     </Transition>
 
     <aside class="mobile-layout__drawer" :class="{ 'is-open': drawerOpen }" aria-label="Mobile navigation">
       <SiteSidebar @navigate="closeDrawer" />
+    </aside>
+
+    <aside class="mobile-layout__toc-drawer" :class="{ 'is-open': tocDrawerOpen }" aria-label="Page timeline">
+      <ScrollSpySidebar
+        :key="`${route.fullPath}:${tocKey}`"
+        class="mobile-layout__toc"
+        root-selector=".mobile-layout__main"
+        heading-selector="h1, h2, h3, .capture-time-heading"
+        :offset="72"
+        mode="mobile"
+        @navigate="closeTocDrawer"
+      />
     </aside>
 
     <main class="mobile-layout__main">
@@ -36,9 +48,12 @@ import MobileHeader from '../components/navigation/MobileHeader.vue'
 import SiteSidebar from '../components/navigation/SiteSidebar.vue'
 import Footer from '../components/system/Footer.vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
+import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 
 const route = useRoute()
 const drawerOpen = ref(false)
+const tocDrawerOpen = ref(false)
+const tocKey = ref(0)
 let previousBodyOverflow = ''
 
 function lockBody() {
@@ -53,6 +68,7 @@ function unlockBody() {
 }
 
 function openDrawer() {
+  tocDrawerOpen.value = false
   drawerOpen.value = true
 }
 
@@ -60,11 +76,27 @@ function closeDrawer() {
   drawerOpen.value = false
 }
 
-function onKeydown(event) {
-  if (event.key === 'Escape') closeDrawer()
+function openTocDrawer() {
+  drawerOpen.value = false
+  tocKey.value += 1
+  tocDrawerOpen.value = true
 }
 
-watch(drawerOpen, (open) => {
+function closeTocDrawer() {
+  tocDrawerOpen.value = false
+}
+
+function closeDrawers() {
+  closeDrawer()
+  closeTocDrawer()
+}
+
+function onKeydown(event) {
+  if (event.key === 'Escape') closeDrawers()
+}
+
+watch([drawerOpen, tocDrawerOpen], ([navOpen, tocOpen]) => {
+  const open = navOpen || tocOpen
   if (open) {
     lockBody()
     window.addEventListener('keydown', onKeydown)
@@ -74,7 +106,7 @@ watch(drawerOpen, (open) => {
   }
 })
 
-watch(() => route.fullPath, closeDrawer)
+watch(() => route.fullPath, closeDrawers)
 
 onBeforeUnmount(() => {
   unlockBody()
@@ -116,6 +148,31 @@ onBeforeUnmount(() => {
   transform: translateX(0);
 }
 
+.mobile-layout__toc-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 50;
+  width: clamp(124px, 36vw, 148px);
+  min-height: 100%;
+  padding: 0;
+  color: var(--site-text);
+  background: var(--site-sidebar-bg);
+  border-left: 1px solid var(--site-border);
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 260ms cubic-bezier(.2, .9, .2, 1);
+  will-change: transform;
+}
+
+.mobile-layout__toc-drawer.is-open {
+  transform: translateX(0);
+}
+
+.mobile-layout__toc {
+  min-height: 100%;
+  padding: 0 10px 22px;
+}
+
 .drawer-overlay-enter-active,
 .drawer-overlay-leave-active {
   transition: opacity 180ms ease;
@@ -149,6 +206,7 @@ onBeforeUnmount(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .mobile-layout__drawer,
+  .mobile-layout__toc-drawer,
   .drawer-overlay-enter-active,
   .drawer-overlay-leave-active,
   .page-fade-enter-active,

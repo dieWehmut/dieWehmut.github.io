@@ -5,14 +5,10 @@ function normalizeDateInput(date: string): string {
 function extractDateRangeParts(input?: string): { start: string; end?: string } | null {
   if (!input) return null
   const normalized = normalizeDateInput(input)
-  const parts = normalized.split(/\s*-\s*/)
+  const range = normalized.match(/^(\d{4}-\d{2}-\d{2})(?:\s+-\s+(\d{4}-\d{2}-\d{2}))?$/)
 
-  if (parts.length >= 2 && /^\d{4}-\d{2}-\d{2}$/.test(parts[0]) && /^\d{4}-\d{2}-\d{2}$/.test(parts[1])) {
-    return { start: parts[0], end: parts[1] }
-  }
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-    return { start: normalized }
+  if (range) {
+    return { start: range[1], end: range[2] }
   }
 
   return null

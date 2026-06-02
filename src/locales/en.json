@@ -79,5 +79,22 @@
     "unreachable": "Unreachable",
     "highLatency": "High Latency",
     "timeout": "Timeout"
+  },
+  "capture": {
+    "title": "Capture",
+    "empty": "No capture assets found.",
+    "editor": "Editor",
+    "localDev": "Local dev editing",
+    "editorDisabled": "Disabled",
+    "editorUnavailable": "Editor unavailable",
+    "uploadImage": "Upload image",
+    "deleteImage": "Delete image",
+    "confirmDelete": "Delete {title}?",
+    "deleteDialogTitle": "Delete image",
+    "cancelDelete": "Cancel",
+    "confirmDeleteAction": "Delete",
+    "loadMore": "Load more",
+    "uploadFailed": "Upload failed.",
+    "deleteFailed": "Delete failed."
   }
 }

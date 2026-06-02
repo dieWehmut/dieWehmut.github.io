@@ -1,5 +1,13 @@
 <template>
-  <article class="project-item">
+  <article
+    class="project-item"
+    :class="{ 'is-clickable': !!primaryUrl }"
+    :role="primaryUrl ? 'link' : undefined"
+    :tabindex="primaryUrl ? 0 : undefined"
+    @click="openProject"
+    @keydown.enter.prevent="openProject"
+    @keydown.space.prevent="openProject"
+  >
     <div class="project-item__main">
       <el-icon class="project-item__icon">
         <component :is="itemIcon" />
@@ -34,12 +42,22 @@ const iconMap: Record<ProjectEntry['category'], unknown> = {
 }
 
 const itemIcon = computed(() => iconMap[props.category])
+const primaryUrl = computed(() => props.project.url || props.project.repoUrl || '')
 
 const formattedDate = computed(() => {
   const date = new Date(props.project.date || '')
   if (Number.isNaN(date.valueOf())) return props.project.date || ''
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 })
+
+function isInteractiveTarget(target: EventTarget | null): boolean {
+  return target instanceof HTMLElement && Boolean(target.closest('a, button'))
+}
+
+function openProject(event?: MouseEvent | KeyboardEvent) {
+  if (!primaryUrl.value || isInteractiveTarget(event?.target || null)) return
+  window.open(primaryUrl.value, '_blank', 'noopener,noreferrer')
+}
 </script>
 
 <style scoped>
@@ -52,14 +70,19 @@ const formattedDate = computed(() => {
   margin: 0 -22px;
   border: 1px solid transparent;
   border-radius: 8px;
-  cursor: default;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.project-item:hover {
+.project-item.is-clickable {
+  cursor: pointer;
+}
+
+.project-item:hover,
+.project-item:focus-visible {
   border-color: rgba(31, 196, 31, 0.45);
   background: rgba(31, 196, 31, 0.04);
   transform: translateY(-2px);
+  outline: none;
 }
 
 .project-item__main {
