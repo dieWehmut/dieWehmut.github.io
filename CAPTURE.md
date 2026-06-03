@@ -95,3 +95,9 @@ DIESW_ASSETS_TOKEN
 ```
 
 That token must be able to read the private `dieWehmut/diesw-assets` repository.
+
+## Automatic capture data sync
+
+The `Sync Capture Assets` workflow keeps `src/data/capture/generated.ts` updated from the private assets repository. It only runs when this main repository is pushed to `main`.
+
+If generated capture data changes, the workflow commits `src/data/capture/generated.ts` back to `main` and triggers the Pages deploy workflow.

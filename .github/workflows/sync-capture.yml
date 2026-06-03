@@ -1,0 +1,72 @@
+name: Sync Capture Assets
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: sync-capture
+  cancel-in-progress: false
+
+jobs:
+  sync-capture:
+    runs-on: ubuntu-latest
+
+    env:
+      DIESW_ASSETS_DIR: ${{ github.workspace }}/.cache/diesw-assets
+
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Checkout assets repository
+        uses: actions/checkout@v4
+        with:
+          repository: dieWehmut/diesw-assets
+          token: ${{ secrets.DIESW_ASSETS_TOKEN }}
+          path: .cache/diesw-assets
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate capture data
+        run: pnpm run capture:sync
+
+      - name: Commit generated capture data
+        id: commit
+        run: |
+          set -e
+
+          if git diff --quiet -- src/data/capture/generated.ts; then
+            echo "No capture changes to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/capture/generated.ts
+          git commit -m "chore: sync capture assets"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger deploy
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

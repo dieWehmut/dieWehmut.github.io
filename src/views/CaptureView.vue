@@ -181,7 +181,7 @@ import { RouterLink } from 'vue-router'
 import { Calendar, Camera, Delete, Plus, PriceTag } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { getCaptureAssets } from '../data/capture'
+import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'
 import type { CaptureAsset, CaptureSourceRef } from '../types/content'
 import { formatTimelineDate, parseTimelineDate } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
@@ -381,7 +381,7 @@ async function refreshCaptureAssets() {
 }
 
 function syncCaptureAssets(assets: CaptureAsset[]) {
-  const nextAssets = sortCaptureAssetList(assets)
+  const nextAssets = sortCaptureAssetList(normalizeCaptureAssets(assets))
   if (JSON.stringify(nextAssets) === JSON.stringify(allAssets.value)) return
   allAssets.value = nextAssets
   if (deleteTarget.value && !nextAssets.some((asset) => asset.id === deleteTarget.value?.id)) {

@@ -2,8 +2,47 @@ import type { CaptureAsset, SearchDocument } from '../../types/content'
 import { getDateSortTimestamp } from '../../utils/date'
 import { generatedCaptureAssets } from './generated'
 
+const captureTitleDatePartPattern = String.raw`(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}(?::\d{2})?)(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?`
+const captureTitleDatePattern = new RegExp(`^${captureTitleDatePartPattern}$`)
+const captureTitleDateRangePattern = new RegExp(`^${captureTitleDatePartPattern}\\s*->\\s*${captureTitleDatePartPattern}$`)
+
+function resolveCaptureDateFromTitle(title: string, date: string): string {
+  const titleDate = title.match(captureTitleDatePattern)
+  if (titleDate && (!date || date === titleDate[1])) {
+    return `${titleDate[1]} ${titleDate[2]}`
+  }
+
+  const titleRange = title.match(captureTitleDateRangePattern)
+  if (!titleRange) return date
+
+  const [, startDate, startTime, endDate, endTime] = titleRange
+  const dateRange = `${startDate} - ${endDate}`
+  if (!date || date === dateRange) {
+    return `${startDate} ${startTime} - ${endDate} ${endTime}`
+  }
+
+  return date
+}
+
+export function normalizeCaptureAsset(asset: CaptureAsset): CaptureAsset {
+  const title = String(asset.title || '').trim()
+  const date = String(asset.date || '').trim()
+
+  return {
+    ...asset,
+    title,
+    date: resolveCaptureDateFromTitle(title, date),
+  }
+}
+
+export function normalizeCaptureAssets(assets: CaptureAsset[]): CaptureAsset[] {
+  return assets.map(normalizeCaptureAsset)
+}
+
 export function getCaptureAssets(): CaptureAsset[] {
-  return generatedCaptureAssets.slice().sort((a, b) => getDateSortTimestamp(b.date) - getDateSortTimestamp(a.date))
+  return normalizeCaptureAssets(generatedCaptureAssets)
+    .slice()
+    .sort((a, b) => getDateSortTimestamp(b.date) - getDateSortTimestamp(a.date))
 }
 
 export function getCaptureSearchDocuments(): SearchDocument[] {
