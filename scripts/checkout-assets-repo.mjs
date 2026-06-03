@@ -113,9 +113,27 @@ function branchExists(remoteUrl, branch) {
 }
 
 function resolveDefaultBranch(remoteUrl) {
-  const result = runGit(['ls-remote', '--symref', remoteUrl, 'HEAD'], { capture: true })
+  const result = runGit(['ls-remote', '--symref', remoteUrl, 'HEAD'], {
+    capture: true,
+    allowFailure: true,
+  })
+  if (!result.ok) return ''
   const match = result.stdout.match(/^ref:\s+refs\/heads\/(.+)\s+HEAD/m)
   return match?.[1] || ''
+}
+
+function createInitialBranch(remoteUrl, branch) {
+  console.log(`Assets repository has no default branch. Creating initial ${branch} branch.`)
+  fs.rmSync(destination, { recursive: true, force: true })
+  fs.mkdirSync(destination, { recursive: true })
+  runGit(['init', '--initial-branch', branch], { cwd: destination })
+  runGit(['remote', 'add', 'origin', remoteUrl], { cwd: destination })
+  fs.writeFileSync(path.join(destination, '.gitkeep'), '')
+  runGit(['add', '.gitkeep'], { cwd: destination })
+  runGit(['config', 'user.name', 'github-actions[bot]'], { cwd: destination })
+  runGit(['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], { cwd: destination })
+  runGit(['commit', '-m', 'chore: initialize assets repository'], { cwd: destination })
+  runGit(['push', 'origin', `${branch}:${branch}`], { cwd: destination })
 }
 
 function createBranchFromDefault(remoteUrl, branch, repositoryInfo) {
@@ -124,7 +142,10 @@ function createBranchFromDefault(remoteUrl, branch, repositoryInfo) {
   }
 
   const defaultBranch = resolveDefaultBranch(remoteUrl)
-  if (!defaultBranch) fail(`Unable to resolve default branch for ${repository}.`)
+  if (!defaultBranch) {
+    createInitialBranch(remoteUrl, branch)
+    return
+  }
   if (defaultBranch === branch) fail(`Default branch ${branch} exists but could not be fetched.`)
 
   console.log(`Assets branch ${branch} does not exist. Creating it from ${defaultBranch}.`)
