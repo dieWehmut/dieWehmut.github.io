@@ -201,7 +201,7 @@ export const friends: FriendLink[] = [
     name: 'Friend Name',
     description: 'A short description',
     url: 'https://friend-site.com',
-    avatar: 'https://github.com/friend-username.png',
+    avatar: 'https://avatars.githubusercontent.com/friend-username',
   },
 ]
 ```

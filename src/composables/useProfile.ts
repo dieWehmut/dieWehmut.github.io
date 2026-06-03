@@ -1,10 +1,10 @@
 import { ref } from 'vue'
 import { fetchWithCache } from '../utils/apiCache'
 import { getGitHubHeaders } from '../utils/github'
+import { getGitHubAvatarUrl } from '../utils/githubAvatar'
 import { siteConfig } from '../data/site/config'
 
 interface GitHubUserProfile {
-  avatar_url?: string
   name?: string
   login?: string
   html_url?: string
@@ -21,7 +21,7 @@ interface GitHubCommit {
   }
 }
 
-const avatarUrl = ref(`https://github.com/${siteConfig.githubUser}.png`)
+const avatarUrl = ref(getGitHubAvatarUrl(siteConfig.githubUser))
 const displayName = ref(siteConfig.githubUser)
 const lastUpdated = ref('2026-03-14')
 const githubUrl = ref(`https://github.com/${siteConfig.githubUser}`)
@@ -47,7 +47,6 @@ async function loadProfile() {
       { headers: getGitHubHeaders() },
       1000 * 60 * 60
     )
-    if (data?.avatar_url) avatarUrl.value = data.avatar_url
     const name = data?.name || data?.login
     if (name) displayName.value = name
     if (data?.html_url) githubUrl.value = data.html_url
