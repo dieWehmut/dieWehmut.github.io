@@ -94,7 +94,7 @@ GitHub Actions requires a repository secret named:
 DIESW_ASSETS_TOKEN
 ```
 
-That token must be able to read the private `dieWehmut/diesw-assets` repository.
+That token must be able to read and write the private `dieWehmut/diesw-assets` repository. The CI workflow checks out `DIESW_ASSETS_REF`, defaulting to `main`. If that branch does not exist in the assets repository, the workflow creates it from the assets repository's default branch.
 
 ## Automatic capture data sync
 

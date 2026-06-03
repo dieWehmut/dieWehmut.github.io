@@ -30,7 +30,7 @@ jobs:
 
           # Remove files that should not be in the template
           rm -rf prompt/ sample/ dist/ public/capture-assets/ .env.local .claude/ .githooks/
-          rm -f CAPTURE.md scripts/sync-assets-repo.mjs
+          rm -f CAPTURE.md scripts/sync-assets-repo.mjs scripts/checkout-assets-repo.mjs
 
           # --- Use generic package metadata for the template ---
           node --input-type=module << 'EOF'
