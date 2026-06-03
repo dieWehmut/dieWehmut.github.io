@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { siteConfig } from './src/data/site/config'
 
 const base = '/'
-const GITHUB_USER = 'dieWehmut'
+const githubUser = siteConfig.githubUser
 const captureUrlPrefix = '/capture-assets/'
 const generatedCapturePath = path.resolve(__dirname, 'src', 'data', 'capture', 'generated.ts')
 const publicCaptureDir = path.resolve(__dirname, 'public', 'capture-assets')
@@ -339,7 +339,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
         rewrite: (proxyPath) =>
-          proxyPath.replace(/^\/api\/contributions/, `/users/${GITHUB_USER}/contributions`),
+          proxyPath.replace(/^\/api\/contributions/, `/users/${githubUser}/contributions`),
         proxyTimeout: 5000,
         timeout: 5000,
       },
@@ -350,7 +350,7 @@ export default defineConfig({
         rewrite: (proxyPath) =>
           proxyPath.replace(
             /^\/api\/trophy/,
-            `/?username=${GITHUB_USER}&theme=tokyonight&no-frame=true&margin-w=10&margin-h=10`
+            `/?username=${githubUser}&theme=tokyonight&no-frame=true&margin-w=10&margin-h=10`
           ),
         proxyTimeout: 5000,
         timeout: 5000,

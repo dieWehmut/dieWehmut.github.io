@@ -35,7 +35,7 @@
         </div>
         <div v-if="group.captures?.length" class="tag-card__captures">
           <CaptureAssetCard
-            v-for="capture in group.captures.slice(0, 2)"
+            v-for="capture in group.captures.slice(0, 1)"
             :key="capture.id"
             :asset="capture"
             @preview="openCapturePreview(group.captures, capture)"
@@ -178,7 +178,7 @@ function openCapturePreview(captures, capture) {
 onMounted(async () => {
   const { getCaptureTagCounts, getCaptureTagPreviews } = await import('../data/capture')
   captureTagCounts.value = getCaptureTagCounts()
-  captureTagPreviews.value = getCaptureTagPreviews(2)
+  captureTagPreviews.value = getCaptureTagPreviews(1)
 })
 </script>
 

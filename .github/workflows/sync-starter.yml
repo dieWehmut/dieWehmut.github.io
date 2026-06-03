@@ -29,7 +29,31 @@ jobs:
           set -e
 
           # Remove files that should not be in the template
-          rm -rf prompt/ sample/ dist/ .env.local .claude/
+          rm -rf prompt/ sample/ dist/ public/capture-assets/ .env.local .claude/ .githooks/
+          rm -f CAPTURE.md scripts/sync-assets-repo.mjs
+
+          # --- Use generic package metadata for the template ---
+          node --input-type=module << 'EOF'
+          import fs from 'node:fs'
+
+          function writeJson(filePath, data) {
+            fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`)
+          }
+
+          const packagePath = 'package.json'
+          const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
+          packageJson.name = 'nexus-starter'
+          if (packageJson.scripts) delete packageJson.scripts['assets:push']
+          writeJson(packagePath, packageJson)
+
+          const packageLockPath = 'package-lock.json'
+          if (fs.existsSync(packageLockPath)) {
+            const packageLock = JSON.parse(fs.readFileSync(packageLockPath, 'utf8'))
+            packageLock.name = 'nexus-starter'
+            if (packageLock.packages?.['']) packageLock.packages[''].name = 'nexus-starter'
+            writeJson(packageLockPath, packageLock)
+          }
+          EOF
 
           # --- Use the starter-readme.md as the template README ---
           cp src/data/site/starter-readme.md README.md
@@ -244,6 +268,78 @@ jobs:
           This is a sample note. Replace it with your own content.
           EOF
 
+          # --- Reset capture data for the template ---
+          cat > src/data/capture/manifest.json << 'EOF'
+          []
+          EOF
+
+          cat > src/data/capture/generated.ts << 'EOF'
+          import type { CaptureAsset } from '../../types/content'
+
+          export const generatedCaptureAssets: CaptureAsset[] = [] as CaptureAsset[]
+
+          export default generatedCaptureAssets
+          EOF
+
+          # --- Replace deploy workflow with a template-friendly GitHub Pages workflow ---
+          cat > .github/workflows/deploy.yml << 'EOF'
+          name: Deploy to GitHub Pages
+
+          on:
+            push:
+              branches: [main]
+            workflow_dispatch:
+
+          permissions:
+            contents: read
+            pages: write
+            id-token: write
+
+          concurrency:
+            group: pages
+            cancel-in-progress: true
+
+          jobs:
+            build-and-deploy:
+              runs-on: ubuntu-latest
+
+              environment:
+                name: github-pages
+
+              steps:
+                - name: Checkout
+                  uses: actions/checkout@v4
+
+                - name: Setup pnpm
+                  uses: pnpm/action-setup@v4
+                  with:
+                    version: 9
+
+                - name: Setup Node.js
+                  uses: actions/setup-node@v4
+                  with:
+                    node-version: 20
+                    cache: pnpm
+
+                - name: Install dependencies
+                  run: pnpm install --frozen-lockfile
+
+                - name: Build
+                  run: pnpm run build
+
+                - name: Setup Pages
+                  uses: actions/configure-pages@v4
+
+                - name: Upload artifact
+                  uses: actions/upload-pages-artifact@v3
+                  with:
+                    path: dist
+
+                - name: Deploy to GitHub Pages
+                  id: deploy
+                  uses: actions/deploy-pages@v4
+          EOF
+
           # --- Create docs/ folder with translated READMEs ---
           mkdir -p docs
           cp src/data/site/starter-readme.zh-TW.md docs/README.zh-TW.md
@@ -254,8 +350,9 @@ jobs:
           rm -f src/data/site/starter-readme.zh-TW.md
           rm -f src/data/site/starter-readme.en.md
 
-          # --- Remove the sync-starter workflow itself from the template ---
+          # --- Remove private sync workflows from the template ---
           rm -f .github/workflows/sync-starter.yml
+          rm -f .github/workflows/sync-capture.yml
 
       - name: Push to starter repo
         env:

@@ -2,10 +2,19 @@ function normalizeDateInput(date: string): string {
   return date.trim().replace(/\//g, '-')
 }
 
+type ParsedTimelineDate = {
+  start?: Date
+  end?: Date
+  startHasTime?: boolean
+  endHasTime?: boolean
+}
+
+const dateTimePattern = String.raw`\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2})?(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?)?`
+
 function extractDateRangeParts(input?: string): { start: string; end?: string } | null {
   if (!input) return null
   const normalized = normalizeDateInput(input)
-  const range = normalized.match(/^(\d{4}-\d{2}-\d{2})(?:\s+-\s+(\d{4}-\d{2}-\d{2}))?$/)
+  const range = normalized.match(new RegExp(`^\\s*(${dateTimePattern})(?:\\s+-\\s+(${dateTimePattern}))?\\s*$`))
 
   if (range) {
     return { start: range[1], end: range[2] }
@@ -14,16 +23,37 @@ function extractDateRangeParts(input?: string): { start: string; end?: string } 
   return null
 }
 
-export function parseTimelineDate(date?: string): { start?: Date; end?: Date } {
+function parseDatePart(value: string): { date: Date; hasTime: boolean } | null {
+  const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?)?$/)
+  if (!match) return null
+
+  const [, year, month, day, hour, minute, second] = match
+  const hasTime = Boolean(hour)
+  const parsedDate = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour || 0),
+    Number(minute || 0),
+    Number(second || 0)
+  )
+
+  if (Number.isNaN(parsedDate.valueOf())) return null
+  return { date: parsedDate, hasTime }
+}
+
+export function parseTimelineDate(date?: string): ParsedTimelineDate {
   const parts = extractDateRangeParts(date)
   if (!parts) return {}
 
-  const start = new Date(parts.start)
-  const end = parts.end ? new Date(parts.end) : undefined
+  const start = parseDatePart(parts.start)
+  const end = parts.end ? parseDatePart(parts.end) : undefined
 
   return {
-    start: Number.isNaN(start.valueOf()) ? undefined : start,
-    end: end && !Number.isNaN(end.valueOf()) ? end : undefined,
+    start: start?.date,
+    end: end?.date,
+    startHasTime: start?.hasTime,
+    endHasTime: end?.hasTime,
   }
 }
 
@@ -34,26 +64,38 @@ export function getDateSortTimestamp(date?: string): number {
   return Date.parse(date || '') || 0
 }
 
-function formatDateValue(date: Date): string {
-  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+function formatDateValue(date: Date, includeTime = false): string {
+  const dateValue = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+  if (!includeTime) return dateValue
+  return `${dateValue} ${formatTimeValue(date)}`
 }
 
 export function formatTimelineDate(date?: string): string {
-  const { start, end } = parseTimelineDate(date)
-  if (start && end) return `${formatDateValue(start)} - ${formatDateValue(end)}`
-  if (start) return formatDateValue(start)
+  const { start, end, startHasTime, endHasTime } = parseTimelineDate(date)
+  if (start && end) return `${formatDateValue(start, startHasTime)} - ${formatDateValue(end, endHasTime)}`
+  if (start) return formatDateValue(start, startHasTime)
   return date || ''
 }
 
 export function formatTimelineShortDate(date?: string): string {
-  const { start, end } = parseTimelineDate(date)
+  const { start, end, startHasTime, endHasTime } = parseTimelineDate(date)
   if (start && end) {
-    return `${String(start.getMonth() + 1).padStart(2, '0')}/${String(start.getDate()).padStart(2, '0')} - ${String(end.getMonth() + 1).padStart(2, '0')}/${String(end.getDate()).padStart(2, '0')}`
+    return `${formatShortDateValue(start, startHasTime)} - ${formatShortDateValue(end, endHasTime)}`
   }
   if (start) {
-    return `${String(start.getMonth() + 1).padStart(2, '0')}/${String(start.getDate()).padStart(2, '0')}`
+    return formatShortDateValue(start, startHasTime)
   }
   return date || ''
+}
+
+function formatShortDateValue(date: Date, includeTime = false): string {
+  const dateValue = `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+  if (!includeTime) return dateValue
+  return `${dateValue} ${formatTimeValue(date)}`
+}
+
+function formatTimeValue(date: Date): string {
+  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 }
 
 export function getTimelineYear(date?: string): string {
