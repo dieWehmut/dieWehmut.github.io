@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import process from 'node:process'
 
@@ -8,6 +9,7 @@ const repository = process.env.DIESW_ASSETS_REPOSITORY || 'dieWehmut/diesw-asset
 const token = process.env.DIESW_ASSETS_TOKEN || ''
 const targetRef = process.env.DIESW_ASSETS_REF || 'main'
 const destination = path.resolve(rootDir, process.env.DIESW_ASSETS_DIR || '.cache/diesw-assets')
+const gitWorkDir = fs.mkdtempSync(path.join(process.env.RUNNER_TEMP || os.tmpdir(), 'diesw-assets-git-'))
 const gitEnv = createGitEnv()
 
 function fail(message) {
@@ -17,7 +19,7 @@ function fail(message) {
 
 function runGit(args, options = {}) {
   const result = spawnSync('git', args, {
-    cwd: options.cwd || rootDir,
+    cwd: options.cwd || gitWorkDir,
     env: gitEnv,
     encoding: 'utf8',
     stdio: options.capture ? 'pipe' : 'inherit',
@@ -46,16 +48,21 @@ function createGitEnv() {
     GIT_TERMINAL_PROMPT: '0',
   }
 
+  for (const key of Object.keys(env)) {
+    if (/^GIT_CONFIG_(?:COUNT|KEY_\d+|VALUE_\d+)$/.test(key)) {
+      delete env[key]
+    }
+  }
+
   if (!token) return env
 
-  const configIndex = Number(env.GIT_CONFIG_COUNT || 0)
   const encoded = Buffer.from(`x-access-token:${token}`).toString('base64')
 
   return {
     ...env,
-    GIT_CONFIG_COUNT: String(configIndex + 1),
-    [`GIT_CONFIG_KEY_${configIndex}`]: 'http.https://github.com/.extraheader',
-    [`GIT_CONFIG_VALUE_${configIndex}`]: `AUTHORIZATION: basic ${encoded}`,
+    GIT_CONFIG_COUNT: '1',
+    GIT_CONFIG_KEY_0: 'http.https://github.com/.extraheader',
+    GIT_CONFIG_VALUE_0: `AUTHORIZATION: basic ${encoded}`,
   }
 }
 
