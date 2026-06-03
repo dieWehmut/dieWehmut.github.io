@@ -201,7 +201,7 @@ export const friends: FriendLink[] = [
     name: '朋友名稱',
     description: '一段簡短的描述',
     url: 'https://friend-site.com',
-    avatar: 'https://github.com/friend-username.png',
+    avatar: 'https://avatars.githubusercontent.com/friend-username',
   },
 ]
 ```

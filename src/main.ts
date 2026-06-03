@@ -12,12 +12,13 @@ import i18n from "./i18n";
 import router from "./router";
 import { initThemePreference } from "./composables/useThemePreference";
 import { siteConfig } from "./data/site/config";
+import { getGitHubAvatarUrl } from "./utils/githubAvatar";
 
 initThemePreference();
 
 document.title = siteConfig.title;
 const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-if (favicon) favicon.href = `https://github.com/${siteConfig.githubUser}.png`;
+if (favicon) favicon.href = getGitHubAvatarUrl(siteConfig.githubUser);
 
 if (siteConfig.googleAnalyticsId) {
   const gaScript = document.createElement("script");
