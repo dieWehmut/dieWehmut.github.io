@@ -188,11 +188,65 @@ function toggleTheme() {
 
 .float-controls__settings {
   bottom: 50px;
-  transition: bottom 200ms ease;
+  border-color: rgba(31, 196, 31, 0.18);
+  color: var(--site-text);
+  background: rgba(10, 10, 10, 0.74);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  transition:
+    bottom 200ms ease,
+    transform 150ms ease,
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .float-controls.is-top-hidden .float-controls__settings {
   bottom: 0;
+}
+
+.float-controls__settings :deep(.el-icon) {
+  animation: settings-spin 2s linear infinite;
+}
+
+.float-controls__settings:hover,
+.float-controls__settings:focus-visible {
+  border-color: #1fc41f;
+  color: var(--site-accent);
+  background: rgba(31, 196, 31, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(31, 196, 31, 0.12),
+    0 14px 40px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.float-controls__settings:hover :deep(.el-icon),
+.float-controls__settings:focus-visible :deep(.el-icon) {
+  animation: none;
+}
+
+:root[data-theme="light"] .float-controls__settings {
+  border-color: rgba(255, 255, 255, 0.68);
+  color: var(--site-text);
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow:
+    0 8px 28px rgba(26, 158, 26, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+}
+
+:root[data-theme="light"] .float-controls__settings:hover,
+:root[data-theme="light"] .float-controls__settings:focus-visible {
+  border-color: #1fc41f;
+  color: var(--site-accent);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 14px 36px rgba(26, 158, 26, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .float-controls__opt-dynamic,
@@ -280,6 +334,11 @@ function toggleTheme() {
   font-weight: 900;
 }
 
+@keyframes settings-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 @media (max-width: 900px) {
   .float-controls {
     right: 14px;
@@ -306,6 +365,10 @@ function toggleTheme() {
   .float-controls__button,
   .float-controls__langs {
     transition: none;
+  }
+
+  .float-controls__settings :deep(.el-icon) {
+    animation: none;
   }
 }
 </style>
