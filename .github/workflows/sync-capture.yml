@@ -18,27 +18,16 @@ jobs:
 
     env:
       DIESW_ASSETS_DIR: ${{ github.workspace }}/.cache/diesw-assets
+      DIESW_ASSETS_REF: ${{ vars.DIESW_ASSETS_REF || 'main' }}
 
     steps:
       - name: Checkout site
         uses: actions/checkout@v4
 
-      - name: Check assets token
+      - name: Checkout assets repository
         env:
           DIESW_ASSETS_TOKEN: ${{ secrets.DIESW_ASSETS_TOKEN }}
-        run: |
-          if [ -z "$DIESW_ASSETS_TOKEN" ]; then
-            echo "DIESW_ASSETS_TOKEN is not set in this repository's Actions secrets." >&2
-            exit 1
-          fi
-
-      - name: Checkout assets repository
-        uses: actions/checkout@v4
-        with:
-          repository: dieWehmut/diesw-assets
-          ref: ${{ vars.DIESW_ASSETS_REF || 'main' }}
-          token: ${{ secrets.DIESW_ASSETS_TOKEN }}
-          path: .cache/diesw-assets
+        run: node scripts/checkout-assets-repo.mjs
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
