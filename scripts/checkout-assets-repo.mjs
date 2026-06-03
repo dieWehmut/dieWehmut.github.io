@@ -41,37 +41,61 @@ function githubRemoteUrl() {
 }
 
 function createGitEnv() {
-  if (!token) return { ...process.env, GIT_TERMINAL_PROMPT: '0' }
-
-  const tempDir = process.env.RUNNER_TEMP || rootDir
-  const askpassPath = path.join(tempDir, process.platform === 'win32' ? 'diesw-assets-askpass.cmd' : 'diesw-assets-askpass.sh')
-
-  if (process.platform === 'win32') {
-    fs.writeFileSync(
-      askpassPath,
-      '@echo off\r\n' +
-      'echo %1 | findstr /I "Username" >nul && echo x-access-token && exit /b 0\r\n' +
-      'echo %DIESW_ASSETS_TOKEN%\r\n',
-      { mode: 0o700 }
-    )
-  } else {
-    fs.writeFileSync(
-      askpassPath,
-      '#!/usr/bin/env sh\n' +
-      'case "$1" in\n' +
-      '  *Username*) printf "%s\\n" "x-access-token" ;;\n' +
-      '  *) printf "%s\\n" "$DIESW_ASSETS_TOKEN" ;;\n' +
-      'esac\n',
-      { mode: 0o700 }
-    )
-    fs.chmodSync(askpassPath, 0o700)
-  }
-
-  return {
+  const env = {
     ...process.env,
-    GIT_ASKPASS: askpassPath,
     GIT_TERMINAL_PROMPT: '0',
   }
+
+  if (!token) return env
+
+  const configIndex = Number(env.GIT_CONFIG_COUNT || 0)
+  const encoded = Buffer.from(`x-access-token:${token}`).toString('base64')
+
+  return {
+    ...env,
+    GIT_CONFIG_COUNT: String(configIndex + 1),
+    [`GIT_CONFIG_KEY_${configIndex}`]: 'http.https://github.com/.extraheader',
+    [`GIT_CONFIG_VALUE_${configIndex}`]: `AUTHORIZATION: basic ${encoded}`,
+  }
+}
+
+function githubApiRepositoryUrl() {
+  const [owner, repoName] = repository.split('/')
+  if (!owner || !repoName) fail(`DIESW_ASSETS_REPOSITORY must be in owner/repo format: ${repository}`)
+  return `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repoName)}`
+}
+
+async function loadRepositoryAccess() {
+  if (!token) fail('DIESW_ASSETS_TOKEN is not set in this repository\'s Actions secrets.')
+
+  const response = await fetch(githubApiRepositoryUrl(), {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  })
+
+  if (response.ok) return response.json()
+
+  if (response.status === 404) {
+    fail(`Cannot access ${repository}. Check that DIESW_ASSETS_REPOSITORY is correct and DIESW_ASSETS_TOKEN has access to this private repository.`)
+  }
+
+  if (response.status === 401) {
+    fail('DIESW_ASSETS_TOKEN is invalid or expired.')
+  }
+
+  if (response.status === 403) {
+    fail(`DIESW_ASSETS_TOKEN cannot access ${repository}. It needs read/write contents permission.`)
+  }
+
+  fail(`GitHub API failed while checking ${repository}: HTTP ${response.status}`)
+}
+
+function tokenCanPush(repositoryInfo) {
+  const permissions = repositoryInfo?.permissions
+  return Boolean(permissions?.admin || permissions?.maintain || permissions?.push)
 }
 
 function branchExists(remoteUrl, branch) {
@@ -87,7 +111,11 @@ function resolveDefaultBranch(remoteUrl) {
   return match?.[1] || ''
 }
 
-function createBranchFromDefault(remoteUrl, branch) {
+function createBranchFromDefault(remoteUrl, branch, repositoryInfo) {
+  if (!tokenCanPush(repositoryInfo)) {
+    fail(`Assets branch ${branch} does not exist, and DIESW_ASSETS_TOKEN cannot create it. Grant write contents permission to ${repository}.`)
+  }
+
   const defaultBranch = resolveDefaultBranch(remoteUrl)
   if (!defaultBranch) fail(`Unable to resolve default branch for ${repository}.`)
   if (defaultBranch === branch) fail(`Default branch ${branch} exists but could not be fetched.`)
@@ -99,10 +127,11 @@ function createBranchFromDefault(remoteUrl, branch) {
   runGit(['push', 'origin', `${branch}:${branch}`], { cwd: destination })
 }
 
+const repositoryInfo = await loadRepositoryAccess()
 const remoteUrl = githubRemoteUrl()
 
 if (!branchExists(remoteUrl, targetRef)) {
-  createBranchFromDefault(remoteUrl, targetRef)
+  createBranchFromDefault(remoteUrl, targetRef, repositoryInfo)
 }
 
 fs.rmSync(destination, { recursive: true, force: true })
