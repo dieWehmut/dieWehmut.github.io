@@ -7,7 +7,13 @@ import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import { siteConfig } from './src/data/site/config'
 
-const base = '/'
+function normalizeBasePath(value?: string): string {
+  const trimmed = value?.trim()
+  if (!trimmed || trimmed === '/') return '/'
+  return `/${trimmed.replace(/^\/+|\/+$/g, '')}/`
+}
+
+const base = normalizeBasePath(process.env.BASE_PATH || process.env.VITE_BASE_PATH)
 const githubUser = siteConfig.githubUser
 const captureUrlPrefix = '/capture-assets/'
 const generatedCapturePath = path.resolve(__dirname, 'src', 'data', 'capture', 'generated.ts')
