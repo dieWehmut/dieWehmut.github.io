@@ -7,6 +7,7 @@ const rootDir = process.cwd()
 const defaultAssetsDir = path.resolve(rootDir, '..', 'diesw-assets')
 const assetsDir = path.resolve(rootDir, process.env.DIESW_ASSETS_DIR?.trim() || defaultAssetsDir)
 const docsDir = path.join(rootDir, 'src', 'data', 'docs')
+const publicCaptureDir = path.join(rootDir, 'public', 'capture-assets')
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true })
@@ -31,17 +32,39 @@ function isMarkdown(filePath) {
   return filePath.toLowerCase().endsWith('.md')
 }
 
+function isMediaAsset(filePath) {
+  return /\.(?:png|jpe?g|gif|webp|svg|avif)$/i.test(filePath)
+}
+
 function mirrorDocsImagesToAssetsRepo() {
   const targetDocsDir = path.join(assetsDir, 'docs')
   fs.rmSync(targetDocsDir, { recursive: true, force: true })
   const docFiles = walkFiles(docsDir)
   for (const filePath of docFiles) {
     if (isMarkdown(filePath)) continue
+    if (!isMediaAsset(filePath)) continue
     const relativePath = path.relative(docsDir, filePath)
     const destinationPath = path.join(targetDocsDir, relativePath)
     ensureDir(path.dirname(destinationPath))
     fs.copyFileSync(filePath, destinationPath)
   }
+}
+
+function copyDirContents(sourceDir, targetDir) {
+  if (!fs.existsSync(sourceDir)) return
+  fs.rmSync(targetDir, { recursive: true, force: true })
+  const files = walkFiles(sourceDir)
+  for (const filePath of files) {
+    const relativePath = path.relative(sourceDir, filePath)
+    const destinationPath = path.join(targetDir, relativePath)
+    ensureDir(path.dirname(destinationPath))
+    fs.copyFileSync(filePath, destinationPath)
+  }
+}
+
+function mirrorPublicCaptureAssetsToAssetsRepo() {
+  copyDirContents(path.join(publicCaptureDir, 'standalone'), path.join(assetsDir, 'standalone'))
+  copyDirContents(path.join(publicCaptureDir, 'local'), path.join(assetsDir, 'local'))
 }
 
 function fail(message) {
@@ -74,6 +97,7 @@ if (!fs.existsSync(path.join(assetsDir, '.git'))) {
 }
 
 mirrorDocsImagesToAssetsRepo()
+mirrorPublicCaptureAssetsToAssetsRepo()
 
 const porcelain = runGit(['status', '--porcelain'], { cwd: assetsDir, capture: true })
 if (!porcelain) {

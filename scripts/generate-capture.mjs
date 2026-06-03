@@ -165,11 +165,17 @@ function isPreservedCaptureAsset(asset) {
   return preservedAssetPrefixes.some((prefix) => image.startsWith(prefix))
 }
 
-function preservedCaptureAssetExists(asset) {
+function preservedCaptureAssetSourcePath(assetsDir, asset) {
   const image = String(asset?.image || '')
   if (!image.startsWith(captureUrlPrefix)) return true
   const relativePath = captureAssetRelativePath(image)
-  return fs.existsSync(path.join(publicCaptureDir, relativePath))
+  const publicPath = path.join(publicCaptureDir, relativePath)
+  if (fs.existsSync(publicPath)) return publicPath
+
+  const assetsPath = path.join(assetsDir, relativePath)
+  if (fs.existsSync(assetsPath)) return assetsPath
+
+  return ''
 }
 
 function normalizeExistingCaptureAsset(asset) {
@@ -185,16 +191,28 @@ function normalizeExistingCaptureAsset(asset) {
   }
 }
 
+function syncPreservedCaptureAsset(asset, sourcePath) {
+  const image = String(asset?.image || '')
+  if (!image.startsWith(captureUrlPrefix) || typeof sourcePath !== 'string') return
+  const relativePath = captureAssetRelativePath(image)
+  const destinationPath = path.join(publicCaptureDir, relativePath)
+  if (path.resolve(sourcePath) === path.resolve(destinationPath)) return
+  ensureDir(path.dirname(destinationPath))
+  fs.copyFileSync(sourcePath, destinationPath)
+}
+
 function assertFileExists(filePath, label) {
   if (!fs.existsSync(filePath)) {
     throw new Error(`${label} not found: ${filePath}`)
   }
 }
 
-function syncDocAsset(docFilePath, imageUrl) {
+function syncDocAsset(assetsDir, docFilePath, imageUrl) {
   const relativeAssetPath = captureAssetRelativePath(imageUrl)
   const docRelativePath = relativeAssetPath.replace(/^docs\//, '')
-  const sourcePath = path.join(docsDir, docRelativePath)
+  const localSourcePath = path.join(docsDir, docRelativePath)
+  const assetsSourcePath = path.join(assetsDir, 'docs', docRelativePath)
+  const sourcePath = fs.existsSync(localSourcePath) ? localSourcePath : assetsSourcePath
   const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
   assertFileExists(sourcePath, 'Markdown image')
   ensureDir(path.dirname(destinationPath))
@@ -240,9 +258,11 @@ async function main() {
 
   for (const asset of loadExistingCaptureAssets()) {
     if (!isPreservedCaptureAsset(asset)) continue
-    if (!preservedCaptureAssetExists(asset)) continue
+    const sourcePath = preservedCaptureAssetSourcePath(assetsDir, asset)
+    if (!sourcePath) continue
     const normalized = normalizeExistingCaptureAsset(asset)
     if (normalized.image) byImage.set(normalized.image, normalized)
+    syncPreservedCaptureAsset(normalized, sourcePath)
   }
 
   for (const filePath of markdownFiles) {
@@ -289,7 +309,7 @@ async function main() {
       }
 
       byImage.set(image.src, existing)
-      syncDocAsset(filePath, image.src)
+      syncDocAsset(assetsDir, filePath, image.src)
     }
   }
 
