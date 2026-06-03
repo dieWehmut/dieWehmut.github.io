@@ -18,7 +18,10 @@
         target="_blank"
         rel="noopener noreferrer"
       >{{ project.name }}</a>
-      <time v-if="project.date" :datetime="project.date">{{ formattedDate }}</time>
+      <time v-if="project.date" class="project-item__date" :datetime="project.date">
+        <el-icon class="project-item__date-icon"><Calendar /></el-icon>
+        {{ formattedDate }}
+      </time>
     </div>
     <div class="project-item__actions">
       <a v-if="project.url" :href="project.url" target="_blank" rel="noopener noreferrer">Open</a>
@@ -29,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Notebook, Headset, Menu, Document } from '@element-plus/icons-vue'
+import { Notebook, Headset, Menu, Document, Calendar } from '@element-plus/icons-vue'
 import type { ProjectEntry } from '../../types/content'
 
 const props = defineProps<{ project: ProjectEntry; category: ProjectEntry['category'] }>()
@@ -117,11 +120,20 @@ function openProject(event?: MouseEvent | KeyboardEvent) {
   outline: none;
 }
 
-time {
+.project-item__date {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--site-muted);
   font-size: 14px;
   font-weight: 700;
+}
+
+.project-item__date-icon {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
 }
 
 .project-item__actions {
@@ -165,6 +177,17 @@ time {
 
   .project-item__name {
     font-size: 22px;
+  }
+
+  .project-item__date {
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .project-item__date-icon {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
   }
 }
 </style>
