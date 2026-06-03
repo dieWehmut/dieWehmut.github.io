@@ -39,10 +39,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check assets token
+        env:
+          DIESW_ASSETS_TOKEN: ${{ secrets.DIESW_ASSETS_TOKEN }}
+        run: |
+          if [ -z "$DIESW_ASSETS_TOKEN" ]; then
+            echo "DIESW_ASSETS_TOKEN is not set in this repository's Actions secrets." >&2
+            exit 1
+          fi
+
       - name: Checkout assets repository
         uses: actions/checkout@v4
         with:
           repository: dieWehmut/diesw-assets
+          ref: ${{ vars.DIESW_ASSETS_REF || 'main' }}
           token: ${{ secrets.DIESW_ASSETS_TOKEN }}
           path: .cache/diesw-assets
 
