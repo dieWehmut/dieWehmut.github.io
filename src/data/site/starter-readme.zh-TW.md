@@ -1,4 +1,4 @@
-<h1 align="center">Nexus Starter</h1>
+<h1 align="center">diesuwa-starter</h1>
 
 <div align="center">
 
@@ -33,7 +33,7 @@
 
 ---
 
-`Nexus Starter` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，適合建立部落格、筆記、專案展示、友鏈頁與靜態個人頁。
+`diesuwa-starter` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，適合建立部落格、筆記、專案展示、友鏈頁與靜態個人頁。
 
 ## 示例
 

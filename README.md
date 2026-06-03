@@ -1,6 +1,6 @@
-# Nexus
+# diesuwa-starter
 
-`Nexus` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus + Tailwind CSS` 的个人站点项目，内容以本地 Markdown 和静态 TypeScript 数据为主，适合部署到 GitHub Pages 一类静态托管平台。
+`diesuwa-starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus + Tailwind CSS` 的个人站点项目，内容以本地 Markdown 和静态 TypeScript 数据为主，适合部署到 GitHub Pages 一类静态托管平台。
 
 当前站点包含这些能力：
 

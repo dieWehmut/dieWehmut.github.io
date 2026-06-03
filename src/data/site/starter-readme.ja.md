@@ -1,4 +1,4 @@
-<h1 align="center">Nexus Starter</h1>
+<h1 align="center">diesuwa-starter</h1>
 
 <div align="center">
 
@@ -33,7 +33,7 @@
 
 ---
 
-`Nexus Starter` は `Vue 3 + Vite + TypeScript + Element Plus` で作られた個人サイト用テンプレートです。ブログ、ノート、プロジェクト紹介、リンク集、静的プロフィールページに向いています。
+`diesuwa-starter` は `Vue 3 + Vite + TypeScript + Element Plus` で作られた個人サイト用テンプレートです。ブログ、ノート、プロジェクト紹介、リンク集、静的プロフィールページに向いています。
 
 ## デモ
 

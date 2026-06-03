@@ -1,4 +1,4 @@
-<h1 align="center">Nexus Starter</h1>
+<h1 align="center">diesuwa-starter</h1>
 
 <div align="center">
 
@@ -33,7 +33,7 @@
 
 ---
 
-`Nexus Starter` is a personal website template built with `Vue 3 + Vite + TypeScript + Element Plus`. It is suitable for blogs, notes, project showcases, friend links, and static profile pages.
+`diesuwa-starter` is a personal website template built with `Vue 3 + Vite + TypeScript + Element Plus`. It is suitable for blogs, notes, project showcases, friend links, and static profile pages.
 
 ## Demos
 
