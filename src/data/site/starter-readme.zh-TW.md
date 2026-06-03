@@ -1,226 +1,77 @@
-# Nexus Starter
+<h1 align="center">Nexus Starter</h1>
 
-一個使用 **Vue 3 + Vite + TailwindCSS + Element Plus** 打造的現代個人網站 / 部落格模板。
+<div align="center">
 
-線上展示 → [https://diesw.tech](https://diesw.tech)
+<div>
+<a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
+  <img src="https://img.shields.io/badge/%E6%A8%A1%E6%9D%BF-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="模板 Demo">
+</a>
+<a href="https://diewehmut.github.io/" target="_blank">
+  <img src="https://img.shields.io/badge/%E6%88%90%E5%93%81-DEMO-F9D553?style=flat-square&logo=google-chrome&logoColor=white&labelColor=555555" alt="成品 Demo">
+</a>
+</div>
+
+<div>
+<a href="https://vuejs.org/" target="_blank">
+  <img src="https://img.shields.io/badge/VUE-3-42B883?style=flat-square&logo=vuedotjs&logoColor=white&labelColor=555555" alt="Vue 3">
+</a>
+<a href="https://vite.dev/" target="_blank">
+  <img src="https://img.shields.io/badge/VITE-7-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=555555" alt="Vite">
+</a>
+<a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
+  <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
+</a>
+</div>
+
+</div>
+
+<div align="center">
+
+[简体中文](../README.md) | 繁體中文 | [English](README.en.md) | [日本語](README.ja.md)
+
+</div>
 
 ---
 
-## ✨ 功能特色
+`Nexus Starter` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，適合建立部落格、筆記、專案展示、友鏈頁與靜態個人頁。
 
-- 🌙 深色 / 淺色主題切換，附平滑過渡動畫
-- 🌸 動態背景效果（粒子、櫻花、雪花）
-- 📝 Markdown 部落格文章與筆記，支援 frontmatter、程式碼高亮及 **KaTeX 數學公式**
-- 🗂️ 專案展示（網站、應用、遊戲、工具）— 可選
-- 🏗️ 基礎設施狀態儀表板 — 可選
-- 👥 友情連結 / 部落格圈頁面
-- 🔍 客戶端全文搜尋
-- 💬 Giscus 評論系統（GitHub Discussions）
-- 🌐 國際化（zh、zh_tw、en、ja、de、la）
-- 📱 響應式行動裝置佈局與側邊導航
-- 💖 自訂游標（愛心形狀！）
-- 📊 Google Analytics（可選）
+## 示例
 
----
+- 模板示例：<https://diewehmut.github.io/diesuwa-starter/>
+- 成品示例：<https://diewehmut.github.io/>
 
-## 🚀 快速開始
+如果模板示例無法開啟，請確認倉庫 `Settings -> Pages -> Source` 已設定為 `GitHub Actions`。部署工作流程會自動為 GitHub Pages 子路徑設定 Vite `base`。
 
-### 1. 建立你的倉庫
-
-在 GitHub 上點擊 **「Use this template」**，或手動克隆並推送：
+## 快速開始
 
 ```bash
 git clone https://github.com/dieWehmut/diesuwa-starter.git my-site
 cd my-site
-rm -rf .git && git init
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-```
-
-### 2. 安裝依賴
-
-```bash
-# 使用 pnpm（推薦）
 pnpm install
-
-# 或使用 npm
-npm install
+pnpm dev
 ```
 
-### 3. 設定你的網站
+請先編輯 `src/data/site/config.ts`，再替換 `src/data` 下的範例文章、筆記、友鏈與專案資料。
 
-編輯 **`src/data/site/config.ts`** — 這是唯一*必須*修改的檔案：
+## 部署
 
-```ts
-export const siteConfig = {
-  // --- 身份資訊 ---
-  githubUser: 'your-github-username',       // ⬅️ 你的 GitHub 使用者名稱
-  githubRepo: 'your-repo-name',             // ⬅️ 託管網站的倉庫名稱
-  owner: 'Your Name',
-  displayName: 'Your Name',
-  email: 'you@example.com',
+推送到 `main` 後，內建 GitHub Actions 會自動建置並部署到 GitHub Pages。
 
-  // --- 網站資訊 ---
-  title: 'My Site',
-  subtitle: 'My Site',
-  description: '一段簡短的描述。',
-  siteUrl: 'https://your-domain.com',       // ⬅️ 你部署後的網址
-  startedAt: '2026-01-01T00:00:00+00:00',   // ⬅️ 網站上線起始日期
+需要確認：
 
-  // --- 外部服務 ---
-  googleAnalyticsId: '',                     // 例如 'G-XXXXXXXXXX'
+1. 進入 `Settings -> Pages`
+2. `Source` 選擇 `GitHub Actions`
+3. 如果不是 `YOUR_USERNAME.github.io` 倉庫，網址會是 `https://YOUR_USERNAME.github.io/YOUR_REPO/`
 
-  // --- ICP 備案（可選，留空則隱藏）---
-  icpNumber: '',
-  icpText: '',
-
-  // --- 功能開關 ---
-  enableInfra: false,     // 設為 true 以顯示基礎設施頁面
-  enableProject: false,   // 設為 true 以顯示專案頁面
-
-  // --- 社交連結 ---
-  links: [
-    { label: 'GitHub', url: 'https://github.com/your-github-username' },
-  ],
-}
-```
-
-### 4. 新增內容
-
-| 內容類型 | 位置 | 格式 |
-|---|---|---|
-| 部落格文章 | `src/data/docs/posts/*.md` | 含 YAML frontmatter 的 Markdown |
-| 短筆記 | `src/data/docs/notes/*.md` | 含 YAML frontmatter 的 Markdown |
-| 關於頁面 | `src/data/site/about.md` | Markdown |
-| 友情連結 | `src/data/site/friends.ts` | TypeScript 陣列 |
-| 專案 | `src/data/site/app.ts`、`game.ts`、`page.ts`、`tool.ts` | TypeScript |
-| 基礎設施端點 | `src/data/site/infra.ts` | TypeScript 陣列 |
-
-#### Frontmatter 範例
-
-```markdown
----
-title: 我的第一篇文章
-date: 2026-05-28
-tags: [hello, intro]
----
-
-你的內容在這裡。支援 **粗體**、*斜體*、`程式碼`、數學公式（$E=mc^2$）、表格等。
-```
-
-### 5. 設定 Giscus 評論（可選）
-
-1. 前往 [https://giscus.app](https://giscus.app) 並為你的倉庫進行設定。
-2. 將 `.env.example` 複製為 `.env.local` 並填入你的 Giscus 設定：
-
-```env
-VITE_GISCUS_REPO=your-username/your-repo
-VITE_GISCUS_REPO_ID=R_xxxxx
-VITE_GISCUS_CATEGORY=Announcements
-VITE_GISCUS_CATEGORY_ID=DIC_xxxxx
-```
-
-### 6. 本地執行
+## 常用命令
 
 ```bash
 pnpm dev
-# 開啟 http://localhost:5173
+pnpm typecheck
+pnpm build
+pnpm preview
 ```
 
-### 7. 部署
-
-內建的 GitHub Actions 工作流程（`.github/workflows/`）會在推送至 `main` 時自動建置並部署至 GitHub Pages。
-
-請確認你的倉庫 Settings → Pages → Source 設定為 **GitHub Actions**。
-
-如需自訂網域，請在 `public/` 目錄下新增包含你網域的 `CNAME` 檔案。
-
----
-
-## 📁 專案結構
-
-```
-src/
-├── data/
-│   ├── site/
-│   │   ├── config.ts        ← ⭐ 個人設定（從這裡開始！）
-│   │   ├── about.md         ← 關於頁面內容
-│   │   ├── profile.ts       ← 個人檔案邏輯（自動從 config 載入）
-│   │   ├── friends.ts       ← 友情連結
-│   │   ├── app.ts           ← 應用專案
-│   │   ├── game.ts          ← 遊戲專案
-│   │   ├── page.ts          ← 網站專案
-│   │   ├── tool.ts          ← 工具專案
-│   │   └── infra.ts         ← 基礎設施端點
-│   └── docs/
-│       ├── posts/            ← 部落格文章（.md）
-│       └── notes/            ← 短筆記（.md）
-├── components/               ← Vue 元件
-├── composables/              ← Vue 組合式函數
-├── layouts/                  ← 佈局包裝器
-├── views/                    ← 頁面視圖（路由）
-├── styles/                   ← SCSS 樣式（主題、游標等）
-├── locales/                  ← i18n 翻譯 JSON 檔案
-└── utils/                    ← 工具函數（markdown、API 快取等）
-```
-
----
-
-## 🎨 自訂技巧
-
-- **主題色彩** — 修改 `src/styles/theme/dark/index.scss` 和 `light/index.scss` 中的 CSS 變數
-- **游標** — 更換 `src/styles/cursor/` 中的 SVG
-- **背景效果** — 在浮動設定按鈕中切換，或在 `src/components/background/` 中自訂
-- **字型** — 替換 `src/assets/fonts/` 中的字型並更新 `src/styles/fonts/index.scss`
-- **國際化** — 編輯 `src/locales/` 中的 JSON 檔案
-
----
-
-## 📐 數學公式支援
-
-行內公式：`$E = mc^2$`
-
-區塊公式：
-```
-$$
-\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
-$$
-```
-
-由 KaTeX 驅動 — 支援所有標準 LaTeX 數學指令。
-
----
-
-## 🤝 友情連結頁面
-
-編輯 `src/data/site/friends.ts`：
-
-```ts
-export const friends: FriendLink[] = [
-  {
-    id: 'friend-1',
-    name: '朋友名稱',
-    description: '一段簡短的描述',
-    url: 'https://friend-site.com',
-    avatar: 'https://avatars.githubusercontent.com/friend-username',
-  },
-]
-```
-
----
-
-## ❓ 常見問題
-
-**問：如何隱藏基礎設施 / 專案頁面？**
-答：在 `config.ts` 中設定 `enableInfra: false` 和/或 `enableProject: false`。
-
-**問：如何更改網站語言？**
-答：預設為中文。使用者可透過浮動按鈕切換。若要更改預設語言，請編輯 `src/i18n.ts`。
-
-**問：可以部署到 Vercel / Netlify 而非 GitHub Pages 嗎？**
-答：可以 — 只需將建置指令設為 `pnpm build`，輸出目錄設為 `dist` 即可。
-
----
-
-## 📄 授權條款
+## 授權
 
 MIT

@@ -1,116 +1,160 @@
-# Nexus Starter
+<h1 align="center">Nexus Starter</h1>
 
-A modern personal website / blog template built with **Vue 3 + Vite + TailwindCSS + Element Plus**.
+<div align="center">
 
-Live demo → [https://diesw.tech](https://diesw.tech)
+<div>
+<a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
+  <img src="https://img.shields.io/badge/%E6%A8%A1%E6%9D%BF-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="模板 Demo">
+</a>
+<a href="https://diewehmut.github.io/" target="_blank">
+  <img src="https://img.shields.io/badge/%E6%88%90%E5%93%81-DEMO-F9D553?style=flat-square&logo=google-chrome&logoColor=white&labelColor=555555" alt="成品 Demo">
+</a>
+</div>
+
+<div>
+<a href="https://vuejs.org/" target="_blank">
+  <img src="https://img.shields.io/badge/VUE-3-42B883?style=flat-square&logo=vuedotjs&logoColor=white&labelColor=555555" alt="Vue 3">
+</a>
+<a href="https://vite.dev/" target="_blank">
+  <img src="https://img.shields.io/badge/VITE-7-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=555555" alt="Vite">
+</a>
+<a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
+  <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
+</a>
+</div>
+
+</div>
+
+<div align="center">
+
+简体中文 | [繁體中文](docs/README.zh-TW.md) | [English](docs/README.en.md) | [日本語](docs/README.ja.md)
+
+</div>
 
 ---
 
-## ✨ Features
+`Nexus Starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，适合搭建博客、笔记、项目展示、友链页和静态资料页。模板可以直接部署到 GitHub Pages，也支持 Vercel / Netlify 等静态托管平台。
 
-- 🌙 Dark / Light theme with smooth transitions
-- 🌸 Animated backgrounds (particles, sakura, snow)
-- 📝 Markdown blog posts & notes with frontmatter, code highlighting, and **KaTeX math** support
-- 🗂️ Project showcase (websites, apps, games, tools) — optional
-- 🏗️ Infrastructure status dashboard — optional
-- 👥 Friends / blogroll page
-- 🔍 Client-side full-text search
-- 💬 Giscus comments (GitHub Discussions)
-- 🌐 i18n (zh, zh_tw, en, ja, de, la)
-- 📱 Responsive mobile layout with drawer navigation
-- 💖 Custom cursor (heart shape!)
-- 📊 Google Analytics (optional)
+## 示例
 
----
+- 模板示例：<https://diewehmut.github.io/diesuwa-starter/>
+- 成品示例：<https://diewehmut.github.io/>
 
-## 🚀 Quick Start
+如果模板示例无法打开，请先检查仓库 `Settings -> Pages -> Source` 是否设置为 `GitHub Actions`。模板的部署工作流会自动为项目页仓库设置 Vite `base`，例如 `diesuwa-starter` 会构建为 `/diesuwa-starter/`。
 
-### 1. Create your repo
+## 功能
 
-Click **"Use this template"** on GitHub, or clone and push:
+- 深色 / 浅色主题切换
+- 动态背景效果
+- Markdown 文章与笔记
+- KaTeX 数学公式
+- 归档、标签、搜索
+- 友链页面
+- 项目展示页，可关闭
+- 基础设施状态页，可关闭
+- Giscus 评论，可选
+- 多语言界面
+- 响应式移动端布局
+- GitHub Pages 自动部署
+
+## 快速开始
+
+### 1. 创建仓库
+
+在 GitHub 点击 `Use this template`，或手动克隆：
 
 ```bash
 git clone https://github.com/dieWehmut/diesuwa-starter.git my-site
 cd my-site
-rm -rf .git && git init
+rm -rf .git
+git init
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 ```
 
-### 2. Install dependencies
+### 2. 安装依赖
 
 ```bash
-# Using pnpm (recommended)
 pnpm install
-
-# Or npm
-npm install
 ```
 
-### 3. Configure your site
+### 3. 修改个人配置
 
-Edit **`src/data/site/config.ts`** — this is the only file you *must* change:
+编辑 `src/data/site/config.ts`：
 
 ```ts
 export const siteConfig = {
-  // --- Identity ---
-  githubUser: 'your-github-username',       // ⬅️ Your GitHub username
-  githubRepo: 'your-repo-name',             // ⬅️ The repo hosting the site
-  owner: 'Your Name',
-  displayName: 'Your Name',
+  githubUser: 'your-github-username',
+  githubRepo: 'your-github-username.github.io',
+  owner: 'your-name',
+  displayName: 'your-name',
   email: 'you@example.com',
 
-  // --- Site Meta ---
-  title: 'My Site',
-  subtitle: 'My Site',
-  description: 'A short description.',
-  siteUrl: 'https://your-domain.com',       // ⬅️ Your deployed URL
-  startedAt: '2026-01-01T00:00:00+00:00',   // ⬅️ Site uptime start date
+  title: 'my-nexus',
+  subtitle: 'my-nexus',
+  description: 'Hi! This is my personal site.',
+  siteUrl: 'https://your-github-username.github.io',
+  startedAt: '2026-05-01T00:00:00+08:00',
 
-  // --- External Services ---
-  googleAnalyticsId: '',                     // e.g. 'G-XXXXXXXXXX'
+  googleAnalyticsId: '',
 
-  // --- ICP Filing (optional, leave empty to hide) ---
   icpNumber: '',
   icpText: '',
 
-  // --- Feature Flags ---
-  enableInfra: false,     // Set true to show Infra page
-  enableProject: false,   // Set true to show Project page
+  enableInfra: false,
+  enableProject: false,
 
-  // --- Social Links ---
   links: [
     { label: 'GitHub', url: 'https://github.com/your-github-username' },
   ],
 }
 ```
 
-### 4. Add content
+如果部署到 `https://YOUR_USERNAME.github.io/YOUR_REPO/`，请把 `siteUrl` 改成完整地址。工作流会自动处理构建路径。
 
-| Content type | Location | Format |
+### 4. 添加内容
+
+| 内容 | 位置 | 格式 |
 |---|---|---|
-| Blog posts | `src/data/docs/posts/*.md` | Markdown with YAML frontmatter |
-| Short notes | `src/data/docs/notes/*.md` | Markdown with YAML frontmatter |
-| About page | `src/data/site/about.md` | Markdown |
-| Friends | `src/data/site/friends.ts` | TypeScript array |
-| Projects | `src/data/site/app.ts`, `game.ts`, `page.ts`, `tool.ts` | TypeScript |
-| Infra endpoints | `src/data/site/infra.ts` | TypeScript array |
+| 文章 | `src/data/docs/posts/*.md` | Markdown + frontmatter |
+| 笔记 | `src/data/docs/notes/*.md` | Markdown + frontmatter |
+| 关于页 | `src/data/site/about.md` | Markdown |
+| 友链 | `src/data/site/friends.ts` | TypeScript 数组 |
+| 项目 | `src/data/site/app.ts`、`game.ts`、`page.ts`、`tool.ts` | TypeScript |
+| 基础设施 | `src/data/site/infra.ts` | TypeScript 数组 |
 
-#### Frontmatter example
+Frontmatter 示例：
 
 ```markdown
 ---
-title: My First Post
+title: 我的第一篇文章
 date: 2026-05-28
 tags: [hello, intro]
 ---
 
-Your content here. Supports **bold**, *italic*, `code`, math ($E=mc^2$), tables, etc.
+这里写正文。支持代码高亮、表格、链接、图片和 KaTeX 数学公式。
 ```
 
-### 5. Set up Giscus comments (optional)
+### 5. 本地运行
 
-1. Go to [https://giscus.app](https://giscus.app) and configure for your repo.
-2. Copy `.env.example` to `.env.local` and fill in your Giscus settings:
+```bash
+pnpm dev
+```
+
+默认地址是 `http://localhost:5173`。
+
+### 6. 部署到 GitHub Pages
+
+模板自带 `.github/workflows/deploy.yml`。推送到 `main` 后会自动构建并部署。
+
+你需要在 GitHub 仓库里确认：
+
+1. 进入 `Settings -> Pages`
+2. `Source` 选择 `GitHub Actions`
+3. 如果仓库名不是 `YOUR_USERNAME.github.io`，访问地址会是 `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+
+## Giscus 评论
+
+复制 `.env.example` 为 `.env.local`，然后填入 Giscus 配置：
 
 ```env
 VITE_GISCUS_REPO=your-username/your-repo
@@ -119,108 +163,51 @@ VITE_GISCUS_CATEGORY=Announcements
 VITE_GISCUS_CATEGORY_ID=DIC_xxxxx
 ```
 
-### 6. Run locally
+为空时评论区会自动隐藏。
+
+## 项目结构
+
+```text
+src/
+  data/
+    site/
+      config.ts
+      about.md
+      friends.ts
+      app.ts
+      game.ts
+      page.ts
+      tool.ts
+      infra.ts
+    docs/
+      posts/
+      notes/
+  components/
+  composables/
+  layouts/
+  views/
+  styles/
+  locales/
+  utils/
+```
+
+## 常用命令
 
 ```bash
 pnpm dev
-# Open http://localhost:5173
+pnpm typecheck
+pnpm build
+pnpm preview
 ```
 
-### 7. Deploy
+## 自定义建议
 
-The included GitHub Actions workflow (`.github/workflows/`) automatically builds and deploys to GitHub Pages on push to `main`.
+- 主题颜色：修改 `src/styles/theme/`
+- 字体：替换 `src/assets/fonts/` 并更新 `src/styles/fonts/index.scss`
+- 背景效果：修改 `src/components/background/`
+- 多语言：修改 `src/locales/`
+- 页面开关：修改 `src/data/site/config.ts`
 
-Make sure your repo Settings → Pages → Source is set to **GitHub Actions**.
-
-For custom domains, add a `CNAME` file in `public/` with your domain.
-
----
-
-## 📁 Project Structure
-
-```
-src/
-├── data/
-│   ├── site/
-│   │   ├── config.ts        ← ⭐ Personal config (start here!)
-│   │   ├── about.md         ← About page content
-│   │   ├── profile.ts       ← Profile logic (auto from config)
-│   │   ├── friends.ts       ← Friend links
-│   │   ├── app.ts           ← App projects
-│   │   ├── game.ts          ← Game projects
-│   │   ├── page.ts          ← Website projects
-│   │   ├── tool.ts          ← Tool projects
-│   │   └── infra.ts         ← Infrastructure endpoints
-│   └── docs/
-│       ├── posts/            ← Blog posts (.md)
-│       └── notes/            ← Short notes (.md)
-├── components/               ← Vue components
-├── composables/              ← Vue composables
-├── layouts/                  ← Layout wrappers
-├── views/                    ← Page views (routed)
-├── styles/                   ← SCSS styles (themes, cursors, etc.)
-├── locales/                  ← i18n translation JSON files
-└── utils/                    ← Utilities (markdown, API cache, etc.)
-```
-
----
-
-## 🎨 Customization Tips
-
-- **Theme colors** — modify CSS variables in `src/styles/theme/dark/index.scss` and `light/index.scss`
-- **Cursor** — change the SVG in `src/styles/cursor/`
-- **Background effects** — toggle in the floating settings button, or customize in `src/components/background/`
-- **Fonts** — replace in `src/assets/fonts/` and update `src/styles/fonts/index.scss`
-- **i18n** — edit JSON files in `src/locales/`
-
----
-
-## 📐 Math Support
-
-Inline math: `$E = mc^2$`
-
-Display math:
-```
-$$
-\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
-$$
-```
-
-Powered by KaTeX — all standard LaTeX math commands are supported.
-
----
-
-## 🤝 Friends Page
-
-Edit `src/data/site/friends.ts`:
-
-```ts
-export const friends: FriendLink[] = [
-  {
-    id: 'friend-1',
-    name: 'Friend Name',
-    description: 'A short description',
-    url: 'https://friend-site.com',
-    avatar: 'https://avatars.githubusercontent.com/friend-username',
-  },
-]
-```
-
----
-
-## ❓ FAQ
-
-**Q: How do I hide the Infra / Project pages?**
-A: Set `enableInfra: false` and/or `enableProject: false` in `config.ts`.
-
-**Q: How do I change the site language?**
-A: The default is Chinese. Users can switch via the floating button. To change the default, edit `src/i18n.ts`.
-
-**Q: Can I deploy to Vercel / Netlify instead of GitHub Pages?**
-A: Yes — just set build command to `pnpm build` and output directory to `dist`.
-
----
-
-## 📄 License
+## 许可
 
 MIT

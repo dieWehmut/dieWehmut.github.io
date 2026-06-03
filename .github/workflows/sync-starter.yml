@@ -3,7 +3,6 @@ name: Sync Starter Template
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 jobs:
   sync-starter:
@@ -78,7 +77,7 @@ jobs:
             title: 'my-nexus',
             subtitle: 'my-nexus',
             description: 'Hi! This is my personal site.',
-            siteUrl: 'https://example.com',
+            siteUrl: 'https://your-github-username.github.io/your-repo/',
             startedAt: '2026-05-01T00:00:00+08:00',
 
             // --- External Services ---
@@ -95,7 +94,7 @@ jobs:
             // --- Social Links ---
             links: [
               { label: 'GitHub', url: 'https://github.com/your-github-username' },
-              { label: 'Website', url: 'https://example.com' },
+              { label: 'Website', url: 'https://your-github-username.github.io/your-repo/' },
             ],
           }
 
@@ -104,9 +103,12 @@ jobs:
 
           # --- Replace about.md with example ---
           cat > src/data/site/about.md << 'ABOUTEOF'
-          ## About This Blog
+          ## About This Site
 
           This site is built with the [Nexus Starter](https://github.com/dieWehmut/diesuwa-starter) template.
+
+          - Template demo: [https://diewehmut.github.io/diesuwa-starter/](https://diewehmut.github.io/diesuwa-starter/)
+          - Production demo: [https://diewehmut.github.io/](https://diewehmut.github.io/)
 
           ## Copyright
 
@@ -122,7 +124,7 @@ jobs:
               id: 'nexus-author',
               name: 'diesw',
               description: 'Nexus template author',
-              url: 'https://diesw.tech',
+              url: 'https://diewehmut.github.io/',
               avatar: 'https://avatars.githubusercontent.com/dieWehmut',
             },
             // Add your friend links here:
@@ -325,7 +327,16 @@ jobs:
                   run: pnpm install --frozen-lockfile
 
                 - name: Build
-                  run: pnpm run build
+                  shell: bash
+                  run: |
+                    repo_name="${GITHUB_REPOSITORY#*/}"
+                    if [ "$repo_name" = "${GITHUB_REPOSITORY_OWNER}.github.io" ]; then
+                      export BASE_PATH="/"
+                    else
+                      export BASE_PATH="/${repo_name}/"
+                    fi
+                    echo "BASE_PATH=$BASE_PATH"
+                    pnpm run build
 
                 - name: Setup Pages
                   uses: actions/configure-pages@v4
@@ -344,11 +355,13 @@ jobs:
           mkdir -p docs
           cp src/data/site/starter-readme.zh-TW.md docs/README.zh-TW.md
           cp src/data/site/starter-readme.en.md docs/README.en.md
+          cp src/data/site/starter-readme.ja.md docs/README.ja.md
 
           # --- Remove the starter-readme source files from template ---
           rm -f src/data/site/starter-readme.md
           rm -f src/data/site/starter-readme.zh-TW.md
           rm -f src/data/site/starter-readme.en.md
+          rm -f src/data/site/starter-readme.ja.md
 
           # --- Remove private sync workflows from the template ---
           rm -f .github/workflows/sync-starter.yml
