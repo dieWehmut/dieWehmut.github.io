@@ -41,17 +41,42 @@ jobs:
 
           const packagePath = 'package.json'
           const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
-          packageJson.name = 'nexus-starter'
+          packageJson.name = 'diesuwa-starter'
           if (packageJson.scripts) delete packageJson.scripts['assets:push']
           writeJson(packagePath, packageJson)
 
           const packageLockPath = 'package-lock.json'
           if (fs.existsSync(packageLockPath)) {
             const packageLock = JSON.parse(fs.readFileSync(packageLockPath, 'utf8'))
-            packageLock.name = 'nexus-starter'
-            if (packageLock.packages?.['']) packageLock.packages[''].name = 'nexus-starter'
+            packageLock.name = 'diesuwa-starter'
+            if (packageLock.packages?.['']) packageLock.packages[''].name = 'diesuwa-starter'
             writeJson(packageLockPath, packageLock)
           }
+          EOF
+
+          # --- Ensure MIT license is present in the template ---
+          cat > LICENSE << 'EOF'
+          MIT License
+
+          Copyright (c) 2026 dieWehmut
+
+          Permission is hereby granted, free of charge, to any person obtaining a copy
+          of this software and associated documentation files (the "Software"), to deal
+          in the Software without restriction, including without limitation the rights
+          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+          copies of the Software, and to permit persons to whom the Software is
+          furnished to do so, subject to the following conditions:
+
+          The above copyright notice and this permission notice shall be included in all
+          copies or substantial portions of the Software.
+
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+          SOFTWARE.
           EOF
 
           # --- Use the starter-readme.md as the template README ---
@@ -105,7 +130,7 @@ jobs:
           cat > src/data/site/about.md << 'ABOUTEOF'
           ## About This Site
 
-          This site is built with the [Nexus Starter](https://github.com/dieWehmut/diesuwa-starter) template.
+          This site is built with the [diesuwa-starter](https://github.com/dieWehmut/diesuwa-starter) template.
 
           - Template demo: [https://diewehmut.github.io/diesuwa-starter/](https://diewehmut.github.io/diesuwa-starter/)
           - Production demo: [https://diewehmut.github.io/](https://diewehmut.github.io/)
@@ -123,7 +148,7 @@ jobs:
             {
               id: 'nexus-author',
               name: 'diesw',
-              description: 'Nexus template author',
+              description: 'diesuwa-starter template author',
               url: 'https://diewehmut.github.io/',
               avatar: 'https://avatars.githubusercontent.com/dieWehmut',
             },
@@ -229,7 +254,7 @@ jobs:
 
           # Hello World
 
-          Welcome to your new Nexus site! Edit or replace this post to get started.
+          Welcome to your new diesuwa-starter site! Edit or replace this post to get started.
 
           ## Markdown Features
 
@@ -383,5 +408,5 @@ jobs:
             echo "No changes to push."
             exit 0
           fi
-          git commit -m "sync: update starter template from Nexus"
+          git commit -m "sync: update starter template"
           git push origin main --force
