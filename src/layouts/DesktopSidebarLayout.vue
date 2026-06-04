@@ -45,8 +45,11 @@ import GiscusComments from '../components/system/GiscusComments.vue'
 
 .desktop-layout__main {
   flex: 1;
-  width: min(var(--site-content-width), calc(100vw - var(--site-sidebar-width) - 96px));
-  margin: 0 auto;
+  width: min(
+    var(--site-content-width),
+    calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-desktop-content-end-gutter))
+  );
+  margin: 0 auto 0 var(--site-desktop-content-gutter);
   padding: 46px 0 54px;
 }
 
@@ -73,7 +76,7 @@ import GiscusComments from '../components/system/GiscusComments.vue'
 
 @media (min-width: 901px) and (max-width: 1100px) {
   .desktop-layout__main {
-    width: calc(100vw - var(--site-sidebar-width) - 44px);
+    width: calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - 22px);
   }
 }
 </style>

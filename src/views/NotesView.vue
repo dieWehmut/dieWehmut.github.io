@@ -38,7 +38,7 @@ function noteEntry(note: NoteEntry) {
 .notes-view {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--site-view-aside-gap);
 }
 
 .notes-view__main {

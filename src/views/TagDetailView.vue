@@ -8,9 +8,48 @@
 
     <div v-if="captures.length" class="tag-detail__capture-section">
       <h2 class="tag-detail__section-title">Capture</h2>
-      <div class="tag-detail__capture-grid">
+
+      <div v-if="standaloneCaptureGroups.length" class="tag-detail__capture-groups">
+        <article
+          v-for="group in standaloneCaptureGroups"
+          :key="group.id"
+          class="tag-detail__capture-group"
+        >
+          <div class="tag-detail__capture-grid">
+            <button
+              v-for="capture in group.assets"
+              :key="capture.id"
+              class="tag-detail__capture-media"
+              type="button"
+              @click="openCapture(capture)"
+            >
+              <img :src="capture.image" :alt="capture.title || ''" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <div class="tag-detail__capture-body">
+            <div class="tag-detail__capture-meta-row">
+              <time v-if="group.date" :datetime="group.date">
+                <el-icon class="tag-detail__date-icon"><Calendar /></el-icon>
+                {{ formattedDate(group.date) }}
+              </time>
+              <RouterLink
+                v-for="captureTag in group.tags"
+                :key="captureTag"
+                class="tag-detail__tag"
+                :to="`/tags/${encodeURIComponent(captureTag)}`"
+              >
+                <el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>
+                {{ captureTag }}
+              </RouterLink>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div v-if="linkedCaptures.length" class="tag-detail__linked-capture-grid">
         <CaptureAssetCard
-          v-for="capture in captures"
+          v-for="capture in linkedCaptures"
           :key="capture.id"
           :asset="capture"
           @preview="openCapture(capture)"
@@ -54,6 +93,21 @@ const route = useRoute()
 const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
+const standaloneCaptures = computed(() =>
+  captures.value.filter((asset) => asset.standalone || !asset.sourceRefs.length)
+)
+const linkedCaptures = computed(() =>
+  captures.value.filter((asset) => !asset.standalone && asset.sourceRefs.length)
+)
+const standaloneCaptureGroups = computed(() => groupStandaloneCaptures(standaloneCaptures.value))
+
+type StandaloneCaptureGroup = {
+  id: string
+  date?: string
+  timestamp: number
+  tags: string[]
+  assets: CaptureAsset[]
+}
 
 const posts = computed<TagContentEntry[]>(() => {
   const matchTag = (tags: string[]) => tags.some((t) => t.toLowerCase() === tag.value.toLowerCase())
@@ -83,6 +137,38 @@ function postUrl(post: TagContentEntry): string {
 
 function formattedDate(dateStr?: string): string {
   return formatTimelineDate(dateStr)
+}
+
+function groupStandaloneCaptures(assets: CaptureAsset[]): StandaloneCaptureGroup[] {
+  const groups = new Map<string, StandaloneCaptureGroup>()
+
+  for (const asset of assets) {
+    const key = asset.date || 'undated'
+    const group = groups.get(key) || {
+      id: `capture-${slugFromDate(key)}`,
+      date: asset.date,
+      timestamp: getDateSortTimestamp(asset.date),
+      tags: [],
+      assets: [],
+    }
+
+    group.tags = mergeUnique(group.tags, asset.tags || [])
+    group.assets.push(asset)
+    groups.set(key, group)
+  }
+
+  return Array.from(groups.values()).sort((a, b) => b.timestamp - a.timestamp)
+}
+
+function mergeUnique(existing: string[], incoming: string[]): string[] {
+  return Array.from(new Set([...existing, ...incoming]))
+}
+
+function slugFromDate(date: string): string {
+  return date
+    .toLowerCase()
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'undated'
 }
 
 function openCapture(capture: CaptureAsset) {
@@ -119,10 +205,88 @@ watch(tag, loadCaptures)
   font-weight: 900;
 }
 
+.tag-detail__capture-groups {
+  display: grid;
+  gap: 20px;
+}
+
+.tag-detail__capture-group {
+  overflow: hidden;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .tag-detail__capture-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.tag-detail__capture-media {
+  appearance: none;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: zoom-in;
+}
+
+.tag-detail__capture-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.tag-detail__capture-media:hover img,
+.tag-detail__capture-media:focus-visible img {
+  transform: scale(1.03);
+}
+
+.tag-detail__capture-media:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--site-accent);
+  outline-offset: -2px;
+}
+
+.tag-detail__capture-body {
+  padding: 12px 14px 14px;
+}
+
+.tag-detail__capture-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 22px;
+  font-size: 14px;
+}
+
+.tag-detail__capture-meta-row time {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--site-muted);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tag-detail__linked-capture-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
+  margin-top: 18px;
+}
+
+.tag-detail__capture-groups + .tag-detail__linked-capture-grid {
+  margin-top: 24px;
 }
 
 .tag-detail__item {
@@ -216,6 +380,25 @@ watch(tag, loadCaptures)
 
 @media (max-width: 900px) {
   .tag-detail__capture-grid {
+    grid-template-columns: repeat(3, calc(100vw / 3));
+  }
+
+  .tag-detail__capture-media {
+    width: calc(100vw / 3);
+  }
+
+  .tag-detail__capture-groups {
+    margin-inline: -18px;
+    gap: 20px;
+  }
+
+  .tag-detail__capture-group {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .tag-detail__linked-capture-grid {
     grid-template-columns: 1fr;
     margin-inline: -18px;
     gap: 18px;

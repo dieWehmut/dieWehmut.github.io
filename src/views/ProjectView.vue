@@ -57,7 +57,7 @@ const projectGroups = computed(() =>
 .project-view {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--site-view-aside-gap);
 }
 
 .project-view__main {

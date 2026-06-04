@@ -187,8 +187,11 @@ watch(currentTheme, () => {
 
 <style scoped>
 .giscus-comments {
-  width: min(var(--site-content-width), calc(100vw - var(--site-sidebar-width) - 96px));
-  margin: 0 auto;
+  width: min(
+    var(--site-content-width),
+    calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-desktop-content-end-gutter))
+  );
+  margin: 0 auto 0 var(--site-desktop-content-gutter);
   padding: 0 0 24px;
   color: var(--site-text);
 }
@@ -250,7 +253,7 @@ watch(currentTheme, () => {
 
 @media (min-width: 901px) and (max-width: 1100px) {
   .giscus-comments {
-    width: calc(100vw - var(--site-sidebar-width) - 44px);
+    width: calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - 22px);
   }
 }
 

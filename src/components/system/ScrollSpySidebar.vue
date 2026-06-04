@@ -227,7 +227,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .scroll-spy {
   flex-shrink: 0;
-  width: 200px;
+  width: var(--site-scroll-spy-width);
   position: sticky;
   top: 0;
   display: flex;

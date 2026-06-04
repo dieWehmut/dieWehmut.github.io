@@ -51,7 +51,7 @@ const formattedDate = computed(() => {
 .post-view {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--site-view-aside-gap);
 }
 
 .post-view__main {
