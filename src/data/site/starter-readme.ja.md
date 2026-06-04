@@ -1,5 +1,9 @@
 <h1 align="center">diesuwa-starter</h1>
 
+<p align="center">
+  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+</p>
+
 <div align="center">
 
 <div>
@@ -37,6 +41,7 @@
 
 ## デモ
 
+- サンプルリポジトリ：<https://github.com/dieWehmut/dieWehmut.github.io>
 - テンプレートデモ：<https://diewehmut.github.io/diesuwa-starter/>
 - 完成例：<https://diewehmut.github.io/>
 
