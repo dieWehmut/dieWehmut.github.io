@@ -1,8 +1,8 @@
 <template>
   <aside class="site-sidebar" aria-label="Site sidebar">
-    <div class="site-sidebar__avatar-link">
+    <RouterLink class="site-sidebar__avatar-link" to="/" aria-label="Back to home" @click="$emit('navigate')">
       <img class="site-sidebar__avatar" :src="avatarUrl" alt="Avatar" />
-    </div>
+    </RouterLink>
 
     <div class="site-sidebar__identity">
       <div class="site-sidebar__title">{{ siteProfile.title }}</div>
@@ -13,6 +13,7 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
 import NavMenu from './NavMenu.vue'
 import { useProfile } from '../../composables/useProfile'
 import { siteProfile } from '../../data'
@@ -41,6 +42,10 @@ const { avatarUrl } = useProfile()
   width: 152px;
   height: 152px;
   margin: 0 auto 14px;
+  border-radius: 50%;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
 }
 
 .site-sidebar__avatar {
@@ -52,7 +57,8 @@ const { avatarUrl } = useProfile()
   transition: transform 220ms ease;
 }
 
-.site-sidebar__avatar-link:hover .site-sidebar__avatar {
+.site-sidebar__avatar-link:hover .site-sidebar__avatar,
+.site-sidebar__avatar-link:focus-visible .site-sidebar__avatar {
   transform: scale(1.08);
 }
 

@@ -38,7 +38,7 @@ function postEntry(post: ArchivePost) {
 .archive-view {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--site-view-aside-gap);
 }
 
 .archive-view__main {

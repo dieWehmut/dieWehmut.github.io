@@ -51,8 +51,8 @@ import aboutRaw from '../data/site/about.md?raw'
 <style scoped>
 .about-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  gap: 44px;
+  grid-template-columns: minmax(0, 1fr) var(--site-scroll-spy-width);
+  gap: var(--site-view-aside-gap);
   align-items: start;
 }
 

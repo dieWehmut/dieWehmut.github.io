@@ -284,6 +284,24 @@ jobs:
           ```
           EOF
 
+          latest_commit_date="$(git log -1 --format=%cI)"
+          {
+            cat << EOF
+          ---
+          title: 开发日志
+          date: ${latest_commit_date}
+          tags: [devlog, commit]
+          ---
+
+          # 开发日志
+
+          本文档由导出流程根据仓库 commit 历史自动生成，日期取最新 commit 时间。
+
+          EOF
+            git log --date=iso-strict --pretty=format:'- `%h` %cI - %s'
+            printf '\n'
+          } > src/data/docs/posts/development-log.md
+
           cat > src/data/docs/notes/sample-note.md << 'EOF'
           ---
           title: Sample Note

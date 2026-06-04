@@ -599,7 +599,7 @@ onBeforeUnmount(() => {
 .capture-view {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--site-view-aside-gap);
 }
 
 .capture-view__main {

@@ -118,4 +118,14 @@ a:focus-visible {
   text-decoration: underline;
   outline: none;
 }
+
+@media (min-width: 901px) {
+  .footer {
+    width: min(
+      var(--site-content-width),
+      calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-desktop-content-end-gutter))
+    );
+    margin: 0 auto 0 var(--site-desktop-content-gutter);
+  }
+}
 </style>

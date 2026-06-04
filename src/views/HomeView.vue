@@ -103,7 +103,7 @@ onMounted(async () => {
 .home-view {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--site-view-aside-gap);
 }
 
 .home-view__main {
