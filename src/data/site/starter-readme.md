@@ -1,5 +1,9 @@
 <h1 align="center">diesuwa-starter</h1>
 
+<p align="center">
+  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+</p>
+
 <div align="center">
 
 <div>
@@ -37,6 +41,7 @@
 
 ## 示例
 
+- 示例仓库：<https://github.com/dieWehmut/dieWehmut.github.io>
 - 模板示例：<https://diewehmut.github.io/diesuwa-starter/>
 - 成品示例：<https://diewehmut.github.io/>
 

@@ -1,5 +1,9 @@
 <h1 align="center">diesuwa-starter</h1>
 
+<p align="center">
+  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+</p>
+
 <div align="center">
 
 <div>
@@ -37,6 +41,7 @@
 
 ## Demos
 
+- Example repository: <https://github.com/dieWehmut/dieWehmut.github.io>
 - Template demo: <https://diewehmut.github.io/diesuwa-starter/>
 - Production demo: <https://diewehmut.github.io/>
 
