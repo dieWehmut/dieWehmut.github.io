@@ -129,7 +129,13 @@
                   :key="group.id"
                   class="capture-group"
                 >
-                  <div class="capture-grid">
+                  <div
+                    class="capture-grid"
+                    :class="{
+                      'capture-grid--single': group.assets.length === 1,
+                      'capture-grid--double': group.assets.length === 2,
+                    }"
+                  >
                     <div
                       v-for="asset in group.assets"
                       :key="asset.id"
@@ -1307,15 +1313,16 @@ watch(isDetailRoute, (detail) => {
   }
 
   .capture-grid {
-    grid-template-columns: repeat(3, calc(100vw / 3));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .capture-card__media {
-    width: calc(100vw / 3);
+  .capture-grid--single {
+    grid-template-columns: minmax(0, 66.666667%);
+    justify-content: start;
   }
 
-  .capture-card {
-    width: calc(100vw / 3);
+  .capture-grid--double {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .capture-card__meta-row {
@@ -1327,10 +1334,6 @@ watch(isDetailRoute, (detail) => {
     flex: 0 0 auto;
     width: 28px;
     height: 28px;
-  }
-
-  .capture-card--add {
-    width: calc(100vw / 3);
   }
 
   .capture-detail,
