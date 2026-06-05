@@ -76,7 +76,9 @@ import GiscusComments from '../components/system/GiscusComments.vue'
 
 @media (min-width: 901px) and (max-width: 1100px) {
   .desktop-layout__main {
-    width: calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - 22px);
+    width: calc(
+      100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-desktop-content-end-gutter)
+    );
   }
 }
 </style>
