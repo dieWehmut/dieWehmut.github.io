@@ -15,7 +15,10 @@
         </div>
 
         <article class="capture-detail">
-          <div class="capture-detail__grid">
+          <div
+            class="capture-detail__grid"
+            :class="{ 'capture-detail__grid--single': selectedGroup.assets.length === 1 }"
+          >
             <figure
               v-for="asset in selectedGroup.assets"
               :key="asset.id"
@@ -808,13 +811,14 @@ watch(isDetailRoute, (detail) => {
 .capture-detail__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
+  gap: 12px;
 }
 
 .capture-detail__figure {
   overflow: hidden;
   margin: 0;
-  aspect-ratio: 1;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.02);
 }
 
@@ -823,7 +827,7 @@ watch(isDetailRoute, (detail) => {
   display: grid;
   place-items: center;
   width: 100%;
-  height: 100%;
+  max-height: 76vh;
   padding: 0;
   border: 0;
   background: rgba(255, 255, 255, 0.03);
@@ -833,8 +837,8 @@ watch(isDetailRoute, (detail) => {
 .capture-detail__media img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-height: 76vh;
+  object-fit: contain;
 }
 
 .capture-detail__media:focus-visible {
@@ -1327,7 +1331,6 @@ watch(isDetailRoute, (detail) => {
   }
 
   .capture-detail,
-  .capture-detail__grid,
   .capture-detail__body {
     margin-inline: -18px;
   }
@@ -1339,6 +1342,28 @@ watch(isDetailRoute, (detail) => {
   .capture-detail__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
+  }
+
+  .capture-detail__grid--single {
+    grid-template-columns: minmax(0, 66.666667%);
+    justify-content: start;
+  }
+
+  .capture-detail__figure {
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .capture-detail__media {
+    height: 100%;
+    max-height: none;
+  }
+
+  .capture-detail__media img {
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
   }
 
   .capture-detail__body {
