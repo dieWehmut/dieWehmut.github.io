@@ -1,20 +1,42 @@
 <template>
   <header class="mobile-header">
-    <button class="mobile-header__menu" type="button" aria-label="Open menu" @click="$emit('toggle-menu')">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-      </svg>
-    </button>
+    <div class="mobile-header__left">
+      <button class="mobile-header__menu" type="button" aria-label="Open menu" @click="$emit('toggle-menu')">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </button>
+      <button
+        v-if="showCaptureBack"
+        class="mobile-header__back"
+        type="button"
+        aria-label="Back to capture"
+        title="Back to capture"
+        @click="backToCapture"
+      >
+        <el-icon><ArrowLeft /></el-icon>
+      </button>
+    </div>
     <button class="mobile-header__toc" type="button" aria-label="Open page timeline" @click="$emit('toggle-toc')">
       <el-icon><Calendar /></el-icon>
     </button>
   </header>
 </template>
 
-<script setup>
-import { Calendar } from '@element-plus/icons-vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ArrowLeft, Calendar } from '@element-plus/icons-vue'
 
 defineEmits(['toggle-menu', 'toggle-toc'])
+
+const route = useRoute()
+const router = useRouter()
+const showCaptureBack = computed(() => route.name === 'capture-detail')
+
+function backToCapture() {
+  router.push('/capture')
+}
 </script>
 
 <style scoped>
@@ -33,7 +55,14 @@ defineEmits(['toggle-menu', 'toggle-toc'])
   backdrop-filter: blur(12px);
 }
 
+.mobile-header__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .mobile-header__menu,
+.mobile-header__back,
 .mobile-header__toc {
   width: 40px;
   height: 40px;
