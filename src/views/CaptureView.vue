@@ -808,14 +808,13 @@ watch(isDetailRoute, (detail) => {
 .capture-detail__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0;
 }
 
 .capture-detail__figure {
   overflow: hidden;
   margin: 0;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
+  aspect-ratio: 1;
   background: rgba(255, 255, 255, 0.02);
 }
 
@@ -824,7 +823,7 @@ watch(isDetailRoute, (detail) => {
   display: grid;
   place-items: center;
   width: 100%;
-  max-height: 76vh;
+  height: 100%;
   padding: 0;
   border: 0;
   background: rgba(255, 255, 255, 0.03);
@@ -834,8 +833,8 @@ watch(isDetailRoute, (detail) => {
 .capture-detail__media img {
   display: block;
   width: 100%;
-  max-height: 76vh;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
 }
 
 .capture-detail__media:focus-visible {
@@ -1342,7 +1341,6 @@ watch(isDetailRoute, (detail) => {
     gap: 0;
   }
 
-  .capture-detail__figure,
   .capture-detail__body {
     border-right: 0;
     border-left: 0;
