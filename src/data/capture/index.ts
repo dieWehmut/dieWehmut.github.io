@@ -45,6 +45,12 @@ export function getCaptureAssets(): CaptureAsset[] {
     .sort((a, b) => getDateSortTimestamp(b.date) - getDateSortTimestamp(a.date))
 }
 
+export function getCaptureAssetById(id: string): CaptureAsset | null {
+  const normalizedId = decodeURIComponent(id).trim()
+  if (!normalizedId) return null
+  return getCaptureAssets().find((asset) => asset.id === normalizedId) || null
+}
+
 export function getCaptureSearchDocuments(): SearchDocument[] {
   return getCaptureAssets().map((asset) => ({
     id: `capture:${asset.id}`,
