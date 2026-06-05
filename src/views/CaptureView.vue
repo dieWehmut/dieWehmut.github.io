@@ -778,7 +778,7 @@ onBeforeUnmount(() => {
 
 .capture-detail__grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1309,7 +1309,7 @@ onBeforeUnmount(() => {
   }
 
   .capture-detail__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
   }
 
