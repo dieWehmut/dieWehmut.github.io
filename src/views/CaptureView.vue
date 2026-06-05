@@ -17,7 +17,10 @@
         <article class="capture-detail">
           <div
             class="capture-detail__grid"
-            :class="{ 'capture-detail__grid--single': selectedGroup.assets.length === 1 }"
+            :class="{
+              'capture-detail__grid--single': selectedGroup.assets.length === 1,
+              'capture-detail__grid--double': selectedGroup.assets.length === 2,
+            }"
           >
             <figure
               v-for="asset in selectedGroup.assets"
@@ -1347,6 +1350,10 @@ watch(isDetailRoute, (detail) => {
   .capture-detail__grid--single {
     grid-template-columns: minmax(0, 66.666667%);
     justify-content: start;
+  }
+
+  .capture-detail__grid--double {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .capture-detail__figure {
