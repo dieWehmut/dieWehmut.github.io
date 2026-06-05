@@ -1,7 +1,7 @@
 <template>
   <section class="capture-view page-surface" :class="{ 'capture-view--detail': isDetailRoute }">
     <div class="capture-view__main">
-      <template v-if="selectedAsset">
+      <template v-if="selectedGroup">
         <div class="capture-detail__topbar">
           <button
             class="capture-detail__back"
@@ -15,27 +15,35 @@
         </div>
 
         <article class="capture-detail">
-          <figure class="capture-detail__figure">
-            <button
-              class="capture-detail__media"
-              type="button"
-              @click="openAsset(selectedAsset)"
+          <div class="capture-detail__grid">
+            <figure
+              v-for="asset in selectedGroup.assets"
+              :key="asset.id"
+              class="capture-detail__figure"
             >
-              <img
-                :src="selectedAsset.image"
-                :alt="selectedAsset.title || ''"
-                loading="eager"
-                decoding="async"
-              />
-            </button>
+              <button
+                class="capture-detail__media"
+                type="button"
+                @click="openAsset(asset)"
+              >
+                <img
+                  :src="asset.image"
+                  :alt="asset.title || ''"
+                  loading="eager"
+                  decoding="async"
+                />
+              </button>
+            </figure>
+          </div>
 
-            <figcaption class="capture-detail__meta-row">
-              <time v-if="selectedAsset.date" :datetime="selectedAsset.date">
+          <div class="capture-detail__body">
+            <div class="capture-detail__meta-row">
+              <time v-if="selectedGroup.date" :datetime="selectedGroup.date">
                 <el-icon class="capture-card__meta-icon"><Calendar /></el-icon>
-                {{ formatDate(selectedAsset.date) }}
+                {{ formatDateOnly(selectedGroup.date) }}
               </time>
               <RouterLink
-                v-for="tag in selectedAsset.tags"
+                v-for="tag in selectedGroup.tags"
                 :key="tag"
                 class="capture-card__tag"
                 :to="`/tags/${encodeURIComponent(tag)}`"
@@ -43,13 +51,11 @@
                 <el-icon class="capture-card__tag-icon"><PriceTag /></el-icon>
                 {{ tag }}
               </RouterLink>
-            </figcaption>
-          </figure>
+            </div>
 
-          <div class="capture-detail__body">
-            <div v-if="selectedAsset.sourceRefs.length" class="capture-group__sources">
+            <div v-if="selectedGroup.sources.length" class="capture-group__sources">
               <RouterLink
-                v-for="source in selectedAsset.sourceRefs"
+                v-for="source in selectedGroup.sources"
                 :key="`${source.type}:${source.id}`"
                 class="capture-group__source"
                 :to="source.url"
@@ -147,33 +153,6 @@
                       >
                         <el-icon><Delete /></el-icon>
                       </button>
-
-                      <div class="capture-card__footer">
-                        <div class="capture-card__meta-row">
-                          <time v-if="asset.date" :datetime="asset.date">
-                            <el-icon class="capture-card__meta-icon"><Calendar /></el-icon>
-                            {{ formatDate(asset.date) }}
-                          </time>
-                          <RouterLink
-                            v-for="tag in asset.tags"
-                            :key="tag"
-                            class="capture-card__tag"
-                            :to="`/tags/${encodeURIComponent(tag)}`"
-                          >
-                            <el-icon class="capture-card__tag-icon"><PriceTag /></el-icon>
-                            {{ tag }}
-                          </RouterLink>
-                        </div>
-
-                        <RouterLink
-                          class="capture-card__comments"
-                          :to="`/capture/${encodeURIComponent(asset.id)}`"
-                          aria-label="Comments"
-                          title="Comments"
-                        >
-                          <el-icon><ChatRound /></el-icon>
-                        </RouterLink>
-                      </div>
                     </div>
                     <button
                       v-if="canEdit"
@@ -188,8 +167,32 @@
                     </button>
                   </div>
 
-                  <div v-if="group.sources.length" class="capture-group__body">
-                    <div class="capture-group__sources">
+                  <div class="capture-group__body">
+                    <div class="capture-card__meta-row">
+                      <time v-if="group.date" :datetime="group.date">
+                        <el-icon class="capture-card__meta-icon"><Calendar /></el-icon>
+                        {{ formatDateOnly(group.date) }}
+                      </time>
+                      <RouterLink
+                        v-for="tag in group.tags"
+                        :key="tag"
+                        class="capture-card__tag"
+                        :to="`/tags/${encodeURIComponent(tag)}`"
+                      >
+                        <el-icon class="capture-card__tag-icon"><PriceTag /></el-icon>
+                        {{ tag }}
+                      </RouterLink>
+                      <RouterLink
+                        class="capture-card__comments"
+                        :to="`/capture/${encodeURIComponent(group.id)}`"
+                        aria-label="Comments"
+                        title="Comments"
+                      >
+                        <el-icon><ChatRound /></el-icon>
+                      </RouterLink>
+                    </div>
+
+                    <div v-if="group.sources.length" class="capture-group__sources">
                       <RouterLink
                         v-for="source in group.sources"
                         :key="`${source.type}:${source.id}`"
@@ -289,14 +292,12 @@ const captureGroups = computed(() => groupCaptureAssets(allAssets.value))
 const yearGroups = computed(() => groupByYearAndMonth(captureGroups.value))
 const route = useRoute()
 const router = useRouter()
-const selectedAssetId = computed(() => String(route.params.id || ''))
-const isDetailRoute = computed(() => selectedAssetId.value.length > 0)
-const selectedAsset = computed(() =>
-  selectedAssetId.value
-    ? allAssets.value.find((asset) => asset.id === decodeURIComponent(selectedAssetId.value)) || null
-    : null
+const selectedGroupId = computed(() => String(route.params.id || ''))
+const isDetailRoute = computed(() => selectedGroupId.value.length > 0)
+const selectedGroup = computed(() =>
+  selectedGroupId.value ? findCaptureGroupByRouteId(decodeURIComponent(selectedGroupId.value)) : null
 )
-const selectedCommentTerm = computed(() => selectedAsset.value ? `capture:${selectedAsset.value.id}` : '')
+const selectedCommentTerm = computed(() => selectedGroup.value ? `capture-group:${selectedGroup.value.id}` : '')
 const scrollSpyKey = computed(() =>
   yearGroups.value
     .map((year) => `${year.id}:${year.months.map((month) => `${month.id}:${month.groups.length}`).join(',')}`)
@@ -376,6 +377,17 @@ function formatDate(date?: string) {
   return formatTimelineDate(date)
 }
 
+function formatDateOnly(date?: string) {
+  const { start, end } = parseTimelineDate(date)
+  if (start && end) return `${formatDateOnlyValue(start)} - ${formatDateOnlyValue(end)}`
+  if (start) return formatDateOnlyValue(start)
+  return date?.replace(/[ T]\d{2}:\d{2}(?::\d{2})?(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?$/, '') || ''
+}
+
+function formatDateOnlyValue(date: Date) {
+  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+}
+
 function groupCaptureAssets(assets: CaptureAsset[]): CaptureGroup[] {
   const groups = new Map<string, CaptureGroup>()
 
@@ -398,6 +410,12 @@ function groupCaptureAssets(assets: CaptureAsset[]): CaptureGroup[] {
   }
 
   return Array.from(groups.values()).sort((a, b) => b.timestamp - a.timestamp)
+}
+
+function findCaptureGroupByRouteId(routeId: string) {
+  return captureGroups.value.find(
+    (group) => group.id === routeId || group.assets.some((asset) => asset.id === routeId)
+  ) || null
 }
 
 function groupByYearAndMonth(groups: CaptureGroup[]): YearGroup[] {
@@ -610,7 +628,7 @@ function upsertCaptureAsset(asset: CaptureAsset) {
 
 function removeCaptureAsset(id: string) {
   allAssets.value = allAssets.value.filter((asset) => asset.id !== id)
-  if (selectedAssetId.value && decodeURIComponent(selectedAssetId.value) === id) {
+  if (selectedGroupId.value && !selectedGroup.value) {
     backToCapture()
   }
 }
@@ -756,6 +774,12 @@ onBeforeUnmount(() => {
 .capture-detail {
   display: grid;
   gap: 22px;
+}
+
+.capture-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .capture-detail__figure {
@@ -931,16 +955,6 @@ onBeforeUnmount(() => {
   outline-offset: -2px;
 }
 
-.capture-card__footer {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 44px;
-  padding: 8px;
-  border-top: 1px solid var(--site-border);
-}
-
 .capture-card__delete {
   position: absolute;
   top: 6px;
@@ -1001,6 +1015,8 @@ onBeforeUnmount(() => {
 }
 
 .capture-group__body {
+  display: grid;
+  gap: 10px;
   padding: 12px 14px 14px;
 }
 
@@ -1008,7 +1024,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 12px;
-  margin-bottom: 8px;
 }
 
 .capture-group__source {
@@ -1093,6 +1108,7 @@ onBeforeUnmount(() => {
   background: rgba(255, 255, 255, 0.03);
   text-decoration: none;
   font-size: 15px;
+  margin-left: auto;
   transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
@@ -1267,15 +1283,6 @@ onBeforeUnmount(() => {
     width: calc(100vw / 3);
   }
 
-  .capture-card__footer {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 6px;
-    min-height: 58px;
-    padding: 7px;
-  }
-
   .capture-card__meta-row {
     flex: 1 1 auto;
     gap: 5px;
@@ -1292,12 +1299,18 @@ onBeforeUnmount(() => {
   }
 
   .capture-detail,
+  .capture-detail__grid,
   .capture-detail__body {
     margin-inline: -18px;
   }
 
   .capture-detail__topbar {
     display: none;
+  }
+
+  .capture-detail__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
   .capture-detail__figure,
