@@ -58,7 +58,7 @@
               </RouterLink>
             </div>
 
-            <GiscusComments layout="inline" :term="selectedCommentTerm" />
+            <GiscusComments layout="inline" source="capture" :term="selectedCommentTerm" />
           </div>
         </article>
       </template>
