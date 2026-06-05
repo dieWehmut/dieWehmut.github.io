@@ -187,6 +187,7 @@
                         :to="`/capture/${encodeURIComponent(group.id)}`"
                         aria-label="Comments"
                         title="Comments"
+                        @click="saveCaptureScrollPosition"
                       >
                         <el-icon><ChatRound /></el-icon>
                       </RouterLink>
@@ -272,7 +273,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, type Directive } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, type Directive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Calendar, Camera, ChatRound, Delete, Plus, PriceTag } from '@element-plus/icons-vue'
@@ -286,6 +287,7 @@ import { openImagePreviewGallery } from '../utils/imagePreview'
 
 const placeholderImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const isDev = import.meta.env.DEV
+const captureScrollStorageKey = 'nexus:capture-scroll-y'
 
 const allAssets = ref<CaptureAsset[]>(getCaptureAssets())
 const captureGroups = computed(() => groupCaptureAssets(allAssets.value))
@@ -470,7 +472,29 @@ function openAsset(asset: CaptureAsset) {
 }
 
 function backToCapture() {
+  if (window.sessionStorage.getItem(captureScrollStorageKey)) {
+    router.back()
+    return
+  }
   router.push('/capture')
+}
+
+function saveCaptureScrollPosition() {
+  window.sessionStorage.setItem(captureScrollStorageKey, String(window.scrollY))
+}
+
+function restoreCaptureScrollPosition() {
+  if (isDetailRoute.value) return
+  const savedScrollY = window.sessionStorage.getItem(captureScrollStorageKey)
+  if (!savedScrollY) return
+  window.sessionStorage.removeItem(captureScrollStorageKey)
+
+  const top = Number(savedScrollY)
+  if (!Number.isFinite(top)) return
+
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top, behavior: 'auto' })
+  })
 }
 
 async function refreshEditorAuth() {
@@ -713,6 +737,7 @@ function slugFromDate(date: string) {
 onMounted(() => {
   refreshEditorAuth()
   refreshCaptureAssets()
+  restoreCaptureScrollPosition()
   if (canUseLocalCaptureAssetApi()) {
     captureAssetRefreshTimer = window.setInterval(refreshCaptureAssets, 1500)
   }
@@ -723,6 +748,10 @@ onBeforeUnmount(() => {
   imageObserver?.disconnect()
   imageObserver = undefined
 })
+
+watch(isDetailRoute, (detail) => {
+  if (!detail) restoreCaptureScrollPosition()
+}, { flush: 'post' })
 </script>
 
 <style scoped>
