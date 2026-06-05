@@ -1,7 +1,12 @@
 <template>
-  <section v-if="shouldRender && (hasConfig || showConfigHint)" class="giscus-comments" aria-label="Comments">
+  <section
+    v-if="shouldRender && (hasConfig || showConfigHint)"
+    class="giscus-comments"
+    :class="{ 'giscus-comments--inline': layout === 'inline' }"
+    aria-label="Comments"
+  >
     <p v-if="!hasConfig" class="giscus-comments__empty">
-      Configure VITE_GISCUS_* to enable GitHub comments.
+      {{ configHint }}
     </p>
 
     <div v-else ref="containerRef" :key="renderKey" class="giscus-comments__container"></div>
@@ -17,6 +22,14 @@ const props = defineProps({
     type: String,
     default: 'desktop',
   },
+  term: {
+    type: String,
+    default: '',
+  },
+  source: {
+    type: String,
+    default: 'site',
+  },
 })
 
 const route = useRoute()
@@ -24,14 +37,14 @@ const containerRef = ref(null)
 const renderKey = ref(0)
 const isActiveLayout = ref(false)
 const currentTheme = ref('dark')
-const excludedRouteNames = new Set(['search', 'not-found'])
+const excludedRouteNames = new Set(['search', 'capture-detail', 'not-found'])
 const showConfigHint = import.meta.env.DEV
 
 let mediaQuery = null
 let themeObserver = null
 let renderedRoute = ''
 
-const config = {
+const siteConfig = {
   repo: import.meta.env.VITE_GISCUS_REPO || '',
   repoId: import.meta.env.VITE_GISCUS_REPO_ID || '',
   category: import.meta.env.VITE_GISCUS_CATEGORY || '',
@@ -44,15 +57,39 @@ const config = {
   lang: import.meta.env.VITE_GISCUS_LANG || 'zh-CN',
 }
 
+const captureConfig = {
+  repo: import.meta.env.VITE_CAPTURE_GISCUS_REPO || siteConfig.repo,
+  repoId: import.meta.env.VITE_CAPTURE_GISCUS_REPO_ID || siteConfig.repoId,
+  category: import.meta.env.VITE_CAPTURE_GISCUS_CATEGORY || siteConfig.category,
+  categoryId: import.meta.env.VITE_CAPTURE_GISCUS_CATEGORY_ID || siteConfig.categoryId,
+  mapping: import.meta.env.VITE_CAPTURE_GISCUS_MAPPING || 'specific',
+  strict: import.meta.env.VITE_CAPTURE_GISCUS_STRICT || siteConfig.strict,
+  reactionsEnabled: import.meta.env.VITE_CAPTURE_GISCUS_REACTIONS_ENABLED || siteConfig.reactionsEnabled,
+  inputPosition: import.meta.env.VITE_CAPTURE_GISCUS_INPUT_POSITION || siteConfig.inputPosition,
+  theme: import.meta.env.VITE_CAPTURE_GISCUS_THEME || siteConfig.theme,
+  lang: import.meta.env.VITE_CAPTURE_GISCUS_LANG || siteConfig.lang,
+}
+
+const activeConfig = computed(() => props.source === 'capture' ? captureConfig : siteConfig)
+
 const hasConfig = computed(() =>
-  Boolean(config.repo && config.repoId && config.category && config.categoryId)
+  Boolean(activeConfig.value.repo && activeConfig.value.repoId && activeConfig.value.category && activeConfig.value.categoryId)
+)
+
+const configHint = computed(() =>
+  props.source === 'capture'
+    ? 'Configure VITE_CAPTURE_GISCUS_* or VITE_GISCUS_* to enable GitHub comments.'
+    : 'Configure VITE_GISCUS_* to enable GitHub comments.'
 )
 
 const shouldRender = computed(() =>
-  isActiveLayout.value && !excludedRouteNames.has(String(route.name || ''))
+  isActiveLayout.value && (props.layout === 'inline' || !excludedRouteNames.has(String(route.name || '')))
 )
 
 const routeTerm = computed(() => {
+  const explicitTerm = props.term.trim()
+  if (explicitTerm) return explicitTerm
+
   const name = String(route.name || 'route')
   const path = route.path === '/' ? 'home' : route.path.replace(/^\/+/, '').replace(/\/+$/g, '')
   return `route:${name}:${path || 'home'}`
@@ -60,6 +97,10 @@ const routeTerm = computed(() => {
 
 function updateActiveLayout() {
   if (!mediaQuery) return
+  if (props.layout === 'inline') {
+    isActiveLayout.value = true
+    return
+  }
   isActiveLayout.value = props.layout === 'mobile' ? mediaQuery.matches : !mediaQuery.matches
 }
 
@@ -89,6 +130,7 @@ function resolveTheme(theme) {
 function syncGiscusTheme() {
   const iframe = containerRef.value?.querySelector('iframe.giscus-frame')
   if (!iframe?.contentWindow) return
+  const config = activeConfig.value
 
   iframe.contentWindow.postMessage(
     {
@@ -112,10 +154,12 @@ async function renderGiscus() {
   await nextTick()
 
   const container = containerRef.value
-  if (!container || renderedRoute === route.fullPath) return
+  const renderId = `${props.source}:${route.fullPath}:${routeTerm.value}`
+  if (!container || renderedRoute === renderId) return
 
   container.innerHTML = ''
-  renderedRoute = route.fullPath
+  renderedRoute = renderId
+  const config = activeConfig.value
 
   const script = document.createElement('script')
   script.src = 'https://giscus.app/client.js'
@@ -179,9 +223,11 @@ onBeforeUnmount(() => {
 })
 
 watch(() => route.fullPath, resetAndRender)
+watch(() => props.term, resetAndRender)
+watch(() => props.source, resetAndRender)
 watch(shouldRender, resetAndRender)
 watch(currentTheme, () => {
-  if (config.theme === 'nexus') syncGiscusTheme()
+  if (activeConfig.value.theme === 'nexus') syncGiscusTheme()
 })
 </script>
 
@@ -244,6 +290,12 @@ watch(currentTheme, () => {
 
 .giscus-comments__container {
   min-width: 0;
+}
+
+.giscus-comments--inline {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .giscus-comments__container :deep(.giscus),
