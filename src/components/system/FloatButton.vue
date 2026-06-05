@@ -131,7 +131,7 @@ function toggleTheme() {
 <style scoped>
 .float-controls {
   position: fixed;
-  right: 20px;
+  right: 4px;
   bottom: 20px;
   z-index: 80;
   width: 48px;
@@ -341,7 +341,7 @@ function toggleTheme() {
 
 @media (max-width: 900px) {
   .float-controls {
-    right: 14px;
+    right: 4px;
     bottom: 14px;
   }
 

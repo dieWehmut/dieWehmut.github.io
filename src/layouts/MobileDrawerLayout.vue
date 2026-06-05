@@ -1,5 +1,5 @@
 <template>
-  <div class="mobile-layout">
+  <div class="mobile-layout" :class="{ 'has-open-drawer': drawerOpen || tocDrawerOpen }">
     <MobileHeader @toggle-menu="openDrawer" @toggle-toc="openTocDrawer" />
 
     <Transition name="drawer-overlay">
@@ -122,6 +122,10 @@ onBeforeUnmount(() => {
   min-height: 100vh;
 }
 
+.mobile-layout.has-open-drawer {
+  z-index: 90;
+}
+
 .mobile-layout__main {
   min-height: calc(100vh - var(--site-mobile-header-height));
   padding: 24px 18px 42px;
@@ -130,7 +134,7 @@ onBeforeUnmount(() => {
 .mobile-layout__overlay {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 90;
   border: 0;
   background: rgba(0, 0, 0, 0.58);
 }
@@ -138,7 +142,7 @@ onBeforeUnmount(() => {
 .mobile-layout__drawer {
   position: fixed;
   inset: 0 auto 0 0;
-  z-index: 50;
+  z-index: 100;
   transform: translateX(-100%);
   transition: transform 260ms cubic-bezier(.2, .9, .2, 1);
   will-change: transform;
@@ -151,7 +155,7 @@ onBeforeUnmount(() => {
 .mobile-layout__toc-drawer {
   position: fixed;
   inset: 0 0 0 auto;
-  z-index: 50;
+  z-index: 100;
   width: clamp(124px, 36vw, 148px);
   min-height: 100%;
   padding: 0;
