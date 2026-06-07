@@ -2,6 +2,2226 @@ import type { CaptureAsset } from '../../types/content'
 
 export const generatedCaptureAssets: CaptureAsset[] = [
   {
+    "id": "docs-calculus-Calculus_1",
+    "image": "/capture-assets/docs/calculus/Calculus_1.jpg",
+    "title": "Calculus 第 1 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_10",
+    "image": "/capture-assets/docs/calculus/Calculus_10.jpg",
+    "title": "Calculus 第 10 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_11",
+    "image": "/capture-assets/docs/calculus/Calculus_11.jpg",
+    "title": "Calculus 第 11 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_12",
+    "image": "/capture-assets/docs/calculus/Calculus_12.jpg",
+    "title": "Calculus 第 12 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_13",
+    "image": "/capture-assets/docs/calculus/Calculus_13.jpg",
+    "title": "Calculus 第 13 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_14",
+    "image": "/capture-assets/docs/calculus/Calculus_14.jpg",
+    "title": "Calculus 第 14 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_15",
+    "image": "/capture-assets/docs/calculus/Calculus_15.jpg",
+    "title": "Calculus 第 15 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_16",
+    "image": "/capture-assets/docs/calculus/Calculus_16.jpg",
+    "title": "Calculus 第 16 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_17",
+    "image": "/capture-assets/docs/calculus/Calculus_17.jpg",
+    "title": "Calculus 第 17 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_18",
+    "image": "/capture-assets/docs/calculus/Calculus_18.jpg",
+    "title": "Calculus 第 18 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_19",
+    "image": "/capture-assets/docs/calculus/Calculus_19.jpg",
+    "title": "Calculus 第 19 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_2",
+    "image": "/capture-assets/docs/calculus/Calculus_2.jpg",
+    "title": "Calculus 第 2 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_20",
+    "image": "/capture-assets/docs/calculus/Calculus_20.jpg",
+    "title": "Calculus 第 20 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_21",
+    "image": "/capture-assets/docs/calculus/Calculus_21.jpg",
+    "title": "Calculus 第 21 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_22",
+    "image": "/capture-assets/docs/calculus/Calculus_22.jpg",
+    "title": "Calculus 第 22 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_23",
+    "image": "/capture-assets/docs/calculus/Calculus_23.jpg",
+    "title": "Calculus 第 23 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_24",
+    "image": "/capture-assets/docs/calculus/Calculus_24.jpg",
+    "title": "Calculus 第 24 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_25",
+    "image": "/capture-assets/docs/calculus/Calculus_25.jpg",
+    "title": "Calculus 第 25 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_26",
+    "image": "/capture-assets/docs/calculus/Calculus_26.jpg",
+    "title": "Calculus 第 26 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_27",
+    "image": "/capture-assets/docs/calculus/Calculus_27.jpg",
+    "title": "Calculus 第 27 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_28",
+    "image": "/capture-assets/docs/calculus/Calculus_28.jpg",
+    "title": "Calculus 第 28 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_29",
+    "image": "/capture-assets/docs/calculus/Calculus_29.jpg",
+    "title": "Calculus 第 29 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_3",
+    "image": "/capture-assets/docs/calculus/Calculus_3.jpg",
+    "title": "Calculus 第 3 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_30",
+    "image": "/capture-assets/docs/calculus/Calculus_30.jpg",
+    "title": "Calculus 第 30 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_31",
+    "image": "/capture-assets/docs/calculus/Calculus_31.jpg",
+    "title": "Calculus 第 31 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_32",
+    "image": "/capture-assets/docs/calculus/Calculus_32.jpg",
+    "title": "Calculus 第 32 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_33",
+    "image": "/capture-assets/docs/calculus/Calculus_33.jpg",
+    "title": "Calculus 第 33 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_4",
+    "image": "/capture-assets/docs/calculus/Calculus_4.jpg",
+    "title": "Calculus 第 4 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_5",
+    "image": "/capture-assets/docs/calculus/Calculus_5.jpg",
+    "title": "Calculus 第 5 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_6",
+    "image": "/capture-assets/docs/calculus/Calculus_6.jpg",
+    "title": "Calculus 第 6 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_7",
+    "image": "/capture-assets/docs/calculus/Calculus_7.jpg",
+    "title": "Calculus 第 7 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_8",
+    "image": "/capture-assets/docs/calculus/Calculus_8.jpg",
+    "title": "Calculus 第 8 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-calculus-Calculus_9",
+    "image": "/capture-assets/docs/calculus/Calculus_9.jpg",
+    "title": "Calculus 第 9 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Calculus",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "calculus-notes",
+        "title": "Calculus Notes",
+        "url": "/post/calculus-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_1",
+    "image": "/capture-assets/docs/chemistry/Chemistry_1.jpg",
+    "title": "Chemistry 第 1 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_10",
+    "image": "/capture-assets/docs/chemistry/Chemistry_10.jpg",
+    "title": "Chemistry 第 10 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_11",
+    "image": "/capture-assets/docs/chemistry/Chemistry_11.jpg",
+    "title": "Chemistry 第 11 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_2",
+    "image": "/capture-assets/docs/chemistry/Chemistry_2.jpg",
+    "title": "Chemistry 第 2 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_3",
+    "image": "/capture-assets/docs/chemistry/Chemistry_3.jpg",
+    "title": "Chemistry 第 3 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_4",
+    "image": "/capture-assets/docs/chemistry/Chemistry_4.jpg",
+    "title": "Chemistry 第 4 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_5",
+    "image": "/capture-assets/docs/chemistry/Chemistry_5.jpg",
+    "title": "Chemistry 第 5 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_6",
+    "image": "/capture-assets/docs/chemistry/Chemistry_6.jpg",
+    "title": "Chemistry 第 6 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_7",
+    "image": "/capture-assets/docs/chemistry/Chemistry_7.jpg",
+    "title": "Chemistry 第 7 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_8",
+    "image": "/capture-assets/docs/chemistry/Chemistry_8.jpg",
+    "title": "Chemistry 第 8 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-chemistry-Chemistry_9",
+    "image": "/capture-assets/docs/chemistry/Chemistry_9.jpg",
+    "title": "Chemistry 第 9 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Chemistry",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "chemistry-notes",
+        "title": "Chemistry Notes",
+        "url": "/post/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_1",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_1.jpg",
+    "title": "Linear Algebra 第 1 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_2",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_2.jpg",
+    "title": "Linear Algebra 第 2 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_3",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_3.jpg",
+    "title": "Linear Algebra 第 3 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_4",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_4.jpg",
+    "title": "Linear Algebra 第 4 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_5",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_5.jpg",
+    "title": "Linear Algebra 第 5 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_6",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_6.jpg",
+    "title": "Linear Algebra 第 6 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_7",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_7.jpg",
+    "title": "Linear Algebra 第 7 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-linear-algebra-LinearAlgebra_8",
+    "image": "/capture-assets/docs/linear-algebra/LinearAlgebra_8.jpg",
+    "title": "Linear Algebra 第 8 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "LinearAlgebra",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "linear-algebra-notes",
+        "title": "Linear Algebra Notes",
+        "url": "/post/linear-algebra-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_1",
+    "image": "/capture-assets/docs/maths/Maths_1.jpg",
+    "title": "Maths 第 1 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_10",
+    "image": "/capture-assets/docs/maths/Maths_10.jpg",
+    "title": "Maths 第 10 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_11",
+    "image": "/capture-assets/docs/maths/Maths_11.jpg",
+    "title": "Maths 第 11 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_12",
+    "image": "/capture-assets/docs/maths/Maths_12.jpg",
+    "title": "Maths 第 12 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_13",
+    "image": "/capture-assets/docs/maths/Maths_13.jpg",
+    "title": "Maths 第 13 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_14",
+    "image": "/capture-assets/docs/maths/Maths_14.jpg",
+    "title": "Maths 第 14 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_15",
+    "image": "/capture-assets/docs/maths/Maths_15.jpg",
+    "title": "Maths 第 15 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_16",
+    "image": "/capture-assets/docs/maths/Maths_16.jpg",
+    "title": "Maths 第 16 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_17",
+    "image": "/capture-assets/docs/maths/Maths_17.jpg",
+    "title": "Maths 第 17 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_18",
+    "image": "/capture-assets/docs/maths/Maths_18.jpg",
+    "title": "Maths 第 18 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_19",
+    "image": "/capture-assets/docs/maths/Maths_19.jpg",
+    "title": "Maths 第 19 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_2",
+    "image": "/capture-assets/docs/maths/Maths_2.jpg",
+    "title": "Maths 第 2 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_20",
+    "image": "/capture-assets/docs/maths/Maths_20.jpg",
+    "title": "Maths 第 20 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_21",
+    "image": "/capture-assets/docs/maths/Maths_21.jpg",
+    "title": "Maths 第 21 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_22",
+    "image": "/capture-assets/docs/maths/Maths_22.jpg",
+    "title": "Maths 第 22 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_23",
+    "image": "/capture-assets/docs/maths/Maths_23.jpg",
+    "title": "Maths 第 23 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_24",
+    "image": "/capture-assets/docs/maths/Maths_24.jpg",
+    "title": "Maths 第 24 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_25",
+    "image": "/capture-assets/docs/maths/Maths_25.jpg",
+    "title": "Maths 第 25 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_26",
+    "image": "/capture-assets/docs/maths/Maths_26.jpg",
+    "title": "Maths 第 26 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_27",
+    "image": "/capture-assets/docs/maths/Maths_27.jpg",
+    "title": "Maths 第 27 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_28",
+    "image": "/capture-assets/docs/maths/Maths_28.jpg",
+    "title": "Maths 第 28 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_29",
+    "image": "/capture-assets/docs/maths/Maths_29.jpg",
+    "title": "Maths 第 29 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_3",
+    "image": "/capture-assets/docs/maths/Maths_3.jpg",
+    "title": "Maths 第 3 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_30",
+    "image": "/capture-assets/docs/maths/Maths_30.jpg",
+    "title": "Maths 第 30 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_4",
+    "image": "/capture-assets/docs/maths/Maths_4.jpg",
+    "title": "Maths 第 4 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_5",
+    "image": "/capture-assets/docs/maths/Maths_5.jpg",
+    "title": "Maths 第 5 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_6",
+    "image": "/capture-assets/docs/maths/Maths_6.jpg",
+    "title": "Maths 第 6 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_7",
+    "image": "/capture-assets/docs/maths/Maths_7.jpg",
+    "title": "Maths 第 7 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_8",
+    "image": "/capture-assets/docs/maths/Maths_8.jpg",
+    "title": "Maths 第 8 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-maths-Maths_9",
+    "image": "/capture-assets/docs/maths/Maths_9.jpg",
+    "title": "Maths 第 9 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Maths",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "maths-notes",
+        "title": "Maths Notes",
+        "url": "/post/maths-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_1",
+    "image": "/capture-assets/docs/physics/Physics_1.jpg",
+    "title": "Physics 第 1 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_10",
+    "image": "/capture-assets/docs/physics/Physics_10.jpg",
+    "title": "Physics 第 10 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_11",
+    "image": "/capture-assets/docs/physics/Physics_11.jpg",
+    "title": "Physics 第 11 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_12",
+    "image": "/capture-assets/docs/physics/Physics_12.jpg",
+    "title": "Physics 第 12 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_13",
+    "image": "/capture-assets/docs/physics/Physics_13.jpg",
+    "title": "Physics 第 13 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_14",
+    "image": "/capture-assets/docs/physics/Physics_14.jpg",
+    "title": "Physics 第 14 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_15",
+    "image": "/capture-assets/docs/physics/Physics_15.jpg",
+    "title": "Physics 第 15 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_16",
+    "image": "/capture-assets/docs/physics/Physics_16.jpg",
+    "title": "Physics 第 16 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_17",
+    "image": "/capture-assets/docs/physics/Physics_17.jpg",
+    "title": "Physics 第 17 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_18",
+    "image": "/capture-assets/docs/physics/Physics_18.jpg",
+    "title": "Physics 第 18 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_19",
+    "image": "/capture-assets/docs/physics/Physics_19.jpg",
+    "title": "Physics 第 19 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_2",
+    "image": "/capture-assets/docs/physics/Physics_2.jpg",
+    "title": "Physics 第 2 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_20",
+    "image": "/capture-assets/docs/physics/Physics_20.jpg",
+    "title": "Physics 第 20 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_21",
+    "image": "/capture-assets/docs/physics/Physics_21.jpg",
+    "title": "Physics 第 21 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_22",
+    "image": "/capture-assets/docs/physics/Physics_22.jpg",
+    "title": "Physics 第 22 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_23",
+    "image": "/capture-assets/docs/physics/Physics_23.jpg",
+    "title": "Physics 第 23 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_24",
+    "image": "/capture-assets/docs/physics/Physics_24.jpg",
+    "title": "Physics 第 24 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_25",
+    "image": "/capture-assets/docs/physics/Physics_25.jpg",
+    "title": "Physics 第 25 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_26",
+    "image": "/capture-assets/docs/physics/Physics_26.jpg",
+    "title": "Physics 第 26 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_27",
+    "image": "/capture-assets/docs/physics/Physics_27.jpg",
+    "title": "Physics 第 27 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_28",
+    "image": "/capture-assets/docs/physics/Physics_28.jpg",
+    "title": "Physics 第 28 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_29",
+    "image": "/capture-assets/docs/physics/Physics_29.jpg",
+    "title": "Physics 第 29 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_3",
+    "image": "/capture-assets/docs/physics/Physics_3.jpg",
+    "title": "Physics 第 3 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_4",
+    "image": "/capture-assets/docs/physics/Physics_4.jpg",
+    "title": "Physics 第 4 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_5",
+    "image": "/capture-assets/docs/physics/Physics_5.jpg",
+    "title": "Physics 第 5 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_6",
+    "image": "/capture-assets/docs/physics/Physics_6.jpg",
+    "title": "Physics 第 6 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_7",
+    "image": "/capture-assets/docs/physics/Physics_7.jpg",
+    "title": "Physics 第 7 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_8",
+    "image": "/capture-assets/docs/physics/Physics_8.jpg",
+    "title": "Physics 第 8 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_9",
+    "image": "/capture-assets/docs/physics/Physics_9.jpg",
+    "title": "Physics 第 9 页原图",
+    "date": "2026-06-06",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "physics-notes",
+        "title": "Physics Notes",
+        "url": "/post/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "standalone-b456301e-24a6-47dd-9ebc-c8293f0feefd-0",
     "image": "/capture-assets/standalone/2026-03/b456301e-24a6-47dd-9ebc-c8293f0feefd/0.webp",
     "title": "2026-03-16 13:35:00 +0800",
