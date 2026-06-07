@@ -3,7 +3,8 @@ import hljs from 'highlight.js'
 import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
-import { resolvePublicAssetUrl } from './publicAssets'
+import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetImage } from './publicAssets'
+import { runCode, type RunResult, type RunStatus } from './codeRunner'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -30,6 +31,7 @@ const PER_TAG_ALLOWED_ATTRS: Record<string, Set<string>> = {
 }
 const MARKDOWN_CACHE_LIMIT = 24
 const MARKDOWN_PREVIEW_CACHE_LIMIT = 80
+const SOURCE_IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const renderedMarkdownCache = new Map<string, string>()
 const renderedMarkdownPreviewCache = new Map<string, string>()
 
@@ -204,6 +206,11 @@ function resolveCodeLanguage(lang: string | undefined): CodeLanguageInfo {
   }
 }
 
+function resolveCodeRunner(lang: string | undefined): string {
+  const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
+  return requestedLang === 'go' || requestedLang === 'golang' ? 'go' : ''
+}
+
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
   const highlighted = validLang
@@ -231,8 +238,11 @@ function renderInlineLatex(text: string): string {
   return renderLatex(text, false)
 }
 
-function renderEditableToolbar(kind: EditableBlockKind, langLabel: string): string {
+function renderEditableToolbar(kind: EditableBlockKind, langLabel: string, runner: string): string {
   const label = kind === 'math' ? 'LaTeX' : langLabel
+  const runButton = runner
+    ? '<button class="md-editable-action md-editable-action--run" type="button" data-md-action="run">运行</button>'
+    : ''
   const sourceButton = kind === 'math'
     ? '<button class="md-editable-action" type="button" data-md-action="source" aria-expanded="false">显示源码</button>'
     : ''
@@ -242,6 +252,7 @@ function renderEditableToolbar(kind: EditableBlockKind, langLabel: string): stri
     `<span class="md-code-lang">${escapeHtml(label)}</span>`,
     '<div class="md-editable-actions">',
     '<button class="md-editable-action md-editable-action--restore" type="button" data-md-action="restore" hidden>复原</button>',
+    runButton,
     '<button class="md-editable-action" type="button" data-md-action="edit" aria-expanded="false">修改</button>',
     sourceButton,
     '<button class="md-editable-action md-code-copy" type="button" data-copy-code data-md-action="copy">复制</button>',
@@ -253,16 +264,18 @@ function renderEditableToolbar(kind: EditableBlockKind, langLabel: string): stri
 function renderEditableBlock(kind: EditableBlockKind, source: string, lang = ''): string {
   const encodedSource = escapeHtml(encodeSource(source))
   const { langLabel, validLang } = resolveCodeLanguage(lang)
+  const runner = kind === 'code' ? resolveCodeRunner(lang) : ''
   const content = kind === 'code'
     ? renderHighlightedCode(source, validLang)
     : renderLatex(source, true)
   const sourceView = kind === 'math'
     ? `<pre class="md-editable-source" hidden><code>${escapeHtml(source)}</code></pre>`
     : ''
+  const runnerAttr = runner ? ` data-md-runner="${escapeHtml(runner)}"` : ''
 
   return [
-    `<div class="md-editable-block md-${kind}-block" data-md-kind="${kind}" data-md-original="${encodedSource}" data-md-current="${encodedSource}" data-md-lang="${escapeHtml(validLang)}">`,
-    renderEditableToolbar(kind, langLabel),
+    `<div class="md-editable-block md-${kind}-block" data-md-kind="${kind}" data-md-original="${encodedSource}" data-md-current="${encodedSource}" data-md-lang="${escapeHtml(validLang)}"${runnerAttr}>`,
+    renderEditableToolbar(kind, langLabel, runner),
     sourceView,
     `<div class="md-editable-content md-${kind}-content">${content}</div>`,
     '</div>',
@@ -400,10 +413,54 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   if (!root) return () => {}
   const resetTimers = new WeakMap<HTMLElement, number>()
   const activeTimers = new Set<number>()
+  const cleanupHandlers: Array<() => void> = []
   let toastTimer: number | null = null
 
+  const imagePreviewSrc = (image: HTMLImageElement): string => {
+    const original = image.dataset.originalSrc || image.dataset.mdLazySrc || image.getAttribute('src') || ''
+    return getPublicAssetUrlCandidates(original)[0] || image.src
+  }
+
+  const loadSourcePageImages = (details: HTMLDetailsElement) => {
+    details.querySelectorAll<HTMLImageElement>('img[data-md-lazy-src]').forEach((image) => {
+      const src = image.dataset.mdLazySrc || ''
+      if (!src) return
+      image.src = getPublicAssetUrlCandidates(src)[0] || src
+    })
+  }
+
+  root.querySelectorAll<HTMLImageElement>('img').forEach((image) => {
+    const originalSrc = image.getAttribute('src') || ''
+    if (!originalSrc) return
+
+    image.dataset.originalSrc = originalSrc
+    const sourcePage = image.closest<HTMLDetailsElement>('details.md-source-page')
+    if (sourcePage && !sourcePage.open) {
+      image.dataset.mdLazySrc = originalSrc
+      image.src = SOURCE_IMAGE_PLACEHOLDER
+    }
+
+    const onError = () => {
+      retryPublicAssetImage(image, originalSrc)
+    }
+
+    image.addEventListener('error', onError)
+    cleanupHandlers.push(() => image.removeEventListener('error', onError))
+
+    if (!sourcePage && image.complete && image.naturalWidth === 0) {
+      queueMicrotask(onError)
+    }
+  })
+
   root.querySelectorAll<HTMLDetailsElement>('details.md-source-page').forEach((details) => {
-    details.open = true
+    if (details.open) loadSourcePageImages(details)
+
+    const onToggle = () => {
+      if (details.open) loadSourcePageImages(details)
+    }
+
+    details.addEventListener('toggle', onToggle)
+    cleanupHandlers.push(() => details.removeEventListener('toggle', onToggle))
   })
 
   const scheduleReset = (button: HTMLElement, label: string, state?: 'is-copied' | 'is-failed') => {
@@ -606,6 +663,172 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (!copied) throw new Error('Clipboard copy failed')
   }
 
+  const runStatusLabels: Record<RunStatus | 'preparing' | 'running', string> = {
+    preparing: '准备中',
+    running: '运行中',
+    success: '成功',
+    compile_error: '编译错误',
+    runtime_error: '运行错误',
+    timeout: '超时',
+    unsupported: '不支持',
+  }
+
+  const ensureRunStream = (panel: HTMLElement, streamName: 'stdout' | 'stderr'): HTMLElement => {
+    const existing = panel.querySelector<HTMLElement>(`[data-md-run-stream="${streamName}"]`)
+    if (existing) return existing
+
+    const stream = document.createElement('div')
+    stream.className = 'md-run-output__stream'
+    stream.dataset.mdRunStream = streamName
+
+    const label = document.createElement('div')
+    label.className = 'md-run-output__stream-label'
+    label.textContent = streamName
+
+    const pre = document.createElement('pre')
+    pre.className = 'md-run-output__pre'
+
+    stream.append(label, pre)
+    panel.append(stream)
+    return stream
+  }
+
+  const ensureRunOutput = (block: HTMLElement): HTMLElement => {
+    const existing = block.querySelector<HTMLElement>('.md-run-output')
+    if (existing) return existing
+
+    const panel = document.createElement('div')
+    panel.className = 'md-run-output'
+    panel.setAttribute('role', 'status')
+    panel.setAttribute('aria-live', 'polite')
+
+    const header = document.createElement('div')
+    header.className = 'md-run-output__header'
+
+    const status = document.createElement('span')
+    status.className = 'md-run-output__status'
+
+    const duration = document.createElement('span')
+    duration.className = 'md-run-output__duration'
+
+    const message = document.createElement('div')
+    message.className = 'md-run-output__message'
+    message.hidden = true
+
+    const empty = document.createElement('div')
+    empty.className = 'md-run-output__empty'
+    empty.textContent = '无输出'
+    empty.hidden = true
+
+    header.append(status, duration)
+    panel.append(header, message, empty)
+    ensureRunStream(panel, 'stdout')
+    ensureRunStream(panel, 'stderr')
+    block.append(panel)
+
+    return panel
+  }
+
+  const setRunOutputPending = (block: HTMLElement, state: 'preparing' | 'running') => {
+    const panel = ensureRunOutput(block)
+    panel.dataset.status = state
+    panel.classList.remove('is-stale')
+
+    const status = panel.querySelector<HTMLElement>('.md-run-output__status')
+    const duration = panel.querySelector<HTMLElement>('.md-run-output__duration')
+    const message = panel.querySelector<HTMLElement>('.md-run-output__message')
+    const empty = panel.querySelector<HTMLElement>('.md-run-output__empty')
+    const stdout = ensureRunStream(panel, 'stdout')
+    const stderr = ensureRunStream(panel, 'stderr')
+
+    if (status) status.textContent = runStatusLabels[state]
+    if (duration) duration.textContent = ''
+    if (message) {
+      message.textContent = ''
+      message.hidden = true
+    }
+    if (empty) empty.hidden = true
+    stdout.hidden = true
+    stderr.hidden = true
+  }
+
+  const scrollRunOutputIntoView = (block: HTMLElement) => {
+    const panel = ensureRunOutput(block)
+    const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+
+    window.requestAnimationFrame(() => {
+      panel.scrollIntoView({ behavior, block: 'center', inline: 'nearest' })
+    })
+  }
+
+  const setRunOutputResult = (block: HTMLElement, result: RunResult) => {
+    const panel = ensureRunOutput(block)
+    panel.dataset.status = result.status
+
+    const status = panel.querySelector<HTMLElement>('.md-run-output__status')
+    const duration = panel.querySelector<HTMLElement>('.md-run-output__duration')
+    const message = panel.querySelector<HTMLElement>('.md-run-output__message')
+    const empty = panel.querySelector<HTMLElement>('.md-run-output__empty')
+    const stdout = ensureRunStream(panel, 'stdout')
+    const stderr = ensureRunStream(panel, 'stderr')
+    const stdoutPre = stdout.querySelector<HTMLElement>('pre')
+    const stderrPre = stderr.querySelector<HTMLElement>('pre')
+    const hasStdout = Boolean(result.stdout)
+    const hasStderr = Boolean(result.stderr)
+
+    if (status) status.textContent = runStatusLabels[result.status]
+    if (duration) duration.textContent = `${Math.max(0, Math.round(result.durationMs))} ms`
+    if (message) {
+      message.textContent = result.message
+      message.hidden = !result.message
+    }
+    if (stdoutPre) stdoutPre.textContent = result.stdout
+    if (stderrPre) stderrPre.textContent = result.stderr
+    stdout.hidden = !hasStdout
+    stderr.hidden = !hasStderr
+    if (empty) empty.hidden = hasStdout || hasStderr || Boolean(result.message)
+  }
+
+  const setRunButtonLoading = (button: HTMLElement, running: boolean) => {
+    button.classList.toggle('is-running', running)
+    button.setAttribute('aria-busy', running ? 'true' : 'false')
+    button.textContent = running ? '运行中' : '运行'
+    if (button instanceof HTMLButtonElement) button.disabled = running
+  }
+
+  const runBlockSource = async (button: HTMLElement, block: HTMLElement) => {
+    if (block.classList.contains('is-running')) return
+
+    const runner = block.dataset.mdRunner || ''
+    block.classList.add('is-running')
+    setRunButtonLoading(button, true)
+    setRunOutputPending(block, 'preparing')
+    scrollRunOutputIntoView(block)
+
+    try {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+      setRunOutputPending(block, 'running')
+      const result = await runCode({
+        language: runner,
+        source: getCurrentSource(block),
+      })
+      setRunOutputResult(block, result)
+      scrollRunOutputIntoView(block)
+    } catch (error) {
+      setRunOutputResult(block, {
+        status: 'runtime_error',
+        stdout: '',
+        stderr: '',
+        durationMs: 0,
+        message: error instanceof Error ? error.message : String(error),
+      })
+      scrollRunOutputIntoView(block)
+    } finally {
+      block.classList.remove('is-running')
+      setRunButtonLoading(button, false)
+    }
+  }
+
   const copyBlockSource = async (button: HTMLElement) => {
     const block = button.closest<HTMLElement>('.md-editable-block')
     const fallbackCode = button.closest('.md-code-block')?.querySelector('code')
@@ -636,9 +859,9 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (image?.src) {
       event.preventDefault()
       const images = Array.from(root.querySelectorAll<HTMLImageElement>('img'))
-        .filter((item) => item.src)
-        .map((item) => ({ src: item.src, alt: item.alt }))
-      openImagePreviewGallery(images, images.findIndex((item) => item.src === image.src))
+        .map((item) => ({ src: imagePreviewSrc(item), alt: item.alt }))
+        .filter((item) => item.src && item.src !== SOURCE_IMAGE_PLACEHOLDER)
+      openImagePreviewGallery(images, images.findIndex((item) => item.src === imagePreviewSrc(image)))
       return
     }
 
@@ -654,6 +877,11 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
 
     if (!block) return
+
+    if (action === 'run') {
+      await runBlockSource(actionButton, block)
+      return
+    }
 
     if (action === 'edit') {
       setEditing(block, !block.classList.contains('is-editing'))
@@ -688,6 +916,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   return () => {
     root.removeEventListener('click', onClick)
     root.removeEventListener('input', onInput)
+    cleanupHandlers.forEach((cleanupHandler) => cleanupHandler())
     activeTimers.forEach((timer) => window.clearTimeout(timer))
     activeTimers.clear()
   }

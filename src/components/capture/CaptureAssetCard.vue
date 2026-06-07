@@ -5,7 +5,13 @@
       type="button"
       @click="$emit('preview', asset)"
     >
-      <img :src="asset.image" :alt="asset.title || ''" loading="lazy" decoding="async" />
+      <img
+        :src="asset.image"
+        :alt="asset.title || ''"
+        loading="lazy"
+        decoding="async"
+        @error="retryPublicAssetImage($event, asset.image)"
+      />
     </button>
 
     <div class="capture-asset-card__body">
@@ -45,6 +51,7 @@ import { RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import type { CaptureAsset } from '../../types/content'
 import { formatTimelineDate } from '../../utils/date'
+import { retryPublicAssetImage } from '../../utils/publicAssets'
 
 const props = defineProps<{
   asset: CaptureAsset
@@ -84,6 +91,12 @@ const formattedDate = computed(() => formatTimelineDate(props.asset.date))
   height: 100%;
   object-fit: cover;
   transition: transform 220ms ease;
+}
+
+.capture-asset-card__media img.is-image-failed {
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  object-fit: contain;
 }
 
 .capture-asset-card__media:hover img,

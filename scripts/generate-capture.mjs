@@ -21,11 +21,6 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true })
 }
 
-function emptyDir(dirPath) {
-  fs.rmSync(dirPath, { recursive: true, force: true })
-  ensureDir(dirPath)
-}
-
 function resolveAssetsDir() {
   const envPath = process.env.DIESW_ASSETS_DIR?.trim()
   if (envPath) return path.resolve(rootDir, envPath)
@@ -212,9 +207,16 @@ function syncDocAsset(assetsDir, docFilePath, imageUrl) {
   const docRelativePath = relativeAssetPath.replace(/^docs\//, '')
   const localSourcePath = path.join(docsDir, docRelativePath)
   const assetsSourcePath = path.join(assetsDir, 'docs', docRelativePath)
-  const sourcePath = fs.existsSync(localSourcePath) ? localSourcePath : assetsSourcePath
   const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
+  const publicSourcePath = destinationPath
+  const sourcePath = fs.existsSync(publicSourcePath)
+    ? publicSourcePath
+    : fs.existsSync(localSourcePath)
+      ? localSourcePath
+      : assetsSourcePath
+
   assertFileExists(sourcePath, 'Markdown image')
+  if (path.resolve(sourcePath) === path.resolve(destinationPath)) return
   ensureDir(path.dirname(destinationPath))
   fs.copyFileSync(sourcePath, destinationPath)
 }
@@ -249,7 +251,7 @@ async function main() {
   }
 
   ensureDir(publicCaptureDir)
-  emptyDir(publicDocsDir)
+  ensureDir(publicDocsDir)
   ensureDir(publicStandaloneDir)
   ensureDir(publicLocalDir)
 

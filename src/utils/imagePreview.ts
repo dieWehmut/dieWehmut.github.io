@@ -1,3 +1,5 @@
+import { retryPublicAssetImage } from './publicAssets'
+
 let overlay: HTMLDivElement | null = null
 let stage: HTMLDivElement | null = null
 let previewImage: HTMLImageElement | null = null
@@ -92,6 +94,7 @@ function ensureOverlay() {
   overlay.addEventListener('click', onOverlayClick)
   overlay.addEventListener('wheel', onWheel, { passive: false })
   previewImage.addEventListener('pointerdown', onPointerDown)
+  previewImage.addEventListener('error', onPreviewImageError)
   window.addEventListener('pointermove', onPointerMove)
   window.addEventListener('pointerup', onPointerUp)
   window.addEventListener('pointercancel', onPointerUp)
@@ -103,6 +106,11 @@ function ensureOverlay() {
   stage.append(previewImage)
   overlay.append(stage, previousButton, nextButton, closeButton)
   document.body.appendChild(overlay)
+}
+
+function onPreviewImageError() {
+  if (!previewImage || !previewItems.length) return
+  retryPublicAssetImage(previewImage, previewItems[currentIndex]?.src)
 }
 
 function onOverlayClick(event: MouseEvent) {

@@ -37,6 +37,7 @@
                   :alt="asset.title || ''"
                   loading="eager"
                   decoding="async"
+                  @error="retryPublicAssetImage($event, asset.image)"
                 />
               </button>
             </figure>
@@ -147,11 +148,11 @@
                         @click="openAsset(asset)"
                       >
                         <img
-                          v-lazy-src="asset.image"
-                          :src="placeholderImage"
+                          :src="asset.image"
                           :alt="asset.title || ''"
                           loading="lazy"
                           decoding="async"
+                          @error="retryPublicAssetImage($event, asset.image)"
                         />
                       </button>
                       <button
@@ -285,7 +286,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch, type Directive } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Calendar, Camera, ChatRound, Delete, Plus, PriceTag } from '@element-plus/icons-vue'
@@ -296,8 +297,8 @@ import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'
 import type { CaptureAsset, CaptureSourceRef } from '../types/content'
 import { formatTimelineDate, parseTimelineDate } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
+import { retryPublicAssetImage } from '../utils/publicAssets'
 
-const placeholderImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const isDev = import.meta.env.DEV
 const captureScrollStorageKey = 'nexus:capture-scroll-y'
 
@@ -332,7 +333,6 @@ const editorStatusText = computed(() => {
   return t('capture.editorUnavailable')
 })
 
-let imageObserver: IntersectionObserver | undefined
 let captureAssetRefreshTimer: number | undefined
 let captureAssetRefreshInFlight = false
 
@@ -349,18 +349,6 @@ type CaptureAssetsResponse = {
   ok: boolean
   assets?: CaptureAsset[]
   error?: string
-}
-
-const vLazySrc: Directive<HTMLImageElement, string> = {
-  mounted(el, binding) {
-    observeImage(el, binding.value)
-  },
-  updated(el, binding) {
-    if (binding.value !== binding.oldValue) observeImage(el, binding.value)
-  },
-  beforeUnmount(el) {
-    imageObserver?.unobserve(el)
-  },
 }
 
 type CaptureGroup = {
@@ -385,6 +373,55 @@ type YearGroup = {
   label: string
   timestamp: number
   months: MonthGroup[]
+}
+
+const eastAsianMonthLabels = Array.from({ length: 12 }, (_, index) => `${index + 1}\u6708`)
+const monthLabelsByLocale: Record<string, readonly string[]> = {
+  zh: eastAsianMonthLabels,
+  zh_tw: eastAsianMonthLabels,
+  ja: eastAsianMonthLabels,
+  en: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  de: [
+    'Januar',
+    'Februar',
+    'M\u00e4rz',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember',
+  ],
+  la: [
+    'Ianuarius',
+    'Februarius',
+    'Martius',
+    'Aprilis',
+    'Maius',
+    'Iunius',
+    'Iulius',
+    'Augustus',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
 }
 
 function formatDate(date?: string) {
@@ -699,44 +736,9 @@ function formatYearLabel(date: Date) {
 }
 
 function formatMonthLabel(date: Date) {
-  return new Intl.DateTimeFormat(locale.value.replace('_', '-'), { month: 'numeric' }).format(date)
-}
-
-function observeImage(el: HTMLImageElement, src?: string) {
-  const imageSrc = String(src || '').trim()
-  if (!imageSrc) return
-  el.dataset.src = imageSrc
-
-  const observer = getImageObserver()
-  if (!observer) {
-    loadImage(el)
-    return
-  }
-
-  observer.observe(el)
-}
-
-function getImageObserver() {
-  if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return undefined
-  if (!imageObserver) {
-    imageObserver = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) loadImage(entry.target as HTMLImageElement)
-        }
-      },
-      { rootMargin: '360px 0px', threshold: 0.01 }
-    )
-  }
-  return imageObserver
-}
-
-function loadImage(el: HTMLImageElement) {
-  const src = el.dataset.src
-  if (!src) return
-  if (el.getAttribute('src') !== src) el.setAttribute('src', src)
-  imageObserver?.unobserve(el)
-  delete el.dataset.src
+  const normalizedLocale = locale.value.toLowerCase().replace('-', '_')
+  const monthLabels = monthLabelsByLocale[normalizedLocale] || monthLabelsByLocale[normalizedLocale.split('_')[0]]
+  return monthLabels?.[date.getMonth()] || `${date.getMonth() + 1}\u6708`
 }
 
 function slugFromDate(date: string) {
@@ -757,8 +759,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (captureAssetRefreshTimer) window.clearInterval(captureAssetRefreshTimer)
-  imageObserver?.disconnect()
-  imageObserver = undefined
 })
 
 watch(isDetailRoute, (detail) => {
@@ -848,6 +848,11 @@ watch(isDetailRoute, (detail) => {
   width: 100%;
   max-height: 76vh;
   object-fit: contain;
+}
+
+.capture-detail__media img.is-image-failed {
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .capture-detail__media:focus-visible {
@@ -982,6 +987,12 @@ watch(isDetailRoute, (detail) => {
   height: 100%;
   object-fit: cover;
   transition: transform 220ms ease;
+}
+
+.capture-card__media img.is-image-failed {
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  object-fit: contain;
 }
 
 .capture-card__media:hover img,
