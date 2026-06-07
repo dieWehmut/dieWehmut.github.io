@@ -3,7 +3,7 @@
     <time class="archive-post__date" :datetime="post.date">{{ shortDate }}</time>
     <div class="archive-post__body">
       <h2>{{ post.title }}</h2>
-      <p>{{ post.summary }}</p>
+      <MarkdownPreview class="archive-post__summary" :source="post.summary" />
       <div class="archive-post__tags" v-if="post.tags?.length">
         <span v-for="tag in post.tags" :key="tag" class="archive-post__tag" @click.stop><RouterLink :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="archive-post__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink></span>
       </div>
@@ -17,6 +17,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import type { ArchivePost } from '../../types/content'
 import { formatTimelineShortDate } from '../../utils/date'
+import MarkdownPreview from './MarkdownPreview.vue'
 
 const props = defineProps<{ post: ArchivePost }>()
 const router = useRouter()
@@ -71,15 +72,13 @@ h2 {
   color: var(--site-accent);
 }
 
-p {
+.archive-post__summary {
+  display: block;
   margin: 8px 0 0;
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  --markdown-preview-lines: 2;
 }
 
 .archive-post__tags {

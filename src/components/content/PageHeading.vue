@@ -6,11 +6,13 @@
       </el-icon>
       <h1>{{ title }}</h1>
     </div>
-    <p v-if="description">{{ description }}</p>
+    <MarkdownPreview v-if="description" class="page-heading__description" :source="description" />
   </header>
 </template>
 
 <script setup>
+import MarkdownPreview from './MarkdownPreview.vue'
+
 defineProps({
   title: { type: String, required: true },
   description: { type: String, default: '' },
@@ -43,12 +45,14 @@ h1 {
   line-height: 1;
 }
 
-p {
+.page-heading__description {
+  display: block;
   margin: 16px 0 0;
   max-width: 760px;
   color: var(--site-muted);
   font-size: 17px;
   line-height: 1.6;
+  --markdown-preview-lines: 3;
 }
 
 @media (max-width: 640px) {
@@ -56,7 +60,7 @@ p {
     margin-bottom: 24px;
   }
 
-  p {
+  .page-heading__description {
     font-size: 16px;
   }
 }

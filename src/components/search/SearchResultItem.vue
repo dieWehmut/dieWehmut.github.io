@@ -9,7 +9,7 @@
         <time v-if="result.date" :datetime="result.date">{{ result.date }}</time>
       </div>
       <h2>{{ result.title }}</h2>
-      <p>{{ result.description }}</p>
+      <MarkdownPreview class="search-result__description" :source="result.description" />
     </div>
   </a>
 </template>
@@ -18,6 +18,7 @@
 import { computed } from 'vue'
 import { Camera, Connection, Cpu, Document, FolderOpened, Memo } from '@element-plus/icons-vue'
 import type { SearchDocument } from '../../types/content'
+import MarkdownPreview from '../content/MarkdownPreview.vue'
 
 const props = defineProps<{ result: SearchDocument }>()
 
@@ -82,10 +83,12 @@ h2 {
   transition: color 160ms ease;
 }
 
-p {
+.search-result__description {
+  display: block;
   margin: 4px 0 0;
   color: var(--site-muted);
   font-size: 15px;
   line-height: 1.55;
+  --markdown-preview-lines: 2;
 }
 </style>

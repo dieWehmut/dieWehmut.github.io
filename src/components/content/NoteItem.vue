@@ -3,7 +3,7 @@
     <time class="note-item__date" :datetime="note.date">{{ shortDate }}</time>
     <div class="note-item__body">
       <h2>{{ note.title }}</h2>
-      <p>{{ note.summary }}</p>
+      <MarkdownPreview class="note-item__summary" :source="note.summary" />
       <div class="note-item__tags" v-if="note.tags?.length">
         <span v-for="tag in note.tags" :key="tag" class="note-item__tag" @click.stop><RouterLink :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="note-item__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink></span>
       </div>
@@ -17,6 +17,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import type { NoteEntry } from '../../types/content'
 import { formatTimelineShortDate } from '../../utils/date'
+import MarkdownPreview from './MarkdownPreview.vue'
 
 const props = defineProps<{ note: NoteEntry }>()
 const router = useRouter()
@@ -71,15 +72,13 @@ h2 {
   color: var(--site-accent);
 }
 
-p {
+.note-item__summary {
+  display: block;
   margin: 8px 0 0;
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  --markdown-preview-lines: 2;
 }
 
 .note-item__tags {
