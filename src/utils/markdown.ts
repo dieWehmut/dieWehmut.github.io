@@ -397,6 +397,10 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   const activeTimers = new Set<number>()
   let toastTimer: number | null = null
 
+  root.querySelectorAll<HTMLDetailsElement>('details.md-source-page').forEach((details) => {
+    details.open = true
+  })
+
   const scheduleReset = (button: HTMLElement, label: string, state?: 'is-copied' | 'is-failed') => {
     const existingTimer = resetTimers.get(button)
     if (existingTimer) {
