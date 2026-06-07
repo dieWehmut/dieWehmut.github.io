@@ -24,8 +24,11 @@ C:\Users\你的用户名\.claude\settings.json
 ### Ubuntu / Debian
 
 ```bash
-~/.codex/config.toml
 ~/.codex/auth.json
+```
+
+```bash
+~/.codex/config.toml
 ```
 
 ### Windows
