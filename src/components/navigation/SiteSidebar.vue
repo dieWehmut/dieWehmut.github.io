@@ -16,7 +16,7 @@
 import { RouterLink } from 'vue-router'
 import NavMenu from './NavMenu.vue'
 import { useProfile } from '../../composables/useProfile'
-import { siteProfile } from '../../data'
+import { siteProfile } from '../../data/site/profile'
 
 defineEmits(['navigate'])
 

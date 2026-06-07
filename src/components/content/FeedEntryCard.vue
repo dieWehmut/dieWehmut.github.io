@@ -14,7 +14,11 @@
         <a v-else-if="entry.url" :href="entry.url" target="_blank" rel="noopener noreferrer">{{ entry.title }}</a>
         <span v-else>{{ entry.title }}</span>
       </h2>
-      <p v-if="entry.description">{{ entry.description }}</p>
+      <MarkdownPreview
+        v-if="entry.description"
+        class="feed-entry-card__description"
+        :source="entry.description"
+      />
       <div v-if="entry.date || entry.tags?.length" class="feed-entry-card__meta-row">
         <time v-if="entry.date" class="feed-entry-card__date" :datetime="entry.date">
           <el-icon class="feed-entry-card__date-icon"><Calendar /></el-icon>
@@ -40,6 +44,7 @@ import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import { formatTimelineDate } from '../../utils/date'
+import MarkdownPreview from './MarkdownPreview.vue'
 
 type FeedEntry = {
   title: string
@@ -118,15 +123,13 @@ function openEntry(event?: MouseEvent | KeyboardEvent) {
   outline: none;
 }
 
-.feed-entry-card__body p {
+.feed-entry-card__description {
+  display: block;
   margin: 8px 0 0;
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  --markdown-preview-lines: 2;
 }
 
 .feed-entry-card__meta-row {

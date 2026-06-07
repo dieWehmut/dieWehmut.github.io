@@ -1,7 +1,8 @@
 import { createApp } from "vue";
-import ElementPlus from "element-plus";
-import * as ElementPlusIconsVue from "@element-plus/icons-vue";
-import "element-plus/dist/index.css";
+import { ElConfigProvider, ElIcon } from "element-plus";
+import "element-plus/theme-chalk/base.css";
+import "element-plus/theme-chalk/el-config-provider.css";
+import "element-plus/theme-chalk/el-icon.css";
 import "./tailwind.css";
 import "./styles/index.scss";
 import "./styles/markdown/index.scss";
@@ -32,12 +33,9 @@ if (siteConfig.googleAnalyticsId) {
 }
 
 const app = createApp(App);
-app.use(ElementPlus);
+app.use(ElConfigProvider);
+app.use(ElIcon);
 app.use(i18n);
 app.use(router);
-
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component);
-}
 
 app.mount("#app");

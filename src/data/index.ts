@@ -113,7 +113,15 @@ export function getTagGroups(): TagGroup[] {
   }
   for (const note of getNotes()) {
     for (const tag of note.tags || []) {
-      const entry = { id: note.id, title: note.title, date: note.date, tags: note.tags, summary: note.summary } as ArchivePost
+      const entry = {
+        id: note.id,
+        title: note.title,
+        date: note.date,
+        tags: note.tags,
+        get summary() {
+          return note.summary
+        },
+      } as ArchivePost
       groups.set(tag, [...(groups.get(tag) || []), entry])
     }
   }

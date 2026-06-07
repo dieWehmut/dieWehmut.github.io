@@ -1,35 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { siteConfig } from './data/site/config'
-import HomeView from './views/HomeView.vue'
-import ArchiveView from './views/ArchiveView.vue'
-import NotesView from './views/NotesView.vue'
-import NoteView from './views/NoteView.vue'
-import InfraView from './views/InfraView.vue'
-import ProjectView from './views/ProjectView.vue'
-import TagsView from './views/TagsView.vue'
-import AboutView from './views/AboutView.vue'
-import FriendsView from './views/FriendsView.vue'
-import SearchView from './views/SearchView.vue'
-import TagDetailView from './views/TagDetailView.vue'
-import PostView from './views/PostView.vue'
-import NotFoundView from './views/NotFoundView.vue'
 
 const routes = [
-  { path: '/post/:id', name: 'post-detail', component: PostView },
-  { path: '/note/:id', name: 'note-detail', component: NoteView },
-  { path: '/', name: 'home', component: HomeView },
-  { path: '/archive', name: 'archive', component: ArchiveView },
-  { path: '/notes', name: 'notes', component: NotesView },
+  { path: '/post/:id', name: 'post-detail', component: () => import('./views/PostView.vue') },
+  { path: '/note/:id', name: 'note-detail', component: () => import('./views/NoteView.vue') },
+  { path: '/', name: 'home', component: () => import('./views/HomeView.vue') },
+  { path: '/archive', name: 'archive', component: () => import('./views/ArchiveView.vue') },
+  { path: '/notes', name: 'notes', component: () => import('./views/NotesView.vue') },
   { path: '/capture', name: 'capture', component: () => import('./views/CaptureView.vue') },
   { path: '/capture/:id', name: 'capture-detail', component: () => import('./views/CaptureView.vue') },
-  { path: '/infra', name: 'infra', component: InfraView, meta: { requiresInfra: true } },
-  { path: '/project', name: 'project', component: ProjectView, meta: { requiresProject: true } },
-  { path: '/tags', name: 'tags', component: TagsView },
-  { path: '/tags/:tag', name: 'tag-detail', component: TagDetailView },
-  { path: '/about', name: 'about', component: AboutView },
-  { path: '/friends', name: 'friends', component: FriendsView },
-  { path: '/search', name: 'search', component: SearchView },
-  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
+  { path: '/infra', name: 'infra', component: () => import('./views/InfraView.vue'), meta: { requiresInfra: true } },
+  { path: '/project', name: 'project', component: () => import('./views/ProjectView.vue'), meta: { requiresProject: true } },
+  { path: '/tags', name: 'tags', component: () => import('./views/TagsView.vue') },
+  { path: '/tags/:tag', name: 'tag-detail', component: () => import('./views/TagDetailView.vue') },
+  { path: '/about', name: 'about', component: () => import('./views/AboutView.vue') },
+  { path: '/friends', name: 'friends', component: () => import('./views/FriendsView.vue') },
+  { path: '/search', name: 'search', component: () => import('./views/SearchView.vue') },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./views/NotFoundView.vue') },
 ]
 
 const router = createRouter({

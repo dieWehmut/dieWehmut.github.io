@@ -68,29 +68,21 @@ function timestamp(date) {
 }
 
 const feedItems = computed(() => {
-  const postItems = getPosts().map((post) => ({
-    id: `post:${post.id}`,
-    title: post.title,
-    description: post.summary,
-    date: post.date,
-    tags: post.tags,
-    url: `/post/${post.id}`,
-    external: false,
-  }))
-
-  const noteItems = getNotes().map((note) => ({
-    id: `note:${note.id}`,
-    title: note.title,
-    description: note.summary,
-    date: note.date,
-    tags: note.tags,
-    url: `/note/${note.id}`,
-    external: false,
-  }))
-
-  return [...postItems, ...noteItems]
-    .sort((a, b) => timestamp(b.date) - timestamp(a.date))
+  return [
+    ...getPosts().map((post) => ({ kind: 'post', entry: post })),
+    ...getNotes().map((note) => ({ kind: 'note', entry: note })),
+  ]
+    .sort((a, b) => timestamp(b.entry.date) - timestamp(a.entry.date))
     .slice(0, 20)
+    .map(({ kind, entry }) => ({
+      id: `${kind}:${entry.id}`,
+      title: entry.title,
+      description: entry.summary,
+      date: entry.date,
+      tags: entry.tags,
+      url: `/${kind}/${entry.id}`,
+      external: false,
+    }))
 })
 
 onMounted(async () => {

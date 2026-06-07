@@ -4,7 +4,7 @@
     <div v-else class="friend-card__avatar friend-card__avatar--fallback">{{ initials }}</div>
     <div class="friend-card__body">
       <h2>{{ friend.name }}</h2>
-      <p>{{ friend.description }}</p>
+      <MarkdownPreview class="friend-card__description" :source="friend.description" />
     </div>
   </a>
 </template>
@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { FriendLink } from '../../types/content'
+import MarkdownPreview from './MarkdownPreview.vue'
 
 const props = defineProps<{ friend: FriendLink }>()
 const initials = computed(() => props.friend.name.slice(0, 2).toUpperCase())
@@ -69,11 +70,13 @@ h2 {
   font-size: 22px;
 }
 
-p {
+.friend-card__description {
+  display: block;
   margin: 6px 0 0;
   color: var(--site-muted);
   font-size: 14px;
   line-height: 1.4;
+  --markdown-preview-lines: 2;
 }
 
 @media (max-width: 560px) {
