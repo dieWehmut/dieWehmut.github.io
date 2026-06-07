@@ -22,6 +22,8 @@
   --md-mark-text: #e6edf3;
   --md-del-color: #f85149;
   --md-ins-color: #56d364;
+  --md-math-bg: rgba(31, 196, 31, 0.055);
+  --md-math-border: rgba(31, 196, 31, 0.18);
   --md-kbd-bg: #161b22;
   --md-kbd-border: #30363d;
   --md-kbd-shadow: rgba(110, 118, 129, 0.4);
@@ -50,20 +52,30 @@
   --md-mark-text: #1f2328;
   --md-del-color: #82071e;
   --md-ins-color: #116329;
+  --md-math-bg: rgba(31, 196, 31, 0.06);
+  --md-math-border: rgba(31, 196, 31, 0.22);
   --md-kbd-bg: #f6f8fa;
   --md-kbd-border: #d0d7de;
   --md-kbd-shadow: rgba(175, 184, 193, 0.2);
   --md-kbd-text: #24292f;
 }
 
-/* ===== Code block with copy button ===== */
-.md-code-block {
+/* ===== Editable code and math blocks ===== */
+.md-editable-block {
   position: relative;
   margin: 16px 0;
-  border-radius: 8px;
-  background: var(--md-code-bg);
-  border: 1px solid var(--md-pre-border);
   overflow: hidden;
+  border: 1px solid var(--md-pre-border);
+  border-radius: 8px;
+}
+
+.md-code-block {
+  background: var(--md-code-bg);
+}
+
+.md-math-block {
+  border-color: var(--md-math-border);
+  background: var(--md-math-bg);
 }
 
 .md-code-block pre {
@@ -73,38 +85,73 @@
   background: transparent !important;
 }
 
-.md-code-header {
+.md-code-header,
+.md-editable-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 6px 12px;
   border-bottom: 1px solid var(--md-pre-border);
   background: var(--md-copy-bg);
 }
 
-.md-code-lang {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--md-copy-text);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.md-math-block .md-editable-toolbar {
+  border-bottom-color: var(--md-math-border);
 }
 
+.md-code-lang {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--md-copy-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.md-editable-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.md-editable-action,
 .md-code-copy {
   all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  box-sizing: border-box;
   cursor: pointer;
-  padding: 3px 10px;
+  padding: 3px 9px;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
   color: var(--md-copy-text);
   background: var(--md-copy-bg);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
   transition: background 150ms ease, color 150ms ease;
+  user-select: none;
 }
 
-.md-code-copy:hover {
-  background: var(--md-copy-bg-hover);
+.md-editable-action:hover,
+.md-editable-action:focus-visible,
+.md-code-copy:hover,
+.md-code-copy:focus-visible {
   color: var(--site-text);
+  background: var(--md-copy-bg-hover);
+  outline: none;
+}
+
+.md-editable-action--restore {
+  color: var(--site-accent);
+  background: rgba(31, 196, 31, 0.12);
 }
 
 .md-code-copy.is-copied {
@@ -120,6 +167,122 @@
 .md-code-copy.is-failed {
   color: #ff7878;
   background: rgba(255, 120, 120, 0.12);
+}
+
+.md-editable-source {
+  margin: 0 !important;
+  padding: 12px 14px !important;
+  overflow-x: auto;
+  border: 0 !important;
+  border-bottom: 1px solid var(--md-pre-border) !important;
+  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--md-code-bg) 82%, transparent) !important;
+  color: var(--md-code-text);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.md-editable-source code {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+  font: inherit !important;
+}
+
+.md-editable-editor {
+  display: block;
+  width: 100%;
+  min-height: 120px;
+  max-height: 520px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  resize: vertical;
+  background: var(--md-code-bg);
+  color: var(--md-code-text);
+  caret-color: var(--site-accent);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.md-editable-editor:focus {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--site-accent) 55%, transparent);
+}
+
+.md-editable-block.is-editing .md-editable-content {
+  display: none;
+}
+
+.md-math-content {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.markdown-body .md-math-block .katex-display {
+  margin: 0;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.md-copy-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 10000;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(16, 22, 28, 0.94);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.96);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.md-copy-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.md-copy-toast--success {
+  border-color: rgba(31, 196, 31, 0.26);
+}
+
+.md-copy-toast--failed {
+  border-color: rgba(255, 120, 120, 0.3);
+  background: rgba(92, 24, 28, 0.96);
+}
+
+@media (max-width: 640px) {
+  .md-code-header,
+  .md-editable-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .md-editable-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
 }
 
 /* ===== highlight.js token colors – Dark (Tokyo Night) ===== */
@@ -300,6 +463,7 @@
   font-size: 16px;
   line-height: 1.75;
   word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .markdown-body h1,
@@ -513,14 +677,31 @@
 
 /* ===== KaTeX / Math ===== */
 .markdown-body .katex-display {
-  margin: 1em 0;
+  display: block;
+  max-width: 100%;
+  margin: 1.15em 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 8px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--md-math-border);
+  border-radius: 8px;
+  background: var(--md-math-bg);
+  text-align: center;
+  scrollbar-width: thin;
+}
+
+.markdown-body p .katex-display {
+  margin: 0.75em 0;
 }
 
 .markdown-body .katex {
   font-size: 1.1em;
+  color: var(--site-text);
+}
+
+.markdown-body .katex-display > .katex {
+  display: inline-block;
+  max-width: 100%;
 }
 
 .markdown-body .katex-error {
@@ -531,4 +712,225 @@
 /* Ensure inline katex doesn't break flow */
 .markdown-body .katex-inline {
   display: inline;
+}
+
+/* Compact Markdown used by cards, search results, tags, and short descriptions. */
+.markdown-preview {
+  display: -webkit-box;
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--markdown-preview-lines, 2);
+}
+
+.markdown-preview :where(strong) {
+  color: var(--site-text);
+  font-weight: 800;
+}
+
+.markdown-preview :where(em) {
+  font-style: italic;
+}
+
+.markdown-preview :where(code) {
+  padding: 0.08em 0.32em;
+  border-radius: 5px;
+  background: var(--md-inline-code-bg);
+  color: var(--md-inline-code-text);
+  font-size: 0.88em;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+.markdown-preview :where(a) {
+  color: var(--site-accent);
+  text-decoration: none;
+}
+
+.markdown-preview :where(.katex-display) {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  text-align: inherit;
+}
+
+.markdown-preview :where(.katex) {
+  max-width: 100%;
+  color: var(--site-text);
+  font-size: 1.02em;
+  white-space: normal;
+}
+
+.markdown-preview :where(.katex-html) {
+  white-space: normal;
+}
+
+.markdown-preview :where(.katex .base) {
+  max-width: 100%;
+  vertical-align: -0.08em;
+}
+
+.markdown-body .md-mindmap,
+.markdown-body .md-diagram {
+  margin: 16px 0;
+  padding: 14px;
+  overflow-x: auto;
+  border: 1px solid var(--md-table-border);
+  border-radius: 8px;
+  background: var(--md-table-row-alt);
+}
+
+.markdown-body .md-mindmap figcaption,
+.markdown-body .md-diagram figcaption {
+  margin-bottom: 10px;
+  color: var(--md-blockquote-text);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.markdown-body .md-mindmap ul {
+  position: relative;
+  margin: 0;
+  padding-left: 26px;
+  list-style: none;
+}
+
+.markdown-body .md-mindmap > ul {
+  padding-left: 0;
+}
+
+.markdown-body .md-mindmap li {
+  position: relative;
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.markdown-body .md-mindmap > ul > li {
+  padding-left: 0;
+}
+
+.markdown-body .md-mindmap li::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 12px;
+  border-top: 1px solid var(--md-blockquote-border);
+}
+
+.markdown-body .md-mindmap > ul > li::before {
+  display: none;
+}
+
+.markdown-body .md-mindmap__node {
+  display: inline-block;
+  max-width: min(720px, 100%);
+  padding: 5px 9px;
+  border: 1px solid var(--md-table-border);
+  border-radius: 6px;
+  background: var(--md-code-bg);
+  color: var(--site-text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.markdown-body .md-mindmap__node--depth-0 {
+  border-color: var(--site-accent);
+  color: var(--md-heading-color);
+  font-weight: 700;
+}
+
+.markdown-body .md-mindmap__node--depth-1 {
+  font-weight: 600;
+}
+
+.markdown-body .md-source-page {
+  margin: 22px 0 30px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--site-accent) 24%, var(--md-table-border));
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--site-accent) 10%, transparent), transparent 34%),
+    var(--md-table-row-alt);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.markdown-body .md-source-page > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-bottom: 1px solid transparent;
+  color: var(--md-heading-color);
+  font-size: 14px;
+  font-weight: 700;
+  list-style: none;
+}
+
+.markdown-body .md-source-page > summary::-webkit-details-marker {
+  display: none;
+}
+
+.markdown-body .md-source-page > summary::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--site-accent);
+  border-bottom: 2px solid var(--site-accent);
+  transform: rotate(-45deg);
+  transition: transform 160ms ease;
+}
+
+.markdown-body .md-source-page[open] > summary {
+  border-bottom-color: var(--md-table-border);
+  background: color-mix(in srgb, var(--site-accent) 8%, transparent);
+}
+
+.markdown-body .md-source-page[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.markdown-body .md-source-page__figure {
+  margin: 0;
+  padding: 14px;
+}
+
+.markdown-body .md-source-page__figure img {
+  display: block;
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  border: 1px solid var(--md-table-border);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.markdown-body .md-source-page__figure figcaption {
+  margin-top: 10px;
+  color: var(--md-blockquote-text);
+  font-size: 12px;
+  text-align: center;
+}
+
+.markdown-body .md-mindmap {
+  background:
+    radial-gradient(circle at 18px 18px, color-mix(in srgb, var(--site-accent) 13%, transparent) 0 2px, transparent 2px 100%),
+    var(--md-table-row-alt);
+  background-size: 28px 28px, auto;
+}
+
+.markdown-body .md-mindmap__node--depth-2 {
+  background: color-mix(in srgb, var(--md-code-bg) 82%, var(--site-accent));
+}
+
+.markdown-body .md-mindmap__node--depth-3,
+.markdown-body .md-mindmap__node--depth-4 {
+  color: var(--md-blockquote-text);
 }
