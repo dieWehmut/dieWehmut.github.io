@@ -1,5 +1,6 @@
 import type { CaptureAsset, SearchDocument } from '../../types/content'
 import { getDateSortTimestamp } from '../../utils/date'
+import { resolvePublicAssetUrl } from '../../utils/publicAssets'
 import { generatedCaptureAssets } from './generated'
 
 const captureTitleDatePartPattern = String.raw`(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}(?::\d{2})?)(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?`
@@ -30,6 +31,7 @@ export function normalizeCaptureAsset(asset: CaptureAsset): CaptureAsset {
 
   return {
     ...asset,
+    image: resolvePublicAssetUrl(asset.image),
     title,
     date: resolveCaptureDateFromTitle(title, date),
   }

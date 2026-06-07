@@ -3,6 +3,7 @@ import hljs from 'highlight.js'
 import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
+import { resolvePublicAssetUrl } from './publicAssets'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -64,7 +65,11 @@ function stripUnsafeAttributes(rawAttrs: string, tagName: string): string {
     if ((lowerName === 'href' || lowerName === 'src') && !isSafeUrl(normalized)) continue
     if (lowerName === 'style' && !isSafeStyle(normalized)) continue
 
-    collected.push(`${lowerName}="${escapeHtml(normalized)}"`)
+    const safeValue = lowerName === 'src' && tagName === 'img'
+      ? resolvePublicAssetUrl(normalized)
+      : normalized
+
+    collected.push(`${lowerName}="${escapeHtml(safeValue)}"`)
   }
 
   return collected.length ? ` ${collected.join(' ')}` : ''
@@ -297,7 +302,7 @@ const marked = new Marked({
       return renderEditableBlock('code', text, requestedLang)
     },
     image({ href, title, text }) {
-      const src = escapeHtml(href || '')
+      const src = escapeHtml(resolvePublicAssetUrl(href || ''))
       const alt = escapeHtml(text || '')
       const titleAttr = title ? ` title="${escapeHtml(title)}"` : ''
       return `<img src="${src}" alt="${alt}"${titleAttr} loading="lazy" decoding="async">`
