@@ -13,13 +13,13 @@ export const siteConfig: SiteConfig = {
   githubRepo: 'dieWehmut.github.io',
   owner: 'dieWehmut',
   displayName: 'diesw',
-  email: 'diesehnsucht0@gmail.com',
+  email: 'diewehmut@outlook.com',
 
   // --- Site Meta ---
   title: 'diesw-nexus',
   subtitle: 'diesw-nexus',
   description: 'Hi!This is dieWehmut.',
-  siteUrl: 'https://diesw.tech',
+  siteUrl: 'https://diewehmut.github.io',
   startedAt: '2025-08-24T22:00:00+08:00',
 
   // --- External Services ---
@@ -36,7 +36,7 @@ export const siteConfig: SiteConfig = {
   // --- Social Links ---
   links: [
     { label: 'GitHub', url: 'https://github.com/dieWehmut' },
-    { label: 'Website', url: 'https://diesw.tech' },
+    { label: 'Website', url: 'https://diewehmut.github.io' },
   ],
 }
 

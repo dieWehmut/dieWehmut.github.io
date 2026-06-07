@@ -4,13 +4,8 @@
   <img src="https://count.getloli.com/get/@dieWehmut.github.io?theme=rule34" alt="Visitors">
 </p>
 
-这是我的个人网站。
-
-- 个人网站：<https://diewehmut.github.io/>
 - 提取出的模板仓库：<https://github.com/dieWehmut/diesuwa-starter>
 - 模板 Demo：<https://diewehmut.github.io/diesuwa-starter/>
-
-这个仓库保存个人站点源码与内容，包含文章、笔记、项目、友链、标签、搜索、动态背景、Giscus 评论和 GitHub Pages 部署配置。
 
 ## 开发
 
