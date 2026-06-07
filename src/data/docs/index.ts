@@ -19,6 +19,7 @@ type ParsedDoc = {
   tags: string[]
   body: string
   assetPaths: string[]
+  summary?: string
 }
 
 const rawDocs = import.meta.glob('./**/*.md', {
@@ -137,6 +138,13 @@ const parsedDocs: ParsedDoc[] = Object.entries(rawDocs).map(([path, raw]) => {
   return { id, type, title, date, tags, body, assetPaths }
 })
 
+function docSummary(doc: ParsedDoc): string {
+  if (doc.summary === undefined) {
+    doc.summary = excerptFromMarkdown(doc.body)
+  }
+  return doc.summary
+}
+
 export function getDocPosts(): ArchivePost[] {
   return parsedDocs
     .filter((doc) => doc.type === 'post')
@@ -145,7 +153,9 @@ export function getDocPosts(): ArchivePost[] {
       title: doc.title,
       date: doc.date,
       tags: doc.tags,
-      summary: excerptFromMarkdown(doc.body),
+      get summary() {
+        return docSummary(doc)
+      },
       body: doc.body,
       assetPaths: doc.assetPaths,
     }))
@@ -159,7 +169,9 @@ export function getDocNotes(): NoteEntry[] {
       title: doc.title,
       date: doc.date,
       tags: doc.tags,
-      summary: excerptFromMarkdown(doc.body),
+      get summary() {
+        return docSummary(doc)
+      },
       body: doc.body,
       assetPaths: doc.assetPaths,
     }))

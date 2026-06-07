@@ -23,7 +23,13 @@
               type="button"
               @click="openCapture(capture)"
             >
-              <img :src="capture.image" :alt="capture.title || ''" loading="lazy" decoding="async" />
+              <img
+                :src="capture.image"
+                :alt="capture.title || ''"
+                loading="lazy"
+                decoding="async"
+                @error="retryPublicAssetImage($event, capture.image)"
+              />
             </button>
           </div>
 
@@ -63,7 +69,11 @@
           <h2>
             <RouterLink :to="postUrl(post)">{{ post.title }}</RouterLink>
           </h2>
-          <p v-if="post.summary">{{ post.summary }}</p>
+          <MarkdownPreview
+            v-if="post.summary"
+            class="tag-detail__summary"
+            :source="post.summary"
+          />
           <div v-if="post.date || post.tags?.length" class="tag-detail__meta-row">
             <time v-if="post.date" class="tag-detail__date" :datetime="post.date"><el-icon class="tag-detail__date-icon"><Calendar /></el-icon>{{ formattedDate(post.date) }}</time>
             <RouterLink v-for="t in post.tags" :key="t" class="tag-detail__tag" :to="`/tags/${encodeURIComponent(t)}`"><el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>{{ t }}</RouterLink>
@@ -83,11 +93,13 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { PriceTag, Calendar } from '@element-plus/icons-vue'
 import CaptureAssetCard from '../components/capture/CaptureAssetCard.vue'
+import MarkdownPreview from '../components/content/MarkdownPreview.vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, TagContentEntry } from '../types/content'
 import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
+import { retryPublicAssetImage } from '../utils/publicAssets'
 
 const route = useRoute()
 const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
@@ -243,6 +255,12 @@ watch(tag, loadCaptures)
   transition: transform 220ms ease;
 }
 
+.tag-detail__capture-media img.is-image-failed {
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  object-fit: contain;
+}
+
 .tag-detail__capture-media:hover img,
 .tag-detail__capture-media:focus-visible img {
   transform: scale(1.03);
@@ -314,15 +332,13 @@ watch(tag, loadCaptures)
   outline: none;
 }
 
-.tag-detail__item-body p {
+.tag-detail__summary {
+  display: block;
   margin: 8px 0 0;
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  --markdown-preview-lines: 2;
 }
 
 .tag-detail__meta-row {
