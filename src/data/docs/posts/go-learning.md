@@ -60,8 +60,8 @@ func main(){
 
 	fmt.Print(a,"+",b,fmt.Sprintf("=%d\n",a+b),c,"\n")
 	log.Println(+3)
-	log.Fatal(fmt.Errorf("%s %s", v1,v2))
-	log.Panicf( "%s %s", v1,v2)
+	log.Println(fmt.Errorf("%s %s", v1,v2))
+	// log.Fatal 会打印后直接退出程序；log.Panicf 会打印后触发 panic。
 }
 ```
 
@@ -118,12 +118,13 @@ func main(){
 	if len(os.Args) > 1{
 		fmt.Printf("Arguments: %s\n", strings.Join(os.Args[1:], ", "))
 	}
-	reader:= bufio.NewReader(os.Stdin)
+	input := "keep learning Go\nAlice 19\n"
+	reader:= bufio.NewReader(strings.NewReader(input))
 	motto, _ := reader.ReadString('\n')
 	motto = strings.TrimSpace(motto)
 	var name string
 	var age int
-	_,err:= fmt.Scan(&name, &age)
+	_,err:= fmt.Fscan(reader, &name, &age)
 	if err != nil{
 		log.Fatalf("Input error: %v", err)
 	}
@@ -163,10 +164,7 @@ import(
 )
 
 func main(){
-	var a [5]int
-	for i:=0; i<5; i++{
-	fmt.Scan(&a[i])
-	}
+	a := [5]int{1, 2, 3, 4, 5}
 	for i:=4; i>=0; i--{
 		fmt.Printf("%d ", a[i])
 	}
@@ -502,9 +500,13 @@ func learn_chan(){
 	ch1 <- "world"
 	time.Sleep(1 * time.Second)
 	ch2:=make(chan string,1)//容量设置为 1 也没关系，缓冲区大小决定了 生产者可以提前多少个消息而不阻塞。
+	done:=make(chan struct{})
 	go producer(ch2)
-	go customer(ch2)
-	time.Sleep(1*time.Second)
+	go func(){
+		customer(ch2)
+		close(done)
+	}()
+	<-done
 
 }
 func producer(ch chan string){
@@ -512,11 +514,11 @@ func producer(ch chan string){
 	ch<-"a"
 	ch<-"b"
 	ch<-"c"
+	close(ch)
 	fmt.Println("producer end:")
 }
 func customer(ch chan string){
-	for{
-		msg:=<-ch
+	for msg:=range ch{
 		fmt.Println(msg)
 	}
 }
@@ -627,6 +629,11 @@ func GoA() {
 }
 
 func GoB() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("GoB recovered:", err)
+		}
+	}()
 	panic("error")
 }
 func learn_defer_Exit(){
@@ -1088,9 +1095,12 @@ func learn_error(){
 	if errors.Is(err,&DivideError{}){
 		fmt.Println("errors.Is:divide error")
 	}
-	var divErr*DivideError
-	if errors.As(err,&divErr){
-		fmt.Println("errors.As:divide error")
+	var target error
+	if errors.As(err,&target){
+		fmt.Printf("errors.As:%T\n", target)
+	}
+	if divErr, ok := err.(*DivideError); ok {
+		fmt.Printf("type assertion: dividend=%d divisor=%d\n", divErr.Dividend, divErr.Divisor)
 	}
 	if err!=nil{
 		fmt.Println(err)//打印值时会看该值是否实现了特定接口，实现了则调用
@@ -1458,20 +1468,33 @@ func main() {
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"encoding/json"
+	"fmt"
 )
-func learn_Gin(){
-	router:=gin.Default()
-	router.GET("/ping",func(c*gin.Context){
-		c.JSON(http.StatusOK,gin.H{
+
+type Context struct{}
+
+func (Context) JSON(status int, body map[string]string) {
+	data, err := json.Marshal(body)
+	if err != nil {
+		fmt.Println("json error:", err)
+		return
+	}
+	fmt.Printf("status=%d body=%s\n", status, data)
+}
+
+func learn_router(){
+	router:=map[string]func(Context){
+		"/ping": func(c Context){
+			c.JSON(200, map[string]string{
 			"message":"pong",
-		})
-	})
-	router.Run()
+			})
+		},
+	}
+	router["/ping"](Context{})
 }
 func main(){
-	learn_Gin()
+	learn_router()
 
 }
 ```
