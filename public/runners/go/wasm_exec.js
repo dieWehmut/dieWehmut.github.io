@@ -554,7 +554,7 @@
 
 		_resume() {
 			if (this.exited) {
-				throw new Error("Go program has already exited");
+				return;
 			}
 			this._inst.exports.resume();
 			if (this.exited) {

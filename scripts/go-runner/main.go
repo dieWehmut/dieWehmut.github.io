@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
+	"strconv"
 	"strings"
 	"syscall/js"
 
@@ -79,6 +81,10 @@ func execute(source string, stdin string) (result runResult) {
 
 	defer func() {
 		if recovered := recover(); recovered != nil {
+			if code, ok := ministdlib.IsRunnerExit(recovered); ok {
+				result.Message = fmt.Sprintf("program exited with code %d", code)
+				return
+			}
 			result.Status = "runtime_error"
 			result.Message = fmt.Sprint(recovered)
 		}
@@ -88,6 +94,8 @@ func execute(source string, stdin string) (result runResult) {
 	var stderr cappedBuffer
 	stdout.limit = maxOutputBytes
 	stderr.limit = maxOutputBytes
+	ministdlib.SetRunnerLogOutput(&stderr)
+	defer ministdlib.SetRunnerLogOutput(nil)
 
 	runner := interp.New(interp.Options{
 		Stdin:  strings.NewReader(stdin),
@@ -105,10 +113,21 @@ func execute(source string, stdin string) (result runResult) {
 		result.Message = err.Error()
 		return result
 	}
+	if err := runner.Use(restrictedOverrides()); err != nil {
+		result.Status = "runtime_error"
+		result.Message = err.Error()
+		return result
+	}
 
 	if _, err := runner.Eval(source); err != nil {
-		result.Status = classifyEvalError(err, stderr.String())
 		result.Message = err.Error()
+		if code, ok := parseRunnerExitMessage(result.Message); ok {
+			result.Status = "success"
+			result.Message = fmt.Sprintf("program exited with code %d", code)
+			stderr = removeRunnerExitPanicLine(stderr)
+		} else {
+			result.Status = classifyEvalError(err, stderr.String())
+		}
 	}
 
 	result.Stdout = stdout.String()
@@ -132,6 +151,31 @@ func classifyEvalError(err error, stderr string) string {
 	return "compile_error"
 }
 
+func parseRunnerExitMessage(message string) (int, bool) {
+	if !strings.HasPrefix(message, "os.Exit(") || !strings.HasSuffix(message, ")") {
+		return 0, false
+	}
+
+	code, err := strconv.Atoi(strings.TrimSuffix(strings.TrimPrefix(message, "os.Exit("), ")"))
+	if err != nil {
+		return 0, false
+	}
+	return code, true
+}
+
+func removeRunnerExitPanicLine(buffer cappedBuffer) cappedBuffer {
+	var filtered cappedBuffer
+	filtered.limit = buffer.limit
+	filtered.truncated = buffer.truncated
+	for _, line := range strings.SplitAfter(buffer.String(), "\n") {
+		if strings.Contains(line, ": panic: ") {
+			continue
+		}
+		_, _ = filtered.Write([]byte(line))
+	}
+	return filtered
+}
+
 func allowedSymbols() interp.Exports {
 	allowedPackages := map[string]bool{
 		"bufio/bufio":         true,
@@ -142,6 +186,8 @@ func allowedSymbols() interp.Exports {
 		"io/io":               true,
 		"log/log":             true,
 		"math/math":           true,
+		"math/cmplx/cmplx":    true,
+		"math/rand/rand":      true,
 		"os/os":               true,
 		"regexp/regexp":       true,
 		"sort/sort":           true,
@@ -158,4 +204,23 @@ func allowedSymbols() interp.Exports {
 		}
 	}
 	return exports
+}
+
+func restrictedOverrides() interp.Exports {
+	return interp.Exports{
+		"log/log": map[string]reflect.Value{
+			"Fatal":   reflect.ValueOf(ministdlib.LogFatal),
+			"Fatalf":  reflect.ValueOf(ministdlib.LogFatalf),
+			"Fatalln": reflect.ValueOf(ministdlib.LogFatalln),
+		},
+		"os/os": map[string]reflect.Value{
+			"Create":    reflect.ValueOf(ministdlib.OsCreate),
+			"Exit":      reflect.ValueOf(ministdlib.OsExit),
+			"File":      reflect.ValueOf((*ministdlib.VirtualFile)(nil)),
+			"Open":      reflect.ValueOf(ministdlib.OsOpen),
+			"OpenFile":  reflect.ValueOf(ministdlib.OsOpenFile),
+			"ReadFile":  reflect.ValueOf(ministdlib.OsReadFile),
+			"WriteFile": reflect.ValueOf(ministdlib.OsWriteFile),
+		},
+	}
 }

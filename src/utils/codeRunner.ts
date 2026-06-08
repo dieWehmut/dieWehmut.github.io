@@ -34,7 +34,7 @@ type GoWorkerResponse = {
 
 const GO_SOURCE_LIMIT_BYTES = 32 * 1024
 const GO_OUTPUT_LIMIT_BYTES = 64 * 1024
-const DEFAULT_TIMEOUT_MS = 3000
+const DEFAULT_TIMEOUT_MS = 8000
 const GO_IMPORT_ALLOW_LIST = [
   'bufio',
   'container/list',
@@ -44,6 +44,8 @@ const GO_IMPORT_ALLOW_LIST = [
   'io',
   'log',
   'math',
+  'math/cmplx',
+  'math/rand',
   'os',
   'regexp',
   'sort',
@@ -288,7 +290,7 @@ function runGoInWorker(source: string, stdin: string, timeoutMs: number): Promis
     timeoutId = window.setTimeout(() => {
       const durationMs = Math.round(performance.now() - startedAt)
       terminateGoWorker()
-      settle(emptyResult('timeout', '运行超过 3 秒，已终止。', durationMs))
+      settle(emptyResult('timeout', '运行超过 8 秒，已终止。', durationMs))
     }, timeoutMs)
 
     try {
