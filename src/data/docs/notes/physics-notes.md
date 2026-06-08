@@ -1,6 +1,6 @@
 ---
 title: High School Physics Notes Summary
-date: 2026-06-08
+date: 2024-06-08
 tags: [Physics, Notes]
 ---
 
