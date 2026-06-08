@@ -1,10 +1,22 @@
 {
+  "env": {
+    "TESSDATA_PREFIX": "C:\\Users\\30119\\tessdata",
+    "PATH_TESSERACT": "C:\\Program Files\\Tesseract-OCR\\tesseract.exe",
+    "PATH_PYTHON": "D:\\software\\python3.10\\python.exe"
+  },
   "permissions": {
+    "defaultMode": "bypassPermissions",
     "allow": [
-      "Bash(cd:*)",
-      "Bash(find:*)",
-      "Bash(grep:*)",
-      "Bash(npx vue-tsc:*)"
+      "Read(**)",
+      "Write(**)",
+      "Edit(**)",
+      "MultiEdit(**)",
+      "NotebookEdit(**)",
+      "Glob(**)",
+      "Grep(**)",
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)"
     ]
   }
 }
