@@ -1,21 +1,20 @@
 <template>
-  <div ref="containerRef" class="markdown-content" v-html="html" />
+  <div ref="containerRef" class="markdown-content" />
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
 
 const props = defineProps<{
   source: string
 }>()
 
 const containerRef = ref<HTMLElement | null>(null)
-const html = ref('')
 
 let cleanup: (() => void) | null = null
 let renderToken = 0
-let idleHandle: ReturnType<Window['setTimeout']> = 0
 let markdownModulePromise: Promise<typeof import('../../utils/markdown')> | null = null
+const scheduledHandles = new Set<number>()
 
 type IdleScheduler = Window & typeof globalThis & {
   requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number
@@ -35,60 +34,103 @@ function loadMarkdownModule() {
   return markdownModulePromise
 }
 
-function scheduleIdle(callback: () => void) {
-  if (typeof window === 'undefined') {
-    callback()
-    return
-  }
-
-  const scheduler = window as IdleScheduler
-  if (scheduler.requestIdleCallback) {
-    idleHandle = scheduler.requestIdleCallback(callback, { timeout: 700 })
-    return
-  }
-
-  idleHandle = window.setTimeout(callback, 0)
+function setRenderedHtml(renderedHtml: string) {
+  if (!containerRef.value) return
+  containerRef.value.innerHTML = renderedHtml
 }
 
-function cancelIdle() {
-  if (!idleHandle || typeof window === 'undefined') return
-  const scheduler = window as IdleScheduler
-  if (scheduler.cancelIdleCallback) {
-    scheduler.cancelIdleCallback(idleHandle)
-  } else {
-    window.clearTimeout(idleHandle)
+function appendRenderedHtml(renderedHtml: string) {
+  if (!containerRef.value) return
+  const section = document.createElement('section')
+  section.className = 'markdown-content__chunk'
+  section.innerHTML = renderedHtml
+  containerRef.value.append(section)
+}
+
+function scheduleIdle(callback: () => void, timeout = 700): number {
+  if (typeof window === 'undefined') {
+    callback()
+    return 0
   }
-  idleHandle = 0
+
+  const scheduler = window as IdleScheduler
+  const wrapped = () => {
+    scheduledHandles.delete(handle)
+    callback()
+  }
+  let handle = 0
+
+  if (scheduler.requestIdleCallback) {
+    handle = scheduler.requestIdleCallback(wrapped, { timeout })
+  } else {
+    handle = window.setTimeout(wrapped, 0)
+  }
+
+  scheduledHandles.add(handle)
+  return handle
+}
+
+function cancelScheduledWork() {
+  if (typeof window === 'undefined') return
+  const scheduler = window as IdleScheduler
+  scheduledHandles.forEach((handle) => {
+    if (scheduler.cancelIdleCallback) {
+      scheduler.cancelIdleCallback(handle)
+    } else {
+      window.clearTimeout(handle)
+    }
+  })
+  scheduledHandles.clear()
+}
+
+function renderRemainingChunks(
+  chunks: string[],
+  index: number,
+  token: number,
+  renderMarkdown: (source: string) => string
+) {
+  if (token !== renderToken) return
+  if (index >= chunks.length) {
+    return
+  }
+
+  scheduleIdle(() => {
+    if (token !== renderToken) return
+    appendRenderedHtml(renderMarkdown(chunks[index]))
+    renderRemainingChunks(chunks, index + 1, token, renderMarkdown)
+  }, 900)
 }
 
 watch(
   () => props.source,
   (source) => {
     const token = ++renderToken
-    html.value = ''
+    setRenderedHtml('')
     cleanup?.()
     cleanup = null
-    cancelIdle()
+    cancelScheduledWork()
 
     if (!source) return
 
     scheduleIdle(async () => {
-      idleHandle = 0
-      const { renderMarkdown } = await loadMarkdownModule()
-      const rendered = renderMarkdown(source)
+      const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
       if (token !== renderToken) return
-      html.value = rendered
-      await nextTick()
+      const chunks = splitMarkdownForProgressiveRender(source)
+      setRenderedHtml(renderMarkdown(chunks[0] || ''))
       if (token !== renderToken) return
       bindInteractions(token)
-    })
+      if (chunks.length <= 1) {
+        return
+      }
+      renderRemainingChunks(chunks, 1, token, renderMarkdown)
+    }, 200)
   },
   { immediate: true }
 )
 
 onBeforeUnmount(() => {
   renderToken += 1
-  cancelIdle()
+  cancelScheduledWork()
   cleanup?.()
 })
 </script>

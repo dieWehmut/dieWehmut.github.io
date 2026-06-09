@@ -4,7 +4,8 @@
     <div class="note-item__body">
       <h2>{{ note.title }}</h2>
       <MarkdownPreview class="note-item__summary" :source="note.summary" />
-      <div class="note-item__tags" v-if="note.tags?.length">
+      <div class="note-item__tags" v-if="note.tags?.length || note.wordCount || note.readingMinutes">
+        <ContentStats :word-count="note.wordCount" :reading-minutes="note.readingMinutes" />
         <span v-for="tag in note.tags" :key="tag" class="note-item__tag" @click.stop><RouterLink :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="note-item__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink></span>
       </div>
     </div>
@@ -17,6 +18,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import type { NoteEntry } from '../../types/content'
 import { formatTimelineShortDate } from '../../utils/date'
+import ContentStats from './ContentStats.vue'
 import MarkdownPreview from './MarkdownPreview.vue'
 
 const props = defineProps<{ note: NoteEntry }>()

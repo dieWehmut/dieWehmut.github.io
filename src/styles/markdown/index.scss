@@ -827,6 +827,12 @@
   scrollbar-width: thin;
 }
 
+.markdown-body .katex svg {
+  display: inline-block;
+  overflow: visible;
+  vertical-align: unset;
+}
+
 .markdown-body p .katex-display {
   margin: 0.75em 0;
 }
@@ -1056,6 +1062,12 @@
   color: var(--md-blockquote-text);
   font-size: 12px;
   text-align: center;
+}
+
+.markdown-body .markdown-content__chunk {
+  display: flow-root;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 
 .markdown-body .md-mindmap {

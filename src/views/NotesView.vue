@@ -29,6 +29,8 @@ function noteEntry(note: NoteEntry) {
     description: note.summary,
     date: note.date,
     tags: note.tags,
+    wordCount: note.wordCount,
+    readingMinutes: note.readingMinutes,
     url: `/note/${note.id}`,
   }
 }

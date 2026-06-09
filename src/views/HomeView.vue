@@ -28,11 +28,6 @@
         </RouterLink>
       </div>
 
-      <div class="home-view__meta">
-        <span>Last Commit</span>
-        <strong>{{ lastUpdated }}</strong>
-      </div>
-
       <section class="home-view__feed">
         <FeedEntryCard v-for="item in feedItems" :key="item.id" :entry="item" />
       </section>
@@ -46,7 +41,6 @@
 import { computed, onMounted, ref } from 'vue'
 import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { useProfile } from '../composables/useProfile'
 import { infra } from '../data/site/infra.ts'
 import { siteConfig } from '../data/site/config'
 import { getPosts, getProjectEntries, getNotes, getTagGroups } from '../data'
@@ -61,7 +55,6 @@ const postsCount = computed(() => getPosts().length)
 const notesCount = computed(() => getNotes().length)
 const tagsCount = computed(() => getTagGroups().length)
 const captureCount = ref(null)
-const { lastUpdated } = useProfile()
 
 function timestamp(date) {
   return getDateSortTimestamp(date)
@@ -80,6 +73,8 @@ const feedItems = computed(() => {
       description: entry.summary,
       date: entry.date,
       tags: entry.tags,
+      wordCount: entry.wordCount,
+      readingMinutes: entry.readingMinutes,
       url: `/${kind}/${entry.id}`,
       external: false,
     }))
@@ -145,32 +140,9 @@ onMounted(async () => {
   line-height: 1;
 }
 
-.home-view__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  margin: 0 0 36px;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
-  color: var(--site-muted);
-  font-weight: 800;
-}
-
-.home-view__meta strong {
-  color: var(--site-text);
-  font-size: 16px;
-}
-
 @media (max-width: 760px) {
   .home-view__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .home-view__meta {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 

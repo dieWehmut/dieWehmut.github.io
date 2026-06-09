@@ -162,6 +162,35 @@ function excerptFromMarkdown(source, maxLength = 120) {
   return `${excerpt}...`
 }
 
+const READABLE_UNIT_PATTERN = /[A-Za-z0-9]+(?:[-_'][A-Za-z0-9]+)*/g
+const CJK_UNIT_PATTERN = /[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u3040-\u30FF\uAC00-\uD7AF]/g
+const READABLE_UNITS_PER_MINUTE = 400
+
+function normalizeMarkdownForWordCount(source) {
+  return source
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/<\/?[^>]+>/g, ' ')
+    .replace(/[`*_~>#|[\](){}\\]/g, ' ')
+    .replace(/^\s{0,3}(?:[-+]|\d+[.)])\s+/gm, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function countReadableUnits(source) {
+  if (!source) return 0
+  const plain = normalizeMarkdownForWordCount(source)
+  const cjkCount = (plain.match(CJK_UNIT_PATTERN) || []).length
+  const latinCount = (plain.replace(CJK_UNIT_PATTERN, ' ').match(READABLE_UNIT_PATTERN) || []).length
+  return cjkCount + latinCount
+}
+
+function readingMinutesFor(wordCount) {
+  if (!wordCount) return 0
+  return Math.max(1, Math.ceil(wordCount / READABLE_UNITS_PER_MINUTE))
+}
+
 function getSortTimestamp(date) {
   if (!date) return 0
   const normalized = String(date).replace(/\//g, '-')
@@ -179,6 +208,8 @@ function toGeneratedModule(docs) {
   date: string
   tags: string[]
   summary: string
+  wordCount: number
+  readingMinutes: number
   path: string
 }
 
@@ -201,6 +232,7 @@ function main() {
       const date = data.date || ''
       const tags = parseTags(data.tags)
       const trimmedContent = content.trim()
+      const wordCount = countReadableUnits(trimmedContent)
 
       return {
         id,
@@ -209,6 +241,8 @@ function main() {
         date,
         tags,
         summary: data.summary || excerptFromMarkdown(trimmedContent),
+        wordCount,
+        readingMinutes: readingMinutesFor(wordCount),
         path: relativePath,
         timestamp: getSortTimestamp(date),
       }
