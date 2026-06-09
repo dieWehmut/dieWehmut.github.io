@@ -31,6 +31,9 @@ jobs:
       VITE_GISCUS_INPUT_POSITION: ${{ vars.VITE_GISCUS_INPUT_POSITION }}
       VITE_GISCUS_THEME: ${{ vars.VITE_GISCUS_THEME }}
       VITE_GISCUS_LANG: ${{ vars.VITE_GISCUS_LANG }}
+      VITE_CODE_RUNNER_MODE: backend
+      VITE_CODE_RUNNER_API_URL: ${{ vars.VITE_CODE_RUNNER_API_URL }}
+      VITE_CODE_RUNNER_API_TOKEN: ${{ vars.VITE_CODE_RUNNER_API_TOKEN }}
 
     environment:
       name: github-pages

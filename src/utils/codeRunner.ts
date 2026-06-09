@@ -1,3 +1,5 @@
+import siteConfig from '../data/site/config'
+
 export type RunStatus = 'success' | 'compile_error' | 'runtime_error' | 'timeout' | 'unsupported'
 
 export type RunResult = {
@@ -284,7 +286,7 @@ function collectGoImports(source: string): string[] {
   return Array.from(imports)
 }
 
-function validateGoSource(source: string): RunResult | null {
+function validateGoSource(source: string, mode: 'frontend' | 'backend'): RunResult | null {
   if (byteLength(source) > GO_SOURCE_LIMIT_BYTES) {
     return emptyResult('unsupported', '源码超过 32 KB，已取消运行。')
   }
@@ -294,7 +296,9 @@ function validateGoSource(source: string): RunResult | null {
     return emptyResult('unsupported', '该代码块不是完整 Go 程序，请补全 package main 和 func main()。')
   }
 
-  const unsupportedImports = collectGoImports(source).filter((importPath) => !GO_IMPORT_ALLOW_SET.has(importPath))
+  const unsupportedImports = mode === 'frontend'
+    ? collectGoImports(source).filter((importPath) => !GO_IMPORT_ALLOW_SET.has(importPath))
+    : []
   if (unsupportedImports.length) {
     return emptyResult(
       'compile_error',
@@ -403,6 +407,172 @@ function enqueueGoRun(source: string, stdin: string, timeoutMs: number): Promise
   return queuedRun
 }
 
+type BackendJobResponse = {
+  jobId?: string
+  status?: string
+  stdout?: string
+  stderr?: string
+  compileStdout?: string
+  compileStderr?: string
+  durationMs?: number
+  errorMessage?: string
+}
+
+type BackendErrorResponse = {
+  error?: string
+  message?: string
+}
+
+function isBackendTerminalStatus(status: string | undefined): boolean {
+  switch (status) {
+    case 'JOB_STATUS_SUCCEEDED':
+    case 'JOB_STATUS_COMPILE_FAILED':
+    case 'JOB_STATUS_RUNTIME_FAILED':
+    case 'JOB_STATUS_TIME_LIMIT_EXCEEDED':
+    case 'JOB_STATUS_MEMORY_LIMIT_EXCEEDED':
+    case 'JOB_STATUS_OUTPUT_LIMIT_EXCEEDED':
+    case 'JOB_STATUS_CANCELED':
+    case 'JOB_STATUS_SYSTEM_ERROR':
+      return true
+    default:
+      return false
+  }
+}
+
+function backendStatusToRunStatus(status: string | undefined): RunStatus {
+  switch (status) {
+    case 'JOB_STATUS_SUCCEEDED':
+      return 'success'
+    case 'JOB_STATUS_COMPILE_FAILED':
+      return 'compile_error'
+    case 'JOB_STATUS_TIME_LIMIT_EXCEEDED':
+      return 'timeout'
+    case 'JOB_STATUS_QUEUED':
+    case 'JOB_STATUS_RUNNING':
+    case 'JOB_STATUS_COMPILING':
+      return 'timeout'
+    case 'JOB_STATUS_RUNTIME_FAILED':
+    case 'JOB_STATUS_MEMORY_LIMIT_EXCEEDED':
+    case 'JOB_STATUS_OUTPUT_LIMIT_EXCEEDED':
+    case 'JOB_STATUS_CANCELED':
+    case 'JOB_STATUS_SYSTEM_ERROR':
+      return 'runtime_error'
+    default:
+      return 'runtime_error'
+  }
+}
+
+function normalizeBackendApiUrl(value: string): string {
+  return value.replace(/\/+$/, '')
+}
+
+function sleep(ms: number, signal: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timeoutId = window.setTimeout(resolve, ms)
+    signal.addEventListener('abort', () => {
+      window.clearTimeout(timeoutId)
+      reject(new DOMException('Aborted', 'AbortError'))
+    }, { once: true })
+  })
+}
+
+async function readBackendBody(response: Response): Promise<BackendJobResponse | BackendErrorResponse | null> {
+  return await response.json().catch(() => null) as BackendJobResponse | BackendErrorResponse | null
+}
+
+async function runGoInBackend(source: string, stdin: string, timeoutMs: number): Promise<RunResult> {
+  const apiUrl = normalizeBackendApiUrl(siteConfig.codeRunner.backendApiUrl || '')
+  if (!apiUrl) {
+    return emptyResult('unsupported', '后端运行模式未配置 API 地址。')
+  }
+
+  const backendWaitTimeoutMs = Math.max(timeoutMs, 30000)
+  const controller = new AbortController()
+  const startedAt = performance.now()
+  const timeoutId = window.setTimeout(() => controller.abort(), backendWaitTimeoutMs + 5000)
+
+  try {
+    const headers: Record<string, string> = {
+      'content-type': 'application/json',
+    }
+    if (siteConfig.codeRunner.backendToken) {
+      headers.authorization = `Bearer ${siteConfig.codeRunner.backendToken}`
+    }
+
+    const submitResponse = await fetch(`${apiUrl}/v1/go/run`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        source,
+        stdin,
+        wait: true,
+        waitTimeoutMs: backendWaitTimeoutMs,
+      }),
+      signal: controller.signal,
+    })
+    const body = await readBackendBody(submitResponse)
+    const durationMs = Math.round(performance.now() - startedAt)
+
+    if (!submitResponse.ok) {
+      const message = body && 'message' in body && body.message
+        ? body.message
+        : `后端 API 返回 ${submitResponse.status}。`
+      return emptyResult(submitResponse.status === 408 ? 'timeout' : 'runtime_error', message, durationMs)
+    }
+
+    let job = body as BackendJobResponse | null
+    if (!job?.jobId && !isBackendTerminalStatus(job?.status)) {
+      return emptyResult('runtime_error', '后端 API 没有返回有效任务。', durationMs)
+    }
+
+    while (job?.jobId && !isBackendTerminalStatus(job.status)) {
+      await sleep(300, controller.signal)
+      const pollResponse = await fetch(`${apiUrl}/v1/jobs/${encodeURIComponent(job.jobId)}`, {
+        headers,
+        signal: controller.signal,
+      })
+      const pollBody = await readBackendBody(pollResponse)
+      if (!pollResponse.ok) {
+        const message = pollBody && 'message' in pollBody && pollBody.message
+          ? pollBody.message
+          : `后端 API 返回 ${pollResponse.status}。`
+        return emptyResult('runtime_error', message, Math.round(performance.now() - startedAt))
+      }
+      job = pollBody as BackendJobResponse | null
+    }
+
+    if (!job) {
+      return emptyResult('runtime_error', '后端 API 没有返回有效任务。', durationMs)
+    }
+
+    if (!isBackendTerminalStatus(job.status)) {
+      return emptyResult('timeout', '后端任务仍在运行，请稍后重试。', durationMs)
+    }
+
+    const jobDurationMs = Math.round(performance.now() - startedAt)
+    const status = backendStatusToRunStatus(job?.status)
+    const stderr = [job?.compileStderr || '', job?.stderr || ''].filter(Boolean).join('\n')
+    const message = status === 'timeout' && job?.status !== 'JOB_STATUS_TIME_LIMIT_EXCEEDED'
+      ? '后端任务仍在运行，请稍后重试。'
+      : job?.errorMessage || ''
+    return normalizeRunResult({
+      status,
+      stdout: job?.stdout || '',
+      stderr,
+      durationMs: job?.durationMs || jobDurationMs,
+      message,
+    }, jobDurationMs)
+  } catch (error) {
+    const durationMs = Math.round(performance.now() - startedAt)
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      return emptyResult('timeout', '后端运行超过时间限制，已终止等待。', durationMs)
+    }
+    return emptyResult('runtime_error', error instanceof Error ? error.message : String(error), durationMs)
+  } finally {
+    window.clearTimeout(timeoutId)
+  }
+}
+
 export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<RunResult> {
   const language = normalizeLanguage(request.language)
 
@@ -411,8 +581,13 @@ export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS)
   }
 
   const source = normalizeGoSourceForRunner(request.source)
-  const validationResult = validateGoSource(source)
+  const runnerMode = siteConfig.codeRunner.mode
+  const validationResult = validateGoSource(source, runnerMode)
   if (validationResult) return Promise.resolve(validationResult)
+
+  if (runnerMode === 'backend') {
+    return runGoInBackend(source, request.stdin || '', timeoutMs)
+  }
 
   return enqueueGoRun(source, request.stdin || '', timeoutMs)
 }

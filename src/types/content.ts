@@ -101,6 +101,11 @@ export interface SiteConfig {
   icpText: string
   enableInfra: boolean
   enableProject: boolean
+  codeRunner: {
+    mode: 'frontend' | 'backend'
+    backendApiUrl: string
+    backendToken: string
+  }
   links: SiteLink[]
 }
 

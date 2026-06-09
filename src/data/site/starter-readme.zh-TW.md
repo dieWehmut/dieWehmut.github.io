@@ -68,6 +68,18 @@ pnpm dev
 2. `Source` 選擇 `GitHub Actions`
 3. 如果不是 `YOUR_USERNAME.github.io` 倉庫，網址會是 `https://YOUR_USERNAME.github.io/YOUR_REPO/`
 
+## Go 程式碼執行
+
+模板預設使用純前端 runner：
+
+```env
+VITE_CODE_RUNNER_MODE=frontend
+VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_TOKEN=
+```
+
+只有在你自行部署 Sandkasten HTTP API 時，才需要改成 `VITE_CODE_RUNNER_MODE=backend` 並設定 `VITE_CODE_RUNNER_API_URL`。Vite 會把這些值寫進公開的前端 JavaScript，`VITE_CODE_RUNNER_API_TOKEN` 不應放私密服務端 token。
+
 ## 常用命令
 
 ```bash

@@ -108,6 +108,12 @@ export const siteConfig = {
   enableInfra: false,
   enableProject: false,
 
+  codeRunner: {
+    mode: (import.meta.env.VITE_CODE_RUNNER_MODE === 'backend' ? 'backend' : 'frontend') as 'frontend' | 'backend',
+    backendApiUrl: import.meta.env.VITE_CODE_RUNNER_API_URL || '',
+    backendToken: import.meta.env.VITE_CODE_RUNNER_API_TOKEN || '',
+  },
+
   links: [
     { label: 'GitHub', url: 'https://github.com/your-github-username' },
   ],
@@ -169,6 +175,26 @@ VITE_GISCUS_CATEGORY_ID=DIC_xxxxx
 ```
 
 为空时评论区会自动隐藏。
+
+## Go 代码运行
+
+模板默认使用纯前端 runner：
+
+```env
+VITE_CODE_RUNNER_MODE=frontend
+VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_TOKEN=
+```
+
+如果你部署了自己的 Sandkasten 后端，可以改为：
+
+```env
+VITE_CODE_RUNNER_MODE=backend
+VITE_CODE_RUNNER_API_URL=https://your-sandkasten-api.example.com
+VITE_CODE_RUNNER_API_TOKEN=
+```
+
+`VITE_CODE_RUNNER_API_TOKEN` 会出现在构建后的前端 JavaScript 中，不要把私密服务端 token 放在这里；生产环境应使用公开客户端 token、限流网关或反向代理。
 
 ## 项目结构
 
