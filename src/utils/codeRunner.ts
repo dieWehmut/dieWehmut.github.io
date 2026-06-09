@@ -79,6 +79,98 @@ function byteLength(value: string): number {
   return encoder.encode(value).byteLength
 }
 
+function normalizeGoSourceForRunner(source: string): string {
+  let output = ''
+  let index = 0
+  let mode: 'code' | 'line-comment' | 'block-comment' | 'string' | 'raw-string' | 'rune' = 'code'
+  let escaped = false
+
+  while (index < source.length) {
+    const char = source[index]
+    const next = source[index + 1]
+
+    if (mode === 'line-comment') {
+      output += char
+      if (char === '\n') mode = 'code'
+      index += 1
+      continue
+    }
+
+    if (mode === 'block-comment') {
+      output += char
+      if (char === '*' && next === '/') {
+        output += next
+        index += 2
+        mode = 'code'
+      } else {
+        index += 1
+      }
+      continue
+    }
+
+    if (mode === 'string') {
+      output += char
+      if (escaped) {
+        escaped = false
+      } else if (char === '\\') {
+        escaped = true
+      } else if (char === '"') {
+        mode = 'code'
+      }
+      index += 1
+      continue
+    }
+
+    if (mode === 'raw-string') {
+      output += char
+      if (char === '`') mode = 'code'
+      index += 1
+      continue
+    }
+
+    if (mode === 'rune') {
+      output += char
+      if (escaped) {
+        escaped = false
+      } else if (char === '\\') {
+        escaped = true
+      } else if (char === "'") {
+        mode = 'code'
+      }
+      index += 1
+      continue
+    }
+
+    if (char === '/' && next === '/') {
+      output += '//'
+      index += 2
+      mode = 'line-comment'
+      continue
+    }
+
+    if (char === '/' && next === '*') {
+      output += '/*'
+      index += 2
+      mode = 'block-comment'
+      continue
+    }
+
+    if (char === '#') {
+      output += '//'
+      index += 1
+      continue
+    }
+
+    output += char
+    if (char === '"') mode = 'string'
+    else if (char === '`') mode = 'raw-string'
+    else if (char === "'") mode = 'rune'
+    index += 1
+  }
+
+  return output
+}
+
 function stripGoComments(source: string): string {
   let output = ''
   let index = 0
@@ -318,8 +410,9 @@ export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS)
     return Promise.resolve(emptyResult('unsupported', `暂不支持运行 ${request.language || 'unknown'} 代码块。`))
   }
 
-  const validationResult = validateGoSource(request.source)
+  const source = normalizeGoSourceForRunner(request.source)
+  const validationResult = validateGoSource(source)
   if (validationResult) return Promise.resolve(validationResult)
 
-  return enqueueGoRun(request.source, request.stdin || '', timeoutMs)
+  return enqueueGoRun(source, request.stdin || '', timeoutMs)
 }
