@@ -5,7 +5,7 @@
       {{ formattedDate }}
     </time>
     <h2 v-if="note.title">{{ note.title }}</h2>
-    <MarkdownContent class="note-card__body markdown-body" :source="note.body" />
+    <MarkdownContent v-if="note.body" class="note-card__body markdown-body" :source="note.body" />
   </article>
 </template>
 

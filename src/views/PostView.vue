@@ -3,7 +3,9 @@
     <div class="post-view__main">
       <div v-if="post" class="post-view__card">
           <h1 class="post-view__title">{{ post.title }}</h1>
-          <MarkdownContent v-if="post.body" class="post-view__body markdown-body" :source="post.body" />
+          <div v-if="isLoading" class="post-view__loading" role="status">Loading post...</div>
+          <div v-else-if="loadError" class="post-view__loading" role="alert">{{ loadError }}</div>
+          <MarkdownContent v-else-if="post.body" class="post-view__body markdown-body" :source="post.body" />
           <div v-if="post.date || post.tags?.length" class="post-view__meta-row">
             <time v-if="post.date" class="post-view__meta-date" :datetime="post.date"><el-icon class="post-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink
@@ -25,19 +27,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { getPosts } from '../data'
+import { getPosts, loadDoc } from '../data'
 import { formatTimelineDate } from '../utils/date'
+import type { ArchivePost } from '../types/content'
 
 const route = useRoute()
+const body = ref('')
+const isLoading = ref(false)
+const loadError = ref('')
+let latestLoadToken: symbol | null = null
 
 const post = computed(() => {
   const id = route.params.id as string
-  return getPosts().find((p) => p.id === id) || null
+  const meta = getPosts().find((p) => p.id === id) || null
+  if (!meta) return null
+  return {
+    ...meta,
+    body: body.value,
+  } satisfies ArchivePost
 })
 
 const formattedDate = computed(() => {
@@ -45,6 +57,36 @@ const formattedDate = computed(() => {
   return formatTimelineDate(post.value.date)
 })
 
+watch(
+  () => route.params.id,
+  async (rawId) => {
+    const id = String(rawId || '')
+    body.value = ''
+    loadError.value = ''
+
+    if (!id || !getPosts().some((item) => item.id === id)) {
+      isLoading.value = false
+      return
+    }
+
+    isLoading.value = true
+    const token = Symbol(id)
+    latestLoadToken = token
+
+    try {
+      const loaded = await loadDoc('post', id)
+      if (latestLoadToken !== token) return
+      body.value = loaded?.body || ''
+      if (!loaded) loadError.value = 'Post not found.'
+    } catch (error) {
+      if (latestLoadToken !== token) return
+      loadError.value = error instanceof Error ? error.message : String(error)
+    } finally {
+      if (latestLoadToken === token) isLoading.value = false
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>
@@ -132,6 +174,13 @@ const formattedDate = computed(() => {
   color: var(--site-text);
   font-size: 15px;
   line-height: 1.75;
+}
+
+.post-view__loading {
+  margin-top: 18px;
+  color: var(--site-muted);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .post-view__body :deep(p) {

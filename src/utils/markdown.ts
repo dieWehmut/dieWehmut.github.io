@@ -1,5 +1,16 @@
 import { Marked } from 'marked'
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/core'
+import bash from 'highlight.js/lib/languages/bash'
+import css from 'highlight.js/lib/languages/css'
+import go from 'highlight.js/lib/languages/go'
+import ini from 'highlight.js/lib/languages/ini'
+import javascript from 'highlight.js/lib/languages/javascript'
+import json from 'highlight.js/lib/languages/json'
+import markdown from 'highlight.js/lib/languages/markdown'
+import powershell from 'highlight.js/lib/languages/powershell'
+import typescript from 'highlight.js/lib/languages/typescript'
+import xml from 'highlight.js/lib/languages/xml'
+import yaml from 'highlight.js/lib/languages/yaml'
 import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
@@ -34,6 +45,26 @@ const MARKDOWN_PREVIEW_CACHE_LIMIT = 80
 const SOURCE_IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const renderedMarkdownCache = new Map<string, string>()
 const renderedMarkdownPreviewCache = new Map<string, string>()
+
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('css', css)
+hljs.registerLanguage('go', go)
+hljs.registerLanguage('golang', go)
+hljs.registerLanguage('html', xml)
+hljs.registerLanguage('ini', ini)
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('js', javascript)
+hljs.registerLanguage('json', json)
+hljs.registerLanguage('markdown', markdown)
+hljs.registerLanguage('md', markdown)
+hljs.registerLanguage('powershell', powershell)
+hljs.registerLanguage('ps1', powershell)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('ts', typescript)
+hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('yaml', yaml)
+hljs.registerLanguage('yml', yaml)
+hljs.registerLanguage('toml', ini)
 
 function escapeHtml(value: string): string {
   return value

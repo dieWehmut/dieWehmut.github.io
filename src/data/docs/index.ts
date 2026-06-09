@@ -1,5 +1,5 @@
 import type { ArchivePost, NoteEntry } from '../../types/content'
-import { excerptFromMarkdown } from '../../utils/markdown'
+import { generatedDocMeta, type GeneratedDocMeta } from './generated'
 
 type DocMeta = {
   id?: string
@@ -11,22 +11,16 @@ type DocMeta = {
   type?: string
 }
 
-type ParsedDoc = {
-  id: string
-  type: 'post' | 'note'
-  title: string
-  date: string
-  tags: string[]
+type LoadedDoc = GeneratedDocMeta & {
   body: string
-  assetPaths: string[]
-  summary?: string
 }
 
-const rawDocs = import.meta.glob('./**/*.md', {
-  eager: true,
+const rawDocLoaders = import.meta.glob('./**/*.md', {
   query: '?raw',
   import: 'default',
-}) as Record<string, string>
+}) as Record<string, () => Promise<string>>
+
+const loadedDocCache = new Map<string, Promise<LoadedDoc | null>>()
 
 function stripQuotes(value: string) {
   return value.replace(/^['"]|['"]$/g, '')
@@ -49,24 +43,6 @@ function parseFrontmatter(raw: string) {
   return { data, content: match[2] || '' }
 }
 
-function parseTags(raw?: string) {
-  if (!raw) return []
-  const value = raw.trim()
-  if (!value) return []
-  const normalized = value.startsWith('[') && value.endsWith(']')
-    ? value.slice(1, -1)
-    : value
-  return normalized
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter(Boolean)
-}
-
-function docIdFromPath(path: string) {
-  const filename = path.split('/').pop() || ''
-  return filename.replace(/\.md$/i, '')
-}
-
 function normalizeDocAssetPath(docPath: string, assetPath: string) {
   if (!assetPath || /^(?:[a-z]+:)?\/\//i.test(assetPath) || assetPath.startsWith('data:')) return assetPath
   if (assetPath.startsWith('/capture-assets/')) return assetPath
@@ -74,9 +50,7 @@ function normalizeDocAssetPath(docPath: string, assetPath: string) {
 
   const normalizedDocPath = docPath.replace(/\\/g, '/').replace(/^\.\//, '')
   const docParts = normalizedDocPath.split('/').filter(Boolean)
-  const docsIndex = docParts.indexOf('docs')
-  const relativeDocParts = docsIndex === -1 ? docParts : docParts.slice(docsIndex + 1)
-  const docDir = relativeDocParts.slice(0, -1)
+  const docDir = docParts.slice(0, -1)
   const relativeParts = assetPath.replace(/\\/g, '/').split('/')
   const resolved = [...docDir]
 
@@ -93,26 +67,6 @@ function normalizeDocAssetPath(docPath: string, assetPath: string) {
   return `/capture-assets/docs/${resolved.join('/')}`
 }
 
-function collectDocAssetPaths(docPath: string, body: string) {
-  const found = new Set<string>()
-  const markdownPattern = /!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g
-  const htmlPattern = /<img\b[^>]*src=['"]([^'"]+)['"][^>]*>/gi
-
-  let match: RegExpExecArray | null
-
-  while ((match = markdownPattern.exec(body)) !== null) {
-    const normalized = normalizeDocAssetPath(docPath, match[1].trim())
-    if (normalized.startsWith('/capture-assets/')) found.add(normalized)
-  }
-
-  while ((match = htmlPattern.exec(body)) !== null) {
-    const normalized = normalizeDocAssetPath(docPath, match[1].trim())
-    if (normalized.startsWith('/capture-assets/')) found.add(normalized)
-  }
-
-  return Array.from(found)
-}
-
 function rewriteDocAssetPaths(docPath: string, body: string) {
   return body
     .replace(/!\[([^\]]*)\]\(([^)\s]+)([^)]*)\)/g, (_full, alt: string, rawPath: string, suffix: string) => {
@@ -125,54 +79,56 @@ function rewriteDocAssetPaths(docPath: string, body: string) {
     })
 }
 
-const parsedDocs: ParsedDoc[] = Object.entries(rawDocs).map(([path, raw]) => {
-  const { data, content } = parseFrontmatter(raw)
-  const type = data.type === 'note' || path.includes('/notes/') ? 'note' : 'post'
-  const id = data.id || docIdFromPath(path)
-  const title = data.title || id
-  const date = data.date || ''
-  const tags = parseTags(data.tags)
-  const body = rewriteDocAssetPaths(path, content.trim())
-  const assetPaths = collectDocAssetPaths(path, content.trim())
-
-  return { id, type, title, date, tags, body, assetPaths }
-})
-
-function docSummary(doc: ParsedDoc): string {
-  if (doc.summary === undefined) {
-    doc.summary = excerptFromMarkdown(doc.body)
+function entryFromMeta(meta: GeneratedDocMeta): ArchivePost | NoteEntry {
+  return {
+    id: meta.id,
+    title: meta.title,
+    date: meta.date,
+    tags: meta.tags,
+    summary: meta.summary,
   }
-  return doc.summary
 }
 
 export function getDocPosts(): ArchivePost[] {
-  return parsedDocs
+  return generatedDocMeta
     .filter((doc) => doc.type === 'post')
-    .map((doc) => ({
-      id: doc.id,
-      title: doc.title,
-      date: doc.date,
-      tags: doc.tags,
-      get summary() {
-        return docSummary(doc)
-      },
-      body: doc.body,
-      assetPaths: doc.assetPaths,
-    }))
+    .map(entryFromMeta)
 }
 
 export function getDocNotes(): NoteEntry[] {
-  return parsedDocs
+  return generatedDocMeta
     .filter((doc) => doc.type === 'note')
-    .map((doc) => ({
-      id: doc.id,
-      title: doc.title,
-      date: doc.date,
-      tags: doc.tags,
-      get summary() {
-        return docSummary(doc)
-      },
-      body: doc.body,
-      assetPaths: doc.assetPaths,
-    }))
+    .map(entryFromMeta)
+}
+
+export function getDocMeta(type: 'post' | 'note', id: string): GeneratedDocMeta | null {
+  return generatedDocMeta.find((doc) => doc.type === type && doc.id === id) || null
+}
+
+export function loadDoc(type: 'post' | 'note', id: string): Promise<LoadedDoc | null> {
+  const key = `${type}:${id}`
+  const existing = loadedDocCache.get(key)
+  if (existing) return existing
+
+  const loadPromise = (async () => {
+    const meta = getDocMeta(type, id)
+    if (!meta) return null
+
+    const loader = rawDocLoaders[meta.path]
+    if (!loader) return null
+
+    const raw = await loader()
+    const { content } = parseFrontmatter(raw)
+    return {
+      ...meta,
+      body: rewriteDocAssetPaths(meta.path, content.trim()),
+    }
+  })()
+
+  loadedDocCache.set(key, loadPromise)
+  return loadPromise
+}
+
+export function preloadDoc(type: 'post' | 'note', id: string): void {
+  void loadDoc(type, id)
 }
