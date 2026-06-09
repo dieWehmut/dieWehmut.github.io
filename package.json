@@ -9,6 +9,7 @@
     "content:sync": "pnpm run docs:sync && pnpm run capture:sync",
     "dev": "pnpm run content:sync && vite",
     "assets:push": "node scripts/sync-assets-repo.mjs",
+    "runner:smoke": "node scripts/smoke-code-runner.mjs",
     "typecheck": "vue-tsc --noEmit",
     "build": "pnpm run content:sync && vite build",
     "preview": "vite preview"

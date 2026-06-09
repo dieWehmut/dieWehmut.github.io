@@ -68,6 +68,18 @@ Required GitHub setting:
 2. Set `Source` to `GitHub Actions`
 3. For project repositories, use `https://YOUR_USERNAME.github.io/YOUR_REPO/`
 
+## Go Code Runner
+
+The template defaults to the browser runner:
+
+```env
+VITE_CODE_RUNNER_MODE=frontend
+VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_TOKEN=
+```
+
+Set `VITE_CODE_RUNNER_MODE=backend` and `VITE_CODE_RUNNER_API_URL` only when you operate a Sandkasten HTTP API. Vite embeds these values in public JavaScript, so `VITE_CODE_RUNNER_API_TOKEN` must not contain a private server token.
+
 ## Commands
 
 ```bash

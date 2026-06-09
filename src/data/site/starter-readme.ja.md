@@ -68,6 +68,18 @@ pnpm dev
 2. `Source` を `GitHub Actions` に設定する
 3. project Pages の場合、URL は `https://YOUR_USERNAME.github.io/YOUR_REPO/` になります
 
+## Go コード実行
+
+テンプレートの既定値はブラウザー runner です。
+
+```env
+VITE_CODE_RUNNER_MODE=frontend
+VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_TOKEN=
+```
+
+Sandkasten HTTP API を自分で運用する場合だけ、`VITE_CODE_RUNNER_MODE=backend` と `VITE_CODE_RUNNER_API_URL` を設定してください。Vite はこれらの値を公開 JavaScript に埋め込むため、`VITE_CODE_RUNNER_API_TOKEN` に非公開のサーバー token を入れないでください。
+
 ## コマンド
 
 ```bash
