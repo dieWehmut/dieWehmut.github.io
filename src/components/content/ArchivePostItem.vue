@@ -4,7 +4,8 @@
     <div class="archive-post__body">
       <h2>{{ post.title }}</h2>
       <MarkdownPreview class="archive-post__summary" :source="post.summary" />
-      <div class="archive-post__tags" v-if="post.tags?.length">
+      <div class="archive-post__tags" v-if="post.tags?.length || post.wordCount || post.readingMinutes">
+        <ContentStats :word-count="post.wordCount" :reading-minutes="post.readingMinutes" />
         <span v-for="tag in post.tags" :key="tag" class="archive-post__tag" @click.stop><RouterLink :to="`/tags/${encodeURIComponent(tag)}`"><el-icon class="archive-post__tag-icon"><PriceTag /></el-icon>{{ tag }}</RouterLink></span>
       </div>
     </div>
@@ -17,6 +18,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import type { ArchivePost } from '../../types/content'
 import { formatTimelineShortDate } from '../../utils/date'
+import ContentStats from './ContentStats.vue'
 import MarkdownPreview from './MarkdownPreview.vue'
 
 const props = defineProps<{ post: ArchivePost }>()

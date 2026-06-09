@@ -119,6 +119,8 @@ export function getTagGroups(): TagGroup[] {
         date: note.date,
         tags: note.tags,
         summary: note.summary,
+        wordCount: note.wordCount,
+        readingMinutes: note.readingMinutes,
       } as ArchivePost
       groups.set(tag, [...(groups.get(tag) || []), entry])
     }
@@ -166,6 +168,8 @@ export function getSearchDocuments(): SearchDocument[] {
     url: `/post/${post.id}`,
     date: post.date,
     tags: post.tags,
+    wordCount: post.wordCount,
+    readingMinutes: post.readingMinutes,
   }))
 
   const noteDocs: SearchDocument[] = getNotes().map((note) => ({
@@ -176,6 +180,8 @@ export function getSearchDocuments(): SearchDocument[] {
     url: `/note/${note.id}`,
     date: note.date,
     tags: note.tags,
+    wordCount: note.wordCount,
+    readingMinutes: note.readingMinutes,
   }))
 
   const friendDocs: SearchDocument[] = friends.map((friend) => ({

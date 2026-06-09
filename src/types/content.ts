@@ -8,6 +8,8 @@ export interface ArchivePost {
   date: string
   tags: string[]
   summary: string
+  wordCount?: number
+  readingMinutes?: number
   body?: string
   assetPaths?: string[]
 }
@@ -18,6 +20,8 @@ export interface NoteEntry {
   date: string
   tags: string[]
   summary: string
+  wordCount?: number
+  readingMinutes?: number
   body?: string
   assetPaths?: string[]
 }
@@ -68,6 +72,8 @@ export interface SearchDocument {
   url: string
   date?: string
   tags?: string[]
+  wordCount?: number
+  readingMinutes?: number
 }
 
 export interface SearchResult extends SearchDocument {

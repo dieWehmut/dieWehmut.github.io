@@ -38,6 +38,28 @@ C:\Users\你的用户名\.codex\config.toml
 C:\Users\你的用户名\.codex\auth.json
 ```
 
+## 安装
+
+### Codex
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
+```
+
+```bash
+nvm install --lts
+nvm use --lts
+```
+
+```bash
+npm install -g @openai/codex
+```
+
 ## Proxy
 
 ### AgentRouter

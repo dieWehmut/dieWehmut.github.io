@@ -74,8 +74,9 @@
             class="tag-detail__summary"
             :source="post.summary"
           />
-          <div v-if="post.date || post.tags?.length" class="tag-detail__meta-row">
+          <div v-if="post.date || post.tags?.length || post.wordCount || post.readingMinutes" class="tag-detail__meta-row">
             <time v-if="post.date" class="tag-detail__date" :datetime="post.date"><el-icon class="tag-detail__date-icon"><Calendar /></el-icon>{{ formattedDate(post.date) }}</time>
+            <ContentStats :word-count="post.wordCount" :reading-minutes="post.readingMinutes" />
             <RouterLink v-for="t in post.tags" :key="t" class="tag-detail__tag" :to="`/tags/${encodeURIComponent(t)}`"><el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>{{ t }}</RouterLink>
           </div>
         </div>
@@ -93,6 +94,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { PriceTag, Calendar } from '@element-plus/icons-vue'
 import CaptureAssetCard from '../components/capture/CaptureAssetCard.vue'
+import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownPreview from '../components/content/MarkdownPreview.vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { getPosts, getNotes } from '../data'
@@ -132,6 +134,8 @@ const posts = computed<TagContentEntry[]>(() => {
       date: note.date,
       tags: note.tags,
       summary: note.summary,
+      wordCount: note.wordCount,
+      readingMinutes: note.readingMinutes,
       _isNote: true,
     }))
   return [...matchedPosts, ...matchedNotes].sort((a, b) => getDateSortTimestamp(b.date) - getDateSortTimestamp(a.date))

@@ -29,6 +29,8 @@ function postEntry(post: ArchivePost) {
     description: post.summary,
     date: post.date,
     tags: post.tags,
+    wordCount: post.wordCount,
+    readingMinutes: post.readingMinutes,
     url: `/post/${post.id}`,
   }
 }

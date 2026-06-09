@@ -20,7 +20,7 @@ import { runCode, type RunResult, type RunStatus } from './codeRunner'
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
   'figure', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'input', 'ins', 'kbd',
-  'li', 'mark', 'ol', 'p', 'pre', 's', 'section', 'small', 'span', 'strong',
+  'li', 'mark', 'ol', 'p', 'path', 'pre', 's', 'section', 'small', 'span', 'strong', 'svg',
   'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'th', 'thead', 'tr', 'ul',
 ])
 
@@ -35,13 +35,19 @@ const PER_TAG_ALLOWED_ATTRS: Record<string, Set<string>> = {
   img: new Set(['src', 'alt', 'width', 'height', 'loading', 'decoding']),
   li: new Set(['value']),
   ol: new Set(['start', 'reversed', 'type']),
+  path: new Set(['d']),
   span: new Set(['style']),
+  svg: new Set(['xmlns', 'width', 'height', 'viewbox', 'preserveaspectratio']),
   textarea: new Set(['rows', 'spellcheck']),
   td: new Set(['align', 'colspan', 'rowspan']),
   th: new Set(['align', 'colspan', 'rowspan']),
 }
 const MARKDOWN_CACHE_LIMIT = 24
 const MARKDOWN_PREVIEW_CACHE_LIMIT = 80
+const MARKDOWN_PROGRESSIVE_MIN_LENGTH = 12000
+const MARKDOWN_CHUNK_MIN_LENGTH = 3600
+const MARKDOWN_CHUNK_TARGET_LENGTH = 7200
+const MARKDOWN_CHUNK_MAX_LENGTH = 12000
 const SOURCE_IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const renderedMarkdownCache = new Map<string, string>()
 const renderedMarkdownPreviewCache = new Map<string, string>()
@@ -76,7 +82,7 @@ function escapeHtml(value: string): string {
 }
 
 function stripUnsafeAttributes(rawAttrs: string, tagName: string): string {
-  const attrPattern = /([:@a-zA-Z_][\w:.-]*)(?:\s*=\s*(".*?"|'.*?'|[^\s"'`=<>]+))?/g
+  const attrPattern = /([:@a-zA-Z_][\w:.-]*)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s"'`=<>]+))?/g
   const allowedAttrs = PER_TAG_ALLOWED_ATTRS[tagName] || new Set<string>()
   const collected: string[] = []
   let match: RegExpExecArray | null
@@ -102,10 +108,19 @@ function stripUnsafeAttributes(rawAttrs: string, tagName: string): string {
       ? resolvePublicAssetUrl(normalized)
       : normalized
 
-    collected.push(`${lowerName}="${escapeHtml(safeValue)}"`)
+    collected.push(`${normalizeAttributeName(lowerName, tagName)}="${escapeHtml(safeValue)}"`)
   }
 
   return collected.length ? ` ${collected.join(' ')}` : ''
+}
+
+function normalizeAttributeName(lowerName: string, tagName: string): string {
+  if (tagName === 'svg') {
+    if (lowerName === 'viewbox') return 'viewBox'
+    if (lowerName === 'preserveaspectratio') return 'preserveAspectRatio'
+  }
+
+  return lowerName
 }
 
 function isAllowedAttribute(lowerName: string, allowedAttrs: Set<string>): boolean {
@@ -147,6 +162,129 @@ function sanitizeHtml(html: string): string {
       const selfClosing = /\/\s*>$/.test(full) ? ' /' : ''
       return `<${lowerTag}${attrs}${selfClosing}>`
     })
+}
+
+function deferClosedSourcePageImages(html: string): string {
+  return html.replace(/<details\b([^>]*)>([\s\S]*?)<\/details>/gi, (full, attrs: string, body: string) => {
+    if (!/\bclass="[^"]*\bmd-source-page\b[^"]*"/i.test(attrs)) return full
+    if (/\bopen\b/i.test(attrs)) return full
+
+    const deferredBody = body.replace(/<img\b([^>]*?)\bsrc="([^"]+)"([^>]*)>/gi, (
+      imageFull: string,
+      beforeSrc: string,
+      src: string,
+      afterSrc: string
+    ) => {
+      if (/\bdata-md-lazy-src=/i.test(imageFull)) return imageFull
+      return `<img${beforeSrc}src="${SOURCE_IMAGE_PLACEHOLDER}" data-md-lazy-src="${src}"${afterSrc}>`
+    })
+
+    return `<details${attrs}>${deferredBody}</details>`
+  })
+}
+
+function isCodeFenceLine(line: string): boolean {
+  return /^(```|~~~)/.test(line.trim())
+}
+
+function countMatches(value: string, pattern: RegExp): number {
+  return value.match(pattern)?.length || 0
+}
+
+function countUnescapedDisplayDollars(value: string): number {
+  let count = 0
+  for (let index = 0; index < value.length - 1; index += 1) {
+    if (value[index] !== '$' || value[index + 1] !== '$') continue
+    if (value[index - 1] === '\\') continue
+    count += 1
+    index += 1
+  }
+  return count
+}
+
+function isChunkBoundaryStable(state: MarkdownSplitState): boolean {
+  return !state.inCodeFence && !state.inDollarMath && !state.inBracketMath && state.detailsDepth <= 0
+}
+
+type MarkdownSplitState = {
+  detailsDepth: number
+  inBracketMath: boolean
+  inCodeFence: boolean
+  inDollarMath: boolean
+}
+
+function updateMarkdownSplitState(line: string, state: MarkdownSplitState) {
+  if (isCodeFenceLine(line)) {
+    state.inCodeFence = !state.inCodeFence
+    return
+  }
+
+  if (state.inCodeFence) return
+
+  const lowerLine = line.toLowerCase()
+  state.detailsDepth += countMatches(lowerLine, /<details\b/g)
+  state.detailsDepth -= countMatches(lowerLine, /<\/details>/g)
+  state.detailsDepth = Math.max(0, state.detailsDepth)
+
+  if (countUnescapedDisplayDollars(line) % 2 === 1) {
+    state.inDollarMath = !state.inDollarMath
+  }
+
+  const bracketOpenCount = countMatches(line, /\\\[/g)
+  const bracketCloseCount = countMatches(line, /\\\]/g)
+  for (let index = 0; index < bracketOpenCount; index += 1) state.inBracketMath = true
+  for (let index = 0; index < bracketCloseCount; index += 1) state.inBracketMath = false
+}
+
+function splitMarkdownIntoChunks(source: string): string[] {
+  const normalized = source.replace(/\r\n/g, '\n')
+  if (normalized.length < MARKDOWN_PROGRESSIVE_MIN_LENGTH) return [normalized]
+
+  const lines = normalized.split('\n')
+  const chunks: string[] = []
+  const current: string[] = []
+  const state: MarkdownSplitState = {
+    detailsDepth: 0,
+    inBracketMath: false,
+    inCodeFence: false,
+    inDollarMath: false,
+  }
+  let currentLength = 0
+
+  const flush = () => {
+    const chunk = current.join('\n').trim()
+    if (chunk) chunks.push(chunk)
+    current.length = 0
+    currentLength = 0
+  }
+
+  for (const line of lines) {
+    const stableBeforeLine = isChunkBoundaryStable(state)
+    const isHeading = /^#{2,6}\s+/.test(line)
+    if (stableBeforeLine && isHeading && currentLength >= MARKDOWN_CHUNK_MIN_LENGTH) {
+      flush()
+    }
+
+    current.push(line)
+    currentLength += line.length + 1
+    updateMarkdownSplitState(line, state)
+
+    const stableAfterLine = isChunkBoundaryStable(state)
+    const isBlank = line.trim() === ''
+    const endsDetails = /<\/details>\s*$/i.test(line)
+    if (
+      stableAfterLine &&
+      (
+        (currentLength >= MARKDOWN_CHUNK_TARGET_LENGTH && (isBlank || endsDetails)) ||
+        (currentLength >= MARKDOWN_CHUNK_MAX_LENGTH && isBlank)
+      )
+    ) {
+      flush()
+    }
+  }
+
+  flush()
+  return chunks.length ? chunks : [normalized]
 }
 
 type MindmapNode = {
@@ -386,7 +524,7 @@ export function renderMarkdown(source: string): string {
   const cached = renderedMarkdownCache.get(source)
   if (cached !== undefined) return cached
 
-  const rendered = sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string)
+  const rendered = deferClosedSourcePageImages(sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string))
   renderedMarkdownCache.set(source, rendered)
 
   if (renderedMarkdownCache.size > MARKDOWN_CACHE_LIMIT) {
@@ -395,6 +533,10 @@ export function renderMarkdown(source: string): string {
   }
 
   return rendered
+}
+
+export function splitMarkdownForProgressiveRender(source: string): string[] {
+  return splitMarkdownIntoChunks(source)
 }
 
 function rememberCached(cache: Map<string, string>, key: string, value: string, limit: number): string {
@@ -460,19 +602,21 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     })
   }
 
-  root.querySelectorAll<HTMLImageElement>('img').forEach((image) => {
+  const bindImage = (image: HTMLImageElement) => {
     const originalSrc = image.getAttribute('src') || ''
     if (!originalSrc) return
+    if (image.dataset.mdBound === 'true') return
+    image.dataset.mdBound = 'true'
 
-    image.dataset.originalSrc = originalSrc
+    image.dataset.originalSrc = image.dataset.mdLazySrc || originalSrc
     const sourcePage = image.closest<HTMLDetailsElement>('details.md-source-page')
-    if (sourcePage && !sourcePage.open) {
+    if (sourcePage && !sourcePage.open && !image.dataset.mdLazySrc) {
       image.dataset.mdLazySrc = originalSrc
       image.src = SOURCE_IMAGE_PLACEHOLDER
     }
 
     const onError = () => {
-      retryPublicAssetImage(image, originalSrc)
+      retryPublicAssetImage(image, image.dataset.originalSrc || originalSrc)
     }
 
     image.addEventListener('error', onError)
@@ -481,9 +625,12 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (!sourcePage && image.complete && image.naturalWidth === 0) {
       queueMicrotask(onError)
     }
-  })
+  }
 
-  root.querySelectorAll<HTMLDetailsElement>('details.md-source-page').forEach((details) => {
+  const bindSourcePage = (details: HTMLDetailsElement) => {
+    if (details.dataset.mdBound === 'true') return
+    details.dataset.mdBound = 'true'
+
     if (details.open) loadSourcePageImages(details)
 
     const onToggle = () => {
@@ -492,7 +639,31 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     details.addEventListener('toggle', onToggle)
     cleanupHandlers.push(() => details.removeEventListener('toggle', onToggle))
-  })
+  }
+
+  const bindStaticMarkdownNodes = (scope: ParentNode | Element) => {
+    if (scope instanceof HTMLImageElement) bindImage(scope)
+    if (scope instanceof HTMLDetailsElement && scope.classList.contains('md-source-page')) {
+      bindSourcePage(scope)
+    }
+
+    scope.querySelectorAll<HTMLImageElement>('img').forEach(bindImage)
+    scope.querySelectorAll<HTMLDetailsElement>('details.md-source-page').forEach(bindSourcePage)
+  }
+
+  bindStaticMarkdownNodes(root)
+
+  if (window.MutationObserver && root instanceof Node) {
+    const observer = new MutationObserver((records) => {
+      records.forEach((record) => {
+        record.addedNodes.forEach((node) => {
+          if (node instanceof Element) bindStaticMarkdownNodes(node)
+        })
+      })
+    })
+    observer.observe(root, { childList: true, subtree: true })
+    cleanupHandlers.push(() => observer.disconnect())
+  }
 
   const scheduleReset = (button: HTMLElement, label: string, state?: 'is-copied' | 'is-failed') => {
     const existingTimer = resetTimers.get(button)

@@ -86,6 +86,8 @@ function entryFromMeta(meta: GeneratedDocMeta): ArchivePost | NoteEntry {
     date: meta.date,
     tags: meta.tags,
     summary: meta.summary,
+    wordCount: meta.wordCount,
+    readingMinutes: meta.readingMinutes,
   }
 }
 

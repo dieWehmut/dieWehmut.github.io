@@ -19,11 +19,12 @@
         class="feed-entry-card__description"
         :source="entry.description"
       />
-      <div v-if="entry.date || entry.tags?.length" class="feed-entry-card__meta-row">
+      <div v-if="entry.date || entry.tags?.length || entry.wordCount || entry.readingMinutes" class="feed-entry-card__meta-row">
         <time v-if="entry.date" class="feed-entry-card__date" :datetime="entry.date">
           <el-icon class="feed-entry-card__date-icon"><Calendar /></el-icon>
           {{ formatDate(entry.date) }}
         </time>
+        <ContentStats :word-count="entry.wordCount" :reading-minutes="entry.readingMinutes" />
         <RouterLink
           v-for="tag in entry.tags"
           :key="tag"
@@ -44,6 +45,7 @@ import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import { formatTimelineDate } from '../../utils/date'
+import ContentStats from './ContentStats.vue'
 import MarkdownPreview from './MarkdownPreview.vue'
 
 type FeedEntry = {
@@ -51,6 +53,8 @@ type FeedEntry = {
   description?: string
   date?: string
   tags?: string[]
+  wordCount?: number
+  readingMinutes?: number
   url?: string
   external?: boolean
 }
@@ -178,4 +182,5 @@ function openEntry(event?: MouseEvent | KeyboardEvent) {
   height: 13px;
   font-size: 13px;
 }
+
 </style>
