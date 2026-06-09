@@ -1,14 +1,13 @@
 <template>
-  <span class="markdown-preview" v-html="html" />
+  <span class="markdown-preview">{{ text }}</span>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { renderMarkdownPreview } from '../../utils/markdown'
 
 const props = defineProps<{
   source: string
 }>()
 
-const html = computed(() => renderMarkdownPreview(props.source))
+const text = computed(() => props.source.replace(/\s+/g, ' ').trim())
 </script>

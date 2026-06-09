@@ -18,7 +18,7 @@ export interface NoteEntry {
   date: string
   tags: string[]
   summary: string
-  body: string
+  body?: string
   assetPaths?: string[]
 }
 

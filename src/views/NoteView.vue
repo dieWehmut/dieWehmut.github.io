@@ -3,7 +3,9 @@
     <div class="note-view__main">
       <div v-if="note" class="note-view__card">
           <h1 class="note-view__title">{{ note.title }}</h1>
-          <MarkdownContent v-if="note.body" class="note-view__body markdown-body" :source="note.body" />
+          <div v-if="isLoading" class="note-view__loading" role="status">Loading note...</div>
+          <div v-else-if="loadError" class="note-view__loading" role="alert">{{ loadError }}</div>
+          <MarkdownContent v-else-if="note.body" class="note-view__body markdown-body" :source="note.body" />
           <div v-if="note.date || note.tags?.length" class="note-view__meta-row">
             <time v-if="note.date" class="note-view__meta-date" :datetime="note.date"><el-icon class="note-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink
@@ -25,19 +27,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { Calendar, PriceTag } from '@element-plus/icons-vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { getNotes } from '../data'
+import { getNotes, loadDoc } from '../data'
 import { formatTimelineDate } from '../utils/date'
+import type { NoteEntry } from '../types/content'
 
 const route = useRoute()
+const body = ref('')
+const isLoading = ref(false)
+const loadError = ref('')
+let latestLoadToken: symbol | null = null
 
 const note = computed(() => {
   const id = route.params.id as string
-  return getNotes().find((n) => n.id === id) || null
+  const meta = getNotes().find((n) => n.id === id) || null
+  if (!meta) return null
+  return {
+    ...meta,
+    body: body.value,
+  } satisfies NoteEntry
 })
 
 const formattedDate = computed(() => {
@@ -45,6 +57,36 @@ const formattedDate = computed(() => {
   return formatTimelineDate(note.value.date)
 })
 
+watch(
+  () => route.params.id,
+  async (rawId) => {
+    const id = String(rawId || '')
+    body.value = ''
+    loadError.value = ''
+
+    if (!id || !getNotes().some((item) => item.id === id)) {
+      isLoading.value = false
+      return
+    }
+
+    isLoading.value = true
+    const token = Symbol(id)
+    latestLoadToken = token
+
+    try {
+      const loaded = await loadDoc('note', id)
+      if (latestLoadToken !== token) return
+      body.value = loaded?.body || ''
+      if (!loaded) loadError.value = 'Note not found.'
+    } catch (error) {
+      if (latestLoadToken !== token) return
+      loadError.value = error instanceof Error ? error.message : String(error)
+    } finally {
+      if (latestLoadToken === token) isLoading.value = false
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>
@@ -125,6 +167,13 @@ const formattedDate = computed(() => {
   color: var(--site-text);
   font-size: 15px;
   line-height: 1.75;
+}
+
+.note-view__loading {
+  margin-top: 18px;
+  color: var(--site-muted);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .note-view__body :deep(p) { margin: 0; }

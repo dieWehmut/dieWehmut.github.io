@@ -14,7 +14,7 @@ import { games } from './site/game'
 import { apps } from './site/app'
 import { tools } from './site/tool'
 import { infra } from './site/infra'
-import { getDocPosts, getDocNotes } from './docs'
+import { getDocPosts, getDocNotes, loadDoc, preloadDoc } from './docs'
 import { friends } from './site/friends'
 import { siteProfile } from './site/profile'
 import { getDateSortTimestamp, getTimelineYear } from '../utils/date'
@@ -118,9 +118,7 @@ export function getTagGroups(): TagGroup[] {
         title: note.title,
         date: note.date,
         tags: note.tags,
-        get summary() {
-          return note.summary
-        },
+        summary: note.summary,
       } as ArchivePost
       groups.set(tag, [...(groups.get(tag) || []), entry])
     }
@@ -212,3 +210,4 @@ export function getSearchDocuments(): SearchDocument[] {
 }
 
 export { friends, siteProfile }
+export { loadDoc, preloadDoc }
