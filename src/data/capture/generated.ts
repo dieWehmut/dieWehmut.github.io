@@ -2,586 +2,6 @@ import type { CaptureAsset } from '../../types/content'
 
 export const generatedCaptureAssets: CaptureAsset[] = [
   {
-    "id": "docs-physics-Physics_1",
-    "image": "/capture-assets/docs/physics/Physics_1.jpg",
-    "title": "Physics 第 1 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_10",
-    "image": "/capture-assets/docs/physics/Physics_10.jpg",
-    "title": "Physics 第 10 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_11",
-    "image": "/capture-assets/docs/physics/Physics_11.jpg",
-    "title": "Physics 第 11 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_12",
-    "image": "/capture-assets/docs/physics/Physics_12.jpg",
-    "title": "Physics 第 12 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_13",
-    "image": "/capture-assets/docs/physics/Physics_13.jpg",
-    "title": "Physics 第 13 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_14",
-    "image": "/capture-assets/docs/physics/Physics_14.jpg",
-    "title": "Physics 第 14 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_15",
-    "image": "/capture-assets/docs/physics/Physics_15.jpg",
-    "title": "Physics 第 15 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_16",
-    "image": "/capture-assets/docs/physics/Physics_16.jpg",
-    "title": "Physics 第 16 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_17",
-    "image": "/capture-assets/docs/physics/Physics_17.jpg",
-    "title": "Physics 第 17 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_18",
-    "image": "/capture-assets/docs/physics/Physics_18.jpg",
-    "title": "Physics 第 18 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_19",
-    "image": "/capture-assets/docs/physics/Physics_19.jpg",
-    "title": "Physics 第 19 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_2",
-    "image": "/capture-assets/docs/physics/Physics_2.jpg",
-    "title": "Physics 第 2 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_20",
-    "image": "/capture-assets/docs/physics/Physics_20.jpg",
-    "title": "Physics 第 20 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_21",
-    "image": "/capture-assets/docs/physics/Physics_21.jpg",
-    "title": "Physics 第 21 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_22",
-    "image": "/capture-assets/docs/physics/Physics_22.jpg",
-    "title": "Physics 第 22 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_23",
-    "image": "/capture-assets/docs/physics/Physics_23.jpg",
-    "title": "Physics 第 23 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_24",
-    "image": "/capture-assets/docs/physics/Physics_24.jpg",
-    "title": "Physics 第 24 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_25",
-    "image": "/capture-assets/docs/physics/Physics_25.jpg",
-    "title": "Physics 第 25 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_26",
-    "image": "/capture-assets/docs/physics/Physics_26.jpg",
-    "title": "Physics 第 26 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_27",
-    "image": "/capture-assets/docs/physics/Physics_27.jpg",
-    "title": "Physics 第 27 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_28",
-    "image": "/capture-assets/docs/physics/Physics_28.jpg",
-    "title": "Physics 第 28 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_29",
-    "image": "/capture-assets/docs/physics/Physics_29.jpg",
-    "title": "Physics 第 29 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_3",
-    "image": "/capture-assets/docs/physics/Physics_3.jpg",
-    "title": "Physics 第 3 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_4",
-    "image": "/capture-assets/docs/physics/Physics_4.jpg",
-    "title": "Physics 第 4 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_5",
-    "image": "/capture-assets/docs/physics/Physics_5.jpg",
-    "title": "Physics 第 5 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_6",
-    "image": "/capture-assets/docs/physics/Physics_6.jpg",
-    "title": "Physics 第 6 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_7",
-    "image": "/capture-assets/docs/physics/Physics_7.jpg",
-    "title": "Physics 第 7 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_8",
-    "image": "/capture-assets/docs/physics/Physics_8.jpg",
-    "title": "Physics 第 8 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
-    "id": "docs-physics-Physics_9",
-    "image": "/capture-assets/docs/physics/Physics_9.jpg",
-    "title": "Physics 第 9 页原图",
-    "date": "2026-06-08",
-    "tags": [
-      "Physics",
-      "Notes"
-    ],
-    "summary": "",
-    "sourceRefs": [
-      {
-        "type": "note",
-        "id": "physics-notes",
-        "title": "High School Physics Notes Summary",
-        "url": "/note/physics-notes"
-      }
-    ],
-    "standalone": false
-  },
-  {
     "id": "standalone-b456301e-24a6-47dd-9ebc-c8293f0feefd-0",
     "image": "/capture-assets/standalone/2026-03/b456301e-24a6-47dd-9ebc-c8293f0feefd/0.webp",
     "title": "2026-03-16 13:35:00 +0800",
@@ -2973,6 +2393,586 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_1",
+    "image": "/capture-assets/docs/physics/Physics_1.jpg",
+    "title": "Physics 第 1 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_10",
+    "image": "/capture-assets/docs/physics/Physics_10.jpg",
+    "title": "Physics 第 10 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_11",
+    "image": "/capture-assets/docs/physics/Physics_11.jpg",
+    "title": "Physics 第 11 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_12",
+    "image": "/capture-assets/docs/physics/Physics_12.jpg",
+    "title": "Physics 第 12 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_13",
+    "image": "/capture-assets/docs/physics/Physics_13.jpg",
+    "title": "Physics 第 13 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_14",
+    "image": "/capture-assets/docs/physics/Physics_14.jpg",
+    "title": "Physics 第 14 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_15",
+    "image": "/capture-assets/docs/physics/Physics_15.jpg",
+    "title": "Physics 第 15 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_16",
+    "image": "/capture-assets/docs/physics/Physics_16.jpg",
+    "title": "Physics 第 16 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_17",
+    "image": "/capture-assets/docs/physics/Physics_17.jpg",
+    "title": "Physics 第 17 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_18",
+    "image": "/capture-assets/docs/physics/Physics_18.jpg",
+    "title": "Physics 第 18 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_19",
+    "image": "/capture-assets/docs/physics/Physics_19.jpg",
+    "title": "Physics 第 19 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_2",
+    "image": "/capture-assets/docs/physics/Physics_2.jpg",
+    "title": "Physics 第 2 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_20",
+    "image": "/capture-assets/docs/physics/Physics_20.jpg",
+    "title": "Physics 第 20 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_21",
+    "image": "/capture-assets/docs/physics/Physics_21.jpg",
+    "title": "Physics 第 21 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_22",
+    "image": "/capture-assets/docs/physics/Physics_22.jpg",
+    "title": "Physics 第 22 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_23",
+    "image": "/capture-assets/docs/physics/Physics_23.jpg",
+    "title": "Physics 第 23 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_24",
+    "image": "/capture-assets/docs/physics/Physics_24.jpg",
+    "title": "Physics 第 24 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_25",
+    "image": "/capture-assets/docs/physics/Physics_25.jpg",
+    "title": "Physics 第 25 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_26",
+    "image": "/capture-assets/docs/physics/Physics_26.jpg",
+    "title": "Physics 第 26 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_27",
+    "image": "/capture-assets/docs/physics/Physics_27.jpg",
+    "title": "Physics 第 27 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_28",
+    "image": "/capture-assets/docs/physics/Physics_28.jpg",
+    "title": "Physics 第 28 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_29",
+    "image": "/capture-assets/docs/physics/Physics_29.jpg",
+    "title": "Physics 第 29 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_3",
+    "image": "/capture-assets/docs/physics/Physics_3.jpg",
+    "title": "Physics 第 3 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_4",
+    "image": "/capture-assets/docs/physics/Physics_4.jpg",
+    "title": "Physics 第 4 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_5",
+    "image": "/capture-assets/docs/physics/Physics_5.jpg",
+    "title": "Physics 第 5 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_6",
+    "image": "/capture-assets/docs/physics/Physics_6.jpg",
+    "title": "Physics 第 6 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_7",
+    "image": "/capture-assets/docs/physics/Physics_7.jpg",
+    "title": "Physics 第 7 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_8",
+    "image": "/capture-assets/docs/physics/Physics_8.jpg",
+    "title": "Physics 第 8 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-physics-Physics_9",
+    "image": "/capture-assets/docs/physics/Physics_9.jpg",
+    "title": "Physics 第 9 页原图",
+    "date": "2024-06-08",
+    "tags": [
+      "Physics",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "physics-notes",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/physics-notes"
       }
     ],
     "standalone": false
