@@ -5,6 +5,7 @@
         <component :is="icon" />
       </el-icon>
       <h1>{{ title }}</h1>
+      <slot name="title-extra" />
     </div>
     <MarkdownPreview v-if="description" class="page-heading__description" :source="description" />
   </header>
@@ -27,6 +28,7 @@ defineProps({
 
 .page-heading__title-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
 }
@@ -37,12 +39,14 @@ defineProps({
 }
 
 h1 {
+  min-width: 0;
   margin: 0;
   color: var(--site-text);
   font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(24px, 3.5vw, 36px);
   font-weight: 800;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .page-heading__description {
