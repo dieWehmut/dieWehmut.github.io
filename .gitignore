@@ -12,6 +12,13 @@ dist-ssr
 *.local
 .vscode/
 public/capture-assets/*
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
+*.avif
 src/data/docs/**/*.png
 src/data/docs/**/*.jpg
 src/data/docs/**/*.jpeg
