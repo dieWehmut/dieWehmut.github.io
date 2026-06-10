@@ -13,20 +13,20 @@ export type GeneratedDocMeta = {
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
     "id": "pve",
-    "type": "note",
+    "type": "post",
     "title": "Proxmox VE 初始化配置",
     "date": "2026-06-09",
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化",
-    "wordCount": 33,
+    "summary": "Git PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
+    "wordCount": 75,
     "readingMinutes": 1,
-    "path": "./notes/pve.md"
+    "path": "./posts/pve.md"
   },
   {
     "id": "ai-api",
-    "type": "note",
+    "type": "post",
     "title": "中转 Claude Code / Codex 配置",
     "date": "2026-05-18",
     "tags": [
@@ -38,10 +38,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录 Ubuntu/Debian Windows Codex配置目录 Ubuntu / Debian Windows 安装 Codex Proxy AgentRouter Deepseek Anthropic...",
-    "wordCount": 284,
+    "summary": "Claude Code配置目录 Ubuntu/Debian Windows Codex配置目录 Ubuntu / Debian Windows 安装 Codex Claude Code Proxy AgentRouter Deepse...",
+    "wordCount": 295,
     "readingMinutes": 1,
-    "path": "./notes/ai-api.md"
+    "path": "./posts/ai-api.md"
   },
   {
     "id": "go-learning",

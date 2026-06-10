@@ -209,11 +209,13 @@ function syncDocAsset(assetsDir, docFilePath, imageUrl) {
   const assetsSourcePath = path.join(assetsDir, 'docs', docRelativePath)
   const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
   const publicSourcePath = destinationPath
-  const sourcePath = fs.existsSync(publicSourcePath)
-    ? publicSourcePath
-    : fs.existsSync(localSourcePath)
-      ? localSourcePath
-      : assetsSourcePath
+  const sourcePath = fs.existsSync(localSourcePath)
+    ? localSourcePath
+    : fs.existsSync(assetsSourcePath)
+      ? assetsSourcePath
+      : fs.existsSync(publicSourcePath)
+        ? publicSourcePath
+        : assetsSourcePath
 
   assertFileExists(sourcePath, 'Markdown image')
   if (path.resolve(sourcePath) === path.resolve(destinationPath)) return

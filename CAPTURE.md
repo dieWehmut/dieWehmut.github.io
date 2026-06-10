@@ -16,7 +16,19 @@ DIESW_ASSETS_DIR=/absolute/path/to/diesw-assets
 
 ## Markdown image sources
 
-For note and post images, place the image file next to the markdown file inside `src/data/docs/...`.
+For note and post images, keep the source file outside the main site history. The preferred storage is the private asset repository:
+
+```text
+diesw-assets/docs/**
+```
+
+Markdown can reference those files with the public path that the app serves:
+
+```md
+<img src="/capture-assets/docs/notes/diagram.png" alt="diagram">
+```
+
+You can also temporarily place a new image next to the markdown file inside `src/data/docs/...` while editing locally.
 
 Example:
 
@@ -32,6 +44,8 @@ Then reference it from markdown with a normal relative path:
 ```
 
 During `dev` and `build`, the project rewrites that reference to a public path under `/capture-assets/docs/...` and copies the actual file into `public/capture-assets/docs/...`.
+
+The generated `public/capture-assets/docs/...` cache is ignored by Git, the same as `public/capture-assets/standalone/...`.
 
 ## Standalone images
 
@@ -78,13 +92,13 @@ You can also push the asset repository manually with:
 pnpm assets:push
 ```
 
-Before that push, the sync script mirrors all non-markdown files from `src/data/docs/**` into:
+Before that push, the sync script mirrors the local docs image cache from `public/capture-assets/docs/**` plus any non-markdown image files from `src/data/docs/**` into:
 
 ```text
 diesw-assets/docs/**
 ```
 
-That keeps local markdown images ignored in the main repository while still publishing them into the private asset repository.
+That keeps docs images ignored in the main repository while still publishing them into the private asset repository.
 
 ## CI setup
 
