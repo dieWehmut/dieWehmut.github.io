@@ -73,6 +73,18 @@
   background: var(--md-code-bg);
 }
 
+.md-file-block {
+  border-style: dashed;
+}
+
+.md-file-block .md-editable-toolbar {
+  background: color-mix(in srgb, var(--md-copy-bg) 82%, var(--site-accent));
+}
+
+.md-file-block .md-code-lang {
+  text-transform: none;
+}
+
 .md-math-block {
   border-color: var(--md-math-border);
   background: var(--md-math-bg);

@@ -355,6 +355,11 @@ type CodeLanguageInfo = {
   validLang: string
 }
 
+type CodeFenceInfo = {
+  lang: string
+  fileName: string
+}
+
 function encodeSource(value: string): string {
   return encodeURIComponent(value).replace(/'/g, '%27')
 }
@@ -385,6 +390,76 @@ function resolveCodeRunner(lang: string | undefined): string {
   return ''
 }
 
+function stripFenceMetaQuotes(value: string): string {
+  return value.trim().replace(/^['"]|['"]$/g, '')
+}
+
+function languageFromFileName(fileName: string): string {
+  const basename = fileName.trim().split('/').pop() || ''
+  const extension = basename.includes('.') ? basename.split('.').pop()?.toLowerCase() || '' : ''
+  switch (extension) {
+    case 'c':
+      return 'c'
+    case 'cc':
+    case 'cpp':
+    case 'cxx':
+    case 'h':
+    case 'hpp':
+      return 'cpp'
+    case 'go':
+      return 'go'
+    case 'js':
+      return 'javascript'
+    case 'json':
+      return 'json'
+    case 'md':
+      return 'markdown'
+    case 'ps1':
+      return 'powershell'
+    case 'r':
+      return 'r'
+    case 'ts':
+      return 'typescript'
+    case 'xml':
+    case 'html':
+      return 'xml'
+    case 'yaml':
+    case 'yml':
+      return 'yaml'
+    default:
+      return extension && hljs.getLanguage(extension) ? extension : ''
+  }
+}
+
+function parseCodeFenceInfo(info: string | undefined): CodeFenceInfo {
+  const tokens = (info || '').trim().split(/\s+/).filter(Boolean)
+  if (!tokens.length) return { lang: '', fileName: '' }
+
+  const firstToken = tokens[0]
+  const firstLower = firstToken.toLowerCase()
+  if (firstLower === 'file') {
+    const fileName = stripFenceMetaQuotes(tokens[1] || '')
+    const explicitLang = tokens
+      .slice(2)
+      .map((token) => token.match(/^(?:lang|language)=(.+)$/i)?.[1] || '')
+      .find(Boolean)
+    return {
+      lang: explicitLang ? stripFenceMetaQuotes(explicitLang) : languageFromFileName(fileName),
+      fileName,
+    }
+  }
+
+  const fileToken = tokens
+    .slice(1)
+    .map((token) => token.match(/^(?:file|filename|path)=(.+)$/i)?.[1] || '')
+    .find(Boolean)
+
+  return {
+    lang: firstToken,
+    fileName: fileToken ? stripFenceMetaQuotes(fileToken) : '',
+  }
+}
+
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
   const highlighted = validLang
@@ -412,8 +487,8 @@ function renderInlineLatex(text: string): string {
   return renderLatex(text, false)
 }
 
-function renderEditableToolbar(kind: EditableBlockKind, langLabel: string, runner: string): string {
-  const label = kind === 'math' ? 'LaTeX' : langLabel
+function renderEditableToolbar(kind: EditableBlockKind, label: string, runner: string): string {
+  const toolbarLabel = kind === 'math' ? 'LaTeX' : label
   const runButton = runner
     ? '<button class="md-editable-action md-editable-action--run" type="button" data-md-action="run">运行</button>'
     : ''
@@ -423,7 +498,7 @@ function renderEditableToolbar(kind: EditableBlockKind, langLabel: string, runne
 
   return [
     '<div class="md-code-header md-editable-toolbar">',
-    `<span class="md-code-lang">${escapeHtml(label)}</span>`,
+    `<span class="md-code-lang">${escapeHtml(toolbarLabel)}</span>`,
     '<div class="md-editable-actions">',
     '<button class="md-editable-action md-editable-action--restore" type="button" data-md-action="restore" hidden>复原</button>',
     runButton,
@@ -435,10 +510,10 @@ function renderEditableToolbar(kind: EditableBlockKind, langLabel: string, runne
   ].join('')
 }
 
-function renderEditableBlock(kind: EditableBlockKind, source: string, lang = ''): string {
+function renderEditableBlock(kind: EditableBlockKind, source: string, lang = '', fileName = ''): string {
   const encodedSource = escapeHtml(encodeSource(source))
   const { langLabel, validLang } = resolveCodeLanguage(lang)
-  const runner = kind === 'code' ? resolveCodeRunner(lang) : ''
+  const runner = kind === 'code' && !fileName ? resolveCodeRunner(lang) : ''
   const content = kind === 'code'
     ? renderHighlightedCode(source, validLang)
     : renderLatex(source, true)
@@ -446,10 +521,13 @@ function renderEditableBlock(kind: EditableBlockKind, source: string, lang = '')
     ? `<pre class="md-editable-source" hidden><code>${escapeHtml(source)}</code></pre>`
     : ''
   const runnerAttr = runner ? ` data-md-runner="${escapeHtml(runner)}"` : ''
+  const fileNameAttr = fileName ? ` data-md-file-name="${escapeHtml(fileName)}"` : ''
+  const fileClass = fileName ? ' md-file-block' : ''
+  const label = fileName ? `file: ${fileName}` : langLabel
 
   return [
-    `<div class="md-editable-block md-${kind}-block" data-md-kind="${kind}" data-md-original="${encodedSource}" data-md-current="${encodedSource}" data-md-lang="${escapeHtml(validLang)}"${runnerAttr}>`,
-    renderEditableToolbar(kind, langLabel, runner),
+    `<div class="md-editable-block md-${kind}-block${fileClass}" data-md-kind="${kind}" data-md-original="${encodedSource}" data-md-current="${encodedSource}" data-md-lang="${escapeHtml(validLang)}"${runnerAttr}${fileNameAttr}>`,
+    renderEditableToolbar(kind, label, runner),
     sourceView,
     `<div class="md-editable-content md-${kind}-content">${content}</div>`,
     '</div>',
@@ -482,11 +560,11 @@ const marked = new Marked({
   breaks: false,
   renderer: {
     code({ text, lang }) {
-      const requestedLang = (lang || '').trim().split(/\s+/)[0]
+      const { lang: requestedLang, fileName } = parseCodeFenceInfo(lang)
       if (requestedLang.toLowerCase() === 'mermaid') {
         return renderMermaidDiagram(text)
       }
-      return renderEditableBlock('code', text, requestedLang)
+      return renderEditableBlock('code', text, requestedLang, fileName)
     },
     image({ href, title, text }) {
       const src = escapeHtml(resolvePublicAssetUrl(href || ''))
@@ -699,6 +777,36 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       ? decodeSource(block.dataset.mdCurrent)
       : getOriginalSource(block)
   )
+
+  const isRunFileBlock = (element: Element | null): element is HTMLElement => (
+    element instanceof HTMLElement &&
+    element.classList.contains('md-editable-block') &&
+    Boolean(element.dataset.mdFileName)
+  )
+
+  const collectAdjacentRunFiles = (block: HTMLElement) => {
+    const files: Array<{ name: string; content: string }> = []
+
+    let previous = block.previousElementSibling
+    while (isRunFileBlock(previous)) {
+      files.unshift({
+        name: previous.dataset.mdFileName || '',
+        content: getCurrentSource(previous),
+      })
+      previous = previous.previousElementSibling
+    }
+
+    let next = block.nextElementSibling
+    while (isRunFileBlock(next)) {
+      files.push({
+        name: next.dataset.mdFileName || '',
+        content: getCurrentSource(next),
+      })
+      next = next.nextElementSibling
+    }
+
+    return files.filter((file) => file.name)
+  }
 
   const updateSourceView = (block: HTMLElement, source: string) => {
     const sourceView = block.querySelector<HTMLElement>('.md-editable-source')
@@ -1009,15 +1117,13 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     const runner = block.dataset.mdRunner || ''
     block.classList.add('is-running')
     setRunButtonLoading(button, true)
-    setRunOutputPending(block, 'preparing')
-    scrollRunOutputIntoView(block)
+    setRunOutputPending(block, 'running')
 
     try {
-      await new Promise((resolve) => requestAnimationFrame(resolve))
-      setRunOutputPending(block, 'running')
       const result = await runCode({
         language: runner,
         source: getCurrentSource(block),
+        files: collectAdjacentRunFiles(block),
       })
       setRunOutputResult(block, result)
       scrollRunOutputIntoView(block)

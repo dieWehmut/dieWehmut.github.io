@@ -1258,6 +1258,11 @@ fmt.Println(-5 % -2) // -1
 
 - 根据正则表达式分割字符串
 
+```file test.txt
+first line from test.txt
+second line from test.txt
+```
+
 ```go
 package main
 
@@ -1597,4 +1602,3 @@ func main() {
     fmt.Println(x)    // [7 2 3]
 }
 ```
-

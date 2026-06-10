@@ -52,7 +52,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Golang"
     ],
     "summary": "2026-01-20 | Tuesday 好几个月前就配了环境，也ai写了点调ai的api的代码测试，今天开始系统了解和学习go语言 **初步认识:** go像cpp那样有{}，又像python那样没有\";\" 大小写就能区分publi...",
-    "wordCount": 5514,
+    "wordCount": 5527,
     "readingMinutes": 14,
     "path": "./posts/go-learning.md"
   },
