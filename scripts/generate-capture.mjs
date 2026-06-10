@@ -10,6 +10,7 @@ const publicCaptureDir = path.join(rootDir, 'public', 'capture-assets')
 const publicDocsDir = path.join(publicCaptureDir, 'docs')
 const publicStandaloneDir = path.join(publicCaptureDir, 'standalone')
 const publicLocalDir = path.join(publicCaptureDir, 'local')
+const publicInfraDir = path.join(publicCaptureDir, 'infra')
 const captureUrlPrefix = '/capture-assets/'
 const preservedAssetPrefixes = [`${captureUrlPrefix}standalone/`, `${captureUrlPrefix}local/`]
 
@@ -233,6 +234,20 @@ function copyStandaloneAsset(assetsDir, imageUrl) {
   fs.copyFileSync(sourcePath, destinationPath)
 }
 
+function syncInfraAssets(assetsDir) {
+  const sourceDir = path.join(assetsDir, 'infra')
+  assertFileExists(sourceDir, 'Infra assets directory')
+  fs.rmSync(publicInfraDir, { recursive: true, force: true })
+
+  for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
+    if (!entry.isFile()) continue
+    const sourcePath = path.join(sourceDir, entry.name)
+    const destinationPath = path.join(publicInfraDir, entry.name)
+    ensureDir(path.dirname(destinationPath))
+    fs.copyFileSync(sourcePath, destinationPath)
+  }
+}
+
 function toTsModule(data) {
   const serialized = JSON.stringify(data, null, 2)
   return `import type { CaptureAsset } from '../../types/content'\n\nexport const generatedCaptureAssets: CaptureAsset[] = ${serialized} as CaptureAsset[]\n\nexport default generatedCaptureAssets\n`
@@ -256,6 +271,8 @@ async function main() {
   ensureDir(publicDocsDir)
   ensureDir(publicStandaloneDir)
   ensureDir(publicLocalDir)
+  ensureDir(publicInfraDir)
+  syncInfraAssets(assetsDir)
 
   const byImage = new Map()
   const markdownFiles = getMarkdownFiles(docsDir)

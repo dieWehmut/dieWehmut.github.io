@@ -8,6 +8,7 @@ const defaultAssetsDir = path.resolve(rootDir, '..', 'diesw-assets')
 const assetsDir = path.resolve(rootDir, process.env.DIESW_ASSETS_DIR?.trim() || defaultAssetsDir)
 const docsDir = path.join(rootDir, 'src', 'data', 'docs')
 const publicCaptureDir = path.join(rootDir, 'public', 'capture-assets')
+const infraAssetsDir = path.join(rootDir, 'src', 'assets', 'infra')
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true })
@@ -71,6 +72,8 @@ function copyDirContents(sourceDir, targetDir) {
 function mirrorPublicCaptureAssetsToAssetsRepo() {
   copyDirContents(path.join(publicCaptureDir, 'standalone'), path.join(assetsDir, 'standalone'))
   copyDirContents(path.join(publicCaptureDir, 'local'), path.join(assetsDir, 'local'))
+  copyDirContents(path.join(publicCaptureDir, 'infra'), path.join(assetsDir, 'infra'))
+  copyDirContents(infraAssetsDir, path.join(assetsDir, 'infra'))
 }
 
 function fail(message) {
@@ -94,18 +97,15 @@ function runGit(args, options = {}) {
 }
 
 function assertNoTrackedSiteImages() {
-  const tracked = runGit(['ls-files', '--', 'public/capture-assets', 'src/data/docs'], { capture: true })
+  const tracked = runGit(['ls-files'], { capture: true })
     .split('\n')
     .map((filePath) => filePath.trim())
     .filter(Boolean)
-    .filter((filePath) => (
-      filePath.startsWith('public/capture-assets/')
-      || (filePath.startsWith('src/data/docs/') && isMediaAsset(filePath))
-    ))
+    .filter(isMediaAsset)
 
   if (tracked.length === 0) return
 
-  fail(`Main repository still tracks generated image files. Move them to diesw-assets and untrack them first:\n${tracked.join('\n')}`)
+  fail(`Main repository still tracks image files. Move them to diesw-assets and untrack them first:\n${tracked.join('\n')}`)
 }
 
 if (!fs.existsSync(assetsDir)) {
