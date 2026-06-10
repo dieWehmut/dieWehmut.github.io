@@ -89,20 +89,21 @@ import { Link, Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
-import sphereImg from '../assets/infra/qiu.png'
-import orbitImg from '../assets/infra/y-bg.png'
-import c1 from '../assets/infra/c1.png'
-import c2 from '../assets/infra/c2.png'
-import c3 from '../assets/infra/c3.png'
-import c4 from '../assets/infra/c4.png'
-import c5 from '../assets/infra/c5.png'
-import c6 from '../assets/infra/c6.png'
-import ico1 from '../assets/infra/ico1.png'
-import ico2 from '../assets/infra/ico2.png'
-import ico3 from '../assets/infra/ico3.png'
-import ico4 from '../assets/infra/ico4.png'
-import ico5 from '../assets/infra/ico5.png'
-import ico6 from '../assets/infra/ico6.png'
+const infraAsset = (name) => `/capture-assets/infra/${name}`
+const sphereImg = infraAsset('qiu.png')
+const orbitImg = infraAsset('y-bg.png')
+const c1 = infraAsset('c1.png')
+const c2 = infraAsset('c2.png')
+const c3 = infraAsset('c3.png')
+const c4 = infraAsset('c4.png')
+const c5 = infraAsset('c5.png')
+const c6 = infraAsset('c6.png')
+const ico1 = infraAsset('ico1.png')
+const ico2 = infraAsset('ico2.png')
+const ico3 = infraAsset('ico3.png')
+const ico4 = infraAsset('ico4.png')
+const ico5 = infraAsset('ico5.png')
+const ico6 = infraAsset('ico6.png')
 const rings = [c1, c2, c3, c4, c5, c6]
 const icons = [ico1, ico2, ico3, ico4, ico5, ico6]
 const { statusMap, checkUrls } = useUrlStatus()
