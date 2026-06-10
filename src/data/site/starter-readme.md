@@ -109,7 +109,6 @@ export const siteConfig = {
   enableProject: false,
 
   codeRunner: {
-    mode: (import.meta.env.VITE_CODE_RUNNER_MODE === 'backend' ? 'backend' : 'frontend') as 'frontend' | 'backend',
     backendApiUrl: import.meta.env.VITE_CODE_RUNNER_API_URL || '',
     backendToken: import.meta.env.VITE_CODE_RUNNER_API_TOKEN || '',
   },
@@ -178,18 +177,9 @@ VITE_GISCUS_CATEGORY_ID=DIC_xxxxx
 
 ## Go 代码运行
 
-模板默认使用纯前端 runner：
+模板统一使用 Sandkasten 后端运行代码。部署前请配置：
 
 ```env
-VITE_CODE_RUNNER_MODE=frontend
-VITE_CODE_RUNNER_API_URL=
-VITE_CODE_RUNNER_API_TOKEN=
-```
-
-如果你部署了自己的 Sandkasten 后端，可以改为：
-
-```env
-VITE_CODE_RUNNER_MODE=backend
 VITE_CODE_RUNNER_API_URL=https://your-sandkasten-api.example.com
 VITE_CODE_RUNNER_API_TOKEN=
 ```

@@ -70,15 +70,14 @@ pnpm dev
 
 ## Go コード実行
 
-テンプレートの既定値はブラウザー runner です。
+テンプレートは Sandkasten HTTP API でコードを実行します。
 
 ```env
-VITE_CODE_RUNNER_MODE=frontend
-VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_URL=https://your-sandkasten-api.example.com
 VITE_CODE_RUNNER_API_TOKEN=
 ```
 
-Sandkasten HTTP API を自分で運用する場合だけ、`VITE_CODE_RUNNER_MODE=backend` と `VITE_CODE_RUNNER_API_URL` を設定してください。Vite はこれらの値を公開 JavaScript に埋め込むため、`VITE_CODE_RUNNER_API_TOKEN` に非公開のサーバー token を入れないでください。
+Vite はこれらの値を公開 JavaScript に埋め込むため、`VITE_CODE_RUNNER_API_TOKEN` に非公開のサーバー token を入れないでください。
 
 ## コマンド
 

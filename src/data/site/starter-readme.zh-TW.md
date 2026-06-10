@@ -70,15 +70,14 @@ pnpm dev
 
 ## Go 程式碼執行
 
-模板預設使用純前端 runner：
+模板統一透過 Sandkasten HTTP API 執行程式碼：
 
 ```env
-VITE_CODE_RUNNER_MODE=frontend
-VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_URL=https://your-sandkasten-api.example.com
 VITE_CODE_RUNNER_API_TOKEN=
 ```
 
-只有在你自行部署 Sandkasten HTTP API 時，才需要改成 `VITE_CODE_RUNNER_MODE=backend` 並設定 `VITE_CODE_RUNNER_API_URL`。Vite 會把這些值寫進公開的前端 JavaScript，`VITE_CODE_RUNNER_API_TOKEN` 不應放私密服務端 token。
+Vite 會把這些值寫進公開的前端 JavaScript，`VITE_CODE_RUNNER_API_TOKEN` 不應放私密服務端 token。
 
 ## 常用命令
 

@@ -1,7 +1,6 @@
 import type { SiteConfig } from '../../types/content'
 
 type CodeRunnerEnv = {
-  VITE_CODE_RUNNER_MODE?: 'frontend' | 'backend'
   VITE_CODE_RUNNER_API_URL?: string
   VITE_CODE_RUNNER_API_TOKEN?: string
   DEV?: boolean
@@ -9,7 +8,6 @@ type CodeRunnerEnv = {
 
 const viteEnv = (import.meta.env || {}) as CodeRunnerEnv
 const processEnv = typeof process === 'undefined' ? {} : process.env
-const configuredRunnerMode = viteEnv.VITE_CODE_RUNNER_MODE || processEnv.VITE_CODE_RUNNER_MODE
 const codeRunnerApiUrl = viteEnv.VITE_CODE_RUNNER_API_URL || processEnv.VITE_CODE_RUNNER_API_URL || ''
 const codeRunnerApiToken = viteEnv.VITE_CODE_RUNNER_API_TOKEN || processEnv.VITE_CODE_RUNNER_API_TOKEN || ''
 const isDevRuntime = viteEnv.DEV === true || processEnv.NODE_ENV === 'development'
@@ -48,10 +46,7 @@ export const siteConfig: SiteConfig = {
   enableProject: true,
 
   // --- Code Runner ---
-  // This repository defaults to the Sandkasten backend. Template exports should
-  // keep VITE_CODE_RUNNER_MODE=frontend unless they operate their own backend.
   codeRunner: {
-    mode: configuredRunnerMode === 'frontend' ? 'frontend' : 'backend',
     backendApiUrl: codeRunnerApiUrl || (isDevRuntime ? 'http://127.0.0.1:8080' : ''),
     backendToken: codeRunnerApiToken,
   },

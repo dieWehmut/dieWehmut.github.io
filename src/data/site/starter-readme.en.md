@@ -70,15 +70,14 @@ Required GitHub setting:
 
 ## Go Code Runner
 
-The template defaults to the browser runner:
+The template runs code through a Sandkasten HTTP API:
 
 ```env
-VITE_CODE_RUNNER_MODE=frontend
-VITE_CODE_RUNNER_API_URL=
+VITE_CODE_RUNNER_API_URL=https://your-sandkasten-api.example.com
 VITE_CODE_RUNNER_API_TOKEN=
 ```
 
-Set `VITE_CODE_RUNNER_MODE=backend` and `VITE_CODE_RUNNER_API_URL` only when you operate a Sandkasten HTTP API. Vite embeds these values in public JavaScript, so `VITE_CODE_RUNNER_API_TOKEN` must not contain a private server token.
+Vite embeds these values in public JavaScript, so `VITE_CODE_RUNNER_API_TOKEN` must not contain a private server token.
 
 ## Commands
 
