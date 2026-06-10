@@ -14,6 +14,12 @@ export type RunCodeRequest = {
   language: string
   source: string
   stdin?: string
+  files?: RunCodeFile[]
+}
+
+export type RunCodeFile = {
+  name: string
+  content: string
 }
 
 const GO_SOURCE_LIMIT_BYTES = 32 * 1024
@@ -239,7 +245,13 @@ async function readBackendBody(response: Response): Promise<BackendJobResponse |
   return await response.json().catch(() => null) as BackendJobResponse | BackendErrorResponse | null
 }
 
-async function runInBackend(language: string, source: string, stdin: string, timeoutMs: number): Promise<RunResult> {
+async function runInBackend(
+  language: string,
+  source: string,
+  stdin: string,
+  timeoutMs: number,
+  files: RunCodeFile[] = []
+): Promise<RunResult> {
   const apiUrl = normalizeBackendApiUrl(siteConfig.codeRunner.backendApiUrl || '')
   if (!apiUrl) {
     return emptyResult('unsupported', '未配置 Sandkasten API 地址。')
@@ -264,8 +276,8 @@ async function runInBackend(language: string, source: string, stdin: string, tim
       body: JSON.stringify({
         source,
         stdin,
-        wait: true,
-        waitTimeoutMs: backendWaitTimeoutMs,
+        ...(files.length ? { files } : {}),
+        wait: false,
       }),
       signal: controller.signal,
     })
@@ -284,8 +296,14 @@ async function runInBackend(language: string, source: string, stdin: string, tim
       return emptyResult('runtime_error', '后端 API 没有返回有效任务。', durationMs)
     }
 
+    let pollDelayMs = 80
     while (job?.jobId && !isBackendTerminalStatus(job.status)) {
-      await sleep(300, controller.signal)
+      const elapsedMs = performance.now() - startedAt
+      if (elapsedMs >= backendWaitTimeoutMs) {
+        return emptyResult('timeout', '后端任务仍在运行，请稍后重试。', Math.round(elapsedMs))
+      }
+
+      await sleep(Math.min(pollDelayMs, Math.max(0, backendWaitTimeoutMs - elapsedMs)), controller.signal)
       const pollResponse = await fetch(`${apiUrl}/v1/jobs/${encodeURIComponent(job.jobId)}`, {
         headers,
         signal: controller.signal,
@@ -298,6 +316,8 @@ async function runInBackend(language: string, source: string, stdin: string, tim
         return emptyResult('runtime_error', message, Math.round(performance.now() - startedAt))
       }
       job = pollBody as BackendJobResponse | null
+      const nextElapsedMs = performance.now() - startedAt
+      pollDelayMs = nextElapsedMs > 5000 ? 300 : nextElapsedMs > 1200 ? 160 : 80
     }
 
     if (!job) {
@@ -336,7 +356,7 @@ export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS)
   const language = normalizeLanguage(request.language)
 
   if (language === 'r') {
-    return runInBackend('r', request.source, request.stdin || '', timeoutMs)
+    return runInBackend('r', request.source, request.stdin || '', timeoutMs, request.files || [])
   }
 
   if (language !== 'go') {
@@ -346,5 +366,5 @@ export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS)
   const validationResult = validateGoSource(request.source)
   if (validationResult) return Promise.resolve(validationResult)
 
-  return runInBackend('go', request.source, request.stdin || '', timeoutMs)
+  return runInBackend('go', request.source, request.stdin || '', timeoutMs, request.files || [])
 }
