@@ -12,8 +12,6 @@ dist-ssr
 *.local
 .vscode/
 public/capture-assets/*
-!public/capture-assets/docs/
-!public/capture-assets/docs/**
 src/data/docs/**/*.png
 src/data/docs/**/*.jpg
 src/data/docs/**/*.jpeg

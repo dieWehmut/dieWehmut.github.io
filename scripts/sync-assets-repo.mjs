@@ -36,30 +36,36 @@ function isMediaAsset(filePath) {
   return /\.(?:png|jpe?g|gif|webp|svg|avif)$/i.test(filePath)
 }
 
-function mirrorDocsImagesToAssetsRepo() {
-  const targetDocsDir = path.join(assetsDir, 'docs')
-  fs.rmSync(targetDocsDir, { recursive: true, force: true })
-  const docFiles = walkFiles(docsDir)
-  for (const filePath of docFiles) {
-    if (isMarkdown(filePath)) continue
-    if (!isMediaAsset(filePath)) continue
-    const relativePath = path.relative(docsDir, filePath)
-    const destinationPath = path.join(targetDocsDir, relativePath)
-    ensureDir(path.dirname(destinationPath))
-    fs.copyFileSync(filePath, destinationPath)
-  }
-}
-
-function copyDirContents(sourceDir, targetDir) {
-  if (!fs.existsSync(sourceDir)) return
-  fs.rmSync(targetDir, { recursive: true, force: true })
-  const files = walkFiles(sourceDir)
+function copyFilesToDir(files, sourceDir, targetDir) {
   for (const filePath of files) {
     const relativePath = path.relative(sourceDir, filePath)
     const destinationPath = path.join(targetDir, relativePath)
     ensureDir(path.dirname(destinationPath))
     fs.copyFileSync(filePath, destinationPath)
   }
+}
+
+function mirrorDocsImagesToAssetsRepo() {
+  const targetDocsDir = path.join(assetsDir, 'docs')
+  const publicDocsDir = path.join(publicCaptureDir, 'docs')
+  const publicDocImages = walkFiles(publicDocsDir).filter(isMediaAsset)
+  const localDocImages = walkFiles(docsDir)
+    .filter((filePath) => !isMarkdown(filePath) && isMediaAsset(filePath))
+
+  if (publicDocImages.length === 0 && localDocImages.length === 0) {
+    console.log('No local docs image cache found; preserving existing assets docs.')
+    return
+  }
+
+  fs.rmSync(targetDocsDir, { recursive: true, force: true })
+  copyFilesToDir(publicDocImages, publicDocsDir, targetDocsDir)
+  copyFilesToDir(localDocImages, docsDir, targetDocsDir)
+}
+
+function copyDirContents(sourceDir, targetDir) {
+  if (!fs.existsSync(sourceDir)) return
+  fs.rmSync(targetDir, { recursive: true, force: true })
+  copyFilesToDir(walkFiles(sourceDir), sourceDir, targetDir)
 }
 
 function mirrorPublicCaptureAssetsToAssetsRepo() {
@@ -87,6 +93,21 @@ function runGit(args, options = {}) {
   return options.capture ? (result.stdout || '').trim() : ''
 }
 
+function assertNoTrackedSiteImages() {
+  const tracked = runGit(['ls-files', '--', 'public/capture-assets', 'src/data/docs'], { capture: true })
+    .split('\n')
+    .map((filePath) => filePath.trim())
+    .filter(Boolean)
+    .filter((filePath) => (
+      filePath.startsWith('public/capture-assets/')
+      || (filePath.startsWith('src/data/docs/') && isMediaAsset(filePath))
+    ))
+
+  if (tracked.length === 0) return
+
+  fail(`Main repository still tracks generated image files. Move them to diesw-assets and untrack them first:\n${tracked.join('\n')}`)
+}
+
 if (!fs.existsSync(assetsDir)) {
   console.log(`Assets directory not found, skipping sync: ${assetsDir}`)
   process.exit(0)
@@ -96,6 +117,7 @@ if (!fs.existsSync(path.join(assetsDir, '.git'))) {
   fail(`Assets directory is not a git repository: ${assetsDir}`)
 }
 
+assertNoTrackedSiteImages()
 mirrorDocsImagesToAssetsRepo()
 mirrorPublicCaptureAssetsToAssetsRepo()
 
