@@ -22,15 +22,15 @@ pnpm build
 
 ## Go 代码运行
 
-当前仓库默认使用 Sandkasten 后端模式。本地联调时先启动 `/root/sandkasten` 的 API，再在本站运行：
+当前仓库统一使用 Sandkasten 后端。本地联调时先启动 `/root/sandkasten` 的 API，再在本站运行：
 
 ```bash
-VITE_CODE_RUNNER_MODE=backend VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm dev
+VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm dev
 ```
 
 可以用 `VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm runner:smoke` 直接验证后端能运行 Go。
 
-模板导出默认使用 `VITE_CODE_RUNNER_MODE=frontend`，可以不依赖后端直接运行。线上 GitHub Pages 如需后端模式，需要把仓库变量 `VITE_CODE_RUNNER_API_URL` 设为 HTTPS Sandkasten API；`VITE_CODE_RUNNER_API_TOKEN` 会被打进前端产物，只能放公开的客户端 token。
+线上 GitHub Pages 需要把仓库变量 `VITE_CODE_RUNNER_API_URL` 设为 HTTPS Sandkasten API；`VITE_CODE_RUNNER_API_TOKEN` 会被打进前端产物，只能放公开的客户端 token。
 
 ## 内容位置
 

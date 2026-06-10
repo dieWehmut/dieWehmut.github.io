@@ -102,7 +102,6 @@ export interface SiteConfig {
   enableInfra: boolean
   enableProject: boolean
   codeRunner: {
-    mode: 'frontend' | 'backend'
     backendApiUrl: string
     backendToken: string
   }

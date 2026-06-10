@@ -8,6 +8,7 @@ import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
 import markdown from 'highlight.js/lib/languages/markdown'
 import powershell from 'highlight.js/lib/languages/powershell'
+import r from 'highlight.js/lib/languages/r'
 import typescript from 'highlight.js/lib/languages/typescript'
 import xml from 'highlight.js/lib/languages/xml'
 import yaml from 'highlight.js/lib/languages/yaml'
@@ -65,6 +66,8 @@ hljs.registerLanguage('markdown', markdown)
 hljs.registerLanguage('md', markdown)
 hljs.registerLanguage('powershell', powershell)
 hljs.registerLanguage('ps1', powershell)
+hljs.registerLanguage('r', r)
+hljs.registerLanguage('rscript', r)
 hljs.registerLanguage('typescript', typescript)
 hljs.registerLanguage('ts', typescript)
 hljs.registerLanguage('xml', xml)
@@ -353,7 +356,7 @@ type CodeLanguageInfo = {
 }
 
 function encodeSource(value: string): string {
-  return encodeURIComponent(value)
+  return encodeURIComponent(value).replace(/'/g, '%27')
 }
 
 function decodeSource(value: string | undefined): string {
@@ -377,7 +380,9 @@ function resolveCodeLanguage(lang: string | undefined): CodeLanguageInfo {
 
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
-  return requestedLang === 'go' || requestedLang === 'golang' ? 'go' : ''
+  if (requestedLang === 'go' || requestedLang === 'golang') return 'go'
+  if (requestedLang === 'r' || requestedLang === 'rscript') return 'r'
+  return ''
 }
 
 function renderHighlightedCode(source: string, lang: string | undefined): string {
