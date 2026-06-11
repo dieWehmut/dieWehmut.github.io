@@ -277,7 +277,7 @@ async function runInBackend(
 
   try {
     const headers: Record<string, string> = {
-      'content-type': 'application/json',
+      'content-type': 'text/plain;charset=UTF-8',
     }
     if (siteConfig.codeRunner.backendToken) {
       headers.authorization = `Bearer ${siteConfig.codeRunner.backendToken}`
