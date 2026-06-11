@@ -124,7 +124,8 @@ const INNER_RING_STEP = FULL_CIRCLE / INNER_RING_LIMIT
 const OUTER_RING_GAP_OFFSET = INNER_RING_STEP / 2
 const STACKED_INNER_RADIUS = 25
 const OUTER_RING_RADIUS = 33
-const OUTER_RING_HORIZONTAL_PUSH = 10
+const OUTER_RING_HORIZONTAL_PUSH = 14
+const OUTER_RING_VERTICAL_POLE_THRESHOLD = 0.98
 let refreshTimer
 
 const serviceItems = computed(() =>
@@ -153,7 +154,10 @@ const servicePoints = computed(() => {
       : ORBIT_START_ANGLE + (ringIndex * FULL_CIRCLE) / innerCount
     const cos = Math.cos(angle)
     const sin = Math.sin(angle)
-    const horizontalPush = isOuter ? cos * OUTER_RING_HORIZONTAL_PUSH : 0
+    const isVerticalOuterPoint = isOuter && Math.abs(sin) > OUTER_RING_VERTICAL_POLE_THRESHOLD
+    const horizontalPush = isOuter && !isVerticalOuterPoint
+      ? Math.sign(cos) * OUTER_RING_HORIZONTAL_PUSH
+      : 0
     const dx = cos * radius + horizontalPush
     const dy = sin * radius
     const x = 50 + dx
