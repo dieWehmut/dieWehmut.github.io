@@ -38,8 +38,7 @@ defineEmits(['navigate'])
 const { t } = useI18n()
 
 const allNavItems = [
-  { name: 'runtimes', labelKey: 'nav.runtimes', fallbackLabel: 'Runtimes', to: '/runtimes', icon: Cpu },
-  { name: 'home', labelKey: 'nav.home', fallbackLabel: 'Home', to: '/home', icon: House },
+  { name: 'home', labelKey: 'nav.home', fallbackLabel: 'Home', to: '/', icon: House },
   { name: 'archive', labelKey: 'nav.archive', fallbackLabel: 'Archive', to: '/archive', icon: Collection },
   { name: 'notes', labelKey: 'nav.notes', fallbackLabel: 'Notes', to: '/notes', icon: Notebook },
   { name: 'infra', labelKey: 'nav.infra', fallbackLabel: 'Infra', to: '/infra', icon: Cpu, enabled: siteConfig.enableInfra },

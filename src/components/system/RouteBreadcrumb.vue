@@ -38,8 +38,7 @@ defineProps({
 })
 
 const staticPages: Record<string, Crumb> = {
-  runtimes: { label: 'Runtimes', to: '/runtimes' },
-  home: { label: 'Home', to: '/home' },
+  home: { label: 'Home', to: '/' },
   archive: { label: 'Archive', to: '/archive' },
   notes: { label: 'Notes', to: '/notes' },
   capture: { label: 'Capture', to: '/capture' },
