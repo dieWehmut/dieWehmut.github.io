@@ -1,12 +1,6 @@
 <template>
   <footer class="footer">
-    <div class="footer__uptime">
-      Uptime:
-      <span>{{ time.days }}</span>d
-      <span>{{ time.hours }}</span>h
-      <span>{{ time.minutes }}</span>m
-      <span>{{ time.seconds }}</span>s
-    </div>
+
 
     <div class="footer__copyright">
       ©  {{ copyrightYear }}
@@ -15,6 +9,13 @@
         <span>|</span>
         <a :href="`https://icp.gov.moe/?keyword=${siteConfig.icpNumber}`" target="_blank" rel="noopener noreferrer">{{ siteConfig.icpText }}</a>
       </template>
+    </div>
+      <div class="footer__uptime">
+      Uptime:
+      <span>{{ time.days }}</span>d
+      <span>{{ time.hours }}</span>h
+      <span>{{ time.minutes }}</span>m
+      <span>{{ time.seconds }}</span>s
     </div>
   </footer>
 </template>
@@ -95,12 +96,13 @@ onBeforeUnmount(() => {
 
 .footer__uptime {
   margin-bottom: 6px;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .footer__uptime span {
   color: var(--site-text);
+  font-weight: 400;
 }
 
 .footer__copyright {

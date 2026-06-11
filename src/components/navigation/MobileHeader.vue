@@ -17,6 +17,7 @@
         <el-icon><ArrowLeft /></el-icon>
       </button>
     </div>
+    <RouteBreadcrumb class="mobile-header__breadcrumb" variant="inline" />
     <button class="mobile-header__toc" type="button" aria-label="Open page timeline" @click="$emit('toggle-toc')">
       <el-icon><Calendar /></el-icon>
     </button>
@@ -27,6 +28,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Calendar } from '@element-plus/icons-vue'
+import RouteBreadcrumb from '../system/RouteBreadcrumb.vue'
 
 defineEmits(['toggle-menu', 'toggle-toc'])
 
@@ -46,8 +48,8 @@ function backToCapture() {
   z-index: 30;
   display: none;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 6px;
   min-height: var(--site-mobile-header-height);
   padding: 10px 14px;
   background: var(--site-sidebar-bg);
@@ -59,6 +61,7 @@ function backToCapture() {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  flex: 0 0 auto;
 }
 
 .mobile-header__menu,
@@ -73,10 +76,16 @@ function backToCapture() {
   border-radius: 8px;
   color: var(--site-text);
   background: transparent;
+  flex: 0 0 auto;
 }
 
 .mobile-header__toc {
   font-size: 21px;
+}
+
+.mobile-header__breadcrumb {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 @media (max-width: 900px) {

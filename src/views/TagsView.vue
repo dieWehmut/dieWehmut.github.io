@@ -23,27 +23,46 @@
     </div>
 
     <div class="tag-grid">
-      <article v-for="group in tagGroups" :key="group.tag" class="tag-card">
+      <article
+        v-for="group in tagGroups"
+        :key="group.tag"
+        class="tag-card"
+        role="link"
+        tabindex="0"
+        @click="openTag($event, group.tag)"
+        @keydown.enter="openTag($event, group.tag)"
+        @keydown.space="openTag($event, group.tag)"
+      >
         <div class="tag-card__heading">
-          <h2>
-            <RouterLink class="tag-card__link" :to="`/tags/${encodeURIComponent(group.tag)}`">
+          <h2 :id="tagHeadingId(group.tag)">
+            <RouterLink class="tag-card__link" :to="tagUrl(group.tag)" @click.stop>
               <el-icon><PriceTag /></el-icon>
-              {{ group.tag }}
+              <span class="tag-card__link-text">{{ group.tag }}</span>
             </RouterLink>
           </h2>
-          <span>x {{ group.count }}</span>
+          <span class="tag-card__count">x {{ group.count }}</span>
         </div>
         <div v-if="group.captures?.length" class="tag-card__captures">
-          <CaptureAssetCard
+          <RouterLink
             v-for="capture in group.captures.slice(0, 1)"
             :key="capture.id"
-            :asset="capture"
-            @preview="openCapturePreview(group.captures, capture)"
-          />
+            class="tag-card__capture-link"
+            :to="captureUrl(capture)"
+            :aria-label="`Open ${capture.title || capture.id}`"
+            @click.stop
+          >
+            <img
+              :src="capture.image"
+              :alt="capture.title || ''"
+              loading="lazy"
+              decoding="async"
+              @error="retryPublicAssetImage($event, capture.image)"
+            />
+          </RouterLink>
         </div>
-        <ul>
-          <li v-for="post in group.posts.slice(0, 5)" :key="post.id">
-            <RouterLink :to="`/archive#${post.id}`">{{ post.title }}</RouterLink>
+        <ul v-if="group.posts.length">
+          <li v-for="post in group.posts.slice(0, visiblePostLimit(group))" :key="post.id">
+            <RouterLink :to="postUrl(post)" @click.stop>{{ post.title }}</RouterLink>
           </li>
         </ul>
       </article>
@@ -53,15 +72,15 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
-import CaptureAssetCard from '../components/capture/CaptureAssetCard.vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { getTagGroups } from '../data'
-import { openImagePreviewGallery } from '../utils/imagePreview'
+import { retryPublicAssetImage } from '../utils/publicAssets'
 
 const captureTagCounts = ref(new Map())
 const captureTagPreviews = ref(new Map())
+const router = useRouter()
 
 const tagGroups = computed(() => mergeCaptureTags(getTagGroups()))
 const cloudPalette = [
@@ -168,11 +187,35 @@ function mergeCaptureTags(baseGroups) {
   return Array.from(byTag.values()).sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
 }
 
-function openCapturePreview(captures, capture) {
-  openImagePreviewGallery(
-    captures.map((item) => ({ src: item.image, alt: item.title || item.tags?.join(', ') || '' })),
-    captures.findIndex((item) => item.id === capture.id)
-  )
+function captureUrl(capture) {
+  return `/capture/${encodeURIComponent(capture.id)}`
+}
+
+function postUrl(post) {
+  return `/${post._isNote ? 'note' : 'post'}/${encodeURIComponent(post.id)}`
+}
+
+function visiblePostLimit(group) {
+  return group.captures?.length ? 2 : 3
+}
+
+function tagUrl(tag) {
+  return `/tags/${encodeURIComponent(tag)}`
+}
+
+function isInteractiveTarget(target) {
+  return target instanceof HTMLElement && Boolean(target.closest('a, button'))
+}
+
+function openTag(event, tag) {
+  if (isInteractiveTarget(event.target)) return
+  if (event instanceof KeyboardEvent) event.preventDefault()
+  router.push(tagUrl(tag))
+}
+
+function tagHeadingId(tag) {
+  const slug = encodeURIComponent(tag).replace(/%/g, '').replace(/[^a-zA-Z0-9_-]/g, '-')
+  return `tag-card-${slug || 'untitled'}`
 }
 
 onMounted(async () => {
@@ -242,12 +285,34 @@ onMounted(async () => {
 
 .tag-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 30px 44px;
+  grid-template-columns: repeat(auto-fill, 248px);
+  justify-content: start;
+  align-items: stretch;
+  gap: 24px;
 }
 
 .tag-card {
+  display: flex;
+  flex-direction: column;
+  width: 248px;
+  height: 100%;
+  min-height: 56px;
   min-width: 0;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid var(--tag-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.tag-card:hover,
+.tag-card:focus-visible {
+  border-color: rgba(31, 196, 31, 0.45);
+  background: rgba(31, 196, 31, 0.04);
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .tag-card__heading {
@@ -261,9 +326,22 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+  max-width: 100%;
   color: var(--site-text);
   text-decoration: none;
   transition: color 160ms ease;
+}
+
+.tag-card__link .el-icon {
+  flex: 0 0 auto;
+}
+
+.tag-card__link-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tag-card__link:hover,
@@ -278,12 +356,13 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   margin: 0;
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 20px;
 }
 
-.tag-card__heading span {
+.tag-card__count {
   flex: 0 0 auto;
   color: var(--site-muted);
   font-weight: 800;
@@ -294,6 +373,8 @@ h2 {
 ul {
   margin: 12px 0 0;
   padding: 0;
+  max-height: 86px;
+  overflow: hidden;
   color: var(--site-muted);
   line-height: 1.65;
   font-size: 16px;
@@ -303,7 +384,44 @@ ul {
 .tag-card__captures {
   display: grid;
   gap: 12px;
+  flex: 0 0 118px;
   margin-top: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tag-card__capture-link {
+  display: block;
+  height: 118px;
+  overflow: hidden;
+  border: 1px solid var(--tag-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+}
+
+.tag-card__capture-link img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.tag-card__capture-link img.is-image-failed {
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  object-fit: contain;
+}
+
+.tag-card__capture-link:hover img,
+.tag-card__capture-link:focus-visible img {
+  transform: scale(1.03);
+}
+
+.tag-card__capture-link:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: -2px;
 }
 
 li {
@@ -341,8 +459,9 @@ li a:focus-visible {
 
 @media (max-width: 900px) {
   .tag-grid {
-    grid-template-columns: 1fr;
-    gap: 26px;
+    grid-template-columns: repeat(auto-fill, 248px);
+    align-items: start;
+    gap: 20px;
   }
 
   .tag-cloud {
@@ -362,4 +481,5 @@ li a:focus-visible {
     font-size: 15px;
   }
 }
+
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="float-controls" :class="{ 'is-top-hidden': atTop }" aria-label="Quick controls">
-    <div class="float-controls__langs" :class="{ 'is-open': languageOpen }">
+    <div class="float-controls__langs" :class="{ 'is-open': languageOpen }" v-show="languageOpen">
       <button
         v-for="lang in languages"
         :key="lang.code"
@@ -308,7 +308,7 @@ function toggleTheme() {
   position: absolute;
   right: 54px;
   bottom: 150px;
-  display: flex;
+  display: none;
   gap: 10px;
   opacity: 0;
   transform: translateX(8px);
@@ -321,6 +321,7 @@ function toggleTheme() {
 }
 
 .float-controls__langs.is-open {
+  display: flex;
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
@@ -348,12 +349,15 @@ function toggleTheme() {
   .float-controls__langs {
     right: 54px;
     bottom: 150px;
-    display: grid;
     grid-template-columns: repeat(3, 44px);
     column-gap: 8px;
     row-gap: 6px;
     width: auto;
     justify-content: end;
+  }
+
+  .float-controls__langs.is-open {
+    display: grid;
   }
 
   .float-controls.is-top-hidden .float-controls__langs {

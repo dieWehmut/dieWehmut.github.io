@@ -298,6 +298,7 @@ import type { CaptureAsset, CaptureSourceRef } from '../types/content'
 import { formatTimelineDate, parseTimelineDate } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
+import { formatTimelineMonthLabel, formatTimelineYearLabel } from '../utils/timelineGroups'
 
 const isDev = import.meta.env.DEV
 const captureScrollStorageKey = 'nexus:capture-scroll-y'
@@ -373,55 +374,6 @@ type YearGroup = {
   label: string
   timestamp: number
   months: MonthGroup[]
-}
-
-const eastAsianMonthLabels = Array.from({ length: 12 }, (_, index) => `${index + 1}\u6708`)
-const monthLabelsByLocale: Record<string, readonly string[]> = {
-  zh: eastAsianMonthLabels,
-  zh_tw: eastAsianMonthLabels,
-  ja: eastAsianMonthLabels,
-  en: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ],
-  de: [
-    'Januar',
-    'Februar',
-    'M\u00e4rz',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember',
-  ],
-  la: [
-    'Ianuarius',
-    'Februarius',
-    'Martius',
-    'Aprilis',
-    'Maius',
-    'Iunius',
-    'Iulius',
-    'Augustus',
-    'September',
-    'October',
-    'November',
-    'December',
-  ],
 }
 
 function formatDate(date?: string) {
@@ -732,13 +684,11 @@ function getStartSortTimestamp(date?: string) {
 }
 
 function formatYearLabel(date: Date) {
-  return new Intl.DateTimeFormat(locale.value.replace('_', '-'), { year: 'numeric' }).format(date)
+  return formatTimelineYearLabel(date, locale.value)
 }
 
 function formatMonthLabel(date: Date) {
-  const normalizedLocale = locale.value.toLowerCase().replace('-', '_')
-  const monthLabels = monthLabelsByLocale[normalizedLocale] || monthLabelsByLocale[normalizedLocale.split('_')[0]]
-  return monthLabels?.[date.getMonth()] || `${date.getMonth() + 1}\u6708`
+  return formatTimelineMonthLabel(date, locale.value)
 }
 
 function slugFromDate(date: string) {

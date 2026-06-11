@@ -9,7 +9,7 @@
     @keydown.space.prevent="openProject"
   >
     <div class="project-item__main">
-      <el-icon class="project-item__icon">
+      <el-icon v-if="!hideIcon" class="project-item__icon">
         <component :is="itemIcon" />
       </el-icon>
       <a
@@ -35,7 +35,13 @@ import { computed } from 'vue'
 import { Notebook, Headset, Menu, Document, Calendar } from '@element-plus/icons-vue'
 import type { ProjectEntry } from '../../types/content'
 
-const props = defineProps<{ project: ProjectEntry; category: ProjectEntry['category'] }>()
+const props = withDefaults(defineProps<{
+  project: ProjectEntry
+  category: ProjectEntry['category']
+  hideIcon?: boolean
+}>(), {
+  hideIcon: false,
+})
 
 const iconMap: Record<ProjectEntry['category'], unknown> = {
   websites: Notebook,

@@ -3,10 +3,15 @@
   --site-sidebar-width: 230px;
   --site-mobile-header-height: 62px;
   --site-content-width: 1120px;
-  --site-desktop-content-gutter: clamp(6px, 1vw, 10px);
+  --site-desktop-content-gutter: clamp(30px, 2.6vw, 40px);
   --site-desktop-content-end-gutter: 64px;
   --site-view-aside-gap: 28px;
   --site-scroll-spy-width: 180px;
+  --site-route-path-height: 44px;
+  --site-right-rail-offset: max(
+    var(--site-desktop-content-end-gutter),
+    calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-content-width))
+  );
 }
 
 * {
@@ -18,6 +23,11 @@ body,
 #app {
   min-width: 0;
   min-height: 100%;
+}
+
+html {
+  scroll-padding-top: calc(var(--site-route-path-height) + 12px);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -73,5 +83,9 @@ a:hover {
 
   body {
     background: var(--site-bg);
+  }
+
+  html {
+    scroll-padding-top: calc(var(--site-mobile-header-height) + 18px);
   }
 }

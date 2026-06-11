@@ -13,9 +13,11 @@ const initialInfra: InfraEntry[] = [
   { name: 'Coolify', key: 'coolify', url: 'https://coolify.diesw.tech', date: '2026-05-14' },
   { name: 'Route Controller', key: 'openwrt', url: 'https://openwrt.diesw.tech', date: '2026-04-06' },
   { name: 'DSM', key: 'dsm', url: 'https://dsm.diesw.tech', date: '2026-04-12' },
+  { name: 'AI Router', key: 'ai2', url: 'https://sub2api.diesw.tech', date: '2026-06-08' },
+  { name: 'Sandkasten', key: 'sandkasten', url: 'https://run.diesw.tech', date: '2026-06-10' },
 ]
 
-initialInfra.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+initialInfra.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
 export const infra = ref(initialInfra)
 

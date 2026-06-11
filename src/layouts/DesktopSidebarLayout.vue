@@ -2,6 +2,7 @@
   <div class="desktop-layout">
     <SiteSidebar class="desktop-layout__sidebar" />
     <div class="desktop-layout__content">
+      <RouteBreadcrumb />
       <main class="desktop-layout__main">
         <RouterView v-slot="{ Component, route }">
           <Transition name="page-fade" mode="out-in">
@@ -20,6 +21,7 @@ import { RouterView } from 'vue-router'
 import SiteSidebar from '../components/navigation/SiteSidebar.vue'
 import Footer from '../components/system/Footer.vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
+import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
 </script>
 
 <style scoped>
