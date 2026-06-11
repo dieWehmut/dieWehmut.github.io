@@ -109,7 +109,7 @@ const crumbs = computed<Crumb[]>(() => {
   gap: 3px;
   height: var(--site-route-path-height);
   min-width: 0;
-  padding: 3px 12px 0;
+  padding: 1px 12px 0;
   border-bottom: 1px solid var(--site-border);
   background: var(--site-sidebar-bg);
   color: var(--site-muted);
@@ -123,7 +123,7 @@ const crumbs = computed<Crumb[]>(() => {
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  min-height: 28px;
+  min-height: 26px;
   padding: 0 4px;
   border-radius: 8px;
   color: inherit;

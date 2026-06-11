@@ -80,6 +80,13 @@
     "highLatency": "高延迟",
     "timeout": "超时"
   },
+  "infra": {
+    "summary": {
+      "endpoints": "{count} 个服务端点",
+      "online": "{count} 在线",
+      "offline": "{count} 离线"
+    }
+  },
   "capture": {
     "title": "图集",
     "empty": "暂无图集资源。",

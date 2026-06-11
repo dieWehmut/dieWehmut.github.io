@@ -12,10 +12,10 @@
           <img class="infra-core__orbit" :src="orbitImg" alt="" />
           <img class="infra-core__sphere" :src="sphereImg" alt="" />
           <div class="infra-core__text">
-            <p>{{ totalCount }} service endpoints</p>
+            <p>{{ t('infra.summary.endpoints', { count: totalCount }) }}</p>
             <div class="infra-core__counts">
-              <span>{{ onlineCount }} online</span>
-              <span class="infra-core__counts--offline">{{ offlineCount }} offline</span>
+              <span>{{ t('infra.summary.online', { count: onlineCount }) }}</span>
+              <span class="infra-core__counts--offline">{{ t('infra.summary.offline', { count: offlineCount }) }}</span>
             </div>
           </div>
         </div>
@@ -92,10 +92,12 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Link, Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
+const { t } = useI18n()
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
 const orbitImg = infraAsset('y-bg.png')
@@ -121,7 +123,8 @@ const ORBIT_START_ANGLE = -Math.PI / 2
 const INNER_RING_STEP = FULL_CIRCLE / INNER_RING_LIMIT
 const OUTER_RING_GAP_OFFSET = INNER_RING_STEP / 2
 const STACKED_INNER_RADIUS = 25
-const OUTER_RING_RADIUS = 41
+const OUTER_RING_RADIUS = 37
+const OUTER_RING_HORIZONTAL_PUSH = 10
 let refreshTimer
 
 const serviceItems = computed(() =>
@@ -148,14 +151,19 @@ const servicePoints = computed(() => {
     const angle = isOuter
       ? outerRingAngle(ringIndex, outerCount)
       : ORBIT_START_ANGLE + (ringIndex * FULL_CIRCLE) / innerCount
-    const x = 50 + Math.cos(angle) * radius
-    const y = 50 + Math.sin(angle) * radius
+    const cos = Math.cos(angle)
+    const sin = Math.sin(angle)
+    const horizontalPush = isOuter ? cos * OUTER_RING_HORIZONTAL_PUSH : 0
+    const dx = cos * radius + horizontalPush
+    const dy = sin * radius
+    const x = 50 + dx
+    const y = 50 + dy
     return {
       item,
       index,
       ring: isOuter ? 'outer' : 'inner',
-      angle,
-      radius,
+      angle: Math.atan2(dy, dx),
+      radius: Math.sqrt(dx * dx + dy * dy),
       style: {
         left: `${x}%`,
         top: `${y}%`,
@@ -165,12 +173,7 @@ const servicePoints = computed(() => {
 })
 
 function outerRingAngle(ringIndex, outerCount) {
-  if (outerCount <= INNER_RING_LIMIT) {
-    const slotIndex = Math.floor(((ringIndex + 0.5) * INNER_RING_LIMIT) / Math.max(outerCount, 1))
-    return ORBIT_START_ANGLE + OUTER_RING_GAP_OFFSET + (slotIndex % INNER_RING_LIMIT) * INNER_RING_STEP
-  }
-
-  return ORBIT_START_ANGLE + OUTER_RING_GAP_OFFSET + (ringIndex * FULL_CIRCLE) / outerCount
+  return ORBIT_START_ANGLE + OUTER_RING_GAP_OFFSET + (ringIndex * FULL_CIRCLE) / Math.max(outerCount, 1)
 }
 
 watch(
@@ -237,7 +240,8 @@ function formatDate(dateStr) {
 function statusLabel(url) {
   const status = statusMap[url]
   if (!status || status.status === 'checking') return ''
-  const label = status.status === 'highLatency' ? 'online' : status.status
+  const labelKey = status.status === 'highLatency' ? 'status.online' : `status.${status.status}`
+  const label = t(labelKey)
   return status.latency != null ? `${label} ${status.latency}ms` : label
 }
 
@@ -260,7 +264,7 @@ function openInfra(item, event) {
 .infra-view {
   min-height: auto;
   padding: 0 0 8px;
-  margin: -100px auto 0;
+  margin: -18px auto 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -268,11 +272,11 @@ function openInfra(item, event) {
 
 .infra-view.has-outer-ring {
   padding-bottom: 16px;
-  margin-top: -64px;
+  margin-top: -18px;
 }
 
 .infra-orbit {
-  --infra-scale: 0.9;
+  --infra-scale: 0.84;
   --infra-core-size: calc(320px * var(--infra-scale));
   --infra-core-shadow: calc(24px * var(--infra-scale));
   --infra-core-text-size: calc(16px * var(--infra-scale));
@@ -340,7 +344,7 @@ function openInfra(item, event) {
 
 .infra-core__text p {
   margin: 0;
-  color: var(--site-muted);
+  color: var(--site-accent);
   font-size: var(--infra-core-text-size);
   font-weight: 800;
 }
