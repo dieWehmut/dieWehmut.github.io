@@ -88,17 +88,12 @@
             <el-icon><ArrowLeft /></el-icon>
           </button>
         </div>
-        <PageHeading :title="t('capture.title')" :icon="Camera" />
         <div class="capture-empty">
           <span>{{ t('capture.empty') }}</span>
         </div>
       </template>
 
       <template v-else>
-        <PageHeading
-          :title="t('capture.title')"
-          :icon="Camera"
-        />
         <div v-if="canEdit" class="capture-editor">
           <div class="capture-editor__status">
             <span>{{ t('capture.editor') }}</span>
@@ -289,8 +284,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Calendar, Camera, ChatRound, Delete, Plus, PriceTag } from '@element-plus/icons-vue'
-import PageHeading from '../components/content/PageHeading.vue'
+import { ArrowLeft, Calendar, ChatRound, Delete, Plus, PriceTag } from '@element-plus/icons-vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'

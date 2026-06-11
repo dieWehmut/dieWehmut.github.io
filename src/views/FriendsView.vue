@@ -1,7 +1,5 @@
 <template>
   <section class="page-surface">
-    <PageHeading title="Friends" :icon="Connection" />
-
     <div class="friends-grid">
       <FriendCard v-for="friend in friends" :key="friend.id" :friend="friend" />
     </div>
@@ -9,8 +7,6 @@
 </template>
 
 <script setup>
-import { Connection } from '@element-plus/icons-vue'
-import PageHeading from '../components/content/PageHeading.vue'
 import FriendCard from '../components/content/FriendCard.vue'
 import { friends } from '../data'
 </script>

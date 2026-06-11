@@ -1,8 +1,6 @@
 <template>
   <section class="notes-view page-surface">
     <div class="notes-view__main">
-      <PageHeading title="Notes" :icon="Notebook" />
-
       <section class="notes-view__feed content-timeline">
         <section v-for="year in yearGroups" :key="year.id" class="content-timeline__year">
           <h2 :id="year.id" class="content-time-heading content-time-heading--year">
@@ -29,8 +27,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Notebook } from '@element-plus/icons-vue'
-import PageHeading from '../components/content/PageHeading.vue'
 import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getNotes } from '../data'

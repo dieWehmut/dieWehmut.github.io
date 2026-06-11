@@ -1,7 +1,5 @@
 <template>
   <section class="about-view page-surface">
-    <PageHeading title="About" :icon="User" />
-
     <div class="about-layout">
       <div class="about-content">
         <div class="about-contact">
@@ -40,9 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { User, Message } from '@element-plus/icons-vue'
+import { Message } from '@element-plus/icons-vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
-import PageHeading from '../components/content/PageHeading.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { siteConfig } from '../data/site/config'
 import aboutRaw from '../data/site/about.md?raw'

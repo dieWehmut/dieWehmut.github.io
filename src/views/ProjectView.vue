@@ -1,8 +1,6 @@
 <template>
   <section class="project-view page-surface">
     <div class="project-view__main">
-      <PageHeading title="Project" :icon="FolderOpened" />
-
       <section v-for="group in projectGroups" :key="group.key" class="project-group">
         <div class="project-group__heading">
           <el-icon class="project-group__icon"><component :is="categoryIcons[group.key]" /></el-icon>
@@ -21,8 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { FolderOpened, Connection, VideoPlay, Iphone, Setting } from '@element-plus/icons-vue'
-import PageHeading from '../components/content/PageHeading.vue'
+import { Connection, VideoPlay, Iphone, Setting } from '@element-plus/icons-vue'
 import ProjectListItem from '../components/project/ProjectListItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getProjectEntries } from '../data'
