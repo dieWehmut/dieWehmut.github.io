@@ -290,7 +290,8 @@ async function runInBackend(
         source,
         stdin,
         ...(files.length ? { files } : {}),
-        wait: false,
+        wait: true,
+        waitTimeoutMs: backendWaitTimeoutMs,
       }),
       signal: controller.signal,
     })
