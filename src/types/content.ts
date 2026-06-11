@@ -74,6 +74,8 @@ export interface SearchDocument {
   tags?: string[]
   wordCount?: number
   readingMinutes?: number
+  captureAssetIds?: string[]
+  captureCount?: number
 }
 
 export interface SearchResult extends SearchDocument {
@@ -157,7 +159,7 @@ export interface WebsiteEntry {
 
 export interface TagGroup {
   tag: string
-  posts: ArchivePost[]
+  posts: TagContentEntry[]
   captures?: CaptureAsset[]
   count: number
   postCount?: number

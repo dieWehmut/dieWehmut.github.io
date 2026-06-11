@@ -1,7 +1,13 @@
 <template>
-  <section class="infra-view page-surface">
+  <section class="infra-view page-surface" :class="{ 'has-outer-ring': hasOuterRing }">
     <PageHeading class="infra-heading" title="Infra" :icon="Cpu" />
-      <div class="infra-orbit" :style="{ '--node-count': String(servicePoints.length) }">
+      <div
+        class="infra-orbit"
+        :class="{ 'has-outer-ring': hasOuterRing }"
+        :style="{
+          '--node-count': String(servicePoints.length),
+        }"
+      >
         <div class="infra-core" aria-label="Infra status summary">
           <img class="infra-core__orbit" :src="orbitImg" alt="" />
           <img class="infra-core__sphere" :src="sphereImg" alt="" />
@@ -19,13 +25,14 @@
             v-for="point in servicePoints"
             :key="'line-' + (point.item.key || point.item.name)"
             class="infra-line"
+            :class="`is-${point.ring}-ring`"
             :style="lineStyle(point)"
           />
           <a
             v-for="point in servicePoints"
             :key="point.item.key || point.item.name"
             class="infra-node"
-            :class="statusClass(point.item.url)"
+            :class="[statusClass(point.item.url), `is-${point.ring}-ring`]"
             :style="point.style"
             :href="point.item.url"
             target="_blank"
@@ -108,28 +115,45 @@ const rings = [c1, c2, c3, c4, c5, c6]
 const icons = [ico1, ico2, ico3, ico4, ico5, ico6]
 const { statusMap, checkUrls } = useUrlStatus()
 const STATUS_REFRESH_INTERVAL_MS = 60_000
+const FULL_CIRCLE = Math.PI * 2
+const INNER_RING_LIMIT = 8
+const ORBIT_START_ANGLE = -Math.PI / 2
+const INNER_RING_STEP = FULL_CIRCLE / INNER_RING_LIMIT
+const OUTER_RING_GAP_OFFSET = INNER_RING_STEP / 2
+const STACKED_INNER_RADIUS = 25
+const OUTER_RING_RADIUS = 41
 let refreshTimer
 
 const serviceItems = computed(() =>
   (infra.value || [])
     .slice()
-    .sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0))
+    .sort((a, b) => (Date.parse(a.date) || 0) - (Date.parse(b.date) || 0))
 )
 
 const totalCount = computed(() => serviceItems.value.length)
+const hasOuterRing = computed(() => totalCount.value > INNER_RING_LIMIT)
 
 const servicePoints = computed(() => {
   const items = serviceItems.value
-  const count = Math.max(items.length, 1)
-  const radius = count <= 6 ? 30 : count <= 10 ? 33 : 35
+  const total = items.length
+  const hasOuter = total > INNER_RING_LIMIT
+  const innerCount = hasOuter ? INNER_RING_LIMIT : Math.max(total, 1)
+  const innerRadius = hasOuter ? STACKED_INNER_RADIUS : total <= 6 ? 30 : 33
+  const outerCount = Math.max(total - INNER_RING_LIMIT, 0)
 
   return items.map((item, index) => {
-    const angle = -Math.PI / 2 + (index * Math.PI * 2) / count
+    const isOuter = hasOuter && index >= INNER_RING_LIMIT
+    const ringIndex = isOuter ? index - INNER_RING_LIMIT : index
+    const radius = isOuter ? OUTER_RING_RADIUS : innerRadius
+    const angle = isOuter
+      ? outerRingAngle(ringIndex, outerCount)
+      : ORBIT_START_ANGLE + (ringIndex * FULL_CIRCLE) / innerCount
     const x = 50 + Math.cos(angle) * radius
     const y = 50 + Math.sin(angle) * radius
     return {
       item,
       index,
+      ring: isOuter ? 'outer' : 'inner',
       angle,
       radius,
       style: {
@@ -139,6 +163,15 @@ const servicePoints = computed(() => {
     }
   })
 })
+
+function outerRingAngle(ringIndex, outerCount) {
+  if (outerCount <= INNER_RING_LIMIT) {
+    const slotIndex = Math.floor(((ringIndex + 0.5) * INNER_RING_LIMIT) / Math.max(outerCount, 1))
+    return ORBIT_START_ANGLE + OUTER_RING_GAP_OFFSET + (slotIndex % INNER_RING_LIMIT) * INNER_RING_STEP
+  }
+
+  return ORBIT_START_ANGLE + OUTER_RING_GAP_OFFSET + (ringIndex * FULL_CIRCLE) / outerCount
+}
 
 watch(
   serviceItems,
@@ -233,18 +266,46 @@ function openInfra(item, event) {
   align-items: center;
 }
 
+.infra-view.has-outer-ring {
+  padding-bottom: 16px;
+  margin-top: -64px;
+}
+
 .infra-orbit {
+  --infra-scale: 0.9;
+  --infra-core-size: calc(320px * var(--infra-scale));
+  --infra-core-shadow: calc(24px * var(--infra-scale));
+  --infra-core-text-size: calc(16px * var(--infra-scale));
+  --infra-count-gap: calc(8px * var(--infra-scale));
+  --infra-count-margin: calc(14px * var(--infra-scale));
+  --infra-count-padding-y: calc(5px * var(--infra-scale));
+  --infra-count-padding-x: calc(10px * var(--infra-scale));
+  --infra-count-size: calc(12px * var(--infra-scale));
+  --infra-node-size: calc(50px * var(--infra-scale));
+  --infra-node-icon-size: calc(22px * var(--infra-scale));
+  --infra-node-gap: calc(9px * var(--infra-scale));
+  --infra-outer-node-gap: calc(7px * var(--infra-scale));
+  --infra-title-size: calc(14px * var(--infra-scale));
+  --infra-date-size: calc(12px * var(--infra-scale));
+  --infra-date-icon-size: calc(12px * var(--infra-scale));
+  --infra-status-size: calc(11px * var(--infra-scale));
+  --infra-status-gap: calc(4px * var(--infra-scale));
+  --infra-hover-shadow: calc(18px * var(--infra-scale));
   position: relative;
-  width: min(760px, 100%);
+  width: min(calc(760px * var(--infra-scale)), 100%);
   aspect-ratio: 1;
   margin: 0 auto;
+}
+
+.infra-orbit.has-outer-ring {
+  width: min(calc(840px * var(--infra-scale)), 100%);
 }
 
 .infra-core {
   position: absolute;
   inset: 50% auto auto 50%;
-  width: 320px;
-  height: 320px;
+  width: var(--infra-core-size);
+  height: var(--infra-core-size);
   display: grid;
   place-items: center;
   transform: translate(-50%, -50%);
@@ -267,7 +328,7 @@ function openInfra(item, event) {
 .infra-core__sphere {
   width: 82%;
   height: 82%;
-  filter: drop-shadow(0 0 24px rgba(31, 196, 31, 0.24));
+  filter: drop-shadow(0 0 var(--infra-core-shadow) rgba(31, 196, 31, 0.24));
   animation: core-sphere-spin 35s linear infinite;
 }
 
@@ -280,6 +341,7 @@ function openInfra(item, event) {
 .infra-core__text p {
   margin: 0;
   color: var(--site-muted);
+  font-size: var(--infra-core-text-size);
   font-weight: 800;
 }
 
@@ -287,16 +349,16 @@ function openInfra(item, event) {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  gap: var(--infra-count-gap);
+  margin-top: var(--infra-count-margin);
 }
 
 .infra-core__counts span {
-  padding: 5px 10px;
+  padding: var(--infra-count-padding-y) var(--infra-count-padding-x);
   border-radius: 999px;
   color: var(--site-accent);
   background: rgba(31, 196, 31, 0.1);
-  font-size: 12px;
+  font-size: var(--infra-count-size);
   font-weight: 800;
 }
 
@@ -331,14 +393,18 @@ function openInfra(item, event) {
 .infra-node__inner {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--infra-node-gap);
   animation: orbit-spin-reverse 1200s linear infinite;
+}
+
+.infra-node.is-outer-ring .infra-node__inner {
+  gap: var(--infra-outer-node-gap);
 }
 
 .infra-node:hover .infra-node__inner,
 .infra-node:focus-visible .infra-node__inner {
   color: var(--site-accent);
-  filter: drop-shadow(0 0 18px rgba(31, 196, 31, 0.25));
+  filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(31, 196, 31, 0.25));
   transform: scale(1.05);
   outline: none;
 }
@@ -348,20 +414,20 @@ function openInfra(item, event) {
 .infra-node.is-error:hover .infra-node__inner,
 .infra-node.is-error:focus-visible .infra-node__inner {
   color: #ff7878;
-  filter: drop-shadow(0 0 18px rgba(255, 120, 120, 0.35));
+  filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(255, 120, 120, 0.35));
 }
 
 .infra-node.is-timeout:hover .infra-node__inner,
 .infra-node.is-timeout:focus-visible .infra-node__inner {
   color: #f0c040;
-  filter: drop-shadow(0 0 18px rgba(240, 192, 64, 0.35));
+  filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(240, 192, 64, 0.35));
 }
 
 .infra-node__orb {
   position: relative;
-  flex: 0 0 50px;
-  width: 50px;
-  height: 50px;
+  flex: 0 0 var(--infra-node-size);
+  width: var(--infra-node-size);
+  height: var(--infra-node-size);
   display: grid;
   place-items: center;
 }
@@ -385,7 +451,7 @@ function openInfra(item, event) {
 }
 
 :root[data-theme="light"] .infra-core__sphere {
-  filter: drop-shadow(0 0 24px rgba(31, 196, 31, 0.24)) invert(1);
+  filter: drop-shadow(0 0 var(--infra-core-shadow) rgba(31, 196, 31, 0.24)) invert(1);
 }
 
 :root[data-theme="light"] .infra-node__icon-img {
@@ -398,8 +464,8 @@ function openInfra(item, event) {
 
 .infra-node__icon-img {
   position: relative;
-  width: 22px;
-  height: 22px;
+  width: var(--infra-node-icon-size);
+  height: var(--infra-node-icon-size);
   object-fit: contain;
   transition: transform 350ms ease;
 }
@@ -415,11 +481,11 @@ function openInfra(item, event) {
 .infra-node__text {
   min-width: 0;
   display: grid;
-  gap: 3px;
+  gap: calc(3px * var(--infra-scale));
 }
 
 .infra-node__text strong {
-  font-size: 14px;
+  font-size: var(--infra-title-size);
   line-height: 1.15;
   white-space: nowrap;
 }
@@ -427,22 +493,22 @@ function openInfra(item, event) {
 .infra-node__date {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--infra-status-gap);
   color: var(--site-muted);
-  font-size: 12px;
+  font-size: var(--infra-date-size);
   font-weight: 800;
   white-space: nowrap;
 }
 
 .infra-node__date-icon {
-  width: 12px;
-  height: 12px;
-  font-size: 12px;
+  width: var(--infra-date-icon-size);
+  height: var(--infra-date-icon-size);
+  font-size: var(--infra-date-icon-size);
 }
 
 .infra-node__text em {
   color: var(--site-accent);
-  font-size: 11px;
+  font-size: var(--infra-status-size);
   font-style: normal;
   font-weight: 900;
   white-space: nowrap;
@@ -484,11 +550,24 @@ function openInfra(item, event) {
 
 @media (max-width: 1180px) {
   .infra-orbit {
-    width: min(690px, 100%);
+    width: min(calc(690px * var(--infra-scale)), 100%);
+  }
+
+  .infra-orbit.has-outer-ring {
+    width: min(calc(760px * var(--infra-scale)), 100%);
   }
 
   .infra-node__inner {
-    gap: 5px;
+    gap: calc(5px * var(--infra-scale));
+  }
+}
+
+@media (min-width: 761px) and (max-width: 980px) {
+  .infra-orbit.has-outer-ring {
+    --infra-node-size: calc(44px * var(--infra-scale));
+    --infra-title-size: calc(13px * var(--infra-scale));
+    --infra-date-size: calc(11px * var(--infra-scale));
+    width: min(calc(680px * var(--infra-scale)), 100%);
   }
 }
 
@@ -506,6 +585,11 @@ function openInfra(item, event) {
     margin: 0;
     padding: 0 0 40px;
     display: block;
+  }
+
+  .infra-view.has-outer-ring {
+    margin: 0;
+    padding: 0 0 40px;
   }
 
   .infra-heading {

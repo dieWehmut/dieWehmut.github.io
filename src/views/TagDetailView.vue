@@ -1,106 +1,133 @@
 <template>
-  <section class="page-surface">
-    <PageHeading :title="tag" :icon="PriceTag">
-      <template #title-extra>
-        <span class="tag-detail__count">
-          {{ totalCount }} {{ totalCount === 1 ? 'entry' : 'entries' }}
-        </span>
-      </template>
-    </PageHeading>
+  <section class="page-surface tag-detail-view">
+    <div class="tag-detail__main">
+      <PageHeading :title="tag" :icon="PriceTag">
+        <template #title-extra>
+          <span class="tag-detail__count">
+            {{ totalCount }} {{ totalCount === 1 ? 'entry' : 'entries' }}
+          </span>
+        </template>
+      </PageHeading>
 
-    <div v-if="timelineItems.length" class="tag-detail__list">
-      <template v-for="item in timelineItems" :key="item.id">
-        <article v-if="item.kind === 'post'" class="tag-detail__item">
-          <div class="tag-detail__item-body">
-            <h2>
-              <RouterLink :to="postUrl(item.post)">{{ item.post.title }}</RouterLink>
-            </h2>
-            <MarkdownPreview
-              v-if="item.post.summary"
-              class="tag-detail__summary"
-              :source="item.post.summary"
-            />
-            <div v-if="item.post.date || item.post.tags?.length || item.post.wordCount || item.post.readingMinutes" class="tag-detail__meta-row">
-              <time v-if="item.post.date" class="tag-detail__date" :datetime="item.post.date"><el-icon class="tag-detail__date-icon"><Calendar /></el-icon>{{ formattedDate(item.post.date) }}</time>
-              <ContentStats :word-count="item.post.wordCount" :reading-minutes="item.post.readingMinutes" />
-              <RouterLink v-for="t in item.post.tags" :key="t" class="tag-detail__tag" :to="`/tags/${encodeURIComponent(t)}`"><el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>{{ t }}</RouterLink>
-            </div>
-          </div>
-        </article>
+      <div v-if="timelineYearGroups.length" class="tag-detail__list content-timeline">
+        <section v-for="year in timelineYearGroups" :key="year.id" class="content-timeline__year">
+          <h2 :id="year.id" class="content-time-heading content-time-heading--year">
+            {{ year.label }}
+          </h2>
 
-        <article
-          v-else
-          class="tag-detail__capture-group"
-        >
-          <div class="tag-detail__capture-grid">
-            <button
-              v-for="capture in item.group.assets"
-              :key="capture.id"
-              class="tag-detail__capture-media"
-              type="button"
-              @click="openCapture(capture)"
-            >
-              <img
-                :src="capture.image"
-                :alt="capture.title || ''"
-                loading="lazy"
-                decoding="async"
-                @error="retryPublicAssetImage($event, capture.image)"
-              />
-            </button>
-          </div>
+          <section v-for="month in year.months" :key="month.id" class="content-timeline__month">
+            <h3 :id="month.id" class="content-time-heading content-time-heading--month">
+              {{ month.label }}
+            </h3>
 
-          <div class="tag-detail__capture-body">
-            <div v-if="item.group.sources.length" class="tag-detail__capture-sources">
-              <RouterLink
-                v-for="source in item.group.sources"
-                :key="`${source.type}:${source.id}`"
-                class="tag-detail__capture-source"
-                :to="source.url"
-              >
-                {{ source.title }}
-              </RouterLink>
+            <div class="content-timeline__items">
+              <template v-for="item in month.items" :key="item.id">
+                <article v-if="item.kind === 'post'" class="tag-detail__item">
+                  <div class="tag-detail__item-body">
+                    <h2>
+                      <RouterLink :to="postUrl(item.post)">{{ item.post.title }}</RouterLink>
+                    </h2>
+                    <MarkdownPreview
+                      v-if="item.post.summary"
+                      class="tag-detail__summary"
+                      :source="item.post.summary"
+                    />
+                    <div v-if="item.post.date || item.post.tags?.length || item.post.wordCount || item.post.readingMinutes" class="tag-detail__meta-row">
+                      <time v-if="item.post.date" class="tag-detail__date" :datetime="item.post.date"><el-icon class="tag-detail__date-icon"><Calendar /></el-icon>{{ formattedDate(item.post.date) }}</time>
+                      <ContentStats :word-count="item.post.wordCount" :reading-minutes="item.post.readingMinutes" />
+                      <RouterLink v-for="t in item.post.tags" :key="t" class="tag-detail__tag" :to="`/tags/${encodeURIComponent(t)}`"><el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>{{ t }}</RouterLink>
+                    </div>
+                  </div>
+                </article>
+
+                <article
+                  v-else
+                  class="tag-detail__capture-group"
+                >
+                  <div class="tag-detail__capture-grid">
+                    <button
+                      v-for="capture in item.group.assets"
+                      :key="capture.id"
+                      class="tag-detail__capture-media"
+                      type="button"
+                      @click="openCapture(capture)"
+                    >
+                      <img
+                        :src="capture.image"
+                        :alt="capture.title || ''"
+                        loading="lazy"
+                        decoding="async"
+                        @error="retryPublicAssetImage($event, capture.image)"
+                      />
+                    </button>
+                  </div>
+
+                  <div class="tag-detail__capture-body">
+                    <div v-if="item.group.sources.length" class="tag-detail__capture-sources">
+                      <RouterLink
+                        v-for="source in item.group.sources"
+                        :key="`${source.type}:${source.id}`"
+                        class="tag-detail__capture-source"
+                        :to="source.url"
+                      >
+                        {{ source.title }}
+                      </RouterLink>
+                    </div>
+                    <div class="tag-detail__capture-meta-row">
+                      <time v-if="item.group.date" :datetime="item.group.date">
+                        <el-icon class="tag-detail__date-icon"><Calendar /></el-icon>
+                        {{ formattedDate(item.group.date) }}
+                      </time>
+                      <RouterLink
+                        v-for="captureTag in item.group.tags"
+                        :key="captureTag"
+                        class="tag-detail__tag"
+                        :to="`/tags/${encodeURIComponent(captureTag)}`"
+                      >
+                        <el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>
+                        {{ captureTag }}
+                      </RouterLink>
+                    </div>
+                  </div>
+                </article>
+              </template>
             </div>
-            <div class="tag-detail__capture-meta-row">
-              <time v-if="item.group.date" :datetime="item.group.date">
-                <el-icon class="tag-detail__date-icon"><Calendar /></el-icon>
-                {{ formattedDate(item.group.date) }}
-              </time>
-              <RouterLink
-                v-for="captureTag in item.group.tags"
-                :key="captureTag"
-                class="tag-detail__tag"
-                :to="`/tags/${encodeURIComponent(captureTag)}`"
-              >
-                <el-icon class="tag-detail__tag-icon"><PriceTag /></el-icon>
-                {{ captureTag }}
-              </RouterLink>
-            </div>
-          </div>
-        </article>
-      </template>
+          </section>
+        </section>
+      </div>
+
+      <div v-if="!totalCount" class="tag-detail__empty">
+        No entries found for this tag.
+      </div>
     </div>
 
-    <div v-if="!totalCount" class="tag-detail__empty">
-      No entries found for this tag.
-    </div>
+    <ScrollSpySidebar
+      v-if="timelineYearGroups.length"
+      :key="scrollSpyKey"
+      root-selector=".tag-detail__main"
+      heading-selector=".content-time-heading"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, RouterLink } from 'vue-router'
 import { PriceTag, Calendar } from '@element-plus/icons-vue'
 import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownPreview from '../components/content/MarkdownPreview.vue'
 import PageHeading from '../components/content/PageHeading.vue'
+import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, CaptureSourceRef, TagContentEntry } from '../types/content'
 import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
+import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
 const route = useRoute()
+const { locale } = useI18n()
 const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
@@ -127,6 +154,18 @@ const timelineItems = computed<TagTimelineItem[]>(() => {
   return [...postItems, ...captureItems]
     .sort((a, b) => b.timestamp - a.timestamp || a.priority - b.priority || a.order - b.order)
 })
+const timelineYearGroups = computed(() =>
+  groupItemsByYearAndMonth(timelineItems.value, {
+    idPrefix: 'tag-detail',
+    locale: locale.value,
+    getDate: (item) => item.kind === 'post' ? item.post.date : item.group.date,
+  })
+)
+const scrollSpyKey = computed(() =>
+  timelineYearGroups.value
+    .map((year) => `${year.id}:${year.months.map((month) => `${month.id}:${month.items.map((item) => item.id).join(',')}`).join(';')}`)
+    .join('|')
+)
 
 type CaptureGroup = {
   id: string
@@ -245,6 +284,17 @@ watch(tag, loadCaptures)
 </script>
 
 <style scoped>
+.tag-detail-view {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--site-view-aside-gap);
+}
+
+.tag-detail__main {
+  flex: 1;
+  min-width: 0;
+}
+
 .tag-detail__count {
   color: var(--site-muted);
   font-size: 15px;
@@ -254,12 +304,38 @@ watch(tag, loadCaptures)
 }
 
 .tag-detail__list {
-  border-top: 1px solid var(--site-border);
+  margin-top: 8px;
+}
+
+.content-timeline,
+.content-timeline__year,
+.content-timeline__month,
+.content-timeline__items {
+  display: grid;
+  gap: 24px;
+}
+
+.content-time-heading {
+  margin: 0;
+  scroll-margin-top: 28px;
+}
+
+.content-time-heading--year {
+  color: var(--site-text);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.content-time-heading--month {
+  color: var(--site-muted);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 900;
 }
 
 .tag-detail__capture-group {
   overflow: hidden;
-  margin: 20px 0;
   border: 1px solid var(--site-border);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.02);
@@ -359,7 +435,7 @@ watch(tag, loadCaptures)
 
 .tag-detail__item {
   padding: 20px 0;
-  border-bottom: 1px solid var(--site-border);
+  border-top: 1px solid var(--site-border);
 }
 
 .tag-detail__item-body h2 {
@@ -445,6 +521,10 @@ watch(tag, loadCaptures)
 }
 
 @media (max-width: 900px) {
+  .tag-detail-view {
+    display: block;
+  }
+
   .tag-detail__capture-grid {
     grid-template-columns: repeat(3, calc(100vw / 3));
   }

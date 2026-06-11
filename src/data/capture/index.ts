@@ -54,15 +54,54 @@ export function getCaptureAssetById(id: string): CaptureAsset | null {
 }
 
 export function getCaptureSearchDocuments(): SearchDocument[] {
-  return getCaptureAssets().map((asset) => ({
-    id: `capture:${asset.id}`,
-    type: 'capture',
-    title: asset.title || asset.id,
-    description: asset.summary || asset.sourceRefs.map((item) => item.title).join(' · ') || 'Capture asset',
-    url: '/capture',
-    date: asset.date,
-    tags: asset.tags,
-  }))
+  const groups = new Map<string, CaptureAsset[]>()
+
+  for (const asset of getCaptureAssets()) {
+    const key = [
+      asset.date || 'undated',
+      (asset.tags || []).join('\u0001'),
+      (asset.sourceRefs || []).map((item) => `${item.type}:${item.id}`).join('\u0001'),
+      asset.standalone ? 'standalone' : 'docs',
+    ].join('\u0002')
+    groups.set(key, [...(groups.get(key) || []), asset])
+  }
+
+  return Array.from(groups.values()).map((assets) => {
+    const first = assets[0]
+    const sourceTitles = mergeUnique(assets.flatMap((asset) => asset.sourceRefs.map((item) => item.title)))
+    const tags = mergeUnique(assets.flatMap((asset) => asset.tags || []))
+
+    return {
+      id: `capture:${first.id}`,
+      type: 'capture',
+      title: captureSearchTitle(assets),
+      description: first.summary || sourceTitles.join(' · ') || 'Capture asset',
+      url: `/capture/${encodeURIComponent(first.id)}`,
+      date: first.date,
+      tags,
+      captureAssetIds: assets.map((asset) => asset.id),
+      captureCount: assets.length,
+    }
+  })
+}
+
+function captureSearchTitle(assets: CaptureAsset[]): string {
+  const first = assets[0]
+  const sourceTitle = first.sourceRefs[0]?.title
+  if (sourceTitle) return assets.length > 1 ? `${sourceTitle} · ${assets.length} images` : sourceTitle
+  const title = formatCaptureTitle(first.title || first.date || first.id)
+  if (title) return assets.length > 1 ? `${title} · ${assets.length} images` : title
+  return assets.length > 1 ? `${first.id} · ${assets.length} images` : first.id
+}
+
+function mergeUnique<T>(items: T[]): T[] {
+  return Array.from(new Set(items))
+}
+
+function formatCaptureTitle(title: string): string {
+  return title
+    .replace(/[ T]\d{2}:\d{2}(?::\d{2})?(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?/g, '')
+    .replace(/\s*->\s*/g, ' - ')
 }
 
 export function getCaptureAssetsByTag(tag: string): CaptureAsset[] {

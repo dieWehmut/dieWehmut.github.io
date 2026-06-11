@@ -3,25 +3,49 @@
     <div class="archive-view__main">
       <PageHeading title="Archive" :icon="Collection" />
 
-      <section class="archive-view__feed">
-        <FeedEntryCard v-for="post in posts" :key="post.id" :entry="postEntry(post)" />
+      <section class="archive-view__feed content-timeline">
+        <section v-for="year in yearGroups" :key="year.id" class="content-timeline__year">
+          <h2 :id="year.id" class="content-time-heading content-time-heading--year">
+            {{ year.label }}
+          </h2>
+
+          <section v-for="month in year.months" :key="month.id" class="content-timeline__month">
+            <h3 :id="month.id" class="content-time-heading content-time-heading--month">
+              {{ month.label }}
+            </h3>
+
+            <div class="content-timeline__items">
+              <FeedEntryCard v-for="post in month.items" :key="post.id" :entry="postEntry(post)" />
+            </div>
+          </section>
+        </section>
       </section>
     </div>
 
-    <ScrollSpySidebar root-selector=".page-surface" />
+    <ScrollSpySidebar root-selector=".archive-view__main" heading-selector=".content-time-heading" />
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Collection } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts } from '../data'
 import type { ArchivePost } from '../types/content'
+import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
+const { locale } = useI18n()
 const posts = computed(() => getPosts())
+const yearGroups = computed(() =>
+  groupItemsByYearAndMonth(posts.value, {
+    idPrefix: 'archive',
+    locale: locale.value,
+    getDate: (post) => post.date,
+  })
+)
 
 function postEntry(post: ArchivePost) {
   return {
@@ -49,7 +73,33 @@ function postEntry(post: ArchivePost) {
 }
 
 .archive-view__feed {
-  border-top: 1px solid var(--site-border);
   margin-top: 8px;
+}
+
+.content-timeline,
+.content-timeline__year,
+.content-timeline__month,
+.content-timeline__items {
+  display: grid;
+  gap: 24px;
+}
+
+.content-time-heading {
+  margin: 0;
+  scroll-margin-top: 28px;
+}
+
+.content-time-heading--year {
+  color: var(--site-text);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.content-time-heading--month {
+  color: var(--site-muted);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 900;
 }
 </style>

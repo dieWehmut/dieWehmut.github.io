@@ -28,24 +28,41 @@
         </RouterLink>
       </div>
 
-      <section class="home-view__feed">
-        <FeedEntryCard v-for="item in feedItems" :key="item.id" :entry="item" />
+      <section class="home-view__feed content-timeline">
+        <section v-for="year in feedYearGroups" :key="year.id" class="content-timeline__year">
+          <h2 :id="year.id" class="content-time-heading content-time-heading--year">
+            {{ year.label }}
+          </h2>
+
+          <section v-for="month in year.months" :key="month.id" class="content-timeline__month">
+            <h3 :id="month.id" class="content-time-heading content-time-heading--month">
+              {{ month.label }}
+            </h3>
+
+            <div class="content-timeline__items">
+              <FeedEntryCard v-for="item in month.items" :key="item.id" :entry="item" />
+            </div>
+          </section>
+        </section>
       </section>
     </div>
 
-    <ScrollSpySidebar root-selector=".page-surface" />
+    <ScrollSpySidebar root-selector=".home-view__main" heading-selector=".content-time-heading" />
   </section>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { infra } from '../data/site/infra.ts'
 import { siteConfig } from '../data/site/config'
 import { getPosts, getProjectEntries, getNotes, getTagGroups } from '../data'
 import { getDateSortTimestamp } from '../utils/date'
+import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
+const { locale } = useI18n()
 const infraCount = computed(() => (infra.value || []).length)
 const projectCount = computed(() => {
   const names = new Set(getProjectEntries().map((item) => item.name.trim().toLowerCase()).filter(Boolean))
@@ -79,6 +96,14 @@ const feedItems = computed(() => {
       external: false,
     }))
 })
+
+const feedYearGroups = computed(() =>
+  groupItemsByYearAndMonth(feedItems.value, {
+    idPrefix: 'home',
+    locale: locale.value,
+    getDate: (item) => item.date,
+  })
+)
 
 onMounted(async () => {
   const { getCaptureAssets } = await import('../data/capture')
@@ -138,6 +163,33 @@ onMounted(async () => {
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 34px;
   line-height: 1;
+}
+
+.content-timeline,
+.content-timeline__year,
+.content-timeline__month,
+.content-timeline__items {
+  display: grid;
+  gap: 24px;
+}
+
+.content-time-heading {
+  margin: 0;
+  scroll-margin-top: 28px;
+}
+
+.content-time-heading--year {
+  color: var(--site-text);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.content-time-heading--month {
+  color: var(--site-muted);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 900;
 }
 
 @media (max-width: 760px) {

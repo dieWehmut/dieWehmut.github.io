@@ -8,6 +8,7 @@ import type {
   SearchDocument,
   SiteProjectItem,
   TagGroup,
+  TagContentEntry,
 } from '../types/content'
 import { pages } from './site/page'
 import { games } from './site/game'
@@ -105,7 +106,7 @@ export function getProjectEntries(): ProjectEntry[] {
 }
 
 export function getTagGroups(): TagGroup[] {
-  const groups = new Map<string, ArchivePost[]>()
+  const groups = new Map<string, TagContentEntry[]>()
   for (const post of getPosts()) {
     for (const tag of post.tags || []) {
       groups.set(tag, [...(groups.get(tag) || []), post])
@@ -121,7 +122,8 @@ export function getTagGroups(): TagGroup[] {
         summary: note.summary,
         wordCount: note.wordCount,
         readingMinutes: note.readingMinutes,
-      } as ArchivePost
+        _isNote: true,
+      } as TagContentEntry
       groups.set(tag, [...(groups.get(tag) || []), entry])
     }
   }

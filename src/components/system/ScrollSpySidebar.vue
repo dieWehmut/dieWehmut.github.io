@@ -42,6 +42,7 @@ let headings = []
 let scrollFrame = 0
 let collectFrame = 0
 let resizeObserver = null
+let mutationObserver = null
 let mediaQuery = null
 let isEnabled = true
 
@@ -174,6 +175,10 @@ function onResize() {
   scheduleCollectHeadings()
 }
 
+function onContentMutation() {
+  scheduleCollectHeadings()
+}
+
 onMounted(async () => {
   await nextTick()
   mediaQuery = window.matchMedia('(max-width: 900px)')
@@ -197,6 +202,17 @@ onMounted(async () => {
     resizeObserver.observe(root)
   }
 
+  if (window.MutationObserver && root) {
+    mutationObserver = new MutationObserver(onContentMutation)
+    mutationObserver.observe(root, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['id', 'data-scroll-title'],
+    })
+  }
+
   // handle initial hash with smooth scroll
   if (window.location.hash) {
     const id = window.location.hash.slice(1)
@@ -214,6 +230,7 @@ onBeforeUnmount(() => {
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame)
   if (collectFrame) window.cancelAnimationFrame(collectFrame)
   resizeObserver?.disconnect()
+  mutationObserver?.disconnect()
   if (mediaQuery?.removeEventListener) {
     mediaQuery.removeEventListener('change', updateEnabledState)
   } else {
@@ -235,9 +252,14 @@ onBeforeUnmount(() => {
   gap: 18px;
   padding-bottom: 24px;
   max-height: 100vh;
+  overflow-x: hidden;
   overflow-y: auto;
   color: var(--site-muted);
+  font-size: 14px;
   min-width: 0;
+  scrollbar-color:
+    color-mix(in srgb, var(--site-accent) 58%, transparent)
+    color-mix(in srgb, var(--site-accent) 10%, transparent);
 }
 
 @media (max-width: 900px) {
@@ -254,6 +276,7 @@ onBeforeUnmount(() => {
   gap: 8px;
   padding: 0 0 12px;
   background: var(--site-sidebar-bg);
+  backdrop-filter: blur(10px);
 }
 
 .scroll-spy__progress {
@@ -267,7 +290,7 @@ onBeforeUnmount(() => {
   width: 4px;
   height: 90px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--site-accent) 10%, transparent);
   overflow: hidden;
 }
 
@@ -278,6 +301,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   border-radius: 999px;
   background: var(--site-accent);
+  transition: height 90ms linear;
 }
 
 .scroll-spy__percent {
@@ -289,32 +313,64 @@ onBeforeUnmount(() => {
 .scroll-spy__nav {
   display: grid;
   gap: 6px;
+  min-width: 0;
 }
 
 .scroll-spy__nav button {
   all: unset;
+  position: relative;
+  overflow: hidden;
   display: block;
   width: 100%;
+  min-height: 30px;
   text-align: left;
   cursor: pointer;
   color: var(--site-muted);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 650;
+  line-height: 1.4;
   border-left: 2px solid transparent;
   padding: 4px 0 4px 10px;
-  transition: color 160ms ease, border-color 160ms ease;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    padding-left 160ms ease;
   box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.scroll-spy__nav button::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 18% 50%,
+      color-mix(in srgb, var(--site-accent) 16%, transparent),
+      transparent 54%
+    );
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
 }
 
 .scroll-spy__nav button.is-active {
   color: var(--site-text);
   border-left-color: var(--site-accent);
+  padding-left: 12px;
 }
 
 .scroll-spy__nav button:hover,
 .scroll-spy__nav button:focus-visible {
   color: var(--site-text);
   outline: none;
+  padding-left: 12px;
+}
+
+.scroll-spy__nav button:hover::before,
+.scroll-spy__nav button:focus-visible::before,
+.scroll-spy__nav button.is-active::before {
+  opacity: 1;
 }
 
 .scroll-spy--mobile {

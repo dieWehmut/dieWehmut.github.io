@@ -21,7 +21,7 @@
         :key="`${route.fullPath}:${tocKey}`"
         class="mobile-layout__toc"
         root-selector=".mobile-layout__main"
-        heading-selector="h1, h2, h3, .capture-time-heading"
+        :heading-selector="tocHeadingSelector"
         :offset="72"
         mode="mobile"
         @navigate="closeTocDrawer"
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, watch, ref } from 'vue'
+import { computed, onBeforeUnmount, watch, ref } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import MobileHeader from '../components/navigation/MobileHeader.vue'
 import SiteSidebar from '../components/navigation/SiteSidebar.vue'
@@ -54,6 +54,13 @@ const route = useRoute()
 const drawerOpen = ref(false)
 const tocDrawerOpen = ref(false)
 const tocKey = ref(0)
+const tocHeadingSelector = computed(() => {
+  if (route.name === 'capture') return '.capture-time-heading'
+  if (['home', 'archive', 'notes', 'tag-detail'].includes(String(route.name || ''))) {
+    return '.content-time-heading'
+  }
+  return 'h1, h2, h3'
+})
 let previousBodyOverflow = ''
 
 function lockBody() {
