@@ -3,6 +3,7 @@
     <div class="post-view__main">
       <div v-if="post" class="post-view__card">
           <h1 class="post-view__title">{{ post.title }}</h1>
+          <div v-if="post.updated" class="post-view__updated">最后更新: {{ post.updated }}</div>
           <div v-if="post.wordCount || post.readingMinutes" class="post-view__stats">
             <ContentStats :word-count="post.wordCount" :reading-minutes="post.readingMinutes" />
           </div>
@@ -32,7 +33,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { Calendar, PriceTag } from '@element-plus/icons-vue'
+import { Calendar, PriceTag, Edit } from '@element-plus/icons-vue'
 import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
@@ -171,6 +172,14 @@ watch(
   color: var(--site-muted);
   font-size: 15px;
   line-height: 1.6;
+}
+
+.post-view__updated {
+  margin-top: 10px;
+  color: var(--site-muted);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
 }
 
 .post-view__stats {

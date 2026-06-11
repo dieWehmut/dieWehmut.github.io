@@ -346,10 +346,49 @@ function toggleTheme() {
     bottom: 14px;
   }
 
+  .float-controls__button {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .float-controls__globe,
+  .float-controls__lang {
+    font-size: 11px;
+  }
+
+  .float-controls__settings {
+    bottom: 46px;
+  }
+
+  .float-controls__opt-theme {
+    bottom: 92px;
+  }
+
+  .float-controls.is-top-hidden .float-controls__opt-theme {
+    bottom: 46px;
+  }
+
+  .float-controls__opt-language {
+    bottom: 138px;
+  }
+
+  .float-controls.is-top-hidden .float-controls__opt-language {
+    bottom: 92px;
+  }
+
+  .float-controls__opt-dynamic {
+    bottom: 184px;
+  }
+
+  .float-controls.is-top-hidden .float-controls__opt-dynamic {
+    bottom: 138px;
+  }
+
   .float-controls__langs {
-    right: 54px;
-    bottom: 150px;
-    grid-template-columns: repeat(3, 44px);
+    right: 48px;
+    bottom: 138px;
+    grid-template-columns: repeat(3, 38px);
     column-gap: 8px;
     row-gap: 6px;
     width: auto;
@@ -361,7 +400,7 @@ function toggleTheme() {
   }
 
   .float-controls.is-top-hidden .float-controls__langs {
-    bottom: 100px;
+    bottom: 92px;
   }
 }
 
