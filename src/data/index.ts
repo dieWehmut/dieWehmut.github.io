@@ -170,6 +170,7 @@ export function getSearchDocuments(): SearchDocument[] {
     url: `/post/${post.id}`,
     date: post.date,
     tags: post.tags,
+    updated: post.updated,
     wordCount: post.wordCount,
     readingMinutes: post.readingMinutes,
   }))
@@ -182,6 +183,7 @@ export function getSearchDocuments(): SearchDocument[] {
     url: `/note/${note.id}`,
     date: note.date,
     tags: note.tags,
+    updated: note.updated,
     wordCount: note.wordCount,
     readingMinutes: note.readingMinutes,
   }))

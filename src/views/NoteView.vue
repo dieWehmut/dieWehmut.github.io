@@ -3,7 +3,7 @@
     <div class="note-view__main">
       <div v-if="note" class="note-view__card">
           <h1 class="note-view__title">{{ note.title }}</h1>
-          <div v-if="note.updated" class="note-view__updated">最后更新: {{ note.updated }}</div>
+          <div v-if="note.updated" class="note-view__updated"><el-icon class="note-view__updated-icon"><Edit /></el-icon>最后更新: {{ note.updated }}</div>
           <div v-if="note.wordCount || note.readingMinutes" class="note-view__stats">
             <ContentStats :word-count="note.wordCount" :reading-minutes="note.readingMinutes" />
           </div>
@@ -168,11 +168,18 @@ watch(
 }
 
 .note-view__updated {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-top: 10px;
   color: var(--site-muted);
   font-size: 14px;
   font-weight: 800;
   line-height: 1.4;
+}
+
+.note-view__updated-icon {
+  font-size: 14px;
 }
 
 .note-view__stats {

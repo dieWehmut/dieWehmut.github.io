@@ -19,10 +19,14 @@
         class="feed-entry-card__description"
         :source="entry.description"
       />
-      <div v-if="entry.date || entry.tags?.length || entry.wordCount || entry.readingMinutes" class="feed-entry-card__meta-row">
+      <div v-if="entry.date || entry.updated || entry.tags?.length || entry.wordCount || entry.readingMinutes" class="feed-entry-card__meta-row">
         <time v-if="entry.date" class="feed-entry-card__date" :datetime="entry.date">
           <el-icon class="feed-entry-card__date-icon"><Calendar /></el-icon>
           {{ formatDate(entry.date) }}
+        </time>
+        <time v-if="entry.updated" class="feed-entry-card__updated" :datetime="entry.updated">
+          <el-icon class="feed-entry-card__updated-icon"><Edit /></el-icon>
+          最后更新: {{ formatDate(entry.updated) }}
         </time>
         <ContentStats :word-count="entry.wordCount" :reading-minutes="entry.readingMinutes" />
         <RouterLink
@@ -43,7 +47,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { RouterLink } from 'vue-router'
-import { Calendar, PriceTag } from '@element-plus/icons-vue'
+import { Calendar, Edit, PriceTag } from '@element-plus/icons-vue'
 import { formatTimelineDate } from '../../utils/date'
 import ContentStats from './ContentStats.vue'
 import MarkdownPreview from './MarkdownPreview.vue'
@@ -57,6 +61,7 @@ type FeedEntry = {
   readingMinutes?: number
   url?: string
   external?: boolean
+  updated?: string
 }
 
 const props = defineProps<{
@@ -158,6 +163,22 @@ function openEntry(event?: MouseEvent | KeyboardEvent) {
   width: 15px;
   height: 15px;
   font-size: 15px;
+}
+
+.feed-entry-card__updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--site-muted);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.feed-entry-card__updated-icon {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
 }
 
 .feed-entry-card__tag {

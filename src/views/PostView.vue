@@ -3,7 +3,7 @@
     <div class="post-view__main">
       <div v-if="post" class="post-view__card">
           <h1 class="post-view__title">{{ post.title }}</h1>
-          <div v-if="post.updated" class="post-view__updated">最后更新: {{ post.updated }}</div>
+          <div v-if="post.updated" class="post-view__updated"><el-icon class="post-view__updated-icon"><Edit /></el-icon>最后更新: {{ post.updated }}</div>
           <div v-if="post.wordCount || post.readingMinutes" class="post-view__stats">
             <ContentStats :word-count="post.wordCount" :reading-minutes="post.readingMinutes" />
           </div>
@@ -175,11 +175,18 @@ watch(
 }
 
 .post-view__updated {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-top: 10px;
   color: var(--site-muted);
   font-size: 14px;
   font-weight: 800;
   line-height: 1.4;
+}
+
+.post-view__updated-icon {
+  font-size: 14px;
 }
 
 .post-view__stats {
