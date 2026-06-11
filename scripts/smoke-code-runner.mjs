@@ -2,7 +2,7 @@ const apiUrl = (process.env.VITE_CODE_RUNNER_API_URL || 'http://127.0.0.1:8080')
 const token = process.env.VITE_CODE_RUNNER_API_TOKEN || ''
 
 const headers = {
-  'content-type': 'application/json',
+  'content-type': 'text/plain;charset=UTF-8',
 }
 if (token) {
   headers.authorization = `Bearer ${token}`
