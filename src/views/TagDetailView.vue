@@ -1,14 +1,6 @@
 <template>
   <section class="page-surface tag-detail-view">
     <div class="tag-detail__main">
-      <PageHeading :title="tag" :icon="PriceTag">
-        <template #title-extra>
-          <span class="tag-detail__count">
-            {{ totalCount }} {{ totalCount === 1 ? 'entry' : 'entries' }}
-          </span>
-        </template>
-      </PageHeading>
-
       <div v-if="timelineYearGroups.length" class="tag-detail__list content-timeline">
         <section v-for="year in timelineYearGroups" :key="year.id" class="content-timeline__year">
           <h2 :id="year.id" class="content-time-heading content-time-heading--year">
@@ -117,7 +109,6 @@ import { useRoute, RouterLink } from 'vue-router'
 import { PriceTag, Calendar } from '@element-plus/icons-vue'
 import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownPreview from '../components/content/MarkdownPreview.vue'
-import PageHeading from '../components/content/PageHeading.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, CaptureSourceRef, TagContentEntry } from '../types/content'
@@ -293,14 +284,6 @@ watch(tag, loadCaptures)
 .tag-detail__main {
   flex: 1;
   min-width: 0;
-}
-
-.tag-detail__count {
-  color: var(--site-muted);
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
 }
 
 .tag-detail__list {

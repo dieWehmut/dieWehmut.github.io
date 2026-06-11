@@ -1,6 +1,5 @@
 <template>
   <section class="search-view page-surface">
-    <PageHeading title="Search" :icon="Search" />
     <SearchInput v-model="query" />
 
     <div class="search-view__results">
@@ -12,8 +11,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Search } from '@element-plus/icons-vue'
-import PageHeading from '../components/content/PageHeading.vue'
 import SearchInput from '../components/search/SearchInput.vue'
 import SearchResultItem from '../components/search/SearchResultItem.vue'
 import { getSearchDocuments } from '../data'

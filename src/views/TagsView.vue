@@ -1,7 +1,5 @@
 <template>
   <section class="page-surface tag-view">
-    <PageHeading title="Tags" :icon="PriceTag" />
-
     <div class="tag-cloud" aria-label="Tag cloud">
       <RouterLink
         v-for="tag in cloudTags"
@@ -74,7 +72,6 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
-import PageHeading from '../components/content/PageHeading.vue'
 import { getTagGroups } from '../data'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 
