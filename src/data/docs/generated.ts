@@ -20,8 +20,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "Git PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
-    "wordCount": 75,
+    "summary": "安装基本依赖 e.g Git PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
+    "wordCount": 164,
     "readingMinutes": 1,
     "updated": "2026/06/10 22:03",
     "path": "./posts/pve.md"
@@ -40,8 +40,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录 Ubuntu/Debian Windows Codex配置目录 Ubuntu / Debian Windows 安装 Codex Claude Code Proxy AgentRouter Deepse...",
-    "wordCount": 295,
+    "summary": "Claude Code配置目录 Ubuntu/Debian Windows Codex配置目录 Ubuntu / Debian Windows 安装 Codex Claude Code 官方 Proxy AgentRouter Dee...",
+    "wordCount": 306,
     "readingMinutes": 1,
     "updated": "2026/06/10 22:03",
     "path": "./posts/ai-api.md"

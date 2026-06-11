@@ -14,7 +14,9 @@ const initialInfra: InfraEntry[] = [
   { name: 'Route Controller', key: 'openwrt', url: 'https://openwrt.diesw.tech', date: '2026-04-06' },
   { name: 'DSM', key: 'dsm', url: 'https://dsm.diesw.tech', date: '2026-04-12' },
   { name: 'AI Router', key: 'ai2', url: 'https://sub2api.diesw.tech', date: '2026-06-08' },
+  { name: 'CodexManager', key: 'ai', url: 'https://codex.diesw.tech', date: '2026-06-11' },
   { name: 'Sandkasten', key: 'sandkasten', url: 'https://run.diesw.tech', date: '2026-06-10' },
+  { name: 'VPS Net', key: 'blog', url: 'https://dashboard.netmaker.hc-dsw-nexus.me', date: '2026-04-10' },
 ]
 
 initialInfra.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
