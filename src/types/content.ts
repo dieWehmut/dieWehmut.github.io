@@ -74,6 +74,7 @@ export interface SearchDocument {
   url: string
   date?: string
   tags?: string[]
+  updated?: string
   wordCount?: number
   readingMinutes?: number
   captureAssetIds?: string[]

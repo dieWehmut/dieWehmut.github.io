@@ -111,6 +111,7 @@ const feedEntry = computed(() => ({
   description: props.result.description,
   date: props.result.date,
   tags: props.result.tags,
+  updated: props.result.updated,
   wordCount: props.result.wordCount,
   readingMinutes: props.result.readingMinutes,
   url: props.result.url,

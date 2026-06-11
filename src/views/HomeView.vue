@@ -90,6 +90,7 @@ const feedItems = computed(() => {
       description: entry.summary,
       date: entry.date,
       tags: entry.tags,
+      updated: entry.updated,
       wordCount: entry.wordCount,
       readingMinutes: entry.readingMinutes,
       url: `/${kind}/${entry.id}`,
