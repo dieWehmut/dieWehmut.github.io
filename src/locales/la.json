@@ -83,6 +83,13 @@
     "highLatency": "Mora longa",
     "timeout": "Tempus excedit"
   },
+  "infra": {
+    "summary": {
+      "endpoints": "{count} puncta servitii",
+      "online": "{count} coniuncta",
+      "offline": "{count} seiuncta"
+    }
+  },
   "capture": {
     "title": "Captura",
     "empty": "Nullae imagines capturae inventae.",

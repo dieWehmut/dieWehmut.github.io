@@ -83,6 +83,13 @@
     "highLatency": "高延遲",
     "timeout": "逾時"
   },
+  "infra": {
+    "summary": {
+      "endpoints": "{count} 個服務端點",
+      "online": "{count} 線上",
+      "offline": "{count} 離線"
+    }
+  },
   "capture": {
     "title": "圖集",
     "empty": "暫無圖集資源。",

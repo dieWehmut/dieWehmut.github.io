@@ -83,6 +83,13 @@
     "highLatency": "Hohe Latenz",
     "timeout": "Zeitüberschreitung"
   },
+  "infra": {
+    "summary": {
+      "endpoints": "{count} Dienst-Endpunkte",
+      "online": "{count} online",
+      "offline": "{count} offline"
+    }
+  },
   "capture": {
     "title": "Capture",
     "empty": "Keine Capture-Bilder gefunden.",

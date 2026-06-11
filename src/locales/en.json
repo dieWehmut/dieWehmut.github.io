@@ -80,6 +80,13 @@
     "highLatency": "High Latency",
     "timeout": "Timeout"
   },
+  "infra": {
+    "summary": {
+      "endpoints": "{count} service endpoints",
+      "online": "{count} online",
+      "offline": "{count} offline"
+    }
+  },
   "capture": {
     "title": "Capture",
     "empty": "No capture assets found.",

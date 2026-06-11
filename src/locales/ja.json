@@ -83,6 +83,13 @@
     "highLatency": "高遅延",
     "timeout": "タイムアウト"
   },
+  "infra": {
+    "summary": {
+      "endpoints": "{count} サービスエンドポイント",
+      "online": "{count} オンライン",
+      "offline": "{count} オフライン"
+    }
+  },
   "capture": {
     "title": "キャプチャ",
     "empty": "キャプチャ画像はまだありません。",
