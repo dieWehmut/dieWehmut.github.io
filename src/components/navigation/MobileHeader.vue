@@ -49,9 +49,9 @@ function backToCapture() {
   display: none;
   align-items: center;
   justify-content: flex-start;
-  gap: 6px;
+  gap: 0;
   min-height: var(--site-mobile-header-height);
-  padding: 10px 14px;
+  padding: 10px 6px;
   background: var(--site-sidebar-bg);
   border-bottom: 1px solid var(--site-border);
   backdrop-filter: blur(12px);

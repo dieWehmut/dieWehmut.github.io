@@ -2,6 +2,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 
+import fileURLToPath from 'node:url'
+import { execSync } from 'node:child_process'
+
 const rootDir = process.cwd()
 const docsDir = path.join(rootDir, 'src', 'data', 'docs')
 const generatedPath = path.join(docsDir, 'generated.ts')
@@ -199,6 +202,15 @@ function getSortTimestamp(date) {
   return Date.parse(date) || 0
 }
 
+function getGitLastUpdated(filePath) {
+  try {
+    const output = execSync(`git log -1 --format="%ad" --date=format:"%Y/%m/%d %H:%M" -- "${filePath}"`, { stdio: 'pipe' }).toString().trim()
+    return output || null
+  } catch (e) {
+    return null
+  }
+}
+
 function toGeneratedModule(docs) {
   const serialized = JSON.stringify(docs, null, 2)
   return `export type GeneratedDocMeta = {
@@ -210,6 +222,7 @@ function toGeneratedModule(docs) {
   summary: string
   wordCount: number
   readingMinutes: number
+  updated: string
   path: string
 }
 
@@ -233,6 +246,7 @@ function main() {
       const tags = parseTags(data.tags)
       const trimmedContent = content.trim()
       const wordCount = countReadableUnits(trimmedContent)
+      const updated = getGitLastUpdated(filePath) || ''
 
       return {
         id,
@@ -243,6 +257,7 @@ function main() {
         summary: data.summary || excerptFromMarkdown(trimmedContent),
         wordCount,
         readingMinutes: readingMinutesFor(wordCount),
+        updated,
         path: relativePath,
         timestamp: getSortTimestamp(date),
       }

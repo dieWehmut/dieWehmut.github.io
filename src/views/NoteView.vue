@@ -3,6 +3,7 @@
     <div class="note-view__main">
       <div v-if="note" class="note-view__card">
           <h1 class="note-view__title">{{ note.title }}</h1>
+          <div v-if="note.updated" class="note-view__updated">最后更新: {{ note.updated }}</div>
           <div v-if="note.wordCount || note.readingMinutes" class="note-view__stats">
             <ContentStats :word-count="note.wordCount" :reading-minutes="note.readingMinutes" />
           </div>
@@ -32,7 +33,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { Calendar, PriceTag } from '@element-plus/icons-vue'
+import { Calendar, PriceTag, Edit } from '@element-plus/icons-vue'
 import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
@@ -164,6 +165,14 @@ watch(
   font-size: 19px;
   font-weight: 700;
   line-height: 1.3;
+}
+
+.note-view__updated {
+  margin-top: 10px;
+  color: var(--site-muted);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
 }
 
 .note-view__stats {
