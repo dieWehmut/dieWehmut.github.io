@@ -4,7 +4,9 @@ import { siteConfig } from './data/site/config'
 const routes = [
   { path: '/post/:id', name: 'post-detail', component: () => import('./views/PostView.vue') },
   { path: '/note/:id', name: 'note-detail', component: () => import('./views/NoteView.vue') },
-  { path: '/', name: 'home', component: () => import('./views/HomeView.vue') },
+  { path: '/', redirect: '/runtimes' },
+  { path: '/runtimes', name: 'runtimes', component: () => import('./views/RuntimesView.vue') },
+  { path: '/home', name: 'home', component: () => import('./views/HomeView.vue') },
   { path: '/archive', name: 'archive', component: () => import('./views/ArchiveView.vue') },
   { path: '/notes', name: 'notes', component: () => import('./views/NotesView.vue') },
   { path: '/capture', name: 'capture', component: () => import('./views/CaptureView.vue') },
