@@ -2,26 +2,16 @@
 
 title: 中转 Claude Code / Codex 配置
 date: 2026-05-18
-tags: [API, Codex, Claude, Deepseek, AgentRouter, OpenAI,Anthropic]
+tags: [APIKey, Codex, Claude, Deepseek, AgentRouter, OpenAI,Anthropic]
 ---
 
 ## Claude Code配置目录
-
-### Ubuntu/Debian
 
 ```bash
 ~/.claude/settings.json
 ```
 
-### Windows
-
-```Powershell
-C:\Users\你的用户名\.claude\settings.json
-```
-
 ## Codex配置目录
-
-### Ubuntu / Debian
 
 ```bash
 ~/.codex/auth.json
@@ -29,13 +19,6 @@ C:\Users\你的用户名\.claude\settings.json
 
 ```bash
 ~/.codex/config.toml
-```
-
-### Windows
-
-```powershell
-C:\Users\你的用户名\.codex\config.toml
-C:\Users\你的用户名\.codex\auth.json
 ```
 
 ## 安装
@@ -64,6 +47,14 @@ npm install -g @openai/codex
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
+```
+
+## 官方
+
+```auth.json
+{
+  "OPENAI_API_KEY": "sk-xxx"
+}
 ```
 
 ## Proxy
@@ -102,7 +93,11 @@ curl -fsSL https://claude.ai/install.sh | bash
 }
 ```
 
-### 自建CodexManager
+### 自建中转
+
+### Sub2api
+
+### CodexManager
 
 ```toml
 model = "gpt-5.5"

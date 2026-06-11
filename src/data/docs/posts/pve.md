@@ -5,6 +5,23 @@ date: 2026-06-09
 tags: [Proxmox VE]
 ---
 
+## 安装基本依赖
+
+```bash
+apt update && apt upgrade -y
+```
+
+```bash
+apt install xxx -y
+```
+
+>e.g:curl, git, unzip,wget, etc.
+
+```bash
+apt install curl -y
+```
+
+
 ## Git
 
 ```bash
@@ -40,7 +57,52 @@ systemctl restart ssh
 ## Nginx
 
 ```bash
+apt update
+apt install -y nginx
+```
+
+```bash
 cd /etc/nginx/sites-available
+```
+
+```bash
+server { 
+
+    listen 80;
+
+
+
+    server_name codex.* ai.*;
+
+
+
+    location / {
+
+        proxy_pass http://192.168.xx.xx:xxxx; 
+
+
+
+        proxy_http_version 1.1;
+
+
+
+        proxy_set_header Host $host;
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_set_header X-Real-IP $remote_addr;
+
+        proxy_set_header X-Forwarded-Proto https;
+
+
+
+        proxy_set_header Upgrade $http_upgrade;
+
+        proxy_set_header Connection "upgrade";
+
+    }
+
+}
 ```
 
 ```bash
