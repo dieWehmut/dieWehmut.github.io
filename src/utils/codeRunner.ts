@@ -25,6 +25,8 @@ export type RunCodeFile = {
 const GO_SOURCE_LIMIT_BYTES = 32 * 1024
 const GO_OUTPUT_LIMIT_BYTES = 64 * 1024
 const DEFAULT_TIMEOUT_MS = 8000
+const BACKEND_EXECUTABLE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src\/\.laeufer-bin\/main(?:\.exe)?/g
+const BACKEND_SOURCE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src/g
 const encoder = new TextEncoder()
 
 function emptyResult(status: RunStatus, message: string, durationMs = 0): RunResult {
@@ -162,13 +164,24 @@ function truncateOutput(value: string): string {
   return `${value.slice(0, end)}\n[output truncated at 64 KB]`
 }
 
+function redactBackendDetails(value: string): string {
+  if (!value) return ''
+  return value
+    .replace(BACKEND_EXECUTABLE_PATH_PATTERN, './main')
+    .replace(BACKEND_SOURCE_PATH_PATTERN, '/workspace')
+}
+
 function normalizeRunResult(result: Omit<RunResult, 'durationMs'> & { durationMs?: number }, durationMs: number): RunResult {
+  const stdout = redactBackendDetails(result.stdout || '')
+  const stderr = redactBackendDetails(result.stderr || '')
+  const message = redactBackendDetails(result.message || '')
+
   return {
     status: result.status,
-    stdout: truncateOutput(result.stdout || ''),
-    stderr: truncateOutput(result.stderr || ''),
+    stdout: truncateOutput(stdout),
+    stderr: truncateOutput(stderr),
     durationMs: result.durationMs ?? durationMs,
-    message: result.message || '',
+    message,
   }
 }
 
