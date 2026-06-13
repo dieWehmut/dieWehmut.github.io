@@ -1,12 +1,12 @@
 ---
-title: Sandkasten 全运行时测试
+title: Sandkasten 测试
 date: 2026-06-13
-tags: [sandkasten, code-runner, test]
+tags: [sandkasten]
 ---
 
-# Sandkasten 全运行时测试
+## Sandkasten 测试
 
-本文测试 Sandkasten 后端支持的全部 58 种语言 / 运行时。每个代码块均可在线运行。
+本文测试 <a href="https://github.com/dieWehmut/sandkasten" target="_blank" rel="noopener noreferrer">Sandkasten</a>后端支持的全部语言 / 运行时。
 
 ## 系统 / 底层
 
@@ -563,69 +563,3 @@ main(): Int64 {
 ```swift
 print("hello from Swift")
 ```
-
-## 总结
-
-以上覆盖了 Sandkasten 后端的全部 58 种运行时：
-
-| # | 运行时 | 类别 |
-|---|--------|------|
-| 1 | Go | 系统语言 |
-| 2 | Assembly | 系统语言 |
-| 3 | Bash | 脚本语言 |
-| 4 | C | 系统语言 |
-| 5 | 仓颉 (Cangjie) | 新兴语言 |
-| 6 | Clojure | JVM / 函数式 |
-| 7 | CSS | 前端 |
-| 8 | C++ | 系统语言 |
-| 9 | C# | .NET |
-| 10 | Coq | 证明助手 |
-| 11 | Crystal | 脚本语言 |
-| 12 | Dart | 脚本语言 |
-| 13 | Elixir | 函数式 |
-| 14 | Erlang | 函数式 |
-| 15 | F# | .NET |
-| 16 | Fortran | 系统语言 |
-| 17 | GDScript | DSL |
-| 18 | Gleam | JVM / 函数式 |
-| 19 | Graphviz | 文档 |
-| 20 | Haskell | 函数式 |
-| 21 | HTML | 标记语言 |
-| 22 | Java | JVM |
-| 23 | JavaScript | 脚本语言 |
-| 24 | Julia | 科学计算 |
-| 25 | Kotlin | JVM |
-| 26 | LaTeX | 文档 |
-| 27 | Lean 4 | 证明助手 |
-| 28 | Lua | 脚本语言 |
-| 29 | Markdown | 标记语言 |
-| 30 | MDX | 标记语言 |
-| 31 | Mojo | 新兴语言 |
-| 32 | Next.js | 前端框架 |
-| 33 | Nextflow | DSL |
-| 34 | Nim | 系统语言 |
-| 35 | Octave | 科学计算 |
-| 36 | OCaml | 函数式 |
-| 37 | Pascal | 系统语言 |
-| 38 | Perl | 脚本语言 |
-| 39 | PHP | 脚本语言 |
-| 40 | Prolog | 逻辑编程 |
-| 41 | Python | 脚本语言 |
-| 42 | QML | 前端 |
-| 43 | R | 科学计算 |
-| 44 | Racket | 函数式 |
-| 45 | Ruby | 脚本语言 |
-| 46 | Rust | 系统语言 |
-| 47 | Scala | JVM |
-| 48 | SCSS | 前端 |
-| 49 | SQL | 数据库 |
-| 50 | Swift | 新兴语言 |
-| 51 | TailwindCSS | 前端 |
-| 52 | Typst | 文档 |
-| 53 | TypeScript | 脚本语言 |
-| 54 | TSX | 前端框架 |
-| 55 | V | 系统语言 |
-| 56 | Vue 3 | 前端框架 |
-| 57 | WDL | DSL |
-| 58 | Zig | 系统语言 |
-

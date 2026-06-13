@@ -15,15 +15,13 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
   {
     "id": "testSandkasten",
     "type": "post",
-    "title": "Sandkasten 全运行时测试",
+    "title": "Sandkasten 测试",
     "date": "2026-06-13",
     "tags": [
-      "sandkasten",
-      "code-runner",
-      "test"
+      "sandkasten"
     ],
-    "summary": "Sandkasten 全运行时测试 本文测试 Sandkasten 后端支持的全部 58 种语言 / 运行时。每个代码块均可在线运行。 系统 / 底层 Go Assembly (GAS x86-64) C C++ Rust Zig V...",
-    "wordCount": 795,
+    "summary": "Sandkasten 测试 本文测试 Sandkasten 后端支持的全部语言 / 运行时。 系统 / 底层 Go Assembly (GAS x86-64) C C++ Rust Zig V Nim Pascal (Free Pas...",
+    "wordCount": 446,
     "readingMinutes": 2,
     "updated": "2026/06/13 13:37",
     "path": "./posts/testSandkasten.md"
