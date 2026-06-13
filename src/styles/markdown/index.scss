@@ -311,6 +311,20 @@
   color: #ff9b9b;
 }
 
+.md-run-output__render {
+  min-width: 0;
+}
+
+.md-run-output__render iframe {
+  display: block;
+  width: 100%;
+  min-height: 120px;
+  max-height: 500px;
+  border: 1px solid var(--md-pre-border);
+  border-radius: 6px;
+  background: #fff;
+}
+
 .md-editable-source {
   margin: 0 !important;
   padding: 12px 14px !important;

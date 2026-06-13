@@ -39,11 +39,38 @@ function emptyResult(status: RunStatus, message: string, durationMs = 0): RunRes
   }
 }
 
+const LANGUAGE_ALIASES: Record<string, string> = {
+  'golang': 'go',
+  'rscript': 'r',
+  'c++': 'cpp', 'cc': 'cpp', 'cxx': 'cpp', 'hpp': 'cpp',
+  'c#': 'csharp', 'cs': 'csharp',
+  'f#': 'fsharp', 'fs': 'fsharp', 'fsx': 'fsharp',
+  'js': 'javascript', 'node': 'javascript',
+  'ts': 'typescript',
+  'py': 'python', 'python3': 'python',
+  'rb': 'ruby',
+  'sh': 'bash', 'shell': 'bash',
+  'assembly': 'asm', 'nasm': 'asm',
+  'md': 'markdown',
+  'graphviz': 'dot',
+  'typ': 'typst',
+  'vue3': 'vue',
+  'next': 'nextjs',
+  'kt': 'kotlin', 'kts': 'kotlin',
+  'jl': 'julia',
+  'ex': 'elixir', 'exs': 'elixir',
+  'erl': 'erlang',
+  'rkt': 'racket',
+  'pl': 'perl',
+  'clj': 'clojure', 'cljs': 'clojure',
+  'ml': 'ocaml',
+  'sqlite': 'sql',
+  'matlab': 'octave',
+}
+
 function normalizeLanguage(language: string): string {
   const normalized = language.trim().toLowerCase()
-  if (normalized === 'golang') return 'go'
-  if (normalized === 'rscript') return 'r'
-  return normalized
+  return LANGUAGE_ALIASES[normalized] || normalized
 }
 
 function byteLength(value: string): number {
@@ -369,16 +396,10 @@ async function runInBackend(
 export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<RunResult> {
   const language = normalizeLanguage(request.language)
 
-  if (language === 'r') {
-    return runInBackend('r', request.source, request.stdin || '', timeoutMs, request.files || [])
+  if (language === 'go') {
+    const validationResult = validateGoSource(request.source)
+    if (validationResult) return Promise.resolve(validationResult)
   }
 
-  if (language !== 'go') {
-    return Promise.resolve(emptyResult('unsupported', `暂不支持运行 ${request.language || 'unknown'} 代码块。`))
-  }
-
-  const validationResult = validateGoSource(request.source)
-  if (validationResult) return Promise.resolve(validationResult)
-
-  return runInBackend('go', request.source, request.stdin || '', timeoutMs, request.files || [])
+  return runInBackend(language, request.source, request.stdin || '', timeoutMs, request.files || [])
 }

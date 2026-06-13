@@ -1,11 +1,15 @@
 <template>
   <section class="search-view page-surface">
-    <SearchInput v-model="query" />
+    <div class="search-view__main">
+      <SearchInput v-model="query" />
 
-    <div class="search-view__results">
-      <SearchResultItem v-for="result in results" :key="result.id" :result="result" />
-      <p v-if="query && results.length === 0" class="search-view__empty">No results found.</p>
+      <div class="search-view__results">
+        <SearchResultItem v-for="result in results" :key="result.id" :result="result" />
+        <p v-if="query && results.length === 0" class="search-view__empty">No results found.</p>
+      </div>
     </div>
+
+    <ScrollSpySidebar root-selector=".page-surface" />
   </section>
 </template>
 
@@ -13,6 +17,7 @@
 import { computed, ref } from 'vue'
 import SearchInput from '../components/search/SearchInput.vue'
 import SearchResultItem from '../components/search/SearchResultItem.vue'
+import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getSearchDocuments } from '../data'
 import { getCaptureSearchDocuments } from '../data/capture'
 import type { SearchDocument, SearchResult } from '../types/content'
@@ -81,6 +86,17 @@ const results = computed(() => {
 </script>
 
 <style scoped>
+.search-view {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--site-view-aside-gap);
+}
+
+.search-view__main {
+  flex: 1;
+  min-width: 0;
+}
+
 .search-view__results {
   margin-top: 34px;
 }

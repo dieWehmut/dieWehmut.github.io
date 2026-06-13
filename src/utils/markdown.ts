@@ -383,11 +383,60 @@ function resolveCodeLanguage(lang: string | undefined): CodeLanguageInfo {
   }
 }
 
+const RUNNER_ALIASES: Record<string, string> = {
+  'golang': 'go',
+  'rscript': 'r',
+  'c++': 'cpp', 'cc': 'cpp', 'cxx': 'cpp', 'hpp': 'cpp',
+  'c#': 'csharp', 'cs': 'csharp',
+  'f#': 'fsharp', 'fs': 'fsharp', 'fsx': 'fsharp',
+  'js': 'javascript', 'node': 'javascript',
+  'ts': 'typescript',
+  'py': 'python', 'python3': 'python',
+  'rb': 'ruby',
+  'sh': 'bash', 'shell': 'bash',
+  'assembly': 'asm', 'nasm': 'asm',
+  'md': 'markdown',
+  'graphviz': 'dot',
+  'typ': 'typst',
+  'vue3': 'vue',
+  'next': 'nextjs',
+  'kt': 'kotlin', 'kts': 'kotlin',
+  'jl': 'julia',
+  'ex': 'elixir', 'exs': 'elixir',
+  'erl': 'erlang',
+  'rkt': 'racket',
+  'pl': 'perl',
+  'clj': 'clojure', 'cljs': 'clojure',
+  'ml': 'ocaml',
+  'sqlite': 'sql',
+  'matlab': 'octave',
+}
+
+const KNOWN_RUNNERS = new Set([
+  'go', 'asm', 'c', 'cpp', 'rust', 'zig', 'v', 'nim', 'pascal', 'fortran',
+  'python', 'javascript', 'typescript', 'ruby', 'perl', 'php', 'lua', 'r', 'julia', 'dart', 'crystal', 'bash',
+  'java', 'kotlin', 'scala', 'clojure', 'gleam',
+  'csharp', 'fsharp',
+  'haskell', 'ocaml', 'elixir', 'erlang', 'racket', 'lean4', 'coq', 'prolog',
+  'html', 'css', 'scss', 'tsx', 'vue', 'qml', 'nextjs',
+  'markdown', 'mdx', 'latex', 'typst', 'dot',
+  'octave',
+  'sql',
+  'gdscript', 'nextflow', 'wdl',
+  'mojo', 'cangjie', 'swift',
+])
+
+const RENDERABLE_RUNNERS = new Set([
+  'html',
+  'markdown', 'md', 'mdx',
+  'tsx', 'vue3', 'vue', 'nextjs', 'next',
+  'graphviz', 'dot', 'typst', 'typ',
+])
+
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
-  if (requestedLang === 'go' || requestedLang === 'golang') return 'go'
-  if (requestedLang === 'r' || requestedLang === 'rscript') return 'r'
-  return ''
+  const canonical = RUNNER_ALIASES[requestedLang] || requestedLang
+  return KNOWN_RUNNERS.has(canonical) ? canonical : ''
 }
 
 function stripFenceMetaQuotes(value: string): string {
@@ -1039,6 +1088,16 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     panel.append(header, message, empty)
     ensureRunStream(panel, 'stdout')
     ensureRunStream(panel, 'stderr')
+
+    const renderContainer = document.createElement('div')
+    renderContainer.className = 'md-run-output__render'
+    renderContainer.hidden = true
+    const iframe = document.createElement('iframe')
+    iframe.setAttribute('sandbox', '')
+    iframe.setAttribute('title', '运行输出预览')
+    renderContainer.append(iframe)
+    panel.append(renderContainer)
+
     block.append(panel)
 
     return panel
@@ -1065,6 +1124,9 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (empty) empty.hidden = true
     stdout.hidden = true
     stderr.hidden = true
+
+    const renderContainer = panel.querySelector<HTMLElement>('.md-run-output__render')
+    if (renderContainer) renderContainer.hidden = true
   }
 
   const scrollRunOutputIntoView = (block: HTMLElement) => {
@@ -1091,16 +1153,30 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     const hasStdout = Boolean(result.stdout)
     const hasStderr = Boolean(result.stderr)
 
+    const runner = block.dataset.mdRunner || ''
+    const isRenderable = RENDERABLE_RUNNERS.has(runner)
+    const renderContainer = panel.querySelector<HTMLElement>('.md-run-output__render')
+
     if (status) status.textContent = runStatusLabels[result.status]
     if (duration) duration.textContent = `${Math.max(0, Math.round(result.durationMs))} ms`
     if (message) {
       message.textContent = result.message
       message.hidden = !result.message
     }
-    if (stdoutPre) stdoutPre.textContent = result.stdout
-    if (stderrPre) stderrPre.textContent = result.stderr
-    stdout.hidden = !hasStdout
-    stderr.hidden = !hasStderr
+
+    if (isRenderable && hasStdout && renderContainer) {
+      const iframe = renderContainer.querySelector('iframe')
+      if (iframe) iframe.srcdoc = result.stdout
+      renderContainer.hidden = false
+      stdout.hidden = true
+      stderr.hidden = true
+    } else {
+      if (renderContainer) renderContainer.hidden = true
+      if (stdoutPre) stdoutPre.textContent = result.stdout
+      if (stderrPre) stderrPre.textContent = result.stderr
+      stdout.hidden = !hasStdout
+      stderr.hidden = !hasStderr
+    }
     if (empty) empty.hidden = hasStdout || hasStderr || Boolean(result.message)
   }
 
