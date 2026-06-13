@@ -21,9 +21,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "sandkasten"
     ],
     "summary": "Sandkasten 测试 本文测试 Sandkasten 后端支持的全部语言 / 运行时。 系统 / 底层 Go Assembly (GAS x86-64) C C++ Rust Zig V Nim Pascal (Free Pas...",
-    "wordCount": 446,
+    "wordCount": 440,
     "readingMinutes": 2,
-    "updated": "2026/06/13 13:37",
+    "updated": "2026/06/13 17:31",
     "path": "./posts/testSandkasten.md"
   },
   {
