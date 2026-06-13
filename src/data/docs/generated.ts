@@ -13,6 +13,22 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "testSandkasten",
+    "type": "post",
+    "title": "Sandkasten 全运行时测试",
+    "date": "2026-06-13",
+    "tags": [
+      "sandkasten",
+      "code-runner",
+      "test"
+    ],
+    "summary": "Sandkasten 全运行时测试 本文测试 Sandkasten 后端支持的全部 58 种语言 / 运行时。每个代码块均可在线运行。 系统 / 底层 Go Assembly (GAS x86-64) C C++ Rust Zig V...",
+    "wordCount": 795,
+    "readingMinutes": 2,
+    "updated": "2026/06/13 13:37",
+    "path": "./posts/testSandkasten.md"
+  },
+  {
     "id": "pve",
     "type": "post",
     "title": "Proxmox VE 初始化配置",
@@ -20,10 +36,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "安装基本依赖 e.g Git PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
-    "wordCount": 164,
+    "summary": "安装基本依赖 e.g:curl, git, unzip,wget, etc. Git PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
+    "wordCount": 169,
     "readingMinutes": 1,
-    "updated": "2026/06/10 22:03",
+    "updated": "2026/06/11 19:41",
     "path": "./posts/pve.md"
   },
   {
@@ -32,7 +48,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "title": "中转 Claude Code / Codex 配置",
     "date": "2026-05-18",
     "tags": [
-      "API",
+      "APIKey",
       "Codex",
       "Claude",
       "Deepseek",
@@ -40,10 +56,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录 Ubuntu/Debian Windows Codex配置目录 Ubuntu / Debian Windows 安装 Codex Claude Code 官方 Proxy AgentRouter Dee...",
-    "wordCount": 306,
+    "summary": "Claude Code配置目录 Codex配置目录 安装 Codex Claude Code 官方 Proxy AgentRouter Deepseek Anthropic 自建中转 Sub2api CodexManager",
+    "wordCount": 268,
     "readingMinutes": 1,
-    "updated": "2026/06/10 22:03",
+    "updated": "2026/06/11 19:41",
     "path": "./posts/ai-api.md"
   },
   {
