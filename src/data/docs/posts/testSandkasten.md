@@ -30,16 +30,15 @@ msg: .string "hello from Assembly\n"
 len = . - msg
 
 .section .text
-.globl _start
-_start:
+.globl main
+main:
     movq $1, %rax
     movq $1, %rdi
     leaq msg(%rip), %rsi
     movq $len, %rdx
     syscall
-    movq $60, %rax
-    xorq %rdi, %rdi
-    syscall
+    xorl %eax, %eax
+    ret
 ```
 
 ### C
@@ -282,9 +281,9 @@ IO.puts("hello from Elixir")
 
 ```erlang
 -module(main).
--export([main/1]).
+-export([main/0]).
 
-main(_) ->
+main() ->
     io:format("hello from Erlang~n"),
     erlang:halt(0).
 ```
@@ -308,9 +307,7 @@ def main : IO Unit :=
 ### Coq
 
 ```coq
-Require Import String.
-
-Compute "hello from Coq".
+Definition hello_from_coq : True := I.
 ```
 
 ### Prolog
@@ -374,7 +371,7 @@ body {
 
 ### TailwindCSS
 
-```css
+```tailwindcss
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -410,16 +407,19 @@ const msg = "hello from Vue 3";
 ### QML
 
 ```qml
-import QtQuick
+import QtQml 2.15
 
-Text {
-    text: "hello from QML"
+QtObject {
+    Component.onCompleted: {
+        console.log("hello from QML")
+        Qt.quit()
+    }
 }
 ```
 
 ### Next.js
 
-```tsx
+```nextjs
 export default function Page() {
   return <h1>hello from Next.js</h1>;
 }
@@ -440,9 +440,7 @@ This is a **Markdown** document.
 ```mdx
 # hello from MDX
 
-export const greeting = "hello";
-
-<strong>{greeting} from MDX</strong>
+<strong>hello from MDX</strong>
 ```
 
 ### LaTeX
@@ -450,7 +448,7 @@ export const greeting = "hello";
 ```latex
 \documentclass{article}
 \begin{document}
-hello from \LaTeX
+hello from LaTeX
 \end{document}
 ```
 
@@ -496,11 +494,12 @@ SELECT 'hello from SQL' AS greeting;
 
 ### GDScript (Godot)
 
-```swift
-extends Node
+```gdscript
+extends SceneTree
 
-func _ready():
+func _init():
     print("hello from GDScript")
+    quit()
 ```
 
 ### Nextflow

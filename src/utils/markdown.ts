@@ -394,32 +394,37 @@ const RUNNER_ALIASES: Record<string, string> = {
   'py': 'python', 'python3': 'python',
   'rb': 'ruby',
   'sh': 'bash', 'shell': 'bash',
-  'assembly': 'asm', 'nasm': 'asm',
+  'asm': 'assembly', 'gas': 'assembly',
   'md': 'markdown',
-  'graphviz': 'dot',
+  'dot': 'graphviz',
   'typ': 'typst',
-  'vue3': 'vue',
-  'next': 'nextjs',
+  'vue': 'vue3', 'vuejs': 'vue3',
+  'next': 'nextjs', 'next.js': 'nextjs',
   'kt': 'kotlin', 'kts': 'kotlin',
   'jl': 'julia',
   'ex': 'elixir', 'exs': 'elixir',
   'erl': 'erlang',
   'rkt': 'racket',
-  'pl': 'perl',
+  'pl': 'prolog',
+  'perl5': 'perl',
   'clj': 'clojure', 'cljs': 'clojure',
   'ml': 'ocaml',
-  'sqlite': 'sql',
+  'sqlite': 'sql', 'sqlite3': 'sql',
   'matlab': 'octave',
+  'v': 'vlang',
+  'tailwind': 'tailwindcss', 'tailwind-css': 'tailwindcss',
+  'gd': 'gdscript', 'godot': 'gdscript',
 }
 
 const KNOWN_RUNNERS = new Set([
-  'go', 'asm', 'c', 'cpp', 'rust', 'zig', 'v', 'nim', 'pascal', 'fortran',
+  'go', 'assembly', 'c', 'cpp', 'rust', 'zig', 'vlang', 'nim', 'pascal', 'fortran',
   'python', 'javascript', 'typescript', 'ruby', 'perl', 'php', 'lua', 'r', 'julia', 'dart', 'crystal', 'bash',
   'java', 'kotlin', 'scala', 'clojure', 'gleam',
   'csharp', 'fsharp',
   'haskell', 'ocaml', 'elixir', 'erlang', 'racket', 'lean4', 'coq', 'prolog',
-  'html', 'css', 'scss', 'tsx', 'vue', 'qml', 'nextjs',
-  'markdown', 'mdx', 'latex', 'typst', 'dot',
+  'html', 'css', 'scss', 'tsx', 'vue3', 'qml', 'nextjs',
+  'tailwindcss',
+  'markdown', 'mdx', 'latex', 'typst', 'graphviz',
   'octave',
   'sql',
   'gdscript', 'nextflow', 'wdl',
@@ -428,10 +433,12 @@ const KNOWN_RUNNERS = new Set([
 
 const RENDERABLE_RUNNERS = new Set([
   'html',
+  'css', 'scss', 'tailwindcss',
   'markdown', 'md', 'mdx',
   'tsx', 'vue3', 'vue', 'nextjs', 'next',
   'graphviz', 'dot', 'typst', 'typ',
 ])
+const STYLE_RENDERABLE_RUNNERS = new Set(['css', 'scss', 'tailwindcss'])
 
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
@@ -515,6 +522,40 @@ function renderHighlightedCode(source: string, lang: string | undefined): string
     ? hljs.highlight(source, { language: validLang }).value
     : escapeHtml(source)
   return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`
+}
+
+function escapeStyleEndTag(value: string): string {
+  return value.replace(/<\/style/gi, '<\\/style')
+}
+
+function injectStyleIntoHtml(html: string, css: string): string {
+  const style = `<style>${escapeStyleEndTag(css)}</style>`
+  if (/<\/head\s*>/i.test(html)) return html.replace(/<\/head\s*>/i, `${style}</head>`)
+  if (/<html[\s>]/i.test(html)) return html.replace(/<html([^>]*)>/i, `<html$1><head>${style}</head>`)
+  return `<!doctype html><html><head>${style}</head><body>${html}</body></html>`
+}
+
+function defaultStylePreviewHtml(css: string): string {
+  return [
+    '<!doctype html>',
+    '<html lang="en">',
+    '<head>',
+    '<meta charset="utf-8">',
+    `<style>${escapeStyleEndTag(css)}</style>`,
+    '</head>',
+    '<body>',
+    '<main class="greeting">hello from style preview</main>',
+    '</body>',
+    '</html>',
+  ].join('')
+}
+
+function composeRenderableSrcdoc(runner: string, stdout: string, files: Array<{ name: string; content: string }>): string {
+  if (!STYLE_RENDERABLE_RUNNERS.has(runner)) return stdout
+
+  const htmlFile = files.find((file) => /\.html?$/i.test(file.name))
+  if (htmlFile) return injectStyleIntoHtml(htmlFile.content, stdout)
+  return defaultStylePreviewHtml(stdout)
 }
 
 function renderLatex(text: string, displayMode: boolean): string {
@@ -1138,7 +1179,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     })
   }
 
-  const setRunOutputResult = (block: HTMLElement, result: RunResult) => {
+  const setRunOutputResult = (block: HTMLElement, result: RunResult, files: Array<{ name: string; content: string }> = []) => {
     const panel = ensureRunOutput(block)
     panel.dataset.status = result.status
 
@@ -1164,12 +1205,13 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       message.hidden = !result.message
     }
 
-    if (isRenderable && hasStdout && renderContainer) {
+    if (isRenderable && result.status === 'success' && hasStdout && renderContainer) {
       const iframe = renderContainer.querySelector('iframe')
-      if (iframe) iframe.srcdoc = result.stdout
+      if (iframe) iframe.srcdoc = composeRenderableSrcdoc(runner, result.stdout, files)
       renderContainer.hidden = false
       stdout.hidden = true
-      stderr.hidden = true
+      if (stderrPre) stderrPre.textContent = result.stderr
+      stderr.hidden = !hasStderr
     } else {
       if (renderContainer) renderContainer.hidden = true
       if (stdoutPre) stdoutPre.textContent = result.stdout
@@ -1196,12 +1238,13 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     setRunOutputPending(block, 'running')
 
     try {
+      const files = collectAdjacentRunFiles(block)
       const result = await runCode({
         language: runner,
         source: getCurrentSource(block),
-        files: collectAdjacentRunFiles(block),
+        files,
       })
-      setRunOutputResult(block, result)
+      setRunOutputResult(block, result, files)
       scrollRunOutputIntoView(block)
     } catch (error) {
       setRunOutputResult(block, {
