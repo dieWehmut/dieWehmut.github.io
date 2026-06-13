@@ -210,15 +210,18 @@ function syncDocAsset(assetsDir, docFilePath, imageUrl) {
   const assetsSourcePath = path.join(assetsDir, 'docs', docRelativePath)
   const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
   const publicSourcePath = destinationPath
-  const sourcePath = fs.existsSync(localSourcePath)
+  return fs.existsSync(localSourcePath)
     ? localSourcePath
     : fs.existsSync(assetsSourcePath)
       ? assetsSourcePath
       : fs.existsSync(publicSourcePath)
         ? publicSourcePath
-        : assetsSourcePath
+        : ''
+}
 
-  assertFileExists(sourcePath, 'Markdown image')
+function copyDocAsset(sourcePath, imageUrl) {
+  const relativeAssetPath = captureAssetRelativePath(imageUrl)
+  const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
   if (path.resolve(sourcePath) === path.resolve(destinationPath)) return
   ensureDir(path.dirname(destinationPath))
   fs.copyFileSync(sourcePath, destinationPath)
@@ -236,8 +239,13 @@ function copyStandaloneAsset(assetsDir, imageUrl) {
 
 function syncInfraAssets(assetsDir) {
   const sourceDir = path.join(assetsDir, 'infra')
-  assertFileExists(sourceDir, 'Infra assets directory')
   fs.rmSync(publicInfraDir, { recursive: true, force: true })
+  ensureDir(publicInfraDir)
+
+  if (!fs.existsSync(sourceDir)) {
+    console.warn(`Infra assets directory not found, skipping optional infra capture assets: ${sourceDir}`)
+    return
+  }
 
   for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
     if (!entry.isFile()) continue
@@ -274,10 +282,17 @@ async function main() {
   ensureDir(publicInfraDir)
   syncInfraAssets(assetsDir)
 
+  const existingCaptureAssets = loadExistingCaptureAssets()
   const byImage = new Map()
   const markdownFiles = getMarkdownFiles(docsDir)
+  const missingAssetPaths = new Set()
 
-  for (const asset of loadExistingCaptureAssets()) {
+  for (const asset of existingCaptureAssets) {
+    const normalized = normalizeExistingCaptureAsset(asset)
+    if (normalized.image) byImage.set(normalized.image, normalized)
+  }
+
+  for (const asset of existingCaptureAssets) {
     if (!isPreservedCaptureAsset(asset)) continue
     const sourcePath = preservedCaptureAssetSourcePath(assetsDir, asset)
     if (!sourcePath) continue
@@ -308,7 +323,14 @@ async function main() {
       const manifestEntry = manifestByUrl.get(image.src)
       if (manifestEntry?.hidden) continue
 
-      const existing = byImage.get(image.src) || {
+      const sourcePath = syncDocAsset(assetsDir, filePath, image.src)
+      const existing = byImage.get(image.src)
+      if (!sourcePath && !existing) {
+        missingAssetPaths.add(image.src)
+        continue
+      }
+
+      const captureAsset = existing || {
         id: manifestEntry?.id || relativePath.replace(/[\\/]/g, '-').replace(/\.[^.]+$/i, ''),
         image: image.src,
         title: manifestEntry?.title || image.alt || '',
@@ -319,18 +341,22 @@ async function main() {
         standalone: false,
       }
 
-      existing.title = manifestEntry?.title || existing.title || image.alt || ''
-      existing.date = manifestEntry?.date || existing.date || date
-      existing.tags = manifestEntry?.tags?.length ? [...manifestEntry.tags] : existing.tags
-      existing.summary = manifestEntry?.summary || existing.summary
-      existing.standalone = false
+      captureAsset.title = manifestEntry?.title || captureAsset.title || image.alt || ''
+      captureAsset.date = manifestEntry?.date || captureAsset.date || date
+      captureAsset.tags = manifestEntry?.tags?.length ? [...manifestEntry.tags] : captureAsset.tags
+      captureAsset.summary = manifestEntry?.summary || captureAsset.summary
+      captureAsset.standalone = false
 
-      if (!existing.sourceRefs.some((item) => item.type === type && item.id === id)) {
-        existing.sourceRefs.push({ type, id, title, url })
+      if (!captureAsset.sourceRefs.some((item) => item.type === type && item.id === id)) {
+        captureAsset.sourceRefs.push({ type, id, title, url })
       }
 
-      byImage.set(image.src, existing)
-      syncDocAsset(assetsDir, filePath, image.src)
+      byImage.set(image.src, captureAsset)
+      if (sourcePath) {
+        copyDocAsset(sourcePath, image.src)
+      } else {
+        missingAssetPaths.add(image.src)
+      }
     }
   }
 
@@ -382,6 +408,9 @@ async function main() {
 
   fs.writeFileSync(generatedPath, toTsModule(captureAssets), 'utf8')
   console.log(`Generated ${captureAssets.length} capture assets from ${markdownFiles.length} markdown files.`)
+  if (missingAssetPaths.size) {
+    console.warn(`Skipped ${missingAssetPaths.size} missing private capture asset source file(s).`)
+  }
 }
 
 main().catch((error) => {
