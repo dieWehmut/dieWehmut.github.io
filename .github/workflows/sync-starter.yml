@@ -436,6 +436,9 @@ jobs:
           rm -f .github/workflows/sync-starter.yml
           rm -f .github/workflows/sync-capture.yml
 
+          # --- Replace index.html title for the template ---
+          sed -i 's|<title>My Site</title>|<title>diesuwa-starter</title>|' index.html
+
       - name: Push to starter repo
         env:
           STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
