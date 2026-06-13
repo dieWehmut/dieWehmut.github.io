@@ -43,3 +43,4 @@ src/data/docs/**/*.avif
 *.sw?
 prompt/
 sample/
+backend
