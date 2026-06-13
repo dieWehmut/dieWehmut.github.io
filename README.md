@@ -41,7 +41,7 @@
 - Giscus 评论，可选
 - 多语言界面（zh-CN / zh-TW / en / ja）
 - 响应式移动端布局
-- 在线 Go 代码运行
+- 在线代码运行（58 种语言 / 运行时）
 - GitHub Pages 自动部署
 
 ## 技术栈
@@ -54,7 +54,7 @@
 | UI 组件 | Element Plus |
 | 样式 | SCSS |
 | 内容 | Markdown + frontmatter |
-| 代码运行 | [Sandkasten](https://github.com/dieWehmut/sandkasten) Go 后端 |
+| 代码运行 | [Sandkasten](https://github.com/dieWehmut/sandkasten)（58 种运行时） |
 | 部署 | GitHub Actions → GitHub Pages |
 
 ## 开发
@@ -68,9 +68,9 @@ pnpm build
 
 默认本地开发地址：<http://localhost:5173>
 
-## Go 代码运行
+## 代码运行
 
-本站使用 [Sandkasten](https://github.com/dieWehmut/sandkasten) 后端运行 Go 代码。本地联调时先启动 Sandkasten API，再运行本站：
+本站使用 [Sandkasten](https://github.com/dieWehmut/sandkasten) 后端运行代码，支持 58 种语言 / 运行时。本地联调时先启动 Sandkasten API，再运行本站：
 
 ```bash
 VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm dev
