@@ -12,7 +12,8 @@
     "runner:smoke": "node scripts/smoke-code-runner.mjs",
     "typecheck": "vue-tsc --noEmit",
     "build": "pnpm run content:sync && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "runner:smoke:docs": "node scripts/smoke-sandkasten-doc.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

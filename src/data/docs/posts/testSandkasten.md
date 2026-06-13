@@ -74,10 +74,11 @@ fn main() {
 ### Zig
 
 ```zig
-const std = @import("std");
+extern fn write(fd: i32, buf: [*]const u8, count: usize) isize;
 
 pub fn main() void {
-    std.debug.print("hello from Zig\n", .{});
+    const msg = "hello from Zig\n";
+    _ = write(1, msg.ptr, msg.len);
 }
 ```
 
@@ -341,32 +342,33 @@ main :-
 ### CSS
 
 ```css
-body {
-  font-family: system-ui, sans-serif;
+.greeting {
+  font: 700 2rem/1.2 system-ui, sans-serif;
+  color: #0f766e;
 }
+```
 
-body::before {
-  content: "hello from CSS";
-  display: block;
-  padding: 2rem;
-  color: #333;
-}
+```file style-preview.html lang=html
+<main class="greeting">hello from CSS</main>
 ```
 
 ### SCSS
 
 ```scss
-$greeting: "hello from SCSS";
+$accent: #7c2d12;
 
-body {
+.greeting {
   font-family: system-ui, sans-serif;
+  color: $accent;
 
-  &::before {
-    content: $greeting;
-    display: block;
-    padding: 2rem;
+  strong {
+    color: #0f766e;
   }
 }
+```
+
+```file style-preview.html lang=html
+<main class="greeting">hello from <strong>SCSS</strong></main>
 ```
 
 ### TailwindCSS
@@ -377,11 +379,14 @@ body {
 @tailwind utilities;
 
 @layer components {
-  .greeting::before {
-    content: "hello from TailwindCSS";
-    @apply block p-8 text-2xl font-bold;
+  .greeting {
+    @apply p-8 text-2xl font-bold text-teal-700;
   }
 }
+```
+
+```file style-preview.html lang=html
+<main class="greeting">hello from TailwindCSS</main>
 ```
 
 ### TSX (React)
@@ -505,18 +510,8 @@ func _init():
 ### Nextflow
 
 ```nextflow
-process sayHello {
-    output:
-    stdout
-
-    script:
-    """
-    echo "hello from Nextflow"
-    """
-}
-
 workflow {
-    sayHello()
+  println "hello from Nextflow"
 }
 ```
 
@@ -525,17 +520,10 @@ workflow {
 ```wdl
 version 1.0
 
-task hello {
-  command {
-    echo "hello from WDL"
-  }
-  output {
-    String out = read_string(stdout())
-  }
-}
-
 workflow hello_wf {
-  call hello
+  output {
+    String message = "hello from WDL"
+  }
 }
 ```
 
@@ -544,7 +532,7 @@ workflow hello_wf {
 ### Mojo
 
 ```mojo
-fn main():
+def main():
     print("hello from Mojo")
 ```
 
