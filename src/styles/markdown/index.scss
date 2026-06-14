@@ -420,6 +420,10 @@
   --vscode-focusBorder: color-mix(in srgb, var(--site-accent) 48%, transparent);
 }
 
+.md-editable-editor.is-readonly .monaco-editor .cursor {
+  display: none !important;
+}
+
 .md-editable-editor .monaco-editor .view-line,
 .md-editable-editor .monaco-editor .margin-view-overlays {
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace !important;
@@ -433,7 +437,8 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--site-accent) 55%, transparent);
 }
 
-.md-editable-block.is-editing .md-editable-content {
+.md-editable-block.is-editing .md-editable-content,
+.md-editable-block .md-editable-content[hidden] {
   display: none;
 }
 

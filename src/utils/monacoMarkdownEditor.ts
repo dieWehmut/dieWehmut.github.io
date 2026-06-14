@@ -15,6 +15,7 @@ export type MarkdownMonacoEditor = {
   dispose: () => void
   focusEnd: () => void
   layout: () => void
+  setReadOnly: (readOnly: boolean) => void
   setValue: (value: string) => void
   getValue: () => string
 }
@@ -24,6 +25,7 @@ type CreateMarkdownMonacoEditorOptions = {
   language: string
   value: string
   onChange: (value: string) => void
+  readOnly?: boolean
 }
 
 type LanguageContributionLoader = () => Promise<unknown>
@@ -52,8 +54,8 @@ const MONACO_THEME_DARK = 'diesw-markdown-dark'
 const MONACO_THEME_LIGHT = 'diesw-markdown-light'
 
 const LANGUAGE_ALIASES: Record<string, string> = {
-  asm: 'shell',
-  assembly: 'shell',
+  asm: 'assembly',
+  assembly: 'assembly',
   bash: 'shell',
   sh: 'shell',
   shell: 'shell',
@@ -124,14 +126,32 @@ const LANGUAGE_ALIASES: Record<string, string> = {
   dockerfile: 'dockerfile',
   graphql: 'graphql',
   protobuf: 'protobuf',
+  coffeescript: 'coffeescript',
+  coffee: 'coffeescript',
+  bat: 'bat',
+  batch: 'bat',
+  hcl: 'hcl',
+  terraform: 'hcl',
+  tf: 'hcl',
+  mysql: 'mysql',
+  postgres: 'pgsql',
+  postgresql: 'pgsql',
+  pgsql: 'pgsql',
+  pg: 'pgsql',
+  objc: 'objective-c',
+  objectivec: 'objective-c',
+  'objective-c': 'objective-c',
+  redis: 'redis',
+  solidity: 'sol',
+  sol: 'sol',
   vue: 'html',
   vue3: 'html',
   qml: 'javascript',
   nextjs: 'typescript',
   next: 'typescript',
   tailwindcss: 'css',
-  typst: 'markdown',
-  typ: 'markdown',
+  typst: 'typst',
+  typ: 'typst',
   latex: 'latex',
   tex: 'latex',
   graphviz: 'dot',
@@ -142,6 +162,17 @@ const LANGUAGE_ALIASES: Record<string, string> = {
   f90: 'fortran',
   zig: 'zig',
   nim: 'nim',
+  crystal: 'ruby',
+  racket: 'scheme',
+  rkt: 'scheme',
+  cangjie: 'cpp',
+  mojo: 'python',
+  nextflow: 'groovy',
+  nf: 'groovy',
+  wdl: 'hcl',
+  gleam: 'gleam',
+  julia: 'julia',
+  jl: 'julia',
   vlang: 'go',
   v: 'go',
   lean4: 'lean4',
@@ -151,19 +182,35 @@ const LANGUAGE_ALIASES: Record<string, string> = {
 }
 
 const EXTRA_LANGUAGES = new Set([
+  'assembly',
   'coq',
   'dot',
+  'erlang',
   'fortran',
   'gdscript',
+  'gleam',
+  'groovy',
+  'haskell',
   'latex',
   'lean4',
   'nim',
+  'ocaml',
   'octave',
+  'prolog',
+  'typst',
   'zig',
+])
+
+const KNOWN_MONACO_LANGUAGES = new Set([
+  'plaintext',
+  ...Object.values(LANGUAGE_ALIASES),
+  ...EXTRA_LANGUAGES,
 ])
 
 const LANGUAGE_CONTRIBUTIONS: LanguageContributionLoader[] = [
   () => import('monaco-editor/esm/vs/basic-languages/clojure/clojure.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/bat/bat.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/coffee/coffee.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/css/css.contribution.js'),
@@ -173,6 +220,7 @@ const LANGUAGE_CONTRIBUTIONS: LanguageContributionLoader[] = [
   () => import('monaco-editor/esm/vs/basic-languages/fsharp/fsharp.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/go/go.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/graphql/graphql.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/hcl/hcl.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/html/html.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/ini/ini.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/java/java.contribution.js'),
@@ -182,18 +230,24 @@ const LANGUAGE_CONTRIBUTIONS: LanguageContributionLoader[] = [
   () => import('monaco-editor/esm/vs/basic-languages/lua/lua.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/mdx/mdx.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/mysql/mysql.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/objective-c/objective-c.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/pascal/pascal.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/perl/perl.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/pgsql/pgsql.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/php/php.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/powershell/powershell.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/protobuf/protobuf.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/python/python.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/r/r.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/redis/redis.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/ruby/ruby.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/rust/rust.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/scala/scala.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/scheme/scheme.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/scss/scss.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/shell/shell.contribution.js'),
+  () => import('monaco-editor/esm/vs/basic-languages/solidity/solidity.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/sql/sql.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/swift/swift.contribution.js'),
   () => import('monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js'),
@@ -361,6 +415,301 @@ function registerExtraLanguages(monaco: MonacoModule) {
       ],
     },
   })
+  monaco.languages.setMonarchTokensProvider('assembly', {
+    tokenizer: {
+      root: [
+        [/[;#].*$/, 'comment'],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/^\s*[A-Za-z_.$][\w.$]*:/, 'type'],
+        [/\b(section|global|extern|bits|align|db|dw|dd|dq|resb|resw|resd|text|data|bss)\b/i, 'keyword'],
+        [/\b(mov|lea|push|pop|add|sub|mul|imul|div|idiv|inc|dec|and|or|xor|not|shl|shr|cmp|test|jmp|je|jne|jg|jge|jl|jle|call|ret|nop|syscall|int)\b/i, 'function'],
+        [/\b(eax|ebx|ecx|edx|esi|edi|esp|ebp|rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)\b/i, 'type'],
+        [/\b(0x[0-9a-f]+|\d+)\b/i, 'number'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('erlang', {
+    tokenizer: {
+      root: [
+        [/%.*/, 'comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/'[^']*'/, 'string'],
+        [/\b(after|begin|case|catch|cond|end|fun|if|let|of|query|receive|try|when)\b/, 'keyword'],
+        [/\b(module|export|import|define|record|spec|callback)\b/, 'keyword'],
+        [/\b[A-Z_][\w@]*/, 'type'],
+        [/\b[a-z][\w@]*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+        [/[{}()[\],.;]/, '@brackets'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('fortran', {
+    tokenizer: {
+      root: [
+        [/!.*/, 'comment'],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\b(program|module|subroutine|function|end|implicit|none|integer|real|logical|character|if|then|else|do|while|select|case|contains|call|return|use|only|intent|in|out|inout|print|write|read)\b/i, 'keyword'],
+        [/\b(true|false)\b/i, 'keyword'],
+        [/\b[a-z_]\w*(?=\()/i, 'function'],
+        [/\b\d+(\.\d+)?([ed][+-]?\d+)?\b/i, 'number'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('gdscript', {
+    tokenizer: {
+      root: [
+        [/#.*/, 'comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/\b(class_name|extends|func|var|const|signal|enum|if|elif|else|for|while|match|break|continue|return|pass|await|yield|preload|load|self|super)\b/, 'keyword'],
+        [/\b(true|false|null|PI|TAU|INF|NAN)\b/, 'keyword'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b[a-z_]\w*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('gleam', {
+    tokenizer: {
+      root: [
+        [/\/\/.*$/, 'comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/\b(import|pub|fn|let|const|type|opaque|external|if|case|todo|panic|use|as|assert)\b/, 'keyword'],
+        [/\b(True|False|Nil|Ok|Error)\b/, 'keyword'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b[a-z_]\w*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+        [/[{}()[\],|]/, '@brackets'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('groovy', {
+    tokenizer: {
+      root: [
+        [/\/\/.*$/, 'comment'],
+        [/\/\*/, 'comment', '@comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\b(abstract|as|assert|break|case|catch|class|const|continue|def|default|do|else|enum|extends|final|finally|for|if|implements|import|in|instanceof|interface|new|null|package|return|super|switch|this|throw|throws|trait|try|while)\b/, 'keyword'],
+        [/\b(true|false)\b/, 'keyword'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b[a-zA-Z_$][\w$]*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      comment: [
+        [/[^/*]+/, 'comment'],
+        [/\*\//, 'comment', '@pop'],
+        [/[/*]/, 'comment'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('haskell', {
+    tokenizer: {
+      root: [
+        [/--.*$/, 'comment'],
+        [/\{-/, 'comment', '@comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\b(case|class|data|default|deriving|do|else|foreign|if|import|in|infix|infixl|infixr|instance|let|module|newtype|of|then|type|where)\b/, 'keyword'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b[a-z_]\w*(?=\s*(::|=))/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      comment: [
+        [/[^\-{}]+/, 'comment'],
+        [/\}-/, 'comment', '@pop'],
+        [/[-{}]/, 'comment'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('lean4', {
+    tokenizer: {
+      root: [
+        [/--.*$/, 'comment'],
+        [/\/-/, 'comment', '@comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/\b(def|theorem|lemma|example|inductive|structure|class|instance|namespace|section|end|open|import|where|by|match|with|if|then|else|let|have|show|fun|forall|exists)\b/, 'keyword'],
+        [/\b(Type|Prop|Sort|Nat|Int|String|Bool|True|False)\b/, 'type'],
+        [/\b[a-zA-Z_]\w*(?=\s*[:=])/, 'function'],
+        [/\b\d+\b/, 'number'],
+      ],
+      comment: [
+        [/[^/-]+/, 'comment'],
+        [/-\//, 'comment', '@pop'],
+        [/[/-]/, 'comment'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('coq', {
+    tokenizer: {
+      root: [
+        [/\(\*/, 'comment', '@comment'],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/\b(Theorem|Lemma|Definition|Fixpoint|Inductive|CoInductive|Record|Module|Section|End|Proof|Qed|Defined|Admitted|Require|Import|From|Check|Compute|Search|match|with|end|fun|forall|exists|let|in|if|then|else)\b/, 'keyword'],
+        [/\b(Prop|Set|Type|nat|bool|true|false)\b/, 'type'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b\d+\b/, 'number'],
+      ],
+      comment: [
+        [/[^*(]+/, 'comment'],
+        [/\*\)/, 'comment', '@pop'],
+        [/[*(]/, 'comment'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('nim', {
+    tokenizer: {
+      root: [
+        [/#.*/, 'comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\b(addr|and|as|asm|bind|block|break|case|cast|concept|const|continue|converter|defer|discard|distinct|div|do|elif|else|end|enum|except|export|finally|for|from|func|if|import|in|include|interface|is|isnot|iterator|let|macro|method|mixin|mod|nil|not|notin|object|of|or|out|proc|ptr|raise|ref|return|shl|shr|static|template|try|tuple|type|using|var|when|while|xor|yield)\b/, 'keyword'],
+        [/\b(true|false)\b/, 'keyword'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b[a-zA-Z_]\w*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('ocaml', {
+    tokenizer: {
+      root: [
+        [/\(\*/, 'comment', '@comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\b(and|as|assert|begin|class|constraint|do|done|downto|else|end|exception|external|false|for|fun|function|functor|if|in|include|inherit|initializer|lazy|let|match|method|module|mutable|new|nonrec|object|of|open|or|private|rec|sig|struct|then|to|true|try|type|val|virtual|when|while|with)\b/, 'keyword'],
+        [/\b[A-Z]\w*\b/, 'type'],
+        [/\b[a-z_]\w*(?=\s*=)/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      comment: [
+        [/[^*(]+/, 'comment'],
+        [/\*\)/, 'comment', '@pop'],
+        [/[*(]/, 'comment'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('octave', {
+    tokenizer: {
+      root: [
+        [/[#%].*/, 'comment'],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\b(break|case|catch|classdef|continue|do|else|elseif|end|end_try_catch|end_unwind_protect|endclassdef|endenumeration|endevents|endfor|endif|endmethods|endparfor|endproperties|endswitch|endwhile|for|function|global|if|otherwise|persistent|return|switch|try|until|unwind_protect|while)\b/, 'keyword'],
+        [/\b(true|false|pi|eps|inf|nan)\b/, 'keyword'],
+        [/\b[a-zA-Z_]\w*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('prolog', {
+    tokenizer: {
+      root: [
+        [/%.*$/, 'comment'],
+        [/\/\*/, 'comment', '@comment'],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/(:-|\\\+|->|;|,|\.)/, 'keyword'],
+        [/\b(is|not|mod|div|fail|true|false|call|once|findall|bagof|setof)\b/, 'keyword'],
+        [/\b[A-Z_]\w*/, 'type'],
+        [/\b[a-z]\w*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      comment: [
+        [/[^/*]+/, 'comment'],
+        [/\*\//, 'comment', '@pop'],
+        [/[/*]/, 'comment'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('typst', {
+    tokenizer: {
+      root: [
+        [/\/\/.*$/, 'comment'],
+        [/#(let|set|show|import|include|if|else|for|while|return|align|figure|table|grid|image|link|ref|cite|bibliography)\b/, 'keyword'],
+        [/#\w+(?=\()/, 'function'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/\$[^$]*\$/, 'string'],
+        [/\b\d+(\.\d+)?(pt|em|cm|mm|in|deg|rad|%?)\b/, 'number'],
+        [/\*[^\*]+\*/, 'keyword'],
+        [/\[[^\]]+\]/, 'type'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
+  monaco.languages.setMonarchTokensProvider('zig', {
+    tokenizer: {
+      root: [
+        [/\/\/.*$/, 'comment'],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, 'string', '@string'],
+        [/\b(addrspace|align|allowzero|and|anyframe|anytype|asm|async|await|break|callconv|catch|comptime|const|continue|defer|else|enum|errdefer|error|export|extern|fn|for|if|inline|linksection|noalias|noinline|nosuspend|null|opaque|or|orelse|packed|pub|resume|return|struct|suspend|switch|test|threadlocal|try|union|unreachable|usingnamespace|var|volatile|while)\b/, 'keyword'],
+        [/\b(true|false|undefined)\b/, 'keyword'],
+        [/\b(u8|u16|u32|u64|usize|i8|i16|i32|i64|isize|f16|f32|f64|bool|void)\b/, 'type'],
+        [/\b[a-zA-Z_]\w*(?=\()/, 'function'],
+        [/\b\d+(\.\d+)?\b/, 'number'],
+      ],
+      string: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, 'string', '@pop'],
+      ],
+    },
+  })
 }
 
 function configureLanguageDefaults(typescriptContribution: TypeScriptContribution) {
@@ -449,7 +798,9 @@ function registerSnippetCompletions(monaco: MonacoModule) {
 
 export function resolveMonacoLanguage(language: string): string {
   const normalized = language.trim().toLowerCase()
-  return LANGUAGE_ALIASES[normalized] || normalized || 'plaintext'
+  if (!normalized) return 'plaintext'
+  const aliased = LANGUAGE_ALIASES[normalized] || normalized
+  return KNOWN_MONACO_LANGUAGES.has(aliased) ? aliased : 'plaintext'
 }
 
 function editorHeightFor(value: string): number {
@@ -466,6 +817,7 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
   const language = resolveMonacoLanguage(options.language)
   const model = monaco.editor.createModel(options.value, language)
   const container = options.container
+  const initialReadOnly = options.readOnly ?? false
   updateContainerHeight(container, options.value)
 
   const editor = monaco.editor.create(container, {
@@ -478,14 +830,14 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     folding: true,
     foldingStrategy: 'auto',
     foldingHighlight: true,
-    showFoldingControls: 'mouseover',
+    showFoldingControls: 'always',
     bracketPairColorization: { enabled: true },
     guides: {
       bracketPairs: true,
       indentation: true,
     },
     minimap: {
-      enabled: true,
+      enabled: !initialReadOnly,
       side: 'right',
       showSlider: 'mouseover',
       maxColumn: 80,
@@ -503,8 +855,8 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     detectIndentation: true,
     wordWrap: 'off',
     stickyScroll: { enabled: true },
-    quickSuggestions: true,
-    suggestOnTriggerCharacters: true,
+    quickSuggestions: !initialReadOnly,
+    suggestOnTriggerCharacters: !initialReadOnly,
     acceptSuggestionOnEnter: 'smart',
     tabCompletion: 'on',
     formatOnPaste: true,
@@ -515,6 +867,9 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     contextmenu: true,
     links: true,
     mouseWheelZoom: true,
+    readOnly: initialReadOnly,
+    domReadOnly: initialReadOnly,
+    renderValidationDecorations: initialReadOnly ? 'off' : 'editable',
   })
 
   const changeDisposable = model.onDidChangeContent(() => {
@@ -543,6 +898,17 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
       editor.layout()
     },
     layout: () => editor.layout(),
+    setReadOnly(readOnly: boolean) {
+      editor.updateOptions({
+        readOnly,
+        domReadOnly: readOnly,
+        minimap: { enabled: !readOnly },
+        quickSuggestions: !readOnly,
+        suggestOnTriggerCharacters: !readOnly,
+        renderValidationDecorations: readOnly ? 'off' : 'editable',
+      })
+      editor.layout()
+    },
     focusEnd() {
       const lastLine = Math.max(1, model.getLineCount())
       const lastColumn = model.getLineMaxColumn(lastLine)
@@ -560,7 +926,7 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
 
   requestAnimationFrame(() => {
     editor.layout()
-    api.focusEnd()
+    if (!initialReadOnly) api.focusEnd()
   })
 
   return api
