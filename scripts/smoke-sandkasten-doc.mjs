@@ -51,7 +51,6 @@ const languageAliases = {
   ml: 'ocaml',
   sqlite: 'sql',
   sqlite3: 'sql',
-  matlab: 'octave',
   v: 'vlang',
   tailwind: 'tailwindcss',
   'tailwind-css': 'tailwindcss',
@@ -197,15 +196,14 @@ function outputLooksRenderable(entry, stdout) {
     case 'vue3':
     case 'nextjs':
       return /<[^>]+>/.test(stdout)
-    case 'graphviz':
     case 'typst':
+    case 'graphviz':
+    case 'latex':
       return stdout.includes('<svg')
     case 'css':
     case 'scss':
     case 'tailwindcss':
       return stdout.includes('{') || stdout.includes('--tw-')
-    case 'latex':
-      return stdout.includes('latex compiled')
     default:
       return true
   }
