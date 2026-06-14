@@ -16,6 +16,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { initGiscusAuthBridge, watchGiscusAuth } from '../../utils/giscusAuth'
 
 const props = defineProps({
   layout: {
@@ -43,6 +44,7 @@ const showConfigHint = import.meta.env.DEV
 let mediaQuery = null
 let themeObserver = null
 let renderedRoute = ''
+let unwatchGiscusAuth = null
 
 const siteConfig = {
   repo: import.meta.env.VITE_GISCUS_REPO || '',
@@ -172,7 +174,7 @@ async function renderGiscus() {
   script.setAttribute('data-mapping', config.mapping)
   script.setAttribute('data-strict', config.strict)
   script.setAttribute('data-reactions-enabled', config.reactionsEnabled)
-  script.setAttribute('data-emit-metadata', '0')
+  script.setAttribute('data-emit-metadata', '1')
   script.setAttribute('data-input-position', config.inputPosition)
   script.setAttribute('data-theme', resolveTheme(config.theme))
   script.setAttribute('data-lang', config.lang)
@@ -192,6 +194,7 @@ function resetAndRender() {
 }
 
 onMounted(() => {
+  initGiscusAuthBridge()
   mediaQuery = window.matchMedia('(max-width: 900px)')
   updateCurrentTheme()
   themeObserver = new MutationObserver(updateCurrentTheme)
@@ -207,10 +210,17 @@ onMounted(() => {
     mediaQuery.addListener(updateActiveLayout)
   }
 
+  unwatchGiscusAuth = watchGiscusAuth((_state, reason) => {
+    if (reason === 'session' || reason === 'signout' || reason === 'error') {
+      resetAndRender()
+    }
+  })
+
   renderGiscus()
 })
 
 onBeforeUnmount(() => {
+  unwatchGiscusAuth?.()
   themeObserver?.disconnect()
 
   if (!mediaQuery) return

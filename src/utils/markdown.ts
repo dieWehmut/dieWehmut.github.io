@@ -16,7 +16,8 @@ import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
 import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetImage } from './publicAssets'
-import { runCode, type RunResult, type RunStatus } from './codeRunner'
+import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
+import { ensureGiscusLogin } from './giscusAuth'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -1093,13 +1094,19 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (!copied) throw new Error('Clipboard copy failed')
   }
 
-  const runStatusLabel = (runner: string, status: RunStatus | 'preparing' | 'queued' | 'running'): string => {
+  const runStatusLabel = (runner: string, status: RunStatus | RunProgressStatus | 'preparing' | 'authenticating'): string => {
     const renderable = isRenderableRunner(runner)
     switch (status) {
+      case 'authenticating':
+        return 'GitHub 登录中'
       case 'preparing':
         return renderable ? '准备渲染' : '准备运行'
       case 'queued':
         return renderable ? '已提交渲染' : '已提交运行'
+      case 'validating':
+        return '校验中'
+      case 'compiling':
+        return '编译中'
       case 'running':
         return runnerBusyLabel(runner)
       case 'success':
@@ -1183,7 +1190,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     return panel
   }
 
-  const setRunOutputPending = (block: HTMLElement, state: 'preparing' | 'queued' | 'running') => {
+  const setRunOutputPending = (block: HTMLElement, state: RunProgressStatus | 'preparing' | 'authenticating') => {
     const panel = ensureRunOutput(block)
     const runner = block.dataset.mdRunner || ''
     panel.dataset.status = state
@@ -1208,6 +1215,11 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     const renderContainer = panel.querySelector<HTMLElement>('.md-run-output__render')
     if (renderContainer) renderContainer.hidden = true
+  }
+
+  const ensureGiscusLoginForRun = async (block: HTMLElement) => {
+    setRunOutputPending(block, 'authenticating')
+    await ensureGiscusLogin()
   }
 
   const scrollRunOutputIntoView = (block: HTMLElement) => {
@@ -1275,16 +1287,17 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     const runner = block.dataset.mdRunner || ''
     block.classList.add('is-running')
     setRunButtonLoading(button, true, runner)
-    setRunOutputPending(block, 'queued')
-    await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
-    setRunOutputPending(block, 'running')
+    setRunOutputPending(block, 'preparing')
 
     try {
+      await ensureGiscusLoginForRun(block)
+      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
       const files = collectAdjacentRunFiles(block)
       const result = await runCode({
         language: runner,
         source: getCurrentSource(block),
         files,
+        onProgress: ({ status }) => setRunOutputPending(block, status),
       })
       setRunOutputResult(block, result, files)
       scrollRunOutputIntoView(block)
@@ -1327,16 +1340,16 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     block.classList.add('is-running')
     if (button) setRunButtonLoading(button, true, runner)
-    setRunOutputPending(block, 'queued')
-    await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
-    setRunOutputPending(block, 'running')
+    setRunOutputPending(block, 'preparing')
 
     try {
+      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
       const files = collectAdjacentRunFiles(block)
       const result = await runCode({
         language: runner,
         source: getCurrentSource(block),
         files,
+        onProgress: ({ status }) => setRunOutputPending(block, status),
       })
       setRunOutputResult(block, result, files)
     } catch (error) {
@@ -1368,20 +1381,33 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     setRunAllStatus(`已提交 ${blocks.length} 个`)
     blocks.forEach((block) => setRunOutputPending(block, 'queued'))
 
-    const workerCount = Math.min(RUN_ALL_CONCURRENCY, blocks.length)
-    const workers = Array.from({ length: workerCount }, async () => {
-      while (nextIndex < blocks.length) {
-        const block = blocks[nextIndex]
-        nextIndex += 1
-        await runOneBlockFromQueue(block)
-        completed += 1
-        setRunAllStatus(`${completed}/${blocks.length} 完成`)
-      }
-    })
-
     try {
+      if (blocks[0]) await ensureGiscusLoginForRun(blocks[0])
+      const workerCount = Math.min(RUN_ALL_CONCURRENCY, blocks.length)
+      const workers = Array.from({ length: workerCount }, async () => {
+        while (nextIndex < blocks.length) {
+          const block = blocks[nextIndex]
+          nextIndex += 1
+          await runOneBlockFromQueue(block)
+          completed += 1
+          setRunAllStatus(`${completed}/${blocks.length} 完成`)
+        }
+      })
       await Promise.all(workers)
       setRunAllStatus(`${blocks.length}/${blocks.length} 完成`)
+    } catch (error) {
+      blocks.forEach((block) => {
+        if (!block.classList.contains('is-running')) {
+          setRunOutputResult(block, {
+            status: 'runtime_error',
+            stdout: '',
+            stderr: '',
+            durationMs: 0,
+            message: error instanceof Error ? error.message : String(error),
+          })
+        }
+      })
+      setRunAllStatus('运行/渲染未完成')
     } finally {
       setRunAllButtonLoading(button, false)
     }

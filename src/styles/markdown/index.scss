@@ -282,8 +282,11 @@
   background: #f0b45d;
 }
 
+.md-run-output[data-status="authenticating"] .md-run-output__status::before,
 .md-run-output[data-status="preparing"] .md-run-output__status::before,
 .md-run-output[data-status="queued"] .md-run-output__status::before,
+.md-run-output[data-status="validating"] .md-run-output__status::before,
+.md-run-output[data-status="compiling"] .md-run-output__status::before,
 .md-run-output[data-status="running"] .md-run-output__status::before {
   background: var(--site-accent);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--site-accent) 16%, transparent);
