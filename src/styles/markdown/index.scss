@@ -385,25 +385,51 @@
   display: block;
   width: 100%;
   min-height: 120px;
-  max-height: 520px;
   box-sizing: border-box;
   margin: 0;
-  padding: 14px 16px;
   overflow: auto;
   border: 0;
   border-radius: 0;
   outline: none;
-  resize: vertical;
   background: var(--md-code-bg);
   color: var(--md-code-text);
-  caret-color: var(--site-accent);
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   font-size: 13px;
-  line-height: 1.65;
-  tab-size: 2;
+  line-height: 1.6;
+}
+
+.md-editable-editor.is-loading {
+  min-height: 180px;
+}
+
+.md-editable-editor.is-loading::before {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  color: var(--md-copy-text);
+  content: "Loading editor...";
+}
+
+.md-editable-editor .monaco-editor,
+.md-editable-editor .monaco-editor-background,
+.md-editable-editor .monaco-editor .margin {
+  background: var(--md-code-bg) !important;
+}
+
+.md-editable-editor .monaco-editor {
+  --vscode-focusBorder: color-mix(in srgb, var(--site-accent) 48%, transparent);
+}
+
+.md-editable-editor .monaco-editor .view-line,
+.md-editable-editor .monaco-editor .margin-view-overlays {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace !important;
 }
 
 .md-editable-editor:focus {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--site-accent) 55%, transparent);
+}
+
+.md-editable-editor:focus-within {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--site-accent) 55%, transparent);
 }
 
