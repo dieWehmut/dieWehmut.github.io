@@ -54,6 +54,9 @@ const MARKDOWN_CHUNK_MAX_LENGTH = 12000
 const SOURCE_IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const renderedMarkdownCache = new Map<string, string>()
 const renderedMarkdownPreviewCache = new Map<string, string>()
+const BLOCKED_PAGE_KEYS = new Set(['d', 'g', 'h', 'j', 'k', 'l', 'r', 'u'])
+let markdownShortcutGuardRefCount = 0
+let markdownShortcutGuardHandler: ((event: KeyboardEvent) => void) | null = null
 
 hljs.registerLanguage('bash', bash)
 hljs.registerLanguage('css', css)
@@ -149,6 +152,54 @@ function isSafeStyle(value: string): boolean {
   if (normalized.includes('expression(')) return false
   if (normalized.includes('javascript:')) return false
   return /^[\w\s.,:%#()+\-;]*$/.test(value)
+}
+
+function isEditableKeyboardTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false
+
+  const formControl = target.closest('input, textarea, select')
+  if (formControl instanceof HTMLInputElement || formControl instanceof HTMLTextAreaElement) {
+    return !formControl.disabled && !formControl.readOnly
+  }
+  if (formControl instanceof HTMLSelectElement) {
+    return !formControl.disabled
+  }
+
+  if (target.closest('[contenteditable=""], [contenteditable="true"]')) return true
+
+  const monacoBlock = target.closest<HTMLElement>('.md-editable-block')
+  return Boolean(monacoBlock?.classList.contains('is-editing') && target.closest('.monaco-editor'))
+}
+
+function shouldBlockMarkdownShortcut(event: KeyboardEvent): boolean {
+  if (event.defaultPrevented) return false
+  if (event.ctrlKey || event.metaKey || event.altKey) return false
+  if (event.isComposing) return false
+  if (!BLOCKED_PAGE_KEYS.has(event.key.toLowerCase())) return false
+  return !isEditableKeyboardTarget(event.target)
+}
+
+function installMarkdownShortcutGuard(doc: Document) {
+  markdownShortcutGuardRefCount += 1
+  if (markdownShortcutGuardHandler || markdownShortcutGuardRefCount !== 1) return
+
+  markdownShortcutGuardHandler = (event: KeyboardEvent) => {
+    if (!shouldBlockMarkdownShortcut(event)) return
+    event.preventDefault()
+    event.stopImmediatePropagation()
+  }
+
+  doc.defaultView?.addEventListener('keydown', markdownShortcutGuardHandler, true)
+  doc.addEventListener('keydown', markdownShortcutGuardHandler, true)
+}
+
+function uninstallMarkdownShortcutGuard(doc: Document) {
+  markdownShortcutGuardRefCount = Math.max(0, markdownShortcutGuardRefCount - 1)
+  if (markdownShortcutGuardRefCount !== 0 || !markdownShortcutGuardHandler) return
+
+  doc.defaultView?.removeEventListener('keydown', markdownShortcutGuardHandler, true)
+  doc.removeEventListener('keydown', markdownShortcutGuardHandler, true)
+  markdownShortcutGuardHandler = null
 }
 
 function sanitizeHtml(html: string): string {
@@ -812,6 +863,12 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   const activeTimers = new Set<number>()
   const cleanupHandlers: Array<() => void> = []
   let toastTimer: number | null = null
+  const ownerDocument = root instanceof Document ? root : root.ownerDocument
+
+  if (ownerDocument) {
+    installMarkdownShortcutGuard(ownerDocument)
+    cleanupHandlers.push(() => uninstallMarkdownShortcutGuard(ownerDocument))
+  }
 
   const imagePreviewSrc = (image: HTMLImageElement): string => {
     const original = image.dataset.originalSrc || image.dataset.mdLazySrc || image.getAttribute('src') || ''
