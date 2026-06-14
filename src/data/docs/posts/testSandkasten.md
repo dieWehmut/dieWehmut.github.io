@@ -135,18 +135,29 @@ echo "nim squares=", squares.foldl(a + b), " fib=", fib(8)
 ### Pascal (Free Pascal)
 
 ```pascal
-program Hello;
+program Squares;
+var
+  i, total: integer;
 begin
-  writeln('hello from Pascal');
+  total := 0;
+  for i := 1 to 5 do
+    total := total + i * i;
+  writeln('pascal squares=', total);
 end.
 ```
 
 ### Fortran
 
 ```fortran
-program hello
-  print *, "hello from Fortran"
-end program hello
+program squares
+  implicit none
+  integer :: i, total
+  total = 0
+  do i = 1, 5
+    total = total + i * i
+  end do
+  print *, "fortran squares=", total
+end program squares
 ```
 
 ## 脚本语言
@@ -186,45 +197,67 @@ console.log(rows.map((row) => `${row.name}:${row.score}`).join(", "));
 ### Ruby
 
 ```ruby
-puts "hello from Ruby"
+values = [1, 2, 3, 4, 5]
+squares = values.map { |n| n * n }
+puts "ruby squares=#{squares.sum} odds=#{values.select(&:odd?).join(',')}"
 ```
 
 ### Perl
 
 ```perl
-print "hello from Perl\n";
+use strict;
+use warnings;
+
+my @values = (1, 2, 3, 4, 5);
+my $total = 0;
+$total += $_ * $_ for @values;
+print "perl squares=$total\n";
 ```
 
 ### PHP
 
 ```php
 <?php
-echo "hello from PHP\n";
+$values = [1, 2, 3, 4, 5];
+$total = array_reduce($values, fn($sum, $n) => $sum + $n * $n, 0);
+echo "php squares={$total}\n";
 ```
 
 ### Lua
 
 ```lua
-print("hello from Lua")
+local total = 0
+for _, n in ipairs({1, 2, 3, 4, 5}) do
+  total = total + n * n
+end
+print("lua squares=" .. total)
 ```
 
 ### R
 
 ```r
-cat("hello from R\n")
+values <- 1:5
+total <- sum(values ^ 2)
+cat(sprintf("r squares=%d mean=%.1f\n", total, mean(values)))
 ```
 
 ### Julia
 
 ```julia
-println("hello from Julia")
+using Statistics
+
+values = 1:5
+total = sum(n -> n^2, values)
+println("julia squares=$total median=$(median(collect(values)))")
 ```
 
 ### Dart
 
 ```dart
 void main() {
-  print("hello from Dart");
+  final values = [1, 2, 3, 4, 5];
+  final total = values.fold<int>(0, (sum, n) => sum + n * n);
+  print("dart squares=$total");
 }
 ```
 
@@ -243,7 +276,13 @@ puts "crystal squares=#{total} fib=#{fib(8)}"
 ### Bash
 
 ```bash
-echo "hello from Bash"
+set -euo pipefail
+
+total=0
+for n in 1 2 3 4 5; do
+  total=$((total + n * n))
+done
+printf 'bash squares=%s\n' "$total"
 ```
 
 ## JVM / 函数式
@@ -253,7 +292,10 @@ echo "hello from Bash"
 ```java
 public class Main {
     public static void main(String[] args) {
-        System.out.println("hello from Java");
+        int total = java.util.stream.IntStream.rangeClosed(1, 5)
+            .map(n -> n * n)
+            .sum();
+        System.out.println("java squares=" + total);
     }
 }
 ```
@@ -262,7 +304,8 @@ public class Main {
 
 ```kotlin
 fun main() {
-    println("hello from Kotlin")
+    val total = (1..5).sumOf { it * it }
+    println("kotlin squares=$total")
 }
 ```
 
@@ -271,7 +314,8 @@ fun main() {
 ```scala
 object Main {
   def main(args: Array[String]): Unit = {
-    println("hello from Scala")
+    val total = (1 to 5).map(n => n * n).sum
+    println(s"scala squares=$total")
   }
 }
 ```
@@ -279,16 +323,24 @@ object Main {
 ### Clojure
 
 ```clojure
-(println "hello from Clojure")
+(def values [1 2 3 4 5])
+(println "clojure squares=" (reduce + (map #(* % %) values)))
 ```
 
 ### Gleam
 
 ```gleam
 import gleam/io
+import gleam/int
+import gleam/list
 
 pub fn main() {
-  io.println("hello from Gleam")
+  [1, 2, 3, 4, 5]
+  |> list.map(fn(n) { n * n })
+  |> list.fold(0, fn(sum, n) { sum + n })
+  |> int.to_string
+  |> fn(total) { "gleam squares=" <> total }
+  |> io.println
 }
 ```
 
@@ -298,10 +350,12 @@ pub fn main() {
 
 ```csharp
 using System;
+using System.Linq;
 
 class Program {
     static void Main() {
-        Console.WriteLine("hello from C#");
+        var values = new[] { 1, 2, 3, 4, 5 };
+        Console.WriteLine($"csharp squares={values.Sum(n => n * n)}");
     }
 }
 ```
@@ -309,7 +363,8 @@ class Program {
 ### F#
 
 ```fsharp
-printfn "hello from F#"
+let total = [1..5] |> List.sumBy (fun n -> n * n)
+printfn "fsharp squares=%d" total
 ```
 
 ## 函数式 / 证明助手
@@ -318,19 +373,22 @@ printfn "hello from F#"
 
 ```haskell
 main :: IO ()
-main = putStrLn "hello from Haskell"
+main = putStrLn ("haskell squares=" ++ show (sum [n * n | n <- [1..5]]))
 ```
 
 ### OCaml
 
 ```ocaml
-print_endline "hello from OCaml"
+let total = List.fold_left (fun acc n -> acc + n * n) 0 [1; 2; 3; 4; 5]
+
+let () = Printf.printf "ocaml squares=%d\n" total
 ```
 
 ### Elixir
 
 ```elixir
-IO.puts("hello from Elixir")
+total = Enum.reduce(1..5, 0, fn n, sum -> sum + n * n end)
+IO.puts("elixir squares=#{total}")
 ```
 
 ### Erlang
@@ -340,7 +398,8 @@ IO.puts("hello from Elixir")
 -export([main/0]).
 
 main() ->
-    io:format("hello from Erlang~n"),
+    Total = lists:sum([N * N || N <- lists:seq(1, 5)]),
+    io:format("erlang squares=~p~n", [Total]),
     erlang:halt(0).
 ```
 
@@ -360,7 +419,7 @@ main() ->
 
 ```lean4
 def main : IO Unit :=
-  IO.println "hello from Lean 4"
+  IO.println s!"lean squares={List.sum ((List.range 6).map fun n => n * n)}"
 
 #eval main
 ```
@@ -368,14 +427,25 @@ def main : IO Unit :=
 ### Coq
 
 ```coq
-Definition hello_from_coq : True := I.
+Fixpoint square_sum (n : nat) : nat :=
+  match n with
+  | O => O
+  | S k => n * n + square_sum k
+  end.
+
+Compute square_sum 5.
 ```
 
 ### Prolog
 
 ```prolog
+square_sum(N, Total) :-
+    findall(Square, (between(1, N, X), Square is X * X), Squares),
+    sum_list(Squares, Total).
+
 main :-
-    write('hello from Prolog'),
+    square_sum(5, Total),
+    format('prolog squares=~w~n', [Total]),
     nl,
     halt.
 
@@ -601,7 +671,9 @@ digraph G {
 ### Octave
 
 ```octave
-disp("hello from GNU Octave");
+values = 1:5;
+total = sum(values .^ 2);
+printf("octave squares=%d mean=%.1f\n", total, mean(values));
 ```
 
 ## 数据库
@@ -609,7 +681,11 @@ disp("hello from GNU Octave");
 ### SQL (SQLite)
 
 ```sql
-SELECT 'hello from SQL' AS greeting;
+WITH values(n) AS (
+  VALUES (1), (2), (3), (4), (5)
+)
+SELECT SUM(n * n) AS square_sum, ROUND(AVG(n), 1) AS mean_value
+FROM values;
 ```
 
 ## 领域特定语言
@@ -620,7 +696,10 @@ SELECT 'hello from SQL' AS greeting;
 extends SceneTree
 
 func _init():
-    print("hello from GDScript")
+    var total := 0
+    for n in [1, 2, 3, 4, 5]:
+        total += n * n
+    print("gdscript squares=%s" % total)
     quit()
 ```
 
@@ -628,7 +707,8 @@ func _init():
 
 ```nextflow
 workflow {
-  println "hello from Nextflow"
+  def values = [1, 2, 3, 4, 5]
+  println "nextflow squares=${values.collect { it * it }.sum()}"
 }
 ```
 
@@ -639,7 +719,8 @@ version 1.0
 
 workflow hello_wf {
   output {
-    String message = "hello from WDL"
+    Array[Int] values = [1, 2, 3, 4, 5]
+    String message = "wdl values=" + sep(",", values)
   }
 }
 ```
@@ -650,14 +731,21 @@ workflow hello_wf {
 
 ```mojo
 def main():
-    print("hello from Mojo")
+    var total = 0
+    for n in range(1, 6):
+        total += n * n
+    print("mojo squares=", total)
 ```
 
 ### 仓颉 (Cangjie)
 
 ```cangjie
 main(): Int64 {
-    println("hello from 仓颉")
+    var total = 0
+    for (n in 1..=5) {
+        total += n * n
+    }
+    println("cangjie squares=${total}")
     return 0
 }
 ```
@@ -665,5 +753,6 @@ main(): Int64 {
 ### Swift
 
 ```swift
-print("hello from Swift")
+let total = (1...5).map { $0 * $0 }.reduce(0, +)
+print("swift squares=\(total)")
 ```

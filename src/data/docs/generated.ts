@@ -21,8 +21,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "sandkasten"
     ],
     "summary": "Sandkasten 测试 本文测试 Sandkasten 后端支持的全部语言 / 运行时。程序语言代码块用于运行；HTML、CSS、Markdown、LaTeX、Typst、Graphviz、Vue、TSX 等前端 / 文档代码块用...",
-    "wordCount": 662,
-    "readingMinutes": 2,
+    "wordCount": 1158,
+    "readingMinutes": 3,
     "updated": "2026/06/14 04:34",
     "path": "./posts/testSandkasten.md"
   },
