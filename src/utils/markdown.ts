@@ -436,14 +436,27 @@ const RENDERABLE_RUNNERS = new Set([
   'css', 'scss', 'tailwindcss',
   'markdown', 'md', 'mdx',
   'tsx', 'vue3', 'vue', 'nextjs', 'next',
-  'graphviz', 'dot', 'typst', 'typ',
+  'latex', 'graphviz', 'dot', 'typst', 'typ',
 ])
 const STYLE_RENDERABLE_RUNNERS = new Set(['css', 'scss', 'tailwindcss'])
+const RUN_ALL_CONCURRENCY = 8
 
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
   const canonical = RUNNER_ALIASES[requestedLang] || requestedLang
   return KNOWN_RUNNERS.has(canonical) ? canonical : ''
+}
+
+function isRenderableRunner(runner: string): boolean {
+  return RENDERABLE_RUNNERS.has(runner)
+}
+
+function runnerActionLabel(runner: string): string {
+  return isRenderableRunner(runner) ? '渲染' : '运行'
+}
+
+function runnerBusyLabel(runner: string): string {
+  return isRenderableRunner(runner) ? '渲染中' : '运行中'
 }
 
 function stripFenceMetaQuotes(value: string): string {
@@ -579,8 +592,9 @@ function renderInlineLatex(text: string): string {
 
 function renderEditableToolbar(kind: EditableBlockKind, label: string, runner: string): string {
   const toolbarLabel = kind === 'math' ? 'LaTeX' : label
+  const runLabel = runner ? runnerActionLabel(runner) : ''
   const runButton = runner
-    ? '<button class="md-editable-action md-editable-action--run" type="button" data-md-action="run">运行</button>'
+    ? `<button class="md-editable-action md-editable-action--run" type="button" data-md-action="run">${runLabel}</button>`
     : ''
   const sourceButton = kind === 'math'
     ? '<button class="md-editable-action" type="button" data-md-action="source" aria-expanded="false">显示源码</button>'
@@ -692,12 +706,23 @@ marked.use(markedKatex({
   output: 'html',
 }))
 
+function withRunAllToolbar(html: string): string {
+  if (!html.includes('data-md-runner=')) return html
+  return [
+    '<div class="md-run-all-toolbar" role="group" aria-label="代码块批量操作">',
+    '<button class="md-editable-action md-editable-action--run-all" type="button" data-md-global-action="run-all">全部运行/渲染</button>',
+    '<span class="md-run-all-toolbar__status" data-md-run-all-status aria-live="polite"></span>',
+    '</div>',
+    html,
+  ].join('')
+}
+
 export function renderMarkdown(source: string): string {
   if (!source) return ''
   const cached = renderedMarkdownCache.get(source)
   if (cached !== undefined) return cached
 
-  const rendered = deferClosedSourcePageImages(sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string))
+  const rendered = withRunAllToolbar(deferClosedSourcePageImages(sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string)))
   renderedMarkdownCache.set(source, rendered)
 
   if (renderedMarkdownCache.size > MARKDOWN_CACHE_LIMIT) {
@@ -1068,14 +1093,28 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (!copied) throw new Error('Clipboard copy failed')
   }
 
-  const runStatusLabels: Record<RunStatus | 'preparing' | 'running', string> = {
-    preparing: '准备中',
-    running: '运行中',
-    success: '成功',
-    compile_error: '编译错误',
-    runtime_error: '运行错误',
-    timeout: '超时',
-    unsupported: '不支持',
+  const runStatusLabel = (runner: string, status: RunStatus | 'preparing' | 'queued' | 'running'): string => {
+    const renderable = isRenderableRunner(runner)
+    switch (status) {
+      case 'preparing':
+        return renderable ? '准备渲染' : '准备运行'
+      case 'queued':
+        return renderable ? '已提交渲染' : '已提交运行'
+      case 'running':
+        return runnerBusyLabel(runner)
+      case 'success':
+        return renderable ? '渲染成功' : '运行成功'
+      case 'compile_error':
+        return renderable ? '渲染错误' : '编译错误'
+      case 'runtime_error':
+        return renderable ? '渲染失败' : '运行错误'
+      case 'timeout':
+        return '超时'
+      case 'unsupported':
+        return '不支持'
+      default:
+        return ''
+    }
   }
 
   const ensureRunStream = (panel: HTMLElement, streamName: 'stdout' | 'stderr'): HTMLElement => {
@@ -1135,7 +1174,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     renderContainer.hidden = true
     const iframe = document.createElement('iframe')
     iframe.setAttribute('sandbox', '')
-    iframe.setAttribute('title', '运行输出预览')
+    iframe.setAttribute('title', '渲染输出预览')
     renderContainer.append(iframe)
     panel.append(renderContainer)
 
@@ -1144,8 +1183,9 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     return panel
   }
 
-  const setRunOutputPending = (block: HTMLElement, state: 'preparing' | 'running') => {
+  const setRunOutputPending = (block: HTMLElement, state: 'preparing' | 'queued' | 'running') => {
     const panel = ensureRunOutput(block)
+    const runner = block.dataset.mdRunner || ''
     panel.dataset.status = state
     panel.classList.remove('is-stale')
 
@@ -1156,7 +1196,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     const stdout = ensureRunStream(panel, 'stdout')
     const stderr = ensureRunStream(panel, 'stderr')
 
-    if (status) status.textContent = runStatusLabels[state]
+    if (status) status.textContent = runStatusLabel(runner, state)
     if (duration) duration.textContent = ''
     if (message) {
       message.textContent = ''
@@ -1198,7 +1238,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     const isRenderable = RENDERABLE_RUNNERS.has(runner)
     const renderContainer = panel.querySelector<HTMLElement>('.md-run-output__render')
 
-    if (status) status.textContent = runStatusLabels[result.status]
+    if (status) status.textContent = runStatusLabel(runner, result.status)
     if (duration) duration.textContent = `${Math.max(0, Math.round(result.durationMs))} ms`
     if (message) {
       message.textContent = result.message
@@ -1222,10 +1262,10 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (empty) empty.hidden = hasStdout || hasStderr || Boolean(result.message)
   }
 
-  const setRunButtonLoading = (button: HTMLElement, running: boolean) => {
+  const setRunButtonLoading = (button: HTMLElement, running: boolean, runner: string) => {
     button.classList.toggle('is-running', running)
     button.setAttribute('aria-busy', running ? 'true' : 'false')
-    button.textContent = running ? '运行中' : '运行'
+    button.textContent = running ? runnerBusyLabel(runner) : runnerActionLabel(runner)
     if (button instanceof HTMLButtonElement) button.disabled = running
   }
 
@@ -1234,7 +1274,9 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     const runner = block.dataset.mdRunner || ''
     block.classList.add('is-running')
-    setRunButtonLoading(button, true)
+    setRunButtonLoading(button, true, runner)
+    setRunOutputPending(block, 'queued')
+    await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
     setRunOutputPending(block, 'running')
 
     try {
@@ -1257,7 +1299,91 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       scrollRunOutputIntoView(block)
     } finally {
       block.classList.remove('is-running')
-      setRunButtonLoading(button, false)
+      setRunButtonLoading(button, false, runner)
+    }
+  }
+
+  const runnableBlocks = (): HTMLElement[] => (
+    Array.from(root.querySelectorAll<HTMLElement>('.md-editable-block[data-md-runner]'))
+      .filter((block) => !block.dataset.mdFileName)
+  )
+
+  const setRunAllStatus = (text: string) => {
+    const status = root.querySelector<HTMLElement>('[data-md-run-all-status]')
+    if (status) status.textContent = text
+  }
+
+  const setRunAllButtonLoading = (button: HTMLElement, running: boolean) => {
+    button.classList.toggle('is-running', running)
+    button.setAttribute('aria-busy', running ? 'true' : 'false')
+    button.textContent = running ? '运行/渲染中' : '全部运行/渲染'
+    if (button instanceof HTMLButtonElement) button.disabled = running
+  }
+
+  const runOneBlockFromQueue = async (block: HTMLElement) => {
+    if (block.classList.contains('is-running')) return
+    const runner = block.dataset.mdRunner || ''
+    const button = block.querySelector<HTMLElement>('[data-md-action="run"]')
+
+    block.classList.add('is-running')
+    if (button) setRunButtonLoading(button, true, runner)
+    setRunOutputPending(block, 'queued')
+    await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
+    setRunOutputPending(block, 'running')
+
+    try {
+      const files = collectAdjacentRunFiles(block)
+      const result = await runCode({
+        language: runner,
+        source: getCurrentSource(block),
+        files,
+      })
+      setRunOutputResult(block, result, files)
+    } catch (error) {
+      setRunOutputResult(block, {
+        status: 'runtime_error',
+        stdout: '',
+        stderr: '',
+        durationMs: 0,
+        message: error instanceof Error ? error.message : String(error),
+      })
+    } finally {
+      block.classList.remove('is-running')
+      if (button) setRunButtonLoading(button, false, runner)
+    }
+  }
+
+  const runAllBlocks = async (button: HTMLElement) => {
+    if (button.classList.contains('is-running')) return
+
+    const blocks = runnableBlocks()
+    if (!blocks.length) {
+      setRunAllStatus('没有可运行/渲染的代码块')
+      return
+    }
+
+    let completed = 0
+    let nextIndex = 0
+    setRunAllButtonLoading(button, true)
+    setRunAllStatus(`已提交 ${blocks.length} 个`)
+    blocks.forEach((block) => setRunOutputPending(block, 'queued'))
+
+    const workerCount = Math.min(RUN_ALL_CONCURRENCY, blocks.length)
+    const workers = Array.from({ length: workerCount }, async () => {
+      while (nextIndex < blocks.length) {
+        const block = blocks[nextIndex]
+        nextIndex += 1
+        await runOneBlockFromQueue(block)
+        completed += 1
+        setRunAllStatus(`${completed}/${blocks.length} 完成`)
+      }
+    })
+
+    try {
+      await Promise.all(workers)
+      setRunAllStatus(`${blocks.length}/${blocks.length} 完成`)
+    } finally {
+      setRunAllButtonLoading(button, false)
     }
   }
 
@@ -1294,6 +1420,15 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
         .map((item) => ({ src: imagePreviewSrc(item), alt: item.alt }))
         .filter((item) => item.src && item.src !== SOURCE_IMAGE_PLACEHOLDER)
       openImagePreviewGallery(images, images.findIndex((item) => item.src === imagePreviewSrc(image)))
+      return
+    }
+
+    const globalActionButton = target.closest<HTMLElement>('[data-md-global-action]')
+    if (globalActionButton) {
+      const action = globalActionButton.dataset.mdGlobalAction || ''
+      if (action === 'run-all') {
+        await runAllBlocks(globalActionButton)
+      }
       return
     }
 
