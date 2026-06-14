@@ -31,26 +31,34 @@ function closeImagePreview() {
   isOpen = false
 }
 
+function stopPreviewKey(event: KeyboardEvent) {
+  event.preventDefault()
+  event.stopImmediatePropagation()
+}
+
 function onKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape') closeImagePreview()
+  if (event.key === 'Escape') {
+    stopPreviewKey(event)
+    closeImagePreview()
+  }
   if (event.key === 'ArrowLeft') {
-    event.preventDefault()
+    stopPreviewKey(event)
     showPreviousImage()
   }
   if (event.key === 'ArrowRight') {
-    event.preventDefault()
+    stopPreviewKey(event)
     showNextImage()
   }
   if (event.key === '+' || event.key === '=') {
-    event.preventDefault()
+    stopPreviewKey(event)
     setScale(scale * 1.15)
   }
   if (event.key === '-') {
-    event.preventDefault()
+    stopPreviewKey(event)
     setScale(scale / 1.15)
   }
   if (event.key === '0') {
-    event.preventDefault()
+    stopPreviewKey(event)
     resetZoom()
   }
 }
