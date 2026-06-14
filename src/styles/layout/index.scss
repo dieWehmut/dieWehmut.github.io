@@ -8,6 +8,10 @@
   --site-view-aside-gap: 28px;
   --site-scroll-spy-width: 180px;
   --site-route-path-height: 40px;
+  --site-mesh-line-row: linear-gradient(color-mix(in srgb, var(--site-accent) 5%, transparent) 1px, transparent 1px);
+  --site-mesh-line-column: linear-gradient(90deg, color-mix(in srgb, var(--site-accent) 4%, transparent) 1px, transparent 1px);
+  --site-mesh-glow: radial-gradient(circle at 18% 8%, color-mix(in srgb, var(--site-accent) 10%, transparent), transparent 30%);
+  --site-mesh-background-size: 28px 28px, 28px 28px, auto, auto;
   --site-right-rail-offset: max(
     var(--site-desktop-content-end-gutter),
     calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-content-width))
@@ -66,6 +70,7 @@ a:hover {
 
 
 .page-surface {
+  position: relative;
   width: 100%;
   min-width: 0;
 }
