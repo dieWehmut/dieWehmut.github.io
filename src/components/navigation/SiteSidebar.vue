@@ -35,11 +35,11 @@ const { avatarUrl } = useProfile()
   color: var(--site-text);
   border-right: 1px solid var(--site-border);
   background:
-    linear-gradient(color-mix(in srgb, var(--site-accent) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--site-accent) 4%, transparent) 1px, transparent 1px),
-    radial-gradient(circle at 18% 8%, color-mix(in srgb, var(--site-accent) 10%, transparent), transparent 30%),
+    var(--site-mesh-line-row),
+    var(--site-mesh-line-column),
+    var(--site-mesh-glow),
     var(--site-sidebar-bg);
-  background-size: 28px 28px, 28px 28px, auto, auto;
+  background-size: var(--site-mesh-background-size);
   box-shadow:
     12px 0 42px rgba(0, 0, 0, 0.18),
     inset -1px 0 0 color-mix(in srgb, var(--site-text) 6%, transparent);

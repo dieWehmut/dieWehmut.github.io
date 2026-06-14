@@ -38,14 +38,25 @@ import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
 }
 
 .desktop-layout__content {
+  position: relative;
   min-width: 0;
   margin-left: var(--site-sidebar-width);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  isolation: isolate;
+  background:
+    var(--site-mesh-line-row),
+    var(--site-mesh-line-column),
+    radial-gradient(circle at 76% 7%, color-mix(in srgb, var(--site-accent) 8%, transparent), transparent 32%),
+    var(--site-bg);
+  background-attachment: fixed;
+  background-size: var(--site-mesh-background-size);
 }
 
 .desktop-layout__main {
+  position: relative;
+  z-index: 1;
   flex: 1;
   width: min(
     var(--site-content-width),

@@ -127,6 +127,13 @@ onBeforeUnmount(() => {
   z-index: 2;
   display: none;
   min-height: 100vh;
+  isolation: isolate;
+  background:
+    var(--site-mesh-line-row),
+    var(--site-mesh-line-column),
+    radial-gradient(circle at 78% 4%, color-mix(in srgb, var(--site-accent) 8%, transparent), transparent 34%),
+    var(--site-bg);
+  background-size: var(--site-mesh-background-size);
 }
 
 .mobile-layout.has-open-drawer {
@@ -134,6 +141,8 @@ onBeforeUnmount(() => {
 }
 
 .mobile-layout__main {
+  position: relative;
+  z-index: 1;
   min-height: calc(100vh - var(--site-mobile-header-height));
   padding: 24px 18px 42px;
 }
