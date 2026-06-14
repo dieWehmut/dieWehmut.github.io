@@ -1,6 +1,7 @@
 import siteConfig from '../data/site/config'
 
 export type RunStatus = 'success' | 'compile_error' | 'runtime_error' | 'timeout' | 'unsupported'
+export type RunProgressStatus = 'queued' | 'validating' | 'compiling' | 'running'
 
 export type RunResult = {
   status: RunStatus
@@ -15,6 +16,7 @@ export type RunCodeRequest = {
   source: string
   stdin?: string
   files?: RunCodeFile[]
+  onProgress?: (progress: RunProgress) => void
 }
 
 export type RunCodeFile = {
@@ -22,10 +24,16 @@ export type RunCodeFile = {
   content: string
 }
 
+export type RunProgress = {
+  status: RunProgressStatus
+  jobId?: string
+  elapsedMs: number
+}
+
 const GO_SOURCE_LIMIT_BYTES = 32 * 1024
 const GO_OUTPUT_LIMIT_BYTES = 64 * 1024
 const DEFAULT_TIMEOUT_MS = 180000
-const MIN_BACKEND_WAIT_TIMEOUT_MS = 180000
+const MIN_BACKEND_TIMEOUT_MS = 180000
 const BACKEND_EXECUTABLE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src\/\.laeufer-bin\/main(?:\.exe)?/g
 const BACKEND_SOURCE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src/g
 const encoder = new TextEncoder()
@@ -233,6 +241,21 @@ type BackendErrorResponse = {
   message?: string
 }
 
+function backendStatusToProgressStatus(status: string | undefined): RunProgressStatus | null {
+  switch (status) {
+    case 'JOB_STATUS_QUEUED':
+      return 'queued'
+    case 'JOB_STATUS_VALIDATING':
+      return 'validating'
+    case 'JOB_STATUS_COMPILING':
+      return 'compiling'
+    case 'JOB_STATUS_RUNNING':
+      return 'running'
+    default:
+      return null
+  }
+}
+
 function isBackendTerminalStatus(status: string | undefined): boolean {
   switch (status) {
     case 'JOB_STATUS_SUCCEEDED':
@@ -258,6 +281,7 @@ function backendStatusToRunStatus(status: string | undefined): RunStatus {
     case 'JOB_STATUS_TIME_LIMIT_EXCEEDED':
       return 'timeout'
     case 'JOB_STATUS_QUEUED':
+    case 'JOB_STATUS_VALIDATING':
     case 'JOB_STATUS_RUNNING':
     case 'JOB_STATUS_COMPILING':
       return 'timeout'
@@ -295,17 +319,18 @@ async function runInBackend(
   source: string,
   stdin: string,
   timeoutMs: number,
-  files: RunCodeFile[] = []
+  files: RunCodeFile[] = [],
+  onProgress?: (progress: RunProgress) => void
 ): Promise<RunResult> {
   const apiUrl = normalizeBackendApiUrl(siteConfig.codeRunner.backendApiUrl || '')
   if (!apiUrl) {
     return emptyResult('unsupported', '未配置 Sandkasten API 地址。')
   }
 
-  const backendWaitTimeoutMs = Math.max(timeoutMs, MIN_BACKEND_WAIT_TIMEOUT_MS)
+  const backendTimeoutMs = Math.max(timeoutMs, MIN_BACKEND_TIMEOUT_MS)
   const controller = new AbortController()
   const startedAt = performance.now()
-  const timeoutId = window.setTimeout(() => controller.abort(), backendWaitTimeoutMs + 5000)
+  const timeoutId = window.setTimeout(() => controller.abort(), backendTimeoutMs + 5000)
 
   try {
     const headers: Record<string, string> = {
@@ -322,8 +347,7 @@ async function runInBackend(
         source,
         stdin,
         ...(files.length ? { files } : {}),
-        wait: true,
-        waitTimeoutMs: backendWaitTimeoutMs,
+        wait: false,
       }),
       signal: controller.signal,
     })
@@ -342,14 +366,26 @@ async function runInBackend(
       return emptyResult('runtime_error', '后端 API 没有返回有效任务。', durationMs)
     }
 
+    const emitProgress = (nextJob: BackendJobResponse | null) => {
+      const progressStatus = backendStatusToProgressStatus(nextJob?.status)
+      if (!progressStatus) return
+      onProgress?.({
+        status: progressStatus,
+        jobId: nextJob?.jobId,
+        elapsedMs: Math.round(performance.now() - startedAt),
+      })
+    }
+
+    emitProgress(job)
+
     let pollDelayMs = 80
     while (job?.jobId && !isBackendTerminalStatus(job.status)) {
       const elapsedMs = performance.now() - startedAt
-      if (elapsedMs >= backendWaitTimeoutMs) {
+      if (elapsedMs >= backendTimeoutMs) {
         return emptyResult('timeout', '后端任务仍在运行，请稍后重试。', Math.round(elapsedMs))
       }
 
-      await sleep(Math.min(pollDelayMs, Math.max(0, backendWaitTimeoutMs - elapsedMs)), controller.signal)
+      await sleep(Math.min(pollDelayMs, Math.max(0, backendTimeoutMs - elapsedMs)), controller.signal)
       const pollResponse = await fetch(`${apiUrl}/v1/jobs/${encodeURIComponent(job.jobId)}`, {
         headers,
         signal: controller.signal,
@@ -362,6 +398,7 @@ async function runInBackend(
         return emptyResult('runtime_error', message, Math.round(performance.now() - startedAt))
       }
       job = pollBody as BackendJobResponse | null
+      emitProgress(job)
       const nextElapsedMs = performance.now() - startedAt
       pollDelayMs = nextElapsedMs > 5000 ? 300 : nextElapsedMs > 1200 ? 160 : 80
     }
@@ -406,5 +443,12 @@ export function runCode(request: RunCodeRequest, timeoutMs = DEFAULT_TIMEOUT_MS)
     if (validationResult) return Promise.resolve(validationResult)
   }
 
-  return runInBackend(language, request.source, request.stdin || '', timeoutMs, request.files || [])
+  return runInBackend(
+    language,
+    request.source,
+    request.stdin || '',
+    timeoutMs,
+    request.files || [],
+    request.onProgress,
+  )
 }
