@@ -24,7 +24,8 @@ export type RunCodeFile = {
 
 const GO_SOURCE_LIMIT_BYTES = 32 * 1024
 const GO_OUTPUT_LIMIT_BYTES = 64 * 1024
-const DEFAULT_TIMEOUT_MS = 8000
+const DEFAULT_TIMEOUT_MS = 180000
+const MIN_BACKEND_WAIT_TIMEOUT_MS = 180000
 const BACKEND_EXECUTABLE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src\/\.laeufer-bin\/main(?:\.exe)?/g
 const BACKEND_SOURCE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src/g
 const encoder = new TextEncoder()
@@ -301,7 +302,7 @@ async function runInBackend(
     return emptyResult('unsupported', '未配置 Sandkasten API 地址。')
   }
 
-  const backendWaitTimeoutMs = Math.max(timeoutMs, 30000)
+  const backendWaitTimeoutMs = Math.max(timeoutMs, MIN_BACKEND_WAIT_TIMEOUT_MS)
   const controller = new AbortController()
   const startedAt = performance.now()
   const timeoutId = window.setTimeout(() => controller.abort(), backendWaitTimeoutMs + 5000)

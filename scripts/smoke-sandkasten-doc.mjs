@@ -6,7 +6,7 @@ const docPath = process.env.SANDKASTEN_DOC_PATH ||
   path.join(root, 'src/data/docs/posts/testSandkasten.md')
 const apiUrl = (process.env.VITE_CODE_RUNNER_API_URL || process.env.CODE_RUNNER_API_URL || 'http://127.0.0.1:8080').replace(/\/+$/, '')
 const token = process.env.VITE_CODE_RUNNER_API_TOKEN || process.env.SANDKASTEN_API_TOKEN || ''
-const waitTimeoutMs = Number(process.env.SANDKASTEN_DOC_SMOKE_WAIT_TIMEOUT_MS || 120000)
+const waitTimeoutMs = Number(process.env.SANDKASTEN_DOC_SMOKE_WAIT_TIMEOUT_MS || 180000)
 
 const languageAliases = {
   golang: 'go',
