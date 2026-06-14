@@ -411,7 +411,6 @@ const RUNNER_ALIASES: Record<string, string> = {
   'clj': 'clojure', 'cljs': 'clojure',
   'ml': 'ocaml',
   'sqlite': 'sql', 'sqlite3': 'sql',
-  'matlab': 'octave',
   'v': 'vlang',
   'tailwind': 'tailwindcss', 'tailwind-css': 'tailwindcss',
   'gd': 'gdscript', 'godot': 'gdscript',
@@ -440,7 +439,7 @@ const RENDERABLE_RUNNERS = new Set([
   'latex', 'graphviz', 'dot', 'typst', 'typ',
 ])
 const STYLE_RENDERABLE_RUNNERS = new Set(['css', 'scss', 'tailwindcss'])
-const RUN_ALL_CONCURRENCY = 8
+const RUN_ALL_CONCURRENCY = 16
 
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
@@ -1343,7 +1342,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     setRunOutputPending(block, 'preparing')
 
     try {
-      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
       const files = collectAdjacentRunFiles(block)
       const result = await runCode({
         language: runner,
@@ -1382,6 +1380,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     blocks.forEach((block) => setRunOutputPending(block, 'queued'))
 
     try {
+      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
       if (blocks[0]) await ensureGiscusLoginForRun(blocks[0])
       const workerCount = Math.min(RUN_ALL_CONCURRENCY, blocks.length)
       const workers = Array.from({ length: workerCount }, async () => {

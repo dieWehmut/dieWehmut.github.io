@@ -604,12 +604,6 @@ digraph G {
 disp("hello from GNU Octave");
 ```
 
-### MATLAB (Octave compatible)
-
-```octave
-fprintf("hello from MATLAB\n");
-```
-
 ## 数据库
 
 ### SQL (SQLite)

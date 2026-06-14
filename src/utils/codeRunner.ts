@@ -75,7 +75,6 @@ const LANGUAGE_ALIASES: Record<string, string> = {
   'clj': 'clojure', 'cljs': 'clojure',
   'ml': 'ocaml',
   'sqlite': 'sql', 'sqlite3': 'sql',
-  'matlab': 'octave',
   'v': 'vlang',
   'tailwind': 'tailwindcss', 'tailwind-css': 'tailwindcss',
   'gd': 'gdscript', 'godot': 'gdscript',
