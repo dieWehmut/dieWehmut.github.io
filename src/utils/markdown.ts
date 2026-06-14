@@ -1,16 +1,51 @@
 import { Marked } from 'marked'
 import hljs from 'highlight.js/lib/core'
 import bash from 'highlight.js/lib/languages/bash'
+import c from 'highlight.js/lib/languages/c'
+import clojure from 'highlight.js/lib/languages/clojure'
+import coq from 'highlight.js/lib/languages/coq'
+import cpp from 'highlight.js/lib/languages/cpp'
 import css from 'highlight.js/lib/languages/css'
+import crystal from 'highlight.js/lib/languages/crystal'
+import csharp from 'highlight.js/lib/languages/csharp'
+import dart from 'highlight.js/lib/languages/dart'
+import delphi from 'highlight.js/lib/languages/delphi'
+import elixir from 'highlight.js/lib/languages/elixir'
+import erlang from 'highlight.js/lib/languages/erlang'
+import fortran from 'highlight.js/lib/languages/fortran'
+import fsharp from 'highlight.js/lib/languages/fsharp'
 import go from 'highlight.js/lib/languages/go'
+import groovy from 'highlight.js/lib/languages/groovy'
+import haskell from 'highlight.js/lib/languages/haskell'
 import ini from 'highlight.js/lib/languages/ini'
+import java from 'highlight.js/lib/languages/java'
 import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
+import julia from 'highlight.js/lib/languages/julia'
+import kotlin from 'highlight.js/lib/languages/kotlin'
+import latex from 'highlight.js/lib/languages/latex'
+import lua from 'highlight.js/lib/languages/lua'
 import markdown from 'highlight.js/lib/languages/markdown'
+import matlab from 'highlight.js/lib/languages/matlab'
+import nim from 'highlight.js/lib/languages/nim'
+import ocaml from 'highlight.js/lib/languages/ocaml'
+import perl from 'highlight.js/lib/languages/perl'
+import php from 'highlight.js/lib/languages/php'
 import powershell from 'highlight.js/lib/languages/powershell'
+import prolog from 'highlight.js/lib/languages/prolog'
+import pgsql from 'highlight.js/lib/languages/pgsql'
+import python from 'highlight.js/lib/languages/python'
+import qml from 'highlight.js/lib/languages/qml'
 import r from 'highlight.js/lib/languages/r'
+import rust from 'highlight.js/lib/languages/rust'
+import ruby from 'highlight.js/lib/languages/ruby'
+import scala from 'highlight.js/lib/languages/scala'
+import scheme from 'highlight.js/lib/languages/scheme'
+import sql from 'highlight.js/lib/languages/sql'
+import swift from 'highlight.js/lib/languages/swift'
 import typescript from 'highlight.js/lib/languages/typescript'
 import xml from 'highlight.js/lib/languages/xml'
+import x86asm from 'highlight.js/lib/languages/x86asm'
 import yaml from 'highlight.js/lib/languages/yaml'
 import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
@@ -59,25 +94,79 @@ let markdownShortcutGuardRefCount = 0
 let markdownShortcutGuardHandler: ((event: KeyboardEvent) => void) | null = null
 
 hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('c', c)
+hljs.registerLanguage('clojure', clojure)
+hljs.registerLanguage('clj', clojure)
+hljs.registerLanguage('coq', coq)
+hljs.registerLanguage('cpp', cpp)
+hljs.registerLanguage('c++', cpp)
+hljs.registerLanguage('cxx', cpp)
 hljs.registerLanguage('css', css)
+hljs.registerLanguage('crystal', crystal)
+hljs.registerLanguage('csharp', csharp)
+hljs.registerLanguage('cs', csharp)
+hljs.registerLanguage('dart', dart)
+hljs.registerLanguage('delphi', delphi)
+hljs.registerLanguage('pascal', delphi)
+hljs.registerLanguage('elixir', elixir)
+hljs.registerLanguage('erlang', erlang)
+hljs.registerLanguage('erl', erlang)
+hljs.registerLanguage('fortran', fortran)
+hljs.registerLanguage('fsharp', fsharp)
+hljs.registerLanguage('fs', fsharp)
 hljs.registerLanguage('go', go)
 hljs.registerLanguage('golang', go)
+hljs.registerLanguage('groovy', groovy)
+hljs.registerLanguage('haskell', haskell)
+hljs.registerLanguage('hs', haskell)
 hljs.registerLanguage('html', xml)
 hljs.registerLanguage('ini', ini)
+hljs.registerLanguage('java', java)
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('js', javascript)
 hljs.registerLanguage('json', json)
+hljs.registerLanguage('julia', julia)
+hljs.registerLanguage('jl', julia)
+hljs.registerLanguage('kotlin', kotlin)
+hljs.registerLanguage('kt', kotlin)
+hljs.registerLanguage('latex', latex)
+hljs.registerLanguage('tex', latex)
+hljs.registerLanguage('lua', lua)
 hljs.registerLanguage('markdown', markdown)
 hljs.registerLanguage('md', markdown)
+hljs.registerLanguage('matlab', matlab)
+hljs.registerLanguage('nim', nim)
+hljs.registerLanguage('octave', matlab)
+hljs.registerLanguage('ocaml', ocaml)
+hljs.registerLanguage('perl', perl)
+hljs.registerLanguage('php', php)
 hljs.registerLanguage('powershell', powershell)
 hljs.registerLanguage('ps1', powershell)
+hljs.registerLanguage('prolog', prolog)
+hljs.registerLanguage('pgsql', pgsql)
+hljs.registerLanguage('python', python)
+hljs.registerLanguage('py', python)
+hljs.registerLanguage('qml', qml)
 hljs.registerLanguage('r', r)
 hljs.registerLanguage('rscript', r)
+hljs.registerLanguage('rust', rust)
+hljs.registerLanguage('ruby', ruby)
+hljs.registerLanguage('rb', ruby)
+hljs.registerLanguage('scala', scala)
+hljs.registerLanguage('scheme', scheme)
+hljs.registerLanguage('racket', scheme)
+hljs.registerLanguage('rkt', scheme)
+hljs.registerLanguage('sql', sql)
+hljs.registerLanguage('sqlite', sql)
+hljs.registerLanguage('sqlite3', sql)
+hljs.registerLanguage('swift', swift)
 hljs.registerLanguage('typescript', typescript)
 hljs.registerLanguage('ts', typescript)
 hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('x86asm', x86asm)
 hljs.registerLanguage('yaml', yaml)
 hljs.registerLanguage('yml', yaml)
+hljs.registerLanguage('hcl', ini)
 hljs.registerLanguage('toml', ini)
 
 function escapeHtml(value: string): string {
@@ -412,9 +501,15 @@ type SetSourceOptions = {
   renderContent?: boolean
 }
 
+export type RenderMarkdownOptions = {
+  codeRunner?: boolean
+  docId?: string
+}
+
 type CodeFenceInfo = {
   lang: string
   fileName: string
+  runnable: boolean | null
 }
 
 function encodeSource(value: string): string {
@@ -430,9 +525,64 @@ function decodeSource(value: string | undefined): string {
   }
 }
 
+function resolveHighlightLanguage(lang: string | undefined): string {
+  const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
+  switch (requestedLang) {
+    case 'asm':
+    case 'assembly':
+    case 'gas':
+      return 'x86asm'
+    case 'cangjie':
+      return 'cpp'
+    case 'fsx':
+      return 'fsharp'
+    case 'gd':
+    case 'gdscript':
+      return 'python'
+    case 'gleam':
+      return 'rust'
+    case 'graphviz':
+    case 'dot':
+      return 'pgsql'
+    case 'lean':
+    case 'lean4':
+      return 'coq'
+    case 'mdx':
+      return 'markdown'
+    case 'mojo':
+      return 'python'
+    case 'next':
+    case 'nextjs':
+    case 'tsx':
+      return 'typescript'
+    case 'nextflow':
+    case 'nf':
+      return 'groovy'
+    case 'qml':
+      return 'qml'
+    case 'sol':
+    case 'solidity':
+      return 'javascript'
+    case 'tailwind':
+    case 'tailwindcss':
+      return 'css'
+    case 'typ':
+    case 'typst':
+      return 'latex'
+    case 'v':
+    case 'vlang':
+      return 'go'
+    case 'wdl':
+      return 'hcl'
+    default:
+      return requestedLang
+  }
+}
+
 function resolveCodeLanguage(lang: string | undefined): CodeLanguageInfo {
   const requestedLang = (lang || '').trim().split(/\s+/)[0]
-  const validLang = requestedLang && hljs.getLanguage(requestedLang) ? requestedLang : ''
+  const highlightLang = resolveHighlightLanguage(requestedLang)
+  const validLang = highlightLang && hljs.getLanguage(highlightLang) ? highlightLang : ''
   return {
     langClass: validLang ? ` language-${validLang}` : '',
     langLabel: requestedLang || validLang || '',
@@ -495,8 +645,6 @@ const RENDERABLE_RUNNERS = new Set([
   'latex', 'graphviz', 'dot', 'typst', 'typ',
 ])
 const STYLE_RENDERABLE_RUNNERS = new Set(['css', 'scss', 'tailwindcss'])
-const RUN_ALL_CONCURRENCY = 4
-
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
   const canonical = RUNNER_ALIASES[requestedLang] || requestedLang
@@ -575,9 +723,35 @@ function languageFromFileName(fileName: string): string {
   }
 }
 
+function isTruthyFenceOption(value: string): boolean {
+  const normalized = stripFenceMetaQuotes(value).trim().toLowerCase()
+  return normalized === '' || normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on'
+}
+
+function isFalsyFenceOption(value: string): boolean {
+  const normalized = stripFenceMetaQuotes(value).trim().toLowerCase()
+  return normalized === '0' || normalized === 'false' || normalized === 'no' || normalized === 'off'
+}
+
+function parseFenceRunnable(tokens: string[]): boolean | null {
+  for (const token of tokens) {
+    const normalized = token.trim().toLowerCase()
+    if (normalized === 'run' || normalized === 'render' || normalized === 'runnable') return true
+    if (normalized === 'norun' || normalized === 'no-run' || normalized === 'no-render') return false
+
+    const match = token.match(/^(?:run|render|runnable|runner|executable)=(.+)$/i)
+    if (!match) continue
+    if (isFalsyFenceOption(match[1])) return false
+    if (isTruthyFenceOption(match[1])) return true
+  }
+
+  return null
+}
+
 function parseCodeFenceInfo(info: string | undefined): CodeFenceInfo {
   const tokens = (info || '').trim().split(/\s+/).filter(Boolean)
-  if (!tokens.length) return { lang: '', fileName: '' }
+  if (!tokens.length) return { lang: '', fileName: '', runnable: null }
+  const runnable = parseFenceRunnable(tokens)
 
   const firstToken = tokens[0]
   const firstLower = firstToken.toLowerCase()
@@ -590,6 +764,7 @@ function parseCodeFenceInfo(info: string | undefined): CodeFenceInfo {
     return {
       lang: explicitLang ? stripFenceMetaQuotes(explicitLang) : languageFromFileName(fileName),
       fileName,
+      runnable,
     }
   }
 
@@ -601,6 +776,7 @@ function parseCodeFenceInfo(info: string | undefined): CodeFenceInfo {
   return {
     lang: firstToken,
     fileName: fileToken ? stripFenceMetaQuotes(fileToken) : '',
+    runnable,
   }
 }
 
@@ -608,7 +784,7 @@ function renderHighlightedCode(source: string, lang: string | undefined): string
   const { langClass, validLang } = resolveCodeLanguage(lang)
   const highlighted = validLang
     ? hljs.highlight(source, { language: validLang, ignoreIllegals: true }).value
-    : escapeHtml(source)
+    : hljs.highlightAuto(source).value
   const normalizedSource = source.replace(/\r\n?/g, '\n')
   const lineCount = Math.max(1, normalizedSource.split('\n').length)
   const lineNumbers = Array.from({ length: lineCount }, (_item, index) => String(index + 1)).join('\n')
@@ -698,11 +874,11 @@ function renderEditableToolbar(kind: EditableBlockKind, label: string, runner: s
   ].join('')
 }
 
-function renderEditableBlock(kind: EditableBlockKind, source: string, lang = '', fileName = ''): string {
+function renderEditableBlock(kind: EditableBlockKind, source: string, lang = '', fileName = '', runnable = false): string {
   const encodedSource = escapeHtml(encodeSource(source))
   const requestedLang = lang.trim().split(/\s+/)[0]
   const { langLabel, validLang } = resolveCodeLanguage(lang)
-  const runner = kind === 'code' && !fileName ? resolveCodeRunner(requestedLang) : ''
+  const runner = kind === 'code' && runnable && !fileName ? resolveCodeRunner(requestedLang) : ''
   const editorLang = requestedLang || validLang || runner
   const content = kind === 'code'
     ? renderHighlightedCode(source, validLang)
@@ -750,11 +926,11 @@ const marked = new Marked({
   breaks: false,
   renderer: {
     code({ text, lang }) {
-      const { lang: requestedLang, fileName } = parseCodeFenceInfo(lang)
+      const { lang: requestedLang, fileName, runnable } = parseCodeFenceInfo(lang)
       if (requestedLang.toLowerCase() === 'mermaid') {
         return renderMermaidDiagram(text)
       }
-      return renderEditableBlock('code', text, requestedLang, fileName)
+      return renderEditableBlock('code', text, requestedLang, fileName, runnable ?? currentMarkdownRenderOptions.codeRunner)
     },
     image({ href, title, text }) {
       const src = escapeHtml(resolvePublicAssetUrl(href || ''))
@@ -792,24 +968,34 @@ marked.use(markedKatex({
   output: 'html',
 }))
 
-function withRunAllToolbar(html: string): string {
-  if (!html.includes('data-md-runner=')) return html
-  return [
-    '<div class="md-run-all-toolbar" role="group" aria-label="代码块批量操作">',
-    '<button class="md-editable-action md-editable-action--run-all" type="button" data-md-global-action="run-all">全部运行/渲染</button>',
-    '<span class="md-run-all-toolbar__status" data-md-run-all-status aria-live="polite"></span>',
-    '</div>',
-    html,
-  ].join('')
+let currentMarkdownRenderOptions: Required<RenderMarkdownOptions> = {
+  codeRunner: false,
+  docId: '',
 }
 
-export function renderMarkdown(source: string): string {
+function withMarkdownRenderOptions<T>(options: RenderMarkdownOptions, render: () => T): T {
+  const previous = currentMarkdownRenderOptions
+  currentMarkdownRenderOptions = {
+    codeRunner: Boolean(options.codeRunner),
+    docId: options.docId || '',
+  }
+  try {
+    return render()
+  } finally {
+    currentMarkdownRenderOptions = previous
+  }
+}
+
+export function renderMarkdown(source: string, options: RenderMarkdownOptions = {}): string {
   if (!source) return ''
-  const cached = renderedMarkdownCache.get(source)
+  const cacheKey = `${options.codeRunner ? '1' : '0'}:${options.docId || ''}:${source}`
+  const cached = renderedMarkdownCache.get(cacheKey)
   if (cached !== undefined) return cached
 
-  const rendered = withRunAllToolbar(deferClosedSourcePageImages(sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string)))
-  renderedMarkdownCache.set(source, rendered)
+  const rendered = withMarkdownRenderOptions(options, () => (
+    deferClosedSourcePageImages(sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string))
+  ))
+  renderedMarkdownCache.set(cacheKey, rendered)
 
   if (renderedMarkdownCache.size > MARKDOWN_CACHE_LIMIT) {
     const oldestKey = renderedMarkdownCache.keys().next().value
@@ -1459,92 +1645,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
   }
 
-  const runnableBlocks = (): HTMLElement[] => (
-    Array.from(root.querySelectorAll<HTMLElement>('.md-editable-block[data-md-runner]'))
-      .filter((block) => !block.dataset.mdFileName)
-  )
-
-  const setRunAllStatus = (text: string) => {
-    const status = root.querySelector<HTMLElement>('[data-md-run-all-status]')
-    if (status) status.textContent = text
-  }
-
-  const setRunAllButtonLoading = (button: HTMLElement, running: boolean) => {
-    button.classList.toggle('is-running', running)
-    button.setAttribute('aria-busy', running ? 'true' : 'false')
-    button.textContent = running ? '运行/渲染中' : '全部运行/渲染'
-    if (button instanceof HTMLButtonElement) button.disabled = running
-  }
-
-  const runOneBlockFromQueue = async (block: HTMLElement) => {
-    if (block.classList.contains('is-running')) return
-    const runner = block.dataset.mdRunner || ''
-    const button = block.querySelector<HTMLElement>('[data-md-action="run"]')
-
-    block.classList.add('is-running')
-    if (button) setRunButtonLoading(button, true, runner)
-    setRunOutputPending(block, 'preparing')
-
-    try {
-      const files = collectAdjacentRunFiles(block)
-      const result = await runCode({
-        language: runner,
-        source: getCurrentSource(block),
-        files,
-        onProgress: ({ status }) => setRunOutputPending(block, status),
-      })
-      setRunOutputResult(block, result, files)
-    } catch (error) {
-      setRunOutputResult(block, {
-        status: 'runtime_error',
-        stdout: '',
-        stderr: '',
-        durationMs: 0,
-        message: error instanceof Error ? error.message : String(error),
-      })
-    } finally {
-      block.classList.remove('is-running')
-      if (button) setRunButtonLoading(button, false, runner)
-    }
-  }
-
-  const runAllBlocks = async (button: HTMLElement) => {
-    if (button.classList.contains('is-running')) return
-
-    const blocks = runnableBlocks()
-    if (!blocks.length) {
-      setRunAllStatus('没有可运行/渲染的代码块')
-      return
-    }
-
-    let completed = 0
-    let nextIndex = 0
-    setRunAllButtonLoading(button, true)
-    setRunAllStatus(`已提交 ${blocks.length} 个`)
-
-    try {
-      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
-      if (blocks[0]) await ensureGiscusLoginForRun(blocks[0])
-      const workerCount = Math.min(RUN_ALL_CONCURRENCY, blocks.length)
-      const workers = Array.from({ length: workerCount }, async () => {
-        while (nextIndex < blocks.length) {
-          const block = blocks[nextIndex]
-          nextIndex += 1
-          await runOneBlockFromQueue(block)
-          completed += 1
-          setRunAllStatus(`${completed}/${blocks.length} 完成`)
-        }
-      })
-      await Promise.all(workers)
-      setRunAllStatus(`${blocks.length}/${blocks.length} 完成`)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      setRunAllStatus(message ? `运行/渲染未完成：${message}` : '运行/渲染未完成')
-    } finally {
-      setRunAllButtonLoading(button, false)
-    }
-  }
-
   const copyBlockSource = async (button: HTMLElement) => {
     const block = button.closest<HTMLElement>('.md-editable-block')
     const fallbackCode = button.closest('.md-code-block')?.querySelector('code')
@@ -1578,15 +1678,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
         .map((item) => ({ src: imagePreviewSrc(item), alt: item.alt }))
         .filter((item) => item.src && item.src !== SOURCE_IMAGE_PLACEHOLDER)
       openImagePreviewGallery(images, images.findIndex((item) => item.src === imagePreviewSrc(image)))
-      return
-    }
-
-    const globalActionButton = target.closest<HTMLElement>('[data-md-global-action]')
-    if (globalActionButton) {
-      const action = globalActionButton.dataset.mdGlobalAction || ''
-      if (action === 'run-all') {
-        await runAllBlocks(globalActionButton)
-      }
       return
     }
 

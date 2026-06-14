@@ -11,6 +11,7 @@ export interface ArchivePost {
   wordCount?: number
   readingMinutes?: number
   updated?: string
+  codeRunner?: boolean
   body?: string
   assetPaths?: string[]
 }
@@ -24,6 +25,7 @@ export interface NoteEntry {
   wordCount?: number
   readingMinutes?: number
   updated?: string
+  codeRunner?: boolean
   body?: string
   assetPaths?: string[]
 }

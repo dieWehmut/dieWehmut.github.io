@@ -36,6 +36,7 @@ const DEFAULT_TIMEOUT_MS = 180000
 const MIN_BACKEND_TIMEOUT_MS = 180000
 const BACKEND_EXECUTABLE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src\/\.laeufer-bin\/main(?:\.exe)?/g
 const BACKEND_SOURCE_PATH_PATTERN = /\/(?:var\/lib\/sandkasten\/laeufer|tmp\/sandkasten-laeufer[^/\s"']*)\/[0-9a-fA-F-]{36}\/src/g
+const RUNNER_INTERNAL_FILE_PATTERN = /(^|[\s"'`(=:])(?:(?:\.\/|\/workspace\/)?\.laeufer-(?:bin|cache|tmp)\/[^\s"'`<>),]+|\/workspace\/\.laeufer-(?:bin|cache|tmp)\b)(?:\s+\d+(?:\.\d+)?\s*(?:b|kb|kib|mb|mib|gb|gib))?/gi
 const encoder = new TextEncoder()
 
 function emptyResult(status: RunStatus, message: string, durationMs = 0): RunResult {
@@ -44,7 +45,7 @@ function emptyResult(status: RunStatus, message: string, durationMs = 0): RunRes
     stdout: '',
     stderr: '',
     durationMs,
-    message,
+    message: redactBackendDetails(message),
   }
 }
 
@@ -208,6 +209,8 @@ function redactBackendDetails(value: string): string {
   return value
     .replace(BACKEND_EXECUTABLE_PATH_PATTERN, './main')
     .replace(BACKEND_SOURCE_PATH_PATTERN, '/workspace')
+    .replace(RUNNER_INTERNAL_FILE_PATTERN, '$1[runner internal file]')
+    .replace(/(?:\s*\[runner internal file\]){2,}/g, ' [runner internal files]')
 }
 
 function normalizeRunResult(result: Omit<RunResult, 'durationMs'> & { durationMs?: number }, durationMs: number): RunResult {

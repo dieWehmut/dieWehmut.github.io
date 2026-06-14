@@ -9,7 +9,13 @@
           </div>
           <div v-if="isLoading" class="post-view__loading" role="status">Loading post...</div>
           <div v-else-if="loadError" class="post-view__loading" role="alert">{{ loadError }}</div>
-          <MarkdownContent v-else-if="post.body" class="post-view__body markdown-body" :source="post.body" />
+          <MarkdownContent
+            v-else-if="post.body"
+            class="post-view__body markdown-body"
+            :source="post.body"
+            :doc-id="post.id"
+            :code-runner="post.codeRunner"
+          />
           <div v-if="post.date || post.tags?.length" class="post-view__meta-row">
             <time v-if="post.date" class="post-view__meta-date" :datetime="post.date"><el-icon class="post-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
             <RouterLink

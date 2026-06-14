@@ -923,8 +923,8 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     links: true,
     mouseWheelZoom: true,
     scrollbar: {
-      horizontalScrollbarSize: 6,
-      verticalScrollbarSize: 6,
+      horizontalScrollbarSize: 3,
+      verticalScrollbarSize: 3,
       useShadows: false,
       alwaysConsumeMouseWheel: false,
     },
