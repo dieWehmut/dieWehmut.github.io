@@ -607,9 +607,18 @@ function parseCodeFenceInfo(info: string | undefined): CodeFenceInfo {
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
   const highlighted = validLang
-    ? hljs.highlight(source, { language: validLang }).value
+    ? hljs.highlight(source, { language: validLang, ignoreIllegals: true }).value
     : escapeHtml(source)
-  return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`
+  const normalizedSource = source.replace(/\r\n?/g, '\n')
+  const lineCount = Math.max(1, normalizedSource.split('\n').length)
+  const lineNumbers = Array.from({ length: lineCount }, (_item, index) => String(index + 1)).join('\n')
+
+  return [
+    '<pre class="md-code-preview">',
+    `<span class="md-code-preview__gutter" aria-hidden="true">${lineNumbers}</span>`,
+    `<code class="hljs md-code-preview__code${langClass}">${highlighted}</code>`,
+    '</pre>',
+  ].join('')
 }
 
 function escapeStyleEndTag(value: string): string {
@@ -1058,26 +1067,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   const monacoEditors = new WeakMap<HTMLElement, MarkdownMonacoEditor>()
   const monacoLoaders = new WeakMap<HTMLElement, Promise<MarkdownMonacoEditor>>()
   const activeMonacoEditors = new Set<MarkdownMonacoEditor>()
-  const pendingPreviewBlocks = new Set<HTMLElement>()
-  const previewHydrationObserver = window.IntersectionObserver
-    ? new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return
-        const block = entry.target
-        if (!(block instanceof HTMLElement)) return
-        previewHydrationObserver?.unobserve(block)
-        pendingPreviewBlocks.delete(block)
-        void ensureEditor(block, true)
-      })
-    }, {
-      rootMargin: '480px 0px',
-      threshold: 0,
-    })
-    : null
-
-  if (previewHydrationObserver) {
-    cleanupHandlers.push(() => previewHydrationObserver.disconnect())
-  }
 
   const ensureEditorHost = (block: HTMLElement): HTMLElement => {
     const existing = block.querySelector<HTMLElement>('.md-editable-editor')
@@ -1098,19 +1087,10 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     return host
   }
 
-  const showReadOnlyPreview = (block: HTMLElement, editorHost: HTMLElement) => {
-    if (getBlockKind(block) !== 'code' || block.classList.contains('is-editing')) return
-    const content = block.querySelector<HTMLElement>('.md-editable-content')
-    if (content) content.hidden = true
-    editorHost.hidden = false
-    editorHost.classList.add('is-readonly')
-  }
-
   const ensureEditor = async (block: HTMLElement, readOnly = false): Promise<MarkdownMonacoEditor> => {
     const existing = monacoEditors.get(block)
     if (existing) {
       existing.setReadOnly(readOnly)
-      if (readOnly) showReadOnlyPreview(block, existing.container)
       return existing
     }
 
@@ -1118,14 +1098,12 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     if (loading) {
       const editor = await loading
       editor.setReadOnly(readOnly)
-      if (readOnly) showReadOnlyPreview(block, editor.container)
       return editor
     }
 
     const host = ensureEditorHost(block)
     host.classList.add('is-loading')
     host.setAttribute('aria-busy', 'true')
-    if (readOnly) showReadOnlyPreview(block, host)
 
     const loader = createMarkdownMonacoEditor({
       container: host,
@@ -1163,20 +1141,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
   }
 
-  const schedulePreviewHydration = (block: HTMLElement) => {
-    if (getBlockKind(block) !== 'code') return
-    if (monacoEditors.has(block) || monacoLoaders.has(block) || pendingPreviewBlocks.has(block)) return
-    ensureEditorHost(block)
-
-    if (!previewHydrationObserver) {
-      void ensureEditor(block, true)
-      return
-    }
-
-    pendingPreviewBlocks.add(block)
-    previewHydrationObserver.observe(block)
-  }
-
   const setEditing = async (block: HTMLElement, editing: boolean) => {
     const editorHost = ensureEditorHost(block)
     const content = block.querySelector<HTMLElement>('.md-editable-content')
@@ -1184,7 +1148,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     block.classList.toggle('is-editing', editing)
     editorHost.hidden = !editing
-    if (content) content.hidden = editing || (getBlockKind(block) === 'code' && monacoEditors.has(block))
+    editorHost.classList.toggle('is-readonly', !editing)
+    if (content) content.hidden = editing
 
     if (editButton) {
       editButton.textContent = editing ? '完成' : '修改'
@@ -1196,11 +1161,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       const editor = monacoEditors.get(block)
       editor?.setValue(getCurrentSource(block))
       editor?.setReadOnly(true)
-      if (getBlockKind(block) === 'code' && editor) {
-        editorHost.hidden = false
-        editorHost.classList.add('is-readonly')
-        editor.layout()
-      }
+      renderBlockContent(block, getCurrentSource(block))
       return
     }
 
@@ -1223,24 +1184,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     setCurrentSource(block, originalSource)
     setSourceVisible(block, false)
     void setEditing(block, false)
-  }
-
-  root.querySelectorAll<HTMLElement>('.md-editable-block[data-md-kind="code"]').forEach(schedulePreviewHydration)
-
-  if (window.MutationObserver && root instanceof Node) {
-    const codeObserver = new MutationObserver((records) => {
-      records.forEach((record) => {
-        record.addedNodes.forEach((node) => {
-          if (!(node instanceof Element)) return
-          if (node.matches('.md-editable-block[data-md-kind="code"]')) {
-            schedulePreviewHydration(node as HTMLElement)
-          }
-          node.querySelectorAll<HTMLElement>('.md-editable-block[data-md-kind="code"]').forEach(schedulePreviewHydration)
-        })
-      })
-    })
-    codeObserver.observe(root, { childList: true, subtree: true })
-    cleanupHandlers.push(() => codeObserver.disconnect())
   }
 
   const showCopyToast = (message: string, failed = false) => {
