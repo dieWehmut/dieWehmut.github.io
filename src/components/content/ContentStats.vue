@@ -1,11 +1,11 @@
 <template>
   <span v-if="wordCount" class="content-stats__item">
     <el-icon class="content-stats__icon"><Document /></el-icon>
-    字数:{{ wordCount }}
+    words:{{ wordCount }}
   </span>
   <span v-if="readingMinutes" class="content-stats__item">
     <el-icon class="content-stats__icon"><Timer /></el-icon>
-    阅读时长:{{ readingMinutes }} min
+    read:{{ readingMinutes }} min
   </span>
 </template>
 
