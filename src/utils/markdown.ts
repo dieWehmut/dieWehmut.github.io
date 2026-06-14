@@ -53,7 +53,7 @@ import { openImagePreviewGallery } from './imagePreview'
 import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetImage } from './publicAssets'
 import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
 import { ensureGiscusLogin } from './giscusAuth'
-import { createMarkdownMonacoEditor, type MarkdownMonacoEditor } from './monacoMarkdownEditor'
+import type { MarkdownMonacoEditor } from './monacoMarkdownEditor'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -972,6 +972,25 @@ let currentMarkdownRenderOptions: Required<RenderMarkdownOptions> = {
   codeRunner: false,
   docId: '',
 }
+let markdownMonacoEditorModulePromise: Promise<typeof import('./monacoMarkdownEditor')> | null = null
+const markdownMonacoWarmups = new Map<string, Promise<void>>()
+
+function loadMarkdownMonacoEditorModule() {
+  markdownMonacoEditorModulePromise ||= import('./monacoMarkdownEditor')
+  return markdownMonacoEditorModulePromise
+}
+
+function warmupMarkdownMonacoEditor(language = '') {
+  const key = language.trim().toLowerCase() || 'plaintext'
+  let warmup = markdownMonacoWarmups.get(key)
+  if (!warmup) {
+    warmup = loadMarkdownMonacoEditorModule()
+      .then(({ preloadMarkdownMonacoEditor }) => preloadMarkdownMonacoEditor(language))
+      .catch(() => undefined)
+    markdownMonacoWarmups.set(key, warmup)
+  }
+  return warmup
+}
 
 function withMarkdownRenderOptions<T>(options: RenderMarkdownOptions, render: () => T): T {
   const previous = currentMarkdownRenderOptions
@@ -1252,7 +1271,16 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
   const monacoEditors = new WeakMap<HTMLElement, MarkdownMonacoEditor>()
   const monacoLoaders = new WeakMap<HTMLElement, Promise<MarkdownMonacoEditor>>()
+  const textareaEditors = new WeakMap<HTMLElement, HTMLTextAreaElement>()
+  const editTokens = new WeakMap<HTMLElement, number>()
   const activeMonacoEditors = new Set<MarkdownMonacoEditor>()
+  let editTokenSequence = 0
+
+  const bumpEditToken = (block: HTMLElement): number => {
+    editTokenSequence += 1
+    editTokens.set(block, editTokenSequence)
+    return editTokenSequence
+  }
 
   const ensureEditorHost = (block: HTMLElement): HTMLElement => {
     const existing = block.querySelector<HTMLElement>('.md-editable-editor')
@@ -1273,6 +1301,42 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     return host
   }
 
+  const ensureTextareaEditor = (block: HTMLElement): HTMLTextAreaElement => {
+    const existing = textareaEditors.get(block)
+    if (existing) return existing
+
+    const host = ensureEditorHost(block)
+    const textarea = document.createElement('textarea')
+    textarea.className = 'md-editable-textarea'
+    textarea.spellcheck = false
+    textarea.setAttribute('autocapitalize', 'off')
+    textarea.setAttribute('autocomplete', 'off')
+    textarea.setAttribute('autocorrect', 'off')
+    textarea.wrap = 'off'
+    textarea.value = getCurrentSource(block)
+    textarea.setAttribute('aria-label', 'Markdown source editor')
+    textarea.style.height = `${Math.max(host.getBoundingClientRect().height, 72)}px`
+    if (host.firstChild) host.insertBefore(textarea, host.firstChild)
+    else host.append(textarea)
+
+    const onInput = () => {
+      setCurrentSource(block, textarea.value, { renderContent: false })
+      textarea.style.height = 'auto'
+      textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 72), 620)}px`
+    }
+
+    textarea.addEventListener('input', onInput)
+    textareaEditors.set(block, textarea)
+    return textarea
+  }
+
+  const removeTextareaEditor = (block: HTMLElement) => {
+    const textarea = textareaEditors.get(block)
+    if (!textarea) return
+    textarea.remove()
+    textareaEditors.delete(block)
+  }
+
   const ensureEditor = async (block: HTMLElement, readOnly = false): Promise<MarkdownMonacoEditor> => {
     const existing = monacoEditors.get(block)
     if (existing) {
@@ -1288,27 +1352,31 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
 
     const host = ensureEditorHost(block)
-    host.classList.add('is-loading')
+    if (!textareaEditors.has(block)) host.classList.add('is-loading')
     host.setAttribute('aria-busy', 'true')
 
-    const loader = createMarkdownMonacoEditor({
-      container: host,
-      language: block.dataset.mdLang || block.dataset.mdRunner || '',
-      value: getCurrentSource(block),
-      onChange: (value) => setCurrentSource(block, value, { renderContent: false }),
-      readOnly,
-    }).then((editor) => {
-      monacoEditors.set(block, editor)
-      activeMonacoEditors.add(editor)
-      host.classList.remove('is-loading')
-      host.setAttribute('aria-busy', 'false')
-      return editor
-    }).catch((error) => {
-      host.classList.remove('is-loading')
-      host.setAttribute('aria-busy', 'false')
-      monacoLoaders.delete(block)
-      throw error
-    })
+    const loader = loadMarkdownMonacoEditorModule()
+      .then(({ createMarkdownMonacoEditor }) => createMarkdownMonacoEditor({
+        container: host,
+        language: block.dataset.mdLang || block.dataset.mdRunner || '',
+        value: getCurrentSource(block),
+        onChange: (value) => setCurrentSource(block, value, { renderContent: false }),
+        readOnly,
+      }))
+      .then((editor) => {
+        monacoEditors.set(block, editor)
+        activeMonacoEditors.add(editor)
+        host.classList.remove('is-loading')
+        host.setAttribute('aria-busy', 'false')
+        if (block.classList.contains('is-editing')) removeTextareaEditor(block)
+        else editor.setReadOnly(true)
+        return editor
+      }).catch((error) => {
+        host.classList.remove('is-loading')
+        host.setAttribute('aria-busy', 'false')
+        monacoLoaders.delete(block)
+        throw error
+      })
 
     monacoLoaders.set(block, loader)
     return loader
@@ -1331,6 +1399,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     const editorHost = ensureEditorHost(block)
     const content = block.querySelector<HTMLElement>('.md-editable-content')
     const editButton = block.querySelector<HTMLButtonElement>('[data-md-action="edit"]')
+    const language = block.dataset.mdLang || block.dataset.mdRunner || ''
+    const editToken = bumpEditToken(block)
 
     block.classList.toggle('is-editing', editing)
     editorHost.hidden = !editing
@@ -1345,16 +1415,30 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     if (!editing) {
       const editor = monacoEditors.get(block)
+      const textarea = textareaEditors.get(block)
+      if (textarea) setCurrentSource(block, textarea.value, { renderContent: false })
       editor?.setValue(getCurrentSource(block))
       editor?.setReadOnly(true)
       renderBlockContent(block, getCurrentSource(block))
+      removeTextareaEditor(block)
       return
     }
 
     setSourceVisible(block, false)
+    const textarea = ensureTextareaEditor(block)
+    textarea.value = getCurrentSource(block)
+    textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 72), 620)}px`
+    textarea.focus()
+
+    void warmupMarkdownMonacoEditor(language)
     try {
       const editor = await ensureEditor(block, false)
+      if (editTokens.get(block) !== editToken || !block.classList.contains('is-editing')) {
+        editor.setReadOnly(true)
+        return
+      }
       editor.setValue(getCurrentSource(block))
+      removeTextareaEditor(block)
       editor.layout()
       editor.container.classList.remove('is-readonly')
       editor.focusEnd()
@@ -1366,6 +1450,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   const restoreBlock = (block: HTMLElement) => {
     const originalSource = getOriginalSource(block)
     const editor = monacoEditors.get(block)
+    const textarea = textareaEditors.get(block)
+    if (textarea) textarea.value = originalSource
     editor?.setValue(originalSource)
     setCurrentSource(block, originalSource)
     setSourceVisible(block, false)
@@ -1667,6 +1753,17 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
   }
 
+  const warmupEditorFromTarget = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) return
+    const editButton = target.closest<HTMLElement>('[data-md-action="edit"]')
+    const block = editButton?.closest<HTMLElement>('.md-editable-block')
+    if (!block) return
+    void warmupMarkdownMonacoEditor(block.dataset.mdLang || block.dataset.mdRunner || '')
+  }
+
+  const onPointerOver = (event: Event) => warmupEditorFromTarget(event.target)
+  const onFocusIn = (event: Event) => warmupEditorFromTarget(event.target)
+
   const onClick = async (event: Event) => {
     const target = event.target
     if (!(target instanceof HTMLElement)) return
@@ -1715,8 +1812,12 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
   }
 
+  root.addEventListener('pointerover', onPointerOver)
+  root.addEventListener('focusin', onFocusIn)
   root.addEventListener('click', onClick)
   return () => {
+    root.removeEventListener('pointerover', onPointerOver)
+    root.removeEventListener('focusin', onFocusIn)
     root.removeEventListener('click', onClick)
     cleanupHandlers.forEach((cleanupHandler) => cleanupHandler())
     activeMonacoEditors.forEach((editor) => editor.dispose())
