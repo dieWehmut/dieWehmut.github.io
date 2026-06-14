@@ -8,6 +8,7 @@ export type GeneratedDocMeta = {
   wordCount: number
   readingMinutes: number
   updated: string
+  codeRunner?: boolean
   path: string
 }
 
@@ -21,9 +22,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "sandkasten"
     ],
     "summary": "Sandkasten 测试 本文测试 Sandkasten 后端支持的全部语言 / 运行时。程序语言代码块用于运行；HTML、CSS、Markdown、LaTeX、Typst、Graphviz、Vue、TSX 等前端 / 文档代码块用...",
-    "wordCount": 1158,
+    "wordCount": 1161,
     "readingMinutes": 3,
-    "updated": "2026/06/14 04:34",
+    "updated": "2026/06/14 14:16",
+    "codeRunner": true,
     "path": "./posts/testSandkasten.md"
   },
   {
@@ -72,6 +74,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 5527,
     "readingMinutes": 14,
     "updated": "2026/06/10 13:07",
+    "codeRunner": true,
     "path": "./posts/go-learning.md"
   },
   {

@@ -107,14 +107,14 @@
   font-size: 13px !important;
   line-height: 21px !important;
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--site-accent) 72%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--site-accent) 82%, transparent) transparent;
 }
 
 .md-code-preview::-webkit-scrollbar,
 .md-editable-source::-webkit-scrollbar,
 .md-run-output__pre::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 3px;
+  height: 3px;
 }
 
 .md-code-preview::-webkit-scrollbar-track,
@@ -127,13 +127,13 @@
 .md-editable-source::-webkit-scrollbar-thumb,
 .md-run-output__pre::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: color-mix(in srgb, var(--site-accent) 62%, transparent);
+  background: color-mix(in srgb, var(--site-accent) 72%, transparent);
 }
 
 .md-code-preview::-webkit-scrollbar-thumb:hover,
 .md-editable-source::-webkit-scrollbar-thumb:hover,
 .md-run-output__pre::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--site-accent) 78%, transparent);
+  background: color-mix(in srgb, var(--site-accent) 88%, transparent);
 }
 
 .md-code-preview__gutter {
@@ -271,35 +271,6 @@
   background: rgba(31, 196, 31, 0.16);
 }
 
-.md-run-all-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin: 0 0 14px;
-}
-
-.md-editable-action--run-all {
-  color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.1);
-}
-
-.md-editable-action--run-all:hover,
-.md-editable-action--run-all:focus-visible,
-.md-editable-action--run-all.is-running {
-  color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.18);
-}
-
-.md-run-all-toolbar__status {
-  min-width: 7em;
-  color: var(--md-copy-text);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.3;
-  text-align: right;
-}
-
 .md-run-output {
   display: grid;
   gap: 10px;
@@ -397,7 +368,7 @@
   padding: 10px 12px !important;
   overflow: auto;
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--site-accent) 72%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--site-accent) 82%, transparent) transparent;
   border: 1px solid var(--md-pre-border) !important;
   border-radius: 6px !important;
   background: color-mix(in srgb, var(--md-code-bg) 78%, #000) !important;
@@ -433,7 +404,7 @@
   padding: 12px 14px !important;
   overflow-x: auto;
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--site-accent) 72%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--site-accent) 82%, transparent) transparent;
   border: 0 !important;
   border-bottom: 1px solid var(--md-pre-border) !important;
   border-radius: 0 !important;
@@ -493,11 +464,11 @@
 }
 
 .md-editable-editor .monaco-scrollable-element > .scrollbar > .slider {
-  background: color-mix(in srgb, var(--site-accent) 62%, transparent) !important;
+  background: color-mix(in srgb, var(--site-accent) 72%, transparent) !important;
 }
 
 .md-editable-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
-  background: color-mix(in srgb, var(--site-accent) 78%, transparent) !important;
+  background: color-mix(in srgb, var(--site-accent) 88%, transparent) !important;
 }
 
 .md-editable-editor .monaco-scrollable-element > .scrollbar > .slider.active {

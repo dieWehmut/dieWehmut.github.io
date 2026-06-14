@@ -223,6 +223,7 @@ function toGeneratedModule(docs) {
   wordCount: number
   readingMinutes: number
   updated: string
+  codeRunner?: boolean
   path: string
 }
 
@@ -258,6 +259,7 @@ function main() {
         wordCount,
         readingMinutes: readingMinutesFor(wordCount),
         updated,
+        ...(data.codeRunner === 'true' || data.codeRunner === '1' || data.codeRunner === 'yes' ? { codeRunner: true } : {}),
         path: relativePath,
         timestamp: getSortTimestamp(date),
       }

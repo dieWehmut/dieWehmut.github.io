@@ -2,6 +2,7 @@
 title: Sandkasten 测试
 date: 2026-06-13
 tags: [sandkasten]
+codeRunner: true
 ---
 
 ## Sandkasten 测试
@@ -244,11 +245,9 @@ cat(sprintf("r squares=%d mean=%.1f\n", total, mean(values)))
 ### Julia
 
 ```julia
-using Statistics
-
 values = 1:5
 total = sum(n -> n^2, values)
-println("julia squares=$total median=$(median(collect(values)))")
+println("julia squares=$total count=$(length(values))")
 ```
 
 ### Dart
@@ -304,7 +303,10 @@ public class Main {
 
 ```kotlin
 fun main() {
-    val total = (1..5).sumOf { it * it }
+    var total = 0
+    for (n in 1..5) {
+        total += n * n
+    }
     println("kotlin squares=$total")
 }
 ```
@@ -681,11 +683,11 @@ printf("octave squares=%d mean=%.1f\n", total, mean(values));
 ### SQL (SQLite)
 
 ```sql
-WITH values(n) AS (
+WITH nums(n) AS (
   VALUES (1), (2), (3), (4), (5)
 )
 SELECT SUM(n * n) AS square_sum, ROUND(AVG(n), 1) AS mean_value
-FROM values;
+FROM nums;
 ```
 
 ## 领域特定语言

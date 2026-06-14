@@ -9,6 +9,7 @@ type DocMeta = {
   summary?: string
   category?: string
   type?: string
+  codeRunner?: string
 }
 
 type LoadedDoc = GeneratedDocMeta & {
@@ -89,6 +90,7 @@ function entryFromMeta(meta: GeneratedDocMeta): ArchivePost | NoteEntry {
     wordCount: meta.wordCount,
     readingMinutes: meta.readingMinutes,
     updated: meta.updated,
+    codeRunner: Boolean(meta.codeRunner),
   }
 }
 

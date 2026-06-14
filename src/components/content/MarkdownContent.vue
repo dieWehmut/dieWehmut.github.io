@@ -7,6 +7,8 @@ import { onBeforeUnmount, ref, watch } from 'vue'
 
 const props = defineProps<{
   source: string
+  docId?: string
+  codeRunner?: boolean
 }>()
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -87,7 +89,7 @@ function renderRemainingChunks(
   chunks: string[],
   index: number,
   token: number,
-  renderMarkdown: (source: string) => string
+  renderMarkdown: typeof import('../../utils/markdown').renderMarkdown
 ) {
   if (token !== renderToken) return
   if (index >= chunks.length) {
@@ -96,14 +98,17 @@ function renderRemainingChunks(
 
   scheduleIdle(() => {
     if (token !== renderToken) return
-    appendRenderedHtml(renderMarkdown(chunks[index]))
+    appendRenderedHtml(renderMarkdown(chunks[index], {
+      codeRunner: props.codeRunner,
+      docId: props.docId,
+    }))
     renderRemainingChunks(chunks, index + 1, token, renderMarkdown)
   }, 900)
 }
 
 watch(
-  () => props.source,
-  (source) => {
+  () => [props.source, props.docId, props.codeRunner] as const,
+  ([source]) => {
     const token = ++renderToken
     setRenderedHtml('')
     cleanup?.()
@@ -116,7 +121,11 @@ watch(
       const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
       if (token !== renderToken) return
       const chunks = splitMarkdownForProgressiveRender(source)
-      setRenderedHtml(renderMarkdown(chunks[0] || ''))
+      const firstChunkHtml = renderMarkdown(chunks[0] || '', {
+        codeRunner: props.codeRunner,
+        docId: props.docId,
+      })
+      setRenderedHtml(firstChunkHtml)
       if (token !== renderToken) return
       bindInteractions(token)
       if (chunks.length <= 1) {
