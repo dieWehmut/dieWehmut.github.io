@@ -444,7 +444,7 @@ const RENDERABLE_RUNNERS = new Set([
   'latex', 'graphviz', 'dot', 'typst', 'typ',
 ])
 const STYLE_RENDERABLE_RUNNERS = new Set(['css', 'scss', 'tailwindcss'])
-const RUN_ALL_CONCURRENCY = 16
+const RUN_ALL_CONCURRENCY = 4
 
 function resolveCodeRunner(lang: string | undefined): string {
   const requestedLang = (lang || '').trim().split(/\s+/)[0].toLowerCase()
@@ -1521,7 +1521,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     let nextIndex = 0
     setRunAllButtonLoading(button, true)
     setRunAllStatus(`已提交 ${blocks.length} 个`)
-    blocks.forEach((block) => setRunOutputPending(block, 'queued'))
 
     try {
       await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
@@ -1539,18 +1538,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       await Promise.all(workers)
       setRunAllStatus(`${blocks.length}/${blocks.length} 完成`)
     } catch (error) {
-      blocks.forEach((block) => {
-        if (!block.classList.contains('is-running')) {
-          setRunOutputResult(block, {
-            status: 'runtime_error',
-            stdout: '',
-            stderr: '',
-            durationMs: 0,
-            message: error instanceof Error ? error.message : String(error),
-          })
-        }
-      })
-      setRunAllStatus('运行/渲染未完成')
+      const message = error instanceof Error ? error.message : String(error)
+      setRunAllStatus(message ? `运行/渲染未完成：${message}` : '运行/渲染未完成')
     } finally {
       setRunAllButtonLoading(button, false)
     }
