@@ -11,7 +11,7 @@
     "assets:push": "node scripts/sync-assets-repo.mjs",
     "runner:smoke": "node scripts/smoke-code-runner.mjs",
     "typecheck": "vue-tsc --noEmit",
-    "build": "pnpm run content:sync && vite build",
+    "build": "pnpm run content:sync && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
     "preview": "vite preview",
     "runner:smoke:docs": "node scripts/smoke-sandkasten-doc.mjs"
   },
@@ -23,6 +23,7 @@
     "katex": "^0.17.0",
     "marked": "^18.0.4",
     "marked-katex-extension": "^5.1.10",
+    "monaco-editor": "^0.55.1",
     "tailwindcss": "^4.2.1",
     "vue": "^3.5.18",
     "vue-i18n": "^9.2.2",
