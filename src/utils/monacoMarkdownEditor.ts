@@ -334,6 +334,13 @@ async function loadLanguageContribution(language: string) {
   await loading
 }
 
+async function prepareMonacoLanguage(language: string) {
+  await loadLanguageContribution(language)
+  if (language === 'javascript' || language === 'typescript') {
+    await ensureTypeScriptDefaults()
+  }
+}
+
 function defineThemes(monaco: MonacoModule) {
   if (themesDefined) return
   themesDefined = true
@@ -847,6 +854,14 @@ export function resolveMonacoLanguage(language: string): string {
   return KNOWN_MONACO_LANGUAGES.has(aliased) ? aliased : 'plaintext'
 }
 
+export async function preloadMarkdownMonacoEditor(language = ''): Promise<void> {
+  const monaco = await loadMonaco()
+  const resolvedLanguage = resolveMonacoLanguage(language)
+  if (resolvedLanguage === 'plaintext') return
+  await prepareMonacoLanguage(resolvedLanguage)
+  monaco.editor.setTheme(currentMonacoTheme())
+}
+
 function editorHeightFor(value: string): number {
   const lines = Math.max(1, value.split('\n').length)
   const contentHeight = lines * MONACO_LINE_HEIGHT + MONACO_VERTICAL_PADDING * 2
@@ -860,12 +875,13 @@ function updateContainerHeight(container: HTMLElement, value: string) {
 export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEditorOptions): Promise<MarkdownMonacoEditor> {
   const monaco = await loadMonaco()
   const language = resolveMonacoLanguage(options.language)
-  await loadLanguageContribution(language)
-  if (language === 'javascript' || language === 'typescript') {
-    await ensureTypeScriptDefaults()
+  const initialLanguage = language === 'plaintext' || EXTRA_LANGUAGES.has(language) ? language : 'plaintext'
+  const model = monaco.editor.createModel(options.value, initialLanguage)
+  if (language !== initialLanguage) {
+    void prepareMonacoLanguage(language).then(() => {
+      if (!model.isDisposed()) monaco.editor.setModelLanguage(model, language)
+    })
   }
-
-  const model = monaco.editor.createModel(options.value, language)
   const container = options.container
   const initialReadOnly = options.readOnly ?? false
   updateContainerHeight(container, options.value)
