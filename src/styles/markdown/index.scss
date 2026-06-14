@@ -90,11 +90,79 @@
   background: var(--md-math-bg);
 }
 
-.md-code-block pre {
+.md-code-block pre,
+.md-code-preview {
   margin: 0 !important;
   border: none !important;
   border-radius: 0 !important;
   background: transparent !important;
+}
+
+.md-code-preview {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  max-height: 620px;
+  padding: 0 !important;
+  overflow: auto;
+  font-size: 13px !important;
+  line-height: 21px !important;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--site-accent) 72%, transparent) transparent;
+}
+
+.md-code-preview::-webkit-scrollbar,
+.md-editable-source::-webkit-scrollbar,
+.md-run-output__pre::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.md-code-preview::-webkit-scrollbar-track,
+.md-editable-source::-webkit-scrollbar-track,
+.md-run-output__pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.md-code-preview::-webkit-scrollbar-thumb,
+.md-editable-source::-webkit-scrollbar-thumb,
+.md-run-output__pre::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--site-accent) 62%, transparent);
+}
+
+.md-code-preview::-webkit-scrollbar-thumb:hover,
+.md-editable-source::-webkit-scrollbar-thumb:hover,
+.md-run-output__pre::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--site-accent) 78%, transparent);
+}
+
+.md-code-preview__gutter {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  min-width: 2.25rem;
+  padding: 12px 8px 12px 10px;
+  border-right: 1px solid color-mix(in srgb, var(--md-pre-border) 72%, transparent);
+  background: var(--md-code-bg);
+  color: var(--md-copy-text);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 21px;
+  text-align: right;
+  user-select: none;
+  white-space: pre;
+}
+
+.md-code-preview__code {
+  display: block;
+  min-width: max-content;
+  padding: 12px 14px 12px 10px !important;
+  background: transparent !important;
+  color: var(--md-code-text);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 21px;
+  white-space: pre;
 }
 
 .md-code-header,
@@ -328,6 +396,8 @@
   margin: 0 !important;
   padding: 10px 12px !important;
   overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--site-accent) 72%, transparent) transparent;
   border: 1px solid var(--md-pre-border) !important;
   border-radius: 6px !important;
   background: color-mix(in srgb, var(--md-code-bg) 78%, #000) !important;
@@ -362,6 +432,8 @@
   margin: 0 !important;
   padding: 12px 14px !important;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--site-accent) 72%, transparent) transparent;
   border: 0 !important;
   border-bottom: 1px solid var(--md-pre-border) !important;
   border-radius: 0 !important;
@@ -384,10 +456,10 @@
 .md-editable-editor {
   display: block;
   width: 100%;
-  min-height: 120px;
+  min-height: 48px;
   box-sizing: border-box;
   margin: 0;
-  overflow: auto;
+  overflow: hidden;
   border: 0;
   border-radius: 0;
   outline: none;
@@ -399,12 +471,12 @@
 }
 
 .md-editable-editor.is-loading {
-  min-height: 180px;
+  min-height: 72px;
 }
 
 .md-editable-editor.is-loading::before {
   display: grid;
-  min-height: 180px;
+  min-height: 72px;
   place-items: center;
   color: var(--md-copy-text);
   content: "Loading editor...";
@@ -418,6 +490,18 @@
 
 .md-editable-editor .monaco-editor {
   --vscode-focusBorder: color-mix(in srgb, var(--site-accent) 48%, transparent);
+}
+
+.md-editable-editor .monaco-scrollable-element > .scrollbar > .slider {
+  background: color-mix(in srgb, var(--site-accent) 62%, transparent) !important;
+}
+
+.md-editable-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+  background: color-mix(in srgb, var(--site-accent) 78%, transparent) !important;
+}
+
+.md-editable-editor .monaco-scrollable-element > .scrollbar > .slider.active {
+  background: var(--site-accent) !important;
 }
 
 .md-editable-editor.is-readonly .monaco-editor .cursor {

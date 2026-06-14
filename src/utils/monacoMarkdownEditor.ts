@@ -49,9 +49,18 @@ type TypeScriptContribution = {
 
 let monacoPromise: Promise<MonacoModule> | null = null
 let completionRegistered = false
+let extraLanguagesRegistered = false
+let themesDefined = false
+let typeScriptDefaultsConfigured = false
+let typeScriptContributionPromise: Promise<TypeScriptContribution> | null = null
+const loadedLanguageContributions = new Map<string, Promise<unknown>>()
 
 const MONACO_THEME_DARK = 'diesw-markdown-dark'
 const MONACO_THEME_LIGHT = 'diesw-markdown-light'
+const MONACO_LINE_HEIGHT = 21
+const MONACO_VERTICAL_PADDING = 8
+const MONACO_MIN_HEIGHT = 37
+const MONACO_MAX_HEIGHT = 620
 
 const LANGUAGE_ALIASES: Record<string, string> = {
   asm: 'assembly',
@@ -207,56 +216,54 @@ const KNOWN_MONACO_LANGUAGES = new Set([
   ...EXTRA_LANGUAGES,
 ])
 
-const LANGUAGE_CONTRIBUTIONS: LanguageContributionLoader[] = [
-  () => import('monaco-editor/esm/vs/basic-languages/clojure/clojure.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/bat/bat.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/coffee/coffee.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/css/css.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/dart/dart.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/elixir/elixir.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/fsharp/fsharp.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/go/go.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/graphql/graphql.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/hcl/hcl.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/html/html.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/ini/ini.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/java/java.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/julia/julia.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/kotlin/kotlin.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/lua/lua.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/mdx/mdx.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/mysql/mysql.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/objective-c/objective-c.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/pascal/pascal.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/perl/perl.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/pgsql/pgsql.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/php/php.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/powershell/powershell.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/protobuf/protobuf.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/python/python.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/r/r.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/redis/redis.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/ruby/ruby.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/rust/rust.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/scala/scala.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/scheme/scheme.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/scss/scss.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/shell/shell.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/solidity/solidity.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/sql/sql.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/swift/swift.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/xml/xml.contribution.js'),
-  () => import('monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'),
-  () => import('monaco-editor/esm/vs/language/json/monaco.contribution.js'),
-  () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
-  () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
-]
+const LANGUAGE_CONTRIBUTIONS: Record<string, LanguageContributionLoader> = {
+  bat: () => import('monaco-editor/esm/vs/basic-languages/bat/bat.contribution.js'),
+  clojure: () => import('monaco-editor/esm/vs/basic-languages/clojure/clojure.contribution.js'),
+  coffeescript: () => import('monaco-editor/esm/vs/basic-languages/coffee/coffee.contribution.js'),
+  cpp: () => import('monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution.js'),
+  csharp: () => import('monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution.js'),
+  css: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+  dart: () => import('monaco-editor/esm/vs/basic-languages/dart/dart.contribution.js'),
+  dockerfile: () => import('monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.contribution.js'),
+  elixir: () => import('monaco-editor/esm/vs/basic-languages/elixir/elixir.contribution.js'),
+  fsharp: () => import('monaco-editor/esm/vs/basic-languages/fsharp/fsharp.contribution.js'),
+  go: () => import('monaco-editor/esm/vs/basic-languages/go/go.contribution.js'),
+  graphql: () => import('monaco-editor/esm/vs/basic-languages/graphql/graphql.contribution.js'),
+  hcl: () => import('monaco-editor/esm/vs/basic-languages/hcl/hcl.contribution.js'),
+  html: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+  ini: () => import('monaco-editor/esm/vs/basic-languages/ini/ini.contribution.js'),
+  java: () => import('monaco-editor/esm/vs/basic-languages/java/java.contribution.js'),
+  javascript: () => import('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'),
+  json: () => import('monaco-editor/esm/vs/language/json/monaco.contribution.js'),
+  julia: () => import('monaco-editor/esm/vs/basic-languages/julia/julia.contribution.js'),
+  kotlin: () => import('monaco-editor/esm/vs/basic-languages/kotlin/kotlin.contribution.js'),
+  lua: () => import('monaco-editor/esm/vs/basic-languages/lua/lua.contribution.js'),
+  markdown: () => import('monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'),
+  mdx: () => import('monaco-editor/esm/vs/basic-languages/mdx/mdx.contribution.js'),
+  mysql: () => import('monaco-editor/esm/vs/basic-languages/mysql/mysql.contribution.js'),
+  'objective-c': () => import('monaco-editor/esm/vs/basic-languages/objective-c/objective-c.contribution.js'),
+  pascal: () => import('monaco-editor/esm/vs/basic-languages/pascal/pascal.contribution.js'),
+  perl: () => import('monaco-editor/esm/vs/basic-languages/perl/perl.contribution.js'),
+  pgsql: () => import('monaco-editor/esm/vs/basic-languages/pgsql/pgsql.contribution.js'),
+  php: () => import('monaco-editor/esm/vs/basic-languages/php/php.contribution.js'),
+  powershell: () => import('monaco-editor/esm/vs/basic-languages/powershell/powershell.contribution.js'),
+  protobuf: () => import('monaco-editor/esm/vs/basic-languages/protobuf/protobuf.contribution.js'),
+  python: () => import('monaco-editor/esm/vs/basic-languages/python/python.contribution.js'),
+  r: () => import('monaco-editor/esm/vs/basic-languages/r/r.contribution.js'),
+  redis: () => import('monaco-editor/esm/vs/basic-languages/redis/redis.contribution.js'),
+  ruby: () => import('monaco-editor/esm/vs/basic-languages/ruby/ruby.contribution.js'),
+  rust: () => import('monaco-editor/esm/vs/basic-languages/rust/rust.contribution.js'),
+  scala: () => import('monaco-editor/esm/vs/basic-languages/scala/scala.contribution.js'),
+  scheme: () => import('monaco-editor/esm/vs/basic-languages/scheme/scheme.contribution.js'),
+  scss: () => import('monaco-editor/esm/vs/basic-languages/scss/scss.contribution.js'),
+  shell: () => import('monaco-editor/esm/vs/basic-languages/shell/shell.contribution.js'),
+  sol: () => import('monaco-editor/esm/vs/basic-languages/solidity/solidity.contribution.js'),
+  sql: () => import('monaco-editor/esm/vs/basic-languages/sql/sql.contribution.js'),
+  swift: () => import('monaco-editor/esm/vs/basic-languages/swift/swift.contribution.js'),
+  typescript: () => import('monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js'),
+  xml: () => import('monaco-editor/esm/vs/basic-languages/xml/xml.contribution.js'),
+  yaml: () => import('monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'),
+}
 
 function currentMonacoTheme(): string {
   if (typeof document === 'undefined') return MONACO_THEME_DARK
@@ -293,22 +300,44 @@ async function loadMonaco(): Promise<MonacoModule> {
   if (!monacoPromise) {
     configureWorkers()
     monacoPromise = (async () => {
-      const [monaco, typescriptContribution] = await Promise.all([
-        import('monaco-editor/esm/vs/editor/editor.api.js'),
-        import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
-      ])
-      await Promise.all(LANGUAGE_CONTRIBUTIONS.map((loadContribution) => loadContribution()))
+      const monaco = await import('monaco-editor/esm/vs/editor/editor.api.js')
       defineThemes(monaco)
       registerExtraLanguages(monaco)
       registerSnippetCompletions(monaco)
-      configureLanguageDefaults(typescriptContribution as unknown as TypeScriptContribution)
       return monaco
     })()
   }
   return monacoPromise
 }
 
+async function ensureTypeScriptDefaults() {
+  if (!typeScriptContributionPromise) {
+    typeScriptContributionPromise = import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js') as unknown as Promise<TypeScriptContribution>
+  }
+
+  if (typeScriptDefaultsConfigured) return
+  const typescriptContribution = await typeScriptContributionPromise
+  configureLanguageDefaults(typescriptContribution)
+  typeScriptDefaultsConfigured = true
+}
+
+async function loadLanguageContribution(language: string) {
+  const loader = LANGUAGE_CONTRIBUTIONS[language]
+  if (!loader) return
+
+  let loading = loadedLanguageContributions.get(language)
+  if (!loading) {
+    loading = loader()
+    loadedLanguageContributions.set(language, loading)
+  }
+
+  await loading
+}
+
 function defineThemes(monaco: MonacoModule) {
+  if (themesDefined) return
+  themesDefined = true
+
   monaco.editor.defineTheme(MONACO_THEME_DARK, {
     base: 'vs-dark',
     inherit: true,
@@ -339,6 +368,12 @@ function defineThemes(monaco: MonacoModule) {
       'editorSuggestWidget.selectedBackground': '#1f6feb44',
       'editorHoverWidget.background': '#161b22',
       'editorHoverWidget.border': '#30363d',
+      'scrollbarSlider.background': '#1fc41f66',
+      'scrollbarSlider.hoverBackground': '#1fc41f99',
+      'scrollbarSlider.activeBackground': '#1fc41fcc',
+      'minimapSlider.background': '#1fc41f33',
+      'minimapSlider.hoverBackground': '#1fc41f55',
+      'minimapSlider.activeBackground': '#1fc41f77',
     },
   })
 
@@ -372,11 +407,20 @@ function defineThemes(monaco: MonacoModule) {
       'editorSuggestWidget.selectedBackground': '#ddf4ff',
       'editorHoverWidget.background': '#ffffff',
       'editorHoverWidget.border': '#d0d7de',
+      'scrollbarSlider.background': '#1f9d5566',
+      'scrollbarSlider.hoverBackground': '#1f9d5599',
+      'scrollbarSlider.activeBackground': '#1f9d55cc',
+      'minimapSlider.background': '#1f9d5533',
+      'minimapSlider.hoverBackground': '#1f9d5555',
+      'minimapSlider.activeBackground': '#1f9d5577',
     },
   })
 }
 
 function registerExtraLanguages(monaco: MonacoModule) {
+  if (extraLanguagesRegistered) return
+  extraLanguagesRegistered = true
+
   const existing = new Set(monaco.languages.getLanguages().map((language) => language.id))
   EXTRA_LANGUAGES.forEach((language) => {
     if (!existing.has(language)) monaco.languages.register({ id: language })
@@ -804,8 +848,9 @@ export function resolveMonacoLanguage(language: string): string {
 }
 
 function editorHeightFor(value: string): number {
-  const lines = Math.max(6, value.split('\n').length + 1)
-  return Math.min(Math.max(lines * 21 + 18, 160), 620)
+  const lines = Math.max(1, value.split('\n').length)
+  const contentHeight = lines * MONACO_LINE_HEIGHT + MONACO_VERTICAL_PADDING * 2
+  return Math.min(Math.max(contentHeight, MONACO_MIN_HEIGHT), MONACO_MAX_HEIGHT)
 }
 
 function updateContainerHeight(container: HTMLElement, value: string) {
@@ -815,6 +860,11 @@ function updateContainerHeight(container: HTMLElement, value: string) {
 export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEditorOptions): Promise<MarkdownMonacoEditor> {
   const monaco = await loadMonaco()
   const language = resolveMonacoLanguage(options.language)
+  await loadLanguageContribution(language)
+  if (language === 'javascript' || language === 'typescript') {
+    await ensureTypeScriptDefaults()
+  }
+
   const model = monaco.editor.createModel(options.value, language)
   const container = options.container
   const initialReadOnly = options.readOnly ?? false
@@ -825,8 +875,9 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     theme: currentMonacoTheme(),
     automaticLayout: true,
     lineNumbers: 'on',
-    lineNumbersMinChars: 3,
-    glyphMargin: true,
+    lineNumbersMinChars: 1,
+    glyphMargin: false,
+    lineDecorationsWidth: 2,
     folding: true,
     foldingStrategy: 'auto',
     foldingHighlight: true,
@@ -849,7 +900,11 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     cursorSmoothCaretAnimation: 'on',
     fontFamily: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
     fontSize: 13,
-    lineHeight: 21,
+    lineHeight: MONACO_LINE_HEIGHT,
+    padding: {
+      top: 8,
+      bottom: 8,
+    },
     tabSize: 2,
     insertSpaces: true,
     detectIndentation: true,
@@ -867,9 +922,21 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     contextmenu: true,
     links: true,
     mouseWheelZoom: true,
+    scrollbar: {
+      horizontalScrollbarSize: 6,
+      verticalScrollbarSize: 6,
+      useShadows: false,
+      alwaysConsumeMouseWheel: false,
+    },
     readOnly: initialReadOnly,
     domReadOnly: initialReadOnly,
     renderValidationDecorations: initialReadOnly ? 'off' : 'editable',
+  })
+
+  const sizeDisposable = editor.onDidContentSizeChange(() => {
+    const height = Math.min(Math.max(editor.getContentHeight(), MONACO_MIN_HEIGHT), MONACO_MAX_HEIGHT)
+    container.style.height = `${height}px`
+    editor.layout()
   })
 
   const changeDisposable = model.onDidChangeContent(() => {
@@ -919,6 +986,7 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     dispose() {
       themeObserver.disconnect()
       changeDisposable.dispose()
+      sizeDisposable.dispose()
       editor.dispose()
       model.dispose()
     },
