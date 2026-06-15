@@ -37,7 +37,7 @@
 
 ---
 
-`diesuwa-starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，适合搭建博客、笔记、项目展示、友链页和静态资料页。模板可以直接部署到 GitHub Pages，也支持 Vercel / Netlify 等静态托管平台。
+`diesuwa-starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，集成了 **Sandkasten 在线代码沙箱** 与 **Uptime Kuma 服务器监控**，适合搭建博客、笔记、项目展示、友链页和带运维看板的静态资料页。模板可以直接部署到 GitHub Pages，也支持 Vercel / Netlify 等静态托管平台。
 
 ## 示例
 
@@ -56,7 +56,8 @@
 - 归档、标签、搜索
 - 友链页面
 - 项目展示页，可关闭
-- 基础设施状态页，可关闭
+- 基础设施状态页（可关闭），支持接入 [Uptime Kuma](https://github.com/louislam/uptime-kuma) 公开状态页，自动渲染心跳/延迟
+- 内置 [Sandkasten](https://github.com/dieWehmut/sandkasten) 在线代码沙箱前端，可直接在文章中跑代码
 - Giscus 评论，可选
 - 多语言界面
 - 响应式移动端布局

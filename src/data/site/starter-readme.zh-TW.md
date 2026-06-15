@@ -37,7 +37,7 @@
 
 ---
 
-`diesuwa-starter` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，適合建立部落格、筆記、專案展示、友鏈頁與靜態個人頁。
+`diesuwa-starter` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，整合了 **Sandkasten 線上程式碼沙箱** 與 **Uptime Kuma 伺服器監控**，適合建立部落格、筆記、專案展示、友鏈頁與帶運維儀表板的靜態個人頁。
 
 ## 示例
 
