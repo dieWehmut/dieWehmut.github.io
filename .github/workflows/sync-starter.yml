@@ -487,3 +487,20 @@ jobs:
           fi
           git commit -m "sync: update starter template"
           git push origin main --force
+
+      - name: Update repository metadata
+        continue-on-error: true
+        env:
+          STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
+        run: |
+          set -e
+          curl -fsSL -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${STARTER_PUSH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/dieWehmut/diesuwa-starter \
+            -d '{
+              "description": "A blog template with an integrated code sandbox and server uptime monitoring.",
+              "homepage": "https://diewehmut.github.io/diesuwa-starter/"
+            }' > /dev/null
+          echo "Repository description & homepage updated."
