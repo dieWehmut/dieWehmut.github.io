@@ -37,7 +37,7 @@
 
 ---
 
-`diesuwa-starter` は `Vue 3 + Vite + TypeScript + Element Plus` で作られた個人サイト用テンプレートです。ブログ、ノート、プロジェクト紹介、リンク集、静的プロフィールページに向いています。
+`diesuwa-starter` は `Vue 3 + Vite + TypeScript + Element Plus` で作られた個人サイト用テンプレートで、**Sandkasten コードサンドボックス** と **Uptime Kuma によるサーバー監視** が組み込まれています。ブログ、ノート、プロジェクト紹介、リンク集、運用ダッシュボード付きの静的プロフィールページに向いています。
 
 ## デモ
 

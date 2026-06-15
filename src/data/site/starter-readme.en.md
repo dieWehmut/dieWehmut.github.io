@@ -37,7 +37,7 @@
 
 ---
 
-`diesuwa-starter` is a personal website template built with `Vue 3 + Vite + TypeScript + Element Plus`. It is suitable for blogs, notes, project showcases, friend links, and static profile pages.
+`diesuwa-starter` is a personal website template built with `Vue 3 + Vite + TypeScript + Element Plus`, with a built-in **Sandkasten code sandbox** and **Uptime Kuma server monitoring** integration. It works for blogs, notes, project showcases, friend links, and ops-style dashboards.
 
 ## Demos
 
