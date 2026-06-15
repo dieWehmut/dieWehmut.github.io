@@ -101,6 +101,7 @@
 .md-code-preview {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
+  --md-code-gutter-width: calc(3ch + 8px);
   max-height: 620px;
   padding: 0 !important;
   overflow: auto;
@@ -144,9 +145,9 @@
   position: sticky;
   left: 0;
   box-sizing: border-box;
-  min-width: 2.25rem;
+  width: var(--md-code-gutter-width);
   padding: 12px 8px 12px 0;
-  border-right: 1px solid color-mix(in srgb, var(--md-pre-border) 72%, transparent);
+  border-right: none;
   background: var(--md-code-bg);
   color: var(--md-copy-text);
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
@@ -160,7 +161,7 @@
 .md-code-preview__code {
   display: block;
   min-width: max-content;
-  padding: 12px 14px 12px 10px !important;
+  padding: 12px 14px 12px 0 !important;
   background: transparent !important;
   color: var(--md-code-text);
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
