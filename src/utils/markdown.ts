@@ -853,7 +853,7 @@ function computeFoldRanges(rawLines: string[]): Map<number, number> {
   return ranges
 }
 
-const FOLD_CHEVRON_SVG = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7.976 10.072 4.357 6.45l.713-.713 2.906 2.906 2.906-2.906.713.713z"/></svg>'
+const FOLD_CHEVRON_SVG = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3.22 5.47a.75.75 0 0 1 1.06 0L8 9.19l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L3.22 6.53a.75.75 0 0 1 0-1.06Z"/></svg>'
 
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
@@ -874,7 +874,7 @@ function renderHighlightedCode(source: string, lang: string | undefined): string
       : '<span class="md-code-preview__fold md-code-preview__fold--placeholder" aria-hidden="true"></span>'
     const codeHtml = highlightedLines[idx] || ''
     return [
-      `<span class="md-code-preview__row" data-line="${lineNo}">`,
+      `<span class="md-code-preview__row" data-md-line="${lineNo}">`,
       `<span class="md-code-preview__lineno" aria-hidden="true">${lineNo}</span>`,
       chevron,
       `<span class="md-code-preview__line">${codeHtml || ' '}</span>`,
@@ -1884,18 +1884,19 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
 
     if (action === 'fold') {
-      const startStr = actionButton.dataset.mdFoldStart
-      const endStr = actionButton.dataset.mdFoldEnd
-      const pre = actionButton.closest<HTMLElement>('.md-code-preview')
+      const foldButton = actionButton.closest<HTMLElement>('[data-md-action="fold"]') || actionButton
+      const startStr = foldButton.dataset.mdFoldStart
+      const endStr = foldButton.dataset.mdFoldEnd
+      const pre = foldButton.closest<HTMLElement>('.md-code-preview')
       if (!pre || !startStr || !endStr) return
       const start = Number(startStr)
       const end = Number(endStr)
-      const folded = actionButton.getAttribute('aria-expanded') === 'true'
-      actionButton.setAttribute('aria-expanded', folded ? 'false' : 'true')
-      actionButton.classList.toggle('is-folded', folded)
+      const folded = foldButton.getAttribute('aria-expanded') === 'true'
+      foldButton.setAttribute('aria-expanded', folded ? 'false' : 'true')
+      foldButton.classList.toggle('is-folded', folded)
       const hiderId = `f${start}`
       for (let n = start + 1; n <= end; n += 1) {
-        const row = pre.querySelector<HTMLElement>(`.md-code-preview__row[data-line="${n}"]`)
+        const row = pre.querySelector<HTMLElement>(`.md-code-preview__row[data-md-line="${n}"]`)
         if (!row) continue
         const current = (row.dataset.foldedBy || '').split(' ').filter(Boolean)
         const set = new Set(current)
