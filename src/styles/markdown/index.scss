@@ -32,14 +32,14 @@
 
 /* Code highlight – light theme */
 :root[data-theme="light"] {
-  --md-code-bg: #f6f8fa;
-  --md-code-text: #24292f;
+  --md-code-bg: #161b22;
+  --md-code-text: #e6edf3;
   --md-inline-code-bg: rgba(175, 184, 193, 0.2);
   --md-inline-code-text: #1f2328;
-  --md-pre-border: rgba(0, 0, 0, 0.1);
-  --md-copy-bg: rgba(175, 184, 193, 0.2);
-  --md-copy-bg-hover: rgba(175, 184, 193, 0.35);
-  --md-copy-text: #57606a;
+  --md-pre-border: rgba(240, 246, 252, 0.1);
+  --md-copy-bg: rgba(110, 118, 129, 0.25);
+  --md-copy-bg-hover: rgba(110, 118, 129, 0.4);
+  --md-copy-text: #8b949e;
   --md-heading-color: #1f2328;
   --md-link-color: #0969da;
   --md-blockquote-border: #d0d7de;
@@ -145,7 +145,7 @@
   left: 0;
   box-sizing: border-box;
   min-width: 2.25rem;
-  padding: 12px 8px 12px 10px;
+  padding: 12px 8px 12px 0;
   border-right: 1px solid color-mix(in srgb, var(--md-pre-border) 72%, transparent);
   background: var(--md-code-bg);
   color: var(--md-copy-text);
@@ -696,28 +696,28 @@
   font-weight: bold;
 }
 
-/* ===== highlight.js token colors – Light (GitHub Light) ===== */
+/* ===== highlight.js token colors – Light theme uses the dark palette ===== */
 :root[data-theme="light"] .hljs {
-  color: #24292f;
+  color: #a9b1d6;
   background: var(--md-code-bg);
 }
 
 :root[data-theme="light"] .hljs-comment,
 :root[data-theme="light"] .hljs-quote {
-  color: #6e7781;
+  color: #565f89;
   font-style: italic;
 }
 
 :root[data-theme="light"] .hljs-keyword,
 :root[data-theme="light"] .hljs-selector-tag,
 :root[data-theme="light"] .hljs-addition {
-  color: #cf222e;
+  color: #bb9af7;
 }
 
 :root[data-theme="light"] .hljs-string,
 :root[data-theme="light"] .hljs-attr,
 :root[data-theme="light"] .hljs-template-variable {
-  color: #0a3069;
+  color: #9ece6a;
 }
 
 :root[data-theme="light"] .hljs-number,
@@ -725,7 +725,7 @@
 :root[data-theme="light"] .hljs-variable,
 :root[data-theme="light"] .hljs-template-tag,
 :root[data-theme="light"] .hljs-tag .hljs-attr {
-  color: #0550ae;
+  color: #ff9e64;
 }
 
 :root[data-theme="light"] .hljs-type,
@@ -734,29 +734,29 @@
 :root[data-theme="light"] .hljs-selector-id,
 :root[data-theme="light"] .hljs-selector-attr,
 :root[data-theme="light"] .hljs-selector-pseudo {
-  color: #8250df;
+  color: #2ac3de;
 }
 
 :root[data-theme="light"] .hljs-title,
 :root[data-theme="light"] .hljs-section,
 :root[data-theme="light"] .hljs-name {
-  color: #8250df;
+  color: #7aa2f7;
 }
 
 :root[data-theme="light"] .hljs-function {
-  color: #8250df;
+  color: #7aa2f7;
 }
 
 :root[data-theme="light"] .hljs-deletion {
-  color: #82071e;
-  background: #ffebe9;
+  color: #f7768e;
+  background: transparent;
 }
 
 :root[data-theme="light"] .hljs-symbol,
 :root[data-theme="light"] .hljs-bullet,
 :root[data-theme="light"] .hljs-link,
 :root[data-theme="light"] .hljs-meta {
-  color: #0550ae;
+  color: #73daca;
 }
 
 :root[data-theme="light"] .hljs-emphasis {

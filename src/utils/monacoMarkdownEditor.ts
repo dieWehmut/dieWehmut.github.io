@@ -266,10 +266,7 @@ const LANGUAGE_CONTRIBUTIONS: Record<string, LanguageContributionLoader> = {
 }
 
 function currentMonacoTheme(): string {
-  if (typeof document === 'undefined') return MONACO_THEME_DARK
-  return document.documentElement.getAttribute('data-theme') === 'light'
-    ? MONACO_THEME_LIGHT
-    : MONACO_THEME_DARK
+  return MONACO_THEME_DARK
 }
 
 function configureWorkers() {
