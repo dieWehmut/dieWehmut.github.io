@@ -125,8 +125,8 @@ jobs:
             icpText: '',
 
             // --- Feature Flags (set false to hide page & nav entry) ---
-            enableInfra: false,
-            enableProject: false,
+            enableInfra: true,
+            enableProject: true,
 
             // --- Code Runner ---
             codeRunner: {
@@ -134,6 +134,15 @@ jobs:
               backendApiUrl: viteEnv.VITE_CODE_RUNNER_API_URL || processEnv.VITE_CODE_RUNNER_API_URL || '',
               backendToken: viteEnv.VITE_CODE_RUNNER_API_TOKEN || processEnv.VITE_CODE_RUNNER_API_TOKEN || '',
             },
+
+            // --- Uptime Kuma (optional) ---
+            // Point this at a public Kuma status page to enrich /infra entries
+            // with real heartbeat data. Leave undefined to skip.
+            // kuma: {
+            //   baseUrl: 'https://kuma.example.com',
+            //   slug: 'public',
+            //   refreshMs: 60_000,
+            // },
 
             // --- Social Links ---
             links: [
@@ -218,13 +227,19 @@ jobs:
 
           cat > src/data/site/infra.ts << 'EOF'
           import { ref } from 'vue'
+          import type { InfraEntry } from '../../types/content'
 
-          const initialInfra = [
-            // Add your infrastructure endpoints here
+          // Sample endpoints — replace with your own services.
+          // Each entry will be probed via /api/ping (dev) or direct fetch (prod),
+          // and optionally enriched by an Uptime Kuma status page if configured
+          // in siteConfig.kuma.
+          const initialInfra: InfraEntry[] = [
+            { name: 'Demo Site', key: 'demo', url: 'https://diewehmut.github.io/diesuwa-starter/', date: '2026-05-01' },
+            { name: 'GitHub', key: 'github', url: 'https://github.com', date: '2026-05-01' },
             // { name: 'Service Name', key: 'service', url: 'https://service.example.com', date: '2025-01-01' },
           ]
 
-          initialInfra.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          initialInfra.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
           export const infra = ref(initialInfra)
 
@@ -233,9 +248,24 @@ jobs:
 
           cat > src/data/site/page.ts << 'EOF'
           import { ref } from 'vue'
+          import type { WebsiteEntry } from '../../types/content'
 
-          export const pages = ref([
-            // Add your website projects here
+          // Sample websites — replace with your own projects.
+          export const pages = ref<WebsiteEntry[]>([
+            {
+              name: 'diesuwa-starter',
+              displayName: 'diesuwa-starter',
+              repoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
+              date: '2026-05-01',
+              url: 'https://diewehmut.github.io/diesuwa-starter/',
+            },
+            // {
+            //   name: 'your-site',
+            //   displayName: 'your-site',
+            //   repoUrl: 'https://github.com/your-username/your-repo',
+            //   date: '2026-06-01',
+            //   url: 'https://your-site.example.com',
+            // },
           ])
 
           export default pages
