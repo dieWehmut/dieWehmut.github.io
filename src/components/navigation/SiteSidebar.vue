@@ -47,6 +47,14 @@ const { avatarUrl } = useProfile()
   overflow: hidden;
 }
 
+:root[data-theme="light"] .site-sidebar {
+  box-shadow: inset -1px 0 0 color-mix(in srgb, var(--site-text) 8%, transparent);
+}
+
+:root[data-theme="light"] .site-sidebar::before {
+  display: none;
+}
+
 .site-sidebar::before {
   position: absolute;
   inset: 0 auto 0 -42%;

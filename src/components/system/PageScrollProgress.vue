@@ -62,4 +62,8 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 10px color-mix(in srgb, var(--site-accent) 28%, transparent);
   transition: width 90ms linear;
 }
+
+:root[data-theme="light"] .page-scroll-progress__bar {
+  box-shadow: none;
+}
 </style>
