@@ -853,7 +853,7 @@ function computeFoldRanges(rawLines: string[]): Map<number, number> {
   return ranges
 }
 
-const FOLD_CHEVRON_SVG = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3.22 5.47a.75.75 0 0 1 1.06 0L8 9.19l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L3.22 6.53a.75.75 0 0 1 0-1.06Z"/></svg>'
+const FOLD_CHEVRON_SVG = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3.22 5.47a.75.75 0 0 1 1.06 0L8 9.19l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L3.22 6.53a.75.75 0 0 1 0-1.06Z"/></svg>'
 
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
