@@ -97,6 +97,7 @@ import { Link, Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
+import { useKumaStatus } from '../composables/useKumaStatus'
 const { t } = useI18n()
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
@@ -115,7 +116,6 @@ const ico5 = infraAsset('ico5.png')
 const ico6 = infraAsset('ico6.png')
 const rings = [c1, c2, c3, c4, c5, c6]
 const icons = [ico1, ico2, ico3, ico4, ico5, ico6]
-const { statusMap, checkUrls } = useUrlStatus()
 const STATUS_REFRESH_INTERVAL_MS = 60_000
 const FULL_CIRCLE = Math.PI * 2
 const INNER_RING_LIMIT = 8
@@ -133,6 +133,21 @@ const serviceItems = computed(() =>
     .slice()
     .sort((a, b) => (Date.parse(a.date) || 0) - (Date.parse(b.date) || 0))
 )
+
+const kuma = useKumaStatus(serviceItems)
+const fallback = useUrlStatus()
+const mergedStatusMap = computed(() => {
+  const out = {}
+  for (const item of serviceItems.value) {
+    const url = item.url
+    if (!url) continue
+    const fromKuma = kuma.statusMap[url]
+    const fromFallback = fallback.statusMap[url]
+    if (fromKuma) out[url] = fromKuma
+    else if (fromFallback) out[url] = fromFallback
+  }
+  return out
+})
 
 const totalCount = computed(() => serviceItems.value.length)
 const hasOuterRing = computed(() => totalCount.value > INNER_RING_LIMIT)
@@ -191,6 +206,7 @@ watch(
 onMounted(() => {
   refreshTimer = window.setInterval(() => {
     refreshStatuses(serviceItems.value, true)
+    kuma.refresh()
   }, STATUS_REFRESH_INTERVAL_MS)
 })
 
@@ -200,14 +216,14 @@ onBeforeUnmount(() => {
 
 const onlineCount = computed(() => {
   return serviceItems.value.filter((item) => {
-    const status = statusMap[item.url]?.status
+    const status = mergedStatusMap.value[item.url]?.status
     return status === 'online' || status === 'highLatency'
   }).length
 })
 
 const offlineCount = computed(() => {
   return serviceItems.value.filter((item) => {
-    const status = statusMap[item.url]?.status
+    const status = mergedStatusMap.value[item.url]?.status
     return status && status !== 'checking' && status !== 'online' && status !== 'highLatency'
   }).length
 })
@@ -217,8 +233,10 @@ function icoSrc(index) {
 }
 
 function refreshStatuses(items, force = false) {
-  const urls = items.map((item) => item.url).filter(Boolean)
-  if (urls.length) checkUrls(urls, { force })
+  const urls = items
+    .map((item) => item.url)
+    .filter((url) => url && !kuma.coveredUrls.has(url))
+  if (urls.length) fallback.checkUrls(urls, { force })
 }
 
 function lineStyle(point) {
@@ -242,7 +260,7 @@ function formatDate(dateStr) {
 }
 
 function statusLabel(url) {
-  const status = statusMap[url]
+  const status = mergedStatusMap.value[url]
   if (!status || status.status === 'checking') return ''
   const labelKey = status.status === 'highLatency' ? 'status.online' : `status.${status.status}`
   const label = t(labelKey)
@@ -250,7 +268,7 @@ function statusLabel(url) {
 }
 
 function statusClass(url) {
-  const status = statusMap[url]?.status
+  const status = mergedStatusMap.value[url]?.status
   return status ? `is-${status}` : ''
 }
 
