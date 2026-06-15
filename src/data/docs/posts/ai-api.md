@@ -23,7 +23,19 @@ tags: [APIKey, Codex, Claude, Deepseek, AgentRouter, OpenAI,Anthropic]
 
 ## 安装
 
-### Codex
+### 一键安装
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+### 无法连接外网的情况
+
+#### npm
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
@@ -43,10 +55,8 @@ nvm use --lts
 npm install -g @openai/codex
 ```
 
-### Claude Code
-
 ```bash
-curl -fsSL https://claude.ai/install.sh | bash
+npm install -g @anthropic/claude
 ```
 
 ## 官方
