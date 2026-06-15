@@ -73,7 +73,7 @@ const PER_TAG_ALLOWED_ATTRS: Record<string, Set<string>> = {
   img: new Set(['src', 'alt', 'width', 'height', 'loading', 'decoding']),
   li: new Set(['value']),
   ol: new Set(['start', 'reversed', 'type']),
-  path: new Set(['d']),
+  path: new Set(['d', 'fill']),
   span: new Set(['style']),
   svg: new Set(['xmlns', 'width', 'height', 'viewbox', 'preserveaspectratio']),
   textarea: new Set(['rows', 'spellcheck']),
@@ -870,7 +870,7 @@ function renderHighlightedCode(source: string, lang: string | undefined): string
     const lineNo = idx + 1
     const foldEnd = folds.get(idx)
     const chevron = foldEnd !== undefined
-      ? `<button type="button" class="md-code-preview__fold" data-md-action="fold" data-fold-start="${lineNo}" data-fold-end="${foldEnd + 1}" aria-expanded="true" aria-label="折叠代码块">${FOLD_CHEVRON_SVG}</button>`
+      ? `<button type="button" class="md-code-preview__fold" data-md-action="fold" data-md-fold-start="${lineNo}" data-md-fold-end="${foldEnd + 1}" aria-expanded="true" aria-label="折叠代码块">${FOLD_CHEVRON_SVG}</button>`
       : '<span class="md-code-preview__fold md-code-preview__fold--placeholder" aria-hidden="true"></span>'
     const codeHtml = highlightedLines[idx] || ''
     return [
@@ -1884,8 +1884,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
 
     if (action === 'fold') {
-      const startStr = actionButton.dataset.foldStart
-      const endStr = actionButton.dataset.foldEnd
+      const startStr = actionButton.dataset.mdFoldStart
+      const endStr = actionButton.dataset.mdFoldEnd
       const pre = actionButton.closest<HTMLElement>('.md-code-preview')
       if (!pre || !startStr || !endStr) return
       const start = Number(startStr)
