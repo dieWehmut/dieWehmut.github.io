@@ -785,13 +785,9 @@ function renderHighlightedCode(source: string, lang: string | undefined): string
   const highlighted = validLang
     ? hljs.highlight(source, { language: validLang, ignoreIllegals: true }).value
     : hljs.highlightAuto(source).value
-  const normalizedSource = source.replace(/\r\n?/g, '\n')
-  const lineCount = Math.max(1, normalizedSource.split('\n').length)
-  const lineNumbers = Array.from({ length: lineCount }, (_item, index) => String(index + 1)).join('\n')
 
   return [
     '<pre class="md-code-preview">',
-    `<span class="md-code-preview__gutter" aria-hidden="true">${lineNumbers}</span>`,
     `<code class="hljs md-code-preview__code${langClass}">${highlighted}</code>`,
     '</pre>',
   ].join('')
@@ -879,6 +875,7 @@ function renderEditableToolbar(kind: EditableBlockKind, label: string, runner: s
     runButton,
     '<button class="md-editable-action" type="button" data-md-action="edit" aria-expanded="false">修改</button>',
     sourceButton,
+    '<button class="md-editable-action md-editable-action--collapse" type="button" data-md-action="collapse" aria-expanded="true" aria-label="折叠代码">收起</button>',
     '<button class="md-editable-action md-code-copy" type="button" data-copy-code data-md-action="copy">复制</button>',
     '</div>',
     '</div>',
@@ -1810,6 +1807,15 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     if (action === 'restore') {
       restoreBlock(block)
+      return
+    }
+
+    if (action === 'collapse') {
+      const collapsed = !block.classList.contains('is-collapsed')
+      block.classList.toggle('is-collapsed', collapsed)
+      actionButton.textContent = collapsed ? '展开' : '收起'
+      actionButton.setAttribute('aria-expanded', collapsed ? 'false' : 'true')
+      actionButton.setAttribute('aria-label', collapsed ? '展开代码' : '折叠代码')
     }
   }
 
