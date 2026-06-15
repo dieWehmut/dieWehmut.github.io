@@ -49,7 +49,16 @@ import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
     var(--site-mesh-line-row),
     var(--site-mesh-line-column),
     radial-gradient(circle at 76% 7%, color-mix(in srgb, var(--site-accent) 8%, transparent), transparent 32%),
-    var(--site-bg);
+    transparent;
+  background-attachment: fixed;
+  background-size: var(--site-mesh-background-size);
+}
+
+:root.dynamic-background-enabled .desktop-layout__content {
+  background:
+    var(--site-mesh-line-row),
+    var(--site-mesh-line-column),
+    transparent;
   background-attachment: fixed;
   background-size: var(--site-mesh-background-size);
 }

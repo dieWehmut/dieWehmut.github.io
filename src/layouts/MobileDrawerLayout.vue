@@ -132,7 +132,15 @@ onBeforeUnmount(() => {
     var(--site-mesh-line-row),
     var(--site-mesh-line-column),
     radial-gradient(circle at 78% 4%, color-mix(in srgb, var(--site-accent) 8%, transparent), transparent 34%),
-    var(--site-bg);
+    transparent;
+  background-size: var(--site-mesh-background-size);
+}
+
+:root.dynamic-background-enabled .mobile-layout {
+  background:
+    var(--site-mesh-line-row),
+    var(--site-mesh-line-column),
+    transparent;
   background-size: var(--site-mesh-background-size);
 }
 
