@@ -785,9 +785,13 @@ function renderHighlightedCode(source: string, lang: string | undefined): string
   const highlighted = validLang
     ? hljs.highlight(source, { language: validLang, ignoreIllegals: true }).value
     : hljs.highlightAuto(source).value
+  const normalizedSource = source.replace(/\r\n?/g, '\n')
+  const lineCount = Math.max(1, normalizedSource.split('\n').length)
+  const lineNumbers = Array.from({ length: lineCount }, (_item, index) => String(index + 1)).join('\n')
 
   return [
     '<pre class="md-code-preview">',
+    `<span class="md-code-preview__gutter" aria-hidden="true">${lineNumbers}</span>`,
     `<code class="hljs md-code-preview__code${langClass}">${highlighted}</code>`,
     '</pre>',
   ].join('')
