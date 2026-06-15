@@ -1172,6 +1172,10 @@ watch(isDetailRoute, (detail) => {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
 }
 
+:root[data-theme="light"] .capture-delete-dialog__panel {
+  box-shadow: none;
+}
+
 .capture-delete-dialog__panel h2 {
   margin: 0 0 8px;
   color: var(--site-text);

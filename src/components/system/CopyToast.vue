@@ -79,4 +79,9 @@ onMounted(() => {
 .copy-toast[style*="scale(1)"] {
   box-shadow: 0 22px 56px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.32);
 }
+
+:root[data-theme="light"] .copy-toast,
+:root[data-theme="light"] .copy-toast[style*="scale(1)"] {
+  box-shadow: none;
+}
 </style>

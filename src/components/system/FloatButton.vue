@@ -164,7 +164,7 @@ function toggleTheme() {
 :root[data-theme="light"] .float-controls__button {
   border-color: rgba(0, 0, 0, 0.15);
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
 }
 
 .float-controls__button:hover,
@@ -234,9 +234,7 @@ function toggleTheme() {
   border-color: rgba(255, 255, 255, 0.68);
   color: var(--site-text);
   background: rgba(255, 255, 255, 0.58);
-  box-shadow:
-    0 8px 28px rgba(26, 158, 26, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
 }
 
 :root[data-theme="light"] .float-controls__settings:hover,
@@ -244,9 +242,7 @@ function toggleTheme() {
   border-color: #1fc41f;
   color: var(--site-accent);
   background: rgba(255, 255, 255, 0.78);
-  box-shadow:
-    0 14px 36px rgba(26, 158, 26, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .float-controls__opt-dynamic,
