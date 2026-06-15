@@ -780,19 +780,111 @@ function parseCodeFenceInfo(info: string | undefined): CodeFenceInfo {
   }
 }
 
+function splitHighlightedByLine(highlighted: string): string[] {
+  const lines: string[] = []
+  const stack: string[] = []
+  let current = ''
+  let index = 0
+  while (index < highlighted.length) {
+    const char = highlighted[index]
+    if (char === '<') {
+      const closeIdx = highlighted.indexOf('>', index)
+      if (closeIdx === -1) {
+        current += highlighted.slice(index)
+        break
+      }
+      const tag = highlighted.slice(index, closeIdx + 1)
+      if (tag.startsWith('</')) {
+        if (stack.length) stack.pop()
+      } else if (!tag.endsWith('/>') && !/^<(?:br|img|hr|input)\b/i.test(tag)) {
+        stack.push(tag)
+      }
+      current += tag
+      index = closeIdx + 1
+      continue
+    }
+    if (char === '\n') {
+      // close all open spans before newline, reopen on next line
+      for (let i = stack.length - 1; i >= 0; i -= 1) current += '</span>'
+      lines.push(current)
+      current = stack.join('')
+      index += 1
+      continue
+    }
+    current += char
+    index += 1
+  }
+  for (let i = stack.length - 1; i >= 0; i -= 1) current += '</span>'
+  lines.push(current)
+  return lines
+}
+
+function computeIndent(line: string): number {
+  let count = 0
+  for (let i = 0; i < line.length; i += 1) {
+    const ch = line[i]
+    if (ch === ' ') count += 1
+    else if (ch === '\t') count += 4
+    else break
+  }
+  return /^\s*$/.test(line) ? -1 : count
+}
+
+function computeFoldRanges(rawLines: string[]): Map<number, number> {
+  // map: startLineIndex -> endLineIndex (inclusive), 0-based
+  const ranges = new Map<number, number>()
+  const indents = rawLines.map(computeIndent)
+  for (let i = 0; i < rawLines.length; i += 1) {
+    const own = indents[i]
+    if (own < 0) continue
+    let nextNonBlank = -1
+    for (let j = i + 1; j < rawLines.length; j += 1) {
+      if (indents[j] >= 0) { nextNonBlank = j; break }
+    }
+    if (nextNonBlank === -1) continue
+    if (indents[nextNonBlank] <= own) continue
+    let end = nextNonBlank
+    for (let j = nextNonBlank + 1; j < rawLines.length; j += 1) {
+      if (indents[j] >= 0 && indents[j] <= own) break
+      end = j
+    }
+    ranges.set(i, end)
+  }
+  return ranges
+}
+
+const FOLD_CHEVRON_SVG = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.5 6.5 8 10l3.5-3.5z"/></svg>'
+
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
   const highlighted = validLang
     ? hljs.highlight(source, { language: validLang, ignoreIllegals: true }).value
     : hljs.highlightAuto(source).value
   const normalizedSource = source.replace(/\r\n?/g, '\n')
-  const lineCount = Math.max(1, normalizedSource.split('\n').length)
-  const lineNumbers = Array.from({ length: lineCount }, (_item, index) => String(index + 1)).join('\n')
+  const rawLines = normalizedSource.split('\n')
+  const highlightedLines = splitHighlightedByLine(highlighted)
+  while (highlightedLines.length < rawLines.length) highlightedLines.push('')
+  const folds = computeFoldRanges(rawLines)
+
+  const rowsHtml = rawLines.map((_rawLine, idx) => {
+    const lineNo = idx + 1
+    const foldEnd = folds.get(idx)
+    const chevron = foldEnd !== undefined
+      ? `<button type="button" class="md-code-preview__fold" data-md-action="fold" data-fold-start="${lineNo}" data-fold-end="${foldEnd + 1}" aria-expanded="true" aria-label="折叠代码块">${FOLD_CHEVRON_SVG}</button>`
+      : '<span class="md-code-preview__fold md-code-preview__fold--placeholder" aria-hidden="true"></span>'
+    const codeHtml = highlightedLines[idx] || ''
+    return [
+      `<span class="md-code-preview__row" data-line="${lineNo}">`,
+      `<span class="md-code-preview__lineno" aria-hidden="true">${lineNo}</span>`,
+      chevron,
+      `<span class="md-code-preview__line">${codeHtml || ' '}</span>`,
+      '</span>',
+    ].join('')
+  }).join('')
 
   return [
     '<pre class="md-code-preview">',
-    `<span class="md-code-preview__gutter" aria-hidden="true">${lineNumbers}</span>`,
-    `<code class="hljs md-code-preview__code${langClass}">${highlighted}</code>`,
+    `<code class="hljs md-code-preview__code${langClass}">${rowsHtml}</code>`,
     '</pre>',
   ].join('')
 }
@@ -1788,6 +1880,30 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     if (action === 'copy') {
       await copyBlockSource(actionButton)
+      return
+    }
+
+    if (action === 'fold') {
+      const startStr = actionButton.dataset.foldStart
+      const endStr = actionButton.dataset.foldEnd
+      const pre = actionButton.closest<HTMLElement>('.md-code-preview')
+      if (!pre || !startStr || !endStr) return
+      const start = Number(startStr)
+      const end = Number(endStr)
+      const folded = actionButton.getAttribute('aria-expanded') === 'true'
+      actionButton.setAttribute('aria-expanded', folded ? 'false' : 'true')
+      actionButton.classList.toggle('is-folded', folded)
+      const hiderId = `f${start}`
+      for (let n = start + 1; n <= end; n += 1) {
+        const row = pre.querySelector<HTMLElement>(`.md-code-preview__row[data-line="${n}"]`)
+        if (!row) continue
+        const current = (row.dataset.foldedBy || '').split(' ').filter(Boolean)
+        const set = new Set(current)
+        if (folded) set.add(hiderId)
+        else set.delete(hiderId)
+        row.dataset.foldedBy = [...set].join(' ')
+        row.classList.toggle('is-hidden', set.size > 0)
+      }
       return
     }
 
