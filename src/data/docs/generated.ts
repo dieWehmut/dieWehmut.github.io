@@ -24,9 +24,23 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "Sandkasten 测试 本文测试 Sandkasten 后端支持的全部语言 / 运行时。程序语言代码块用于运行；HTML、CSS、Markdown、LaTeX、Typst、Graphviz、Vue、TSX 等前端 / 文档代码块用...",
     "wordCount": 1161,
     "readingMinutes": 3,
-    "updated": "2026/06/14 14:16",
+    "updated": "2026/06/14 16:36",
     "codeRunner": true,
     "path": "./posts/testSandkasten.md"
+  },
+  {
+    "id": "win",
+    "type": "post",
+    "title": "Win服务器控制",
+    "date": "2026-06-13",
+    "tags": [
+      "Windows"
+    ],
+    "summary": "ssh 启动ssh-agent e.g: 清除同ip地址的ssh key冲突",
+    "wordCount": 44,
+    "readingMinutes": 1,
+    "updated": "",
+    "path": "./posts/win.md"
   },
   {
     "id": "pve",
@@ -36,8 +50,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "安装基本依赖 e.g:curl, git, unzip,wget, etc. Git PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
-    "wordCount": 169,
+    "summary": "安装基本依赖 e.g:curl, git, unzip,wget, etc. Git 登录 PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
+    "wordCount": 174,
     "readingMinutes": 1,
     "updated": "2026/06/11 19:41",
     "path": "./posts/pve.md"
@@ -56,8 +70,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录 Codex配置目录 安装 Codex Claude Code 官方 Proxy AgentRouter Deepseek Anthropic 自建中转 Sub2api CodexManager",
-    "wordCount": 268,
+    "summary": "Claude Code配置目录 Codex配置目录 安装 一键安装 无法连接外网的情况 npm 官方 Proxy AgentRouter Deepseek Anthropic 自建中转 Sub2api CodexManager",
+    "wordCount": 295,
     "readingMinutes": 1,
     "updated": "2026/06/11 19:41",
     "path": "./posts/ai-api.md"
@@ -73,7 +87,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "2026-01-20 | Tuesday 好几个月前就配了环境，也ai写了点调ai的api的代码测试，今天开始系统了解和学习go语言 **初步认识:** go像cpp那样有{}，又像python那样没有\";\" 大小写就能区分publi...",
     "wordCount": 5527,
     "readingMinutes": 14,
-    "updated": "2026/06/10 13:07",
+    "updated": "2026/06/14 16:36",
     "codeRunner": true,
     "path": "./posts/go-learning.md"
   },
