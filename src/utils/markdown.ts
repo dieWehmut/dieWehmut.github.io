@@ -52,7 +52,7 @@ import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
 import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetImage } from './publicAssets'
 import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
-import { ensureGiscusLogin } from './giscusAuth'
+import { ensureGiscusLogin, getGiscusAuthState } from './giscusAuth'
 import type { MarkdownMonacoEditor } from './monacoMarkdownEditor'
 
 const ALLOWED_TAGS = new Set([
@@ -1633,6 +1633,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   }
 
   const ensureGiscusLoginForRun = async (block: HTMLElement) => {
+    if (getGiscusAuthState().authenticated) return
     setRunOutputPending(block, 'authenticating')
     await ensureGiscusLogin()
   }
