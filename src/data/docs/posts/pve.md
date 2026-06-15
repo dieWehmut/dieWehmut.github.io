@@ -5,7 +5,11 @@ date: 2026-06-09
 tags: [Proxmox VE]
 ---
 
-## 安装基本依赖
+## 自部署参考
+
+[https://community-scripts.org/]
+
+## LXC初始化
 
 ```bash
 apt update && apt upgrade -y
@@ -18,7 +22,19 @@ apt install xxx -y
 >e.g:curl, git, unzip,wget, etc.
 
 ```bash
-apt install curl git unzip wget -y
+apt install curl git unzip wget tree -y
+```
+
+## Docker
+
+```bash
+apt update
+apt install -y curl
+
+curl -fsSL https://get.docker.com | sh
+
+systemctl enable docker
+systemctl start docker
 ```
 
 ## Git 登录
@@ -51,7 +67,6 @@ nano /etc/ssh/sshd_config
 systemctl restart ssh
 ```
 
-## LXC初始化
 
 ## Nginx
 
@@ -94,6 +109,10 @@ systemctl restart nginx
 
 ```bash
 cd /etc/cloudflared
+```
+
+```bash
+cloudflared tunnel route dns uuid xxx.com
 ```
 
 ```bash

@@ -75,10 +75,9 @@ npm install -g @anthropic/claude
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://agentrouter.org",
-    "ANTHROPIC_AUTH_TOKEN": "sk-xx",
     "ANTHROPIC_API_KEY": "sk-xx"
   },
-  "model": "claude-opus-4-6",
+  "model": "claude-opus-4-7",
   "effortLevel": "max"
 }
 ```

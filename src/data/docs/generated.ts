@@ -39,7 +39,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "ssh 启动ssh-agent e.g: 清除同ip地址的ssh key冲突",
     "wordCount": 44,
     "readingMinutes": 1,
-    "updated": "",
+    "updated": "2026/06/15 19:04",
     "path": "./posts/win.md"
   },
   {
@@ -50,10 +50,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "安装基本依赖 e.g:curl, git, unzip,wget, etc. Git 登录 PVE LXC扩容 允许ssh root密码登录 PermitRootLogin yes LXC初始化 Nginx CF Tunnel",
-    "wordCount": 174,
+    "summary": "自部署参考 [https://community-scripts.org/] LXC初始化 e.g:curl, git, unzip,wget, etc. Docker Git 登录 PVE LXC扩容 允许ssh root密码登录...",
+    "wordCount": 198,
     "readingMinutes": 1,
-    "updated": "2026/06/11 19:41",
+    "updated": "2026/06/15 19:04",
     "path": "./posts/pve.md"
   },
   {
@@ -71,9 +71,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Anthropic"
     ],
     "summary": "Claude Code配置目录 Codex配置目录 安装 一键安装 无法连接外网的情况 npm 官方 Proxy AgentRouter Deepseek Anthropic 自建中转 Sub2api CodexManager",
-    "wordCount": 295,
+    "wordCount": 291,
     "readingMinutes": 1,
-    "updated": "2026/06/11 19:41",
+    "updated": "2026/06/15 19:04",
     "path": "./posts/ai-api.md"
   },
   {

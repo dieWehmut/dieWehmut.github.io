@@ -16,7 +16,11 @@ const initialInfra: InfraEntry[] = [
   { name: 'AI Router', key: 'ai2', url: 'https://sub2api.diesw.tech', date: '2026-06-08' },
   { name: 'CodexManager', key: 'ai', url: 'https://codex.diesw.tech', date: '2026-06-11' },
   { name: 'Sandkasten', key: 'sandkasten', url: 'https://run.diesw.tech', date: '2026-06-10' },
-  { name: 'VPS Net', key: 'blog', url: 'https://dashboard.netmaker.hc-dsw-nexus.me', date: '2026-04-10' },
+  { name: 'VPS Net', key: 'vps', url: 'https://dashboard.netmaker.hc-dsw-nexus.me', date: '2026-04-10' },
+  { name: 'Plex', key: 'plex', url: 'https://plex.diesw.tech', date: '2026-06-15' },
+  { name: 'Music Station', key: 'music', url: 'https://music.diesw.tech', date: '2026-06-15' },
+  { name: 'Cloud Drive', key: 'cloud', url: 'https://cloud.diesw.tech', date: '2026-06-15' },
+  { name: 'Uptime Kuma', key: 'uptime', url: 'https://kuma.diesw.tech', date: '2026-06-15' },
 ]
 
 initialInfra.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
