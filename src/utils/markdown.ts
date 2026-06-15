@@ -801,20 +801,31 @@ function escapeStyleEndTag(value: string): string {
   return value.replace(/<\/style/gi, '<\\/style')
 }
 
+const IFRAME_SCROLLBAR_CSS = `
+*{scrollbar-width:thin;scrollbar-color:rgba(31,196,31,0.58) rgba(31,196,31,0.10);}
+*::-webkit-scrollbar{width:12px;height:12px;}
+*::-webkit-scrollbar-track{border-radius:999px;background:rgba(31,196,31,0.10);box-shadow:inset 0 0 0 1px rgba(31,196,31,0.08);}
+*::-webkit-scrollbar-thumb{border:3px solid transparent;border-radius:999px;background:rgba(31,196,31,0.72);background-clip:padding-box;}
+*::-webkit-scrollbar-thumb:hover{background:#1fc41f;background-clip:padding-box;}
+*::-webkit-scrollbar-thumb:active{background:#0a8a0a;background-clip:padding-box;}
+`
+
 function injectStyleIntoHtml(html: string, css: string): string {
-  const style = `<style>${escapeStyleEndTag(css)}</style>`
+  const combined = `${IFRAME_SCROLLBAR_CSS}\n${css}`
+  const style = `<style>${escapeStyleEndTag(combined)}</style>`
   if (/<\/head\s*>/i.test(html)) return html.replace(/<\/head\s*>/i, `${style}</head>`)
   if (/<html[\s>]/i.test(html)) return html.replace(/<html([^>]*)>/i, `<html$1><head>${style}</head>`)
   return `<!doctype html><html><head>${style}</head><body>${html}</body></html>`
 }
 
 function defaultStylePreviewHtml(css: string): string {
+  const combined = `${IFRAME_SCROLLBAR_CSS}\n${css}`
   return [
     '<!doctype html>',
     '<html lang="en">',
     '<head>',
     '<meta charset="utf-8">',
-    `<style>${escapeStyleEndTag(css)}</style>`,
+    `<style>${escapeStyleEndTag(combined)}</style>`,
     '</head>',
     '<body>',
     '<main class="greeting">hello from style preview</main>',
