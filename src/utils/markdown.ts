@@ -1638,15 +1638,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     await ensureGiscusLogin()
   }
 
-  const scrollRunOutputIntoView = (block: HTMLElement) => {
-    const panel = ensureRunOutput(block)
-    const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
-
-    window.requestAnimationFrame(() => {
-      panel.scrollIntoView({ behavior, block: 'center', inline: 'nearest' })
-    })
-  }
-
   const setRunOutputResult = (block: HTMLElement, result: RunResult, files: Array<{ name: string; content: string }> = []) => {
     const panel = ensureRunOutput(block)
     panel.dataset.status = result.status
@@ -1716,7 +1707,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
         onProgress: ({ status }) => setRunOutputPending(block, status),
       })
       setRunOutputResult(block, result, files)
-      scrollRunOutputIntoView(block)
     } catch (error) {
       setRunOutputResult(block, {
         status: 'runtime_error',
@@ -1725,7 +1715,6 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
         durationMs: 0,
         message: error instanceof Error ? error.message : String(error),
       })
-      scrollRunOutputIntoView(block)
     } finally {
       block.classList.remove('is-running')
       setRunButtonLoading(button, false, runner)
