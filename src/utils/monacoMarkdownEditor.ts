@@ -890,7 +890,7 @@ export async function createMarkdownMonacoEditor(options: CreateMarkdownMonacoEd
     lineNumbers: 'on',
     lineNumbersMinChars: 3,
     glyphMargin: false,
-    lineDecorationsWidth: 6,
+    lineDecorationsWidth: 0,
     folding: true,
     foldingStrategy: 'auto',
     foldingHighlight: true,
