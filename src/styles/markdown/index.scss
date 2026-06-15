@@ -179,7 +179,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
+  width: 18px;
   height: 21px;
   margin-right: 4px;
   background: var(--md-code-bg);
@@ -198,10 +198,14 @@
 }
 
 .md-code-preview__fold svg {
+  width: 16px;
+  height: 16px;
+  display: block;
   transition: transform 150ms ease;
 }
 
 .md-code-preview__fold--placeholder {
+  width: 18px;
   cursor: default;
 }
 
