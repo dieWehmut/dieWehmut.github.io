@@ -18,11 +18,10 @@ apt install xxx -y
 >e.g:curl, git, unzip,wget, etc.
 
 ```bash
-apt install curl -y
+apt install curl git unzip wget -y
 ```
 
-
-## Git
+## Git 登录
 
 ```bash
 apt install gh -y
@@ -67,41 +66,18 @@ cd /etc/nginx/sites-available
 
 ```bash
 server { 
-
     listen 80;
-
-
-
     server_name codex.* ai.*;
-
-
-
     location / {
-
         proxy_pass http://192.168.xx.xx:xxxx; 
-
-
-
         proxy_http_version 1.1;
-
-
-
         proxy_set_header Host $host;
-
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
         proxy_set_header X-Real-IP $remote_addr;
-
         proxy_set_header X-Forwarded-Proto https;
-
-
-
         proxy_set_header Upgrade $http_upgrade;
-
         proxy_set_header Connection "upgrade";
-
     }
-
 }
 ```
 
