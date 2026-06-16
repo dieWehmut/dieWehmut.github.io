@@ -70,17 +70,21 @@ const formattedDate = computed(() => {
 
 watch(
   [() => route.params.id, docContentVersion],
-  async ([rawId]) => {
+  async ([rawId], oldValues) => {
     const id = String(rawId || '')
-    body.value = ''
-    loadError.value = ''
+    const prevId = oldValues ? String(oldValues[0] || '') : ''
+    const isHmr = Boolean(oldValues) && prevId === id && body.value !== ''
+    if (!isHmr) {
+      body.value = ''
+      loadError.value = ''
+    }
 
     if (!id || !getPosts().some((item) => item.id === id)) {
       isLoading.value = false
       return
     }
 
-    isLoading.value = true
+    if (!isHmr) isLoading.value = true
     const token = Symbol(id)
     latestLoadToken = token
 

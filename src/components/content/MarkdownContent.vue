@@ -110,12 +110,14 @@ watch(
   () => [props.source, props.docId, props.codeRunner] as const,
   ([source]) => {
     const token = ++renderToken
-    setRenderedHtml('')
     cleanup?.()
     cleanup = null
     cancelScheduledWork()
 
-    if (!source) return
+    if (!source) {
+      setRenderedHtml('')
+      return
+    }
 
     scheduleIdle(async () => {
       const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
@@ -125,8 +127,8 @@ watch(
         codeRunner: props.codeRunner,
         docId: props.docId,
       })
-      setRenderedHtml(firstChunkHtml)
       if (token !== renderToken) return
+      setRenderedHtml(firstChunkHtml)
       bindInteractions(token)
       if (chunks.length <= 1) {
         return
