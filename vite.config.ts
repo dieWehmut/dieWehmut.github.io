@@ -274,6 +274,51 @@ function captureEditPlugin(): Plugin {
   }
 }
 
+function markdownHotReloadPlugin(): Plugin {
+  const docsRoot = path.resolve(__dirname, 'src', 'data', 'docs')
+  const siteRoot = path.resolve(__dirname, 'src', 'data', 'site')
+  const generateDocsScript = path.resolve(__dirname, 'scripts', 'generate-docs-data.mjs')
+  let pending: NodeJS.Timeout | null = null
+
+  function isWatchedMarkdown(filePath: string): boolean {
+    if (!filePath.toLowerCase().endsWith('.md')) return false
+    const normalized = path.resolve(filePath)
+    return normalized.startsWith(docsRoot + path.sep) || normalized.startsWith(siteRoot + path.sep)
+  }
+
+  return {
+    name: 'vite-markdown-hot-reload',
+    apply: 'serve',
+    configureServer(server: ViteDevServer) {
+      const triggerReload = (filePath: string): void => {
+        if (!isWatchedMarkdown(filePath)) return
+        if (pending) clearTimeout(pending)
+        pending = setTimeout(() => {
+          pending = null
+          const isDocsMd = path.resolve(filePath).startsWith(docsRoot + path.sep)
+          if (isDocsMd) {
+            try {
+              execFileSync(process.execPath, [generateDocsScript], {
+                stdio: 'inherit',
+                cwd: __dirname,
+              })
+            } catch (error) {
+              server.config.logger.error(
+                `[md-hmr] generate-docs-data failed: ${error instanceof Error ? error.message : String(error)}`
+              )
+            }
+          }
+          server.ws.send({ type: 'full-reload', path: '*' })
+        }, 200)
+      }
+
+      server.watcher.on('add', triggerReload)
+      server.watcher.on('change', triggerReload)
+      server.watcher.on('unlink', triggerReload)
+    },
+  }
+}
+
 function pingProxy(): Plugin {
   return {
     name: 'vite-ping-proxy',
@@ -321,7 +366,7 @@ function pingProxy(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), pingProxy(), captureEditPlugin(), copy404Plugin()],
+  plugins: [vue(), tailwindcss(), pingProxy(), captureEditPlugin(), markdownHotReloadPlugin(), copy404Plugin()],
   resolve: {
     alias: {
       '@assets': path.resolve(__dirname, 'src/assets'),
