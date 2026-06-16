@@ -51,9 +51,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Proxmox VE"
     ],
     "summary": "自部署参考 [https://community-scripts.org/] LXC初始化 e.g:curl, git, unzip,wget, etc. Docker Git 登录 PVE LXC扩容 允许ssh root密码登录...",
-    "wordCount": 198,
+    "wordCount": 206,
     "readingMinutes": 1,
-    "updated": "2026/06/15 19:04",
+    "updated": "2026/06/15 22:12",
     "path": "./posts/pve.md"
   },
   {
@@ -73,7 +73,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "Claude Code配置目录 Codex配置目录 安装 一键安装 无法连接外网的情况 npm 官方 Proxy AgentRouter Deepseek Anthropic 自建中转 Sub2api CodexManager",
     "wordCount": 291,
     "readingMinutes": 1,
-    "updated": "2026/06/15 19:04",
+    "updated": "2026/06/15 22:12",
     "path": "./posts/ai-api.md"
   },
   {

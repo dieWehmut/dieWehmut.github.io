@@ -1,7 +1,7 @@
 ---
 title: Go Golang
 date: 2026/01/20 - 2026/03/02
-tags: [Golang]
+tags: [Golang,Code]
 codeRunner: true
 ---
 
