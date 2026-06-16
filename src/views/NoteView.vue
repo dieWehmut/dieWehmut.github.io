@@ -37,7 +37,7 @@ import { Calendar, PriceTag, Edit } from '@element-plus/icons-vue'
 import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
-import { getNotes, loadDoc } from '../data'
+import { getNotes, loadDoc, docContentVersion } from '../data'
 import { formatTimelineDate } from '../utils/date'
 import type { NoteEntry } from '../types/content'
 
@@ -63,8 +63,8 @@ const formattedDate = computed(() => {
 })
 
 watch(
-  () => route.params.id,
-  async (rawId) => {
+  [() => route.params.id, docContentVersion],
+  async ([rawId]) => {
     const id = String(rawId || '')
     body.value = ''
     loadError.value = ''

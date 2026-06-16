@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import type { ArchivePost, NoteEntry } from '../../types/content'
 import { generatedDocMeta, type GeneratedDocMeta } from './generated'
 
@@ -22,6 +23,15 @@ const rawDocLoaders = import.meta.glob('./**/*.md', {
 }) as Record<string, () => Promise<string>>
 
 const loadedDocCache = new Map<string, Promise<LoadedDoc | null>>()
+
+export const docContentVersion = ref(0)
+
+if (import.meta.hot) {
+  import.meta.hot.on('md-content-update', () => {
+    loadedDocCache.clear()
+    docContentVersion.value += 1
+  })
+}
 
 function stripQuotes(value: string) {
   return value.replace(/^['"]|['"]$/g, '')
