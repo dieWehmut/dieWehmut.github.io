@@ -15,7 +15,7 @@ import { games } from './site/game'
 import { apps } from './site/app'
 import { tools } from './site/tool'
 import { infra } from './site/infra'
-import { getDocPosts, getDocNotes, loadDoc, preloadDoc } from './docs'
+import { getDocPosts, getDocNotes, loadDoc, preloadDoc, docContentVersion } from './docs'
 import { friends } from './site/friends'
 import { siteProfile } from './site/profile'
 import { getDateSortTimestamp, getTimelineYear } from '../utils/date'
@@ -220,4 +220,4 @@ export function getSearchDocuments(): SearchDocument[] {
 }
 
 export { friends, siteProfile }
-export { loadDoc, preloadDoc }
+export { loadDoc, preloadDoc, docContentVersion }

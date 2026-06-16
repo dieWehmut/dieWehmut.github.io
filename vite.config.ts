@@ -279,6 +279,7 @@ function markdownHotReloadPlugin(): Plugin {
   const siteRoot = path.resolve(__dirname, 'src', 'data', 'site')
   const generateDocsScript = path.resolve(__dirname, 'scripts', 'generate-docs-data.mjs')
   let pending: NodeJS.Timeout | null = null
+  let pendingPath: string | null = null
 
   function isWatchedMarkdown(filePath: string): boolean {
     if (!filePath.toLowerCase().endsWith('.md')) return false
@@ -292,10 +293,13 @@ function markdownHotReloadPlugin(): Plugin {
     configureServer(server: ViteDevServer) {
       const triggerReload = (filePath: string): void => {
         if (!isWatchedMarkdown(filePath)) return
+        pendingPath = path.resolve(filePath)
         if (pending) clearTimeout(pending)
         pending = setTimeout(() => {
           pending = null
-          const isDocsMd = path.resolve(filePath).startsWith(docsRoot + path.sep)
+          const changedPath = pendingPath
+          pendingPath = null
+          const isDocsMd = changedPath ? changedPath.startsWith(docsRoot + path.sep) : false
           if (isDocsMd) {
             try {
               execFileSync(process.execPath, [generateDocsScript], {
@@ -308,7 +312,12 @@ function markdownHotReloadPlugin(): Plugin {
               )
             }
           }
-          server.ws.send({ type: 'full-reload', path: '*' })
+          const relative = changedPath ? path.relative(__dirname, changedPath).replace(/\\/g, '/') : ''
+          server.ws.send({
+            type: 'custom',
+            event: 'md-content-update',
+            data: { path: relative },
+          })
         }, 200)
       }
 
