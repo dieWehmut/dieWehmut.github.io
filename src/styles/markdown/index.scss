@@ -636,14 +636,13 @@
 @media (max-width: 640px) {
   .md-code-header,
   .md-editable-toolbar {
-    align-items: flex-start;
-    flex-direction: column;
+    flex-wrap: wrap;
+    row-gap: 4px;
   }
 
   .md-editable-actions {
-    width: 100%;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 }
 
