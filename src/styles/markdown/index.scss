@@ -1314,3 +1314,65 @@
 .markdown-body .md-mindmap__node--depth-4 {
   color: var(--md-blockquote-text);
 }
+
+/* ===== Table of contents (heading-anchor lists) =====
+   Detected via :has() — a list is treated as a TOC when at least one
+   direct child <li> starts with an in-page anchor link. */
+.markdown-body :where(ul):has(> li > a[href^="#"]) {
+  margin: 18px 0 24px;
+  padding: 14px 18px 14px 18px;
+  list-style: none;
+  border: 1px solid color-mix(in srgb, var(--site-accent) 22%, var(--md-table-border));
+  border-left: 3px solid var(--site-accent);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--site-accent) 6%, transparent), transparent 60%),
+    color-mix(in srgb, var(--md-table-row-alt) 70%, transparent);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) ul {
+  margin: 4px 0 4px 6px;
+  padding: 2px 0 2px 14px;
+  list-style: none;
+  border-left: 1px dashed color-mix(in srgb, var(--site-accent) 32%, var(--md-table-border));
+  font-size: 13.5px;
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) li {
+  position: relative;
+  margin: 4px 0;
+  padding-left: 0;
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) > li {
+  margin: 6px 0;
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) > li > a[href^="#"] {
+  font-weight: 600;
+  color: var(--md-heading-color);
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) li > a[href^="#"] {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 4px;
+  color: var(--site-text);
+  text-decoration: none;
+  transition: color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) li > a[href^="#"]:hover,
+.markdown-body :where(ul):has(> li > a[href^="#"]) li > a[href^="#"]:focus-visible {
+  color: var(--site-accent);
+  background: color-mix(in srgb, var(--site-accent) 12%, transparent);
+  text-decoration: none;
+  transform: translateX(2px);
+  outline: none;
+}
+
+.markdown-body :where(ul):has(> li > a[href^="#"]) li::marker {
+  content: "";
+}
