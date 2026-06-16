@@ -1159,7 +1159,10 @@ function normalizeMarkdownPreviewSource(source: string): string {
     .replace(/`([^`]*)`/g, '$1')
     .replace(/\\\[([\s\S]+?)\\\]/g, '\\($1\\)')
     .replace(/\$\$([\s\S]+?)\$\$/g, '\\($1\\)')
-    .replace(/\s+/g, ' ')
+    .replace(/\r\n?/g, '\n')
+    .replace(/[ \t\f\v]+/g, ' ')
+    .replace(/[ \t]*\n[ \t]*/g, '\n')
+    .replace(/\n{2,}/g, '\n')
     .trim()
 }
 
@@ -1171,7 +1174,11 @@ export function renderMarkdownPreview(source: string): string {
   const cached = renderedMarkdownPreviewCache.get(normalized)
   if (cached !== undefined) return cached
 
-  const rendered = sanitizeHtml(marked.parseInline(preprocessMarkdownMath(normalized)) as string)
+  const lines = normalized.split('\n')
+  const renderedLines = lines.map((line) =>
+    line ? sanitizeHtml(marked.parseInline(preprocessMarkdownMath(line)) as string) : ''
+  )
+  const rendered = renderedLines.join('<br>')
   return rememberCached(renderedMarkdownPreviewCache, normalized, rendered, MARKDOWN_PREVIEW_CACHE_LIMIT)
 }
 

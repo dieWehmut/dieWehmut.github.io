@@ -138,7 +138,7 @@ function openEntry(event?: MouseEvent | KeyboardEvent) {
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  --markdown-preview-lines: 2;
+  --markdown-preview-lines: 3;
 }
 
 .feed-entry-card__meta-row {

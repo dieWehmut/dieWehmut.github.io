@@ -1091,13 +1091,12 @@
 
 /* Compact Markdown used by cards, search results, tags, and short descriptions. */
 .markdown-preview {
-  display: -webkit-box;
+  display: block;
   max-width: 100%;
   overflow: hidden;
   color: inherit;
   overflow-wrap: anywhere;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--markdown-preview-lines, 2);
+  max-height: calc(1lh * var(--markdown-preview-lines, 2));
 }
 
 .markdown-preview :where(strong) {

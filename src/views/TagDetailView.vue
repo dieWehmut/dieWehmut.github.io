@@ -447,7 +447,7 @@ watch(tag, loadCaptures)
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  --markdown-preview-lines: 2;
+  --markdown-preview-lines: 3;
 }
 
 .tag-detail__meta-row {
