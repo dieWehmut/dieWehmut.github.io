@@ -80,7 +80,7 @@ h2 {
   color: var(--site-muted);
   font-size: 16px;
   line-height: 1.6;
-  --markdown-preview-lines: 2;
+  --markdown-preview-lines: 3;
 }
 
 .note-item__tags {

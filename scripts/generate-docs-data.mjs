@@ -86,7 +86,10 @@ function normalizeMarkdownPreviewSource(source) {
     .replace(/`([^`]*)`/g, '$1')
     .replace(/\\\[([\s\S]+?)\\\]/g, '\\($1\\)')
     .replace(/\$\$([\s\S]+?)\$\$/g, '\\($1\\)')
-    .replace(/\s+/g, ' ')
+    .replace(/\r\n?/g, '\n')
+    .replace(/[ \t\f\v]+/g, ' ')
+    .replace(/[ \t]*\n[ \t]*/g, '\n')
+    .replace(/\n{2,}/g, '\n')
     .trim()
 }
 
@@ -146,8 +149,11 @@ function adjustExcerptCutForMath(value, cut, maxExtension) {
 
 function trimExcerptEnd(value) {
   return value
-    .replace(/\s+/g, ' ')
-    .replace(/[\s,.;:\uFF0C\u3002\uFF1B\uFF1A\u3001-]+$/g, '')
+    .replace(/[ \t\f\v]+/g, ' ')
+    .replace(/[ \t]*\n[ \t]*/g, '\n')
+    .replace(/\n{2,}/g, '\n')
+    .replace(/[ \t,.;:\uFF0C\u3002\uFF1B\uFF1A\u3001-]+$/g, '')
+    .replace(/^\n+|\n+$/g, '')
     .trim()
 }
 
