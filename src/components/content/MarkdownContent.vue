@@ -19,7 +19,7 @@ let markdownModulePromise: Promise<typeof import('../../utils/markdown')> | null
 const scheduledHandles = new Set<number>()
 
 type IdleScheduler = Window & typeof globalThis & {
-  requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number
+  requestIdleCallback?: (callback: (deadline: IdleDeadline) => void, options?: { timeout?: number }) => number
   cancelIdleCallback?: (handle: number) => void
 }
 
@@ -49,16 +49,16 @@ function appendRenderedHtml(renderedHtml: string) {
   containerRef.value.append(section)
 }
 
-function scheduleIdle(callback: () => void, timeout = 700): number {
+function scheduleIdle(callback: (deadline?: IdleDeadline) => void, timeout = 700): number {
   if (typeof window === 'undefined') {
     callback()
     return 0
   }
 
   const scheduler = window as IdleScheduler
-  const wrapped = () => {
+  const wrapped = (deadline?: IdleDeadline) => {
     scheduledHandles.delete(handle)
-    callback()
+    callback(deadline)
   }
   let handle = 0
 
@@ -92,18 +92,27 @@ function renderRemainingChunks(
   renderMarkdown: typeof import('../../utils/markdown').renderMarkdown
 ) {
   if (token !== renderToken) return
-  if (index >= chunks.length) {
-    return
-  }
+  if (index >= chunks.length) return
 
-  scheduleIdle(() => {
+  scheduleIdle((deadline) => {
     if (token !== renderToken) return
-    appendRenderedHtml(renderMarkdown(chunks[index], {
-      codeRunner: props.codeRunner,
-      docId: props.docId,
-    }))
-    renderRemainingChunks(chunks, index + 1, token, renderMarkdown)
-  }, 900)
+    let cursor = index
+    // Drain as many chunks as fit in this idle slice instead of one per
+    // callback, so a large doc finishes in a couple of frames rather than
+    // dribbling out over many seconds.
+    do {
+      appendRenderedHtml(renderMarkdown(chunks[cursor], {
+        codeRunner: props.codeRunner,
+        docId: props.docId,
+      }))
+      cursor += 1
+      if (token !== renderToken) return
+    } while (
+      cursor < chunks.length &&
+      (!deadline || deadline.timeRemaining() > 4)
+    )
+    renderRemainingChunks(chunks, cursor, token, renderMarkdown)
+  }, 300)
 }
 
 watch(
@@ -119,7 +128,9 @@ watch(
       return
     }
 
-    scheduleIdle(async () => {
+    // Render the first chunk as soon as the markdown module is ready instead
+    // of waiting on an idle gap, so navigating to a doc paints immediately.
+    void (async () => {
       const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
       if (token !== renderToken) return
       const chunks = splitMarkdownForProgressiveRender(source)
@@ -134,7 +145,7 @@ watch(
         return
       }
       renderRemainingChunks(chunks, 1, token, renderMarkdown)
-    }, 200)
+    })()
   },
   { immediate: true }
 )
