@@ -8,10 +8,11 @@
         <span class="scroll-spy__percent">{{ progress }}%</span>
       </div>
     </div>
-    <nav class="scroll-spy__nav" aria-label="目录">
+    <nav ref="navRef" class="scroll-spy__nav" aria-label="目录">
       <button
         v-for="item in items"
         :key="item.id"
+        :ref="(el) => registerButton(item.id, el)"
         :class="{ 'is-active': item.id === activeId }"
         :style="{ paddingLeft: `${itemPaddingLeft(item)}px` }"
         @click="scrollToHeading(item.id)"
@@ -23,7 +24,7 @@
 </template>
 
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
@@ -37,6 +38,8 @@ const emit = defineEmits(['navigate'])
 const items = ref([])
 const activeId = ref('')
 const progress = ref(0)
+const navRef = ref(null)
+const buttonEls = new Map()
 
 let headings = []
 let scrollFrame = 0
@@ -45,6 +48,13 @@ let resizeObserver = null
 let mutationObserver = null
 let mediaQuery = null
 let isEnabled = true
+let pendingScrollId = ''
+let pendingScrollHandle = 0
+
+function registerButton(id, el) {
+  if (el) buttonEls.set(id, el)
+  else buttonEls.delete(id)
+}
 
 function findRoot() {
   return document.querySelector(props.rootSelector) || document.body
@@ -137,12 +147,69 @@ function updateActive() {
   if (nextActiveId !== activeId.value) activeId.value = nextActiveId
 }
 
-function scrollToHeading(id) {
-  const el = document.getElementById(id)
-  if (!el) return
+function jumpToElement(el) {
   const top = el.getBoundingClientRect().top + window.scrollY - props.offset
   window.scrollTo({ top, behavior: 'smooth' })
-  emit('navigate', id)
+}
+
+function cancelPendingScroll() {
+  if (pendingScrollHandle) {
+    window.cancelAnimationFrame(pendingScrollHandle)
+    pendingScrollHandle = 0
+  }
+  pendingScrollId = ''
+}
+
+// A deep heading may live in a markdown chunk that progressive rendering has
+// not appended yet, so getElementById can be null on the first click. Retry
+// across a few frames (capped) until the element materialises, then jump.
+function scrollToHeading(id) {
+  cancelPendingScroll()
+  const el = document.getElementById(id)
+  if (el) {
+    jumpToElement(el)
+    emit('navigate', id)
+    return
+  }
+
+  pendingScrollId = id
+  const startedAt = performance.now()
+
+  const attempt = () => {
+    if (pendingScrollId !== id) return
+    const target = document.getElementById(id)
+    if (target) {
+      cancelPendingScroll()
+      jumpToElement(target)
+      emit('navigate', id)
+      return
+    }
+    if (performance.now() - startedAt > 4000) {
+      cancelPendingScroll()
+      return
+    }
+    pendingScrollHandle = window.requestAnimationFrame(attempt)
+  }
+
+  pendingScrollHandle = window.requestAnimationFrame(attempt)
+}
+
+function followActive() {
+  if (props.mode !== 'desktop') return
+  const button = buttonEls.get(activeId.value)
+  const nav = navRef.value
+  if (!button || !nav) return
+  const aside = nav.closest('.scroll-spy')
+  if (!aside) return
+
+  const asideRect = aside.getBoundingClientRect()
+  const btnRect = button.getBoundingClientRect()
+  const margin = 24
+  if (btnRect.top < asideRect.top + margin) {
+    aside.scrollTop -= asideRect.top + margin - btnRect.top
+  } else if (btnRect.bottom > asideRect.bottom - margin) {
+    aside.scrollTop += btnRect.bottom - (asideRect.bottom - margin)
+  }
 }
 
 function onScroll() {
@@ -170,6 +237,10 @@ function updateNow() {
   updateProgress()
   updateActive()
 }
+
+watch(activeId, () => {
+  nextTick(followActive)
+})
 
 function onResize() {
   scheduleCollectHeadings()
@@ -229,6 +300,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame)
   if (collectFrame) window.cancelAnimationFrame(collectFrame)
+  cancelPendingScroll()
   resizeObserver?.disconnect()
   mutationObserver?.disconnect()
   if (mediaQuery?.removeEventListener) {
