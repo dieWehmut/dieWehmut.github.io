@@ -26,7 +26,7 @@
         </time>
         <time v-if="entry.updated" class="feed-entry-card__updated" :datetime="entry.updated">
           <el-icon class="feed-entry-card__updated-icon"><Edit /></el-icon>
-          最后更新: {{ formatDate(entry.updated) }}
+          Updated: {{ formatDate(entry.updated) }}
         </time>
         <ContentStats :word-count="entry.wordCount" :reading-minutes="entry.readingMinutes" />
         <RouterLink
