@@ -521,6 +521,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -541,6 +547,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -561,6 +573,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -581,6 +599,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -601,6 +625,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -621,6 +651,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -641,6 +677,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -661,6 +703,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -681,6 +729,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -701,6 +755,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -721,6 +781,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -741,6 +807,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -761,6 +833,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -781,6 +859,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -801,6 +885,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -821,6 +911,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -841,6 +937,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -861,6 +963,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -881,6 +989,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -901,6 +1015,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -921,6 +1041,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -941,6 +1067,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -961,6 +1093,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -981,6 +1119,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1001,6 +1145,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1021,6 +1171,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1041,6 +1197,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1061,6 +1223,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1081,6 +1249,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1101,6 +1275,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1121,6 +1301,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1141,6 +1327,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1161,6 +1353,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus-notes",
         "title": "Calculus Notes",
         "url": "/note/calculus-notes"
+      },
+      {
+        "type": "note",
+        "id": "calculus",
+        "title": "Calculus Notes",
+        "url": "/note/calculus"
       }
     ],
     "standalone": false
@@ -1181,6 +1379,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1201,6 +1405,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1221,6 +1431,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1241,6 +1457,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1261,6 +1483,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1281,6 +1509,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1301,6 +1535,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -1321,6 +1561,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linear-algebra-notes",
         "title": "Linear Algebra Notes",
         "url": "/note/linear-algebra-notes"
+      },
+      {
+        "type": "note",
+        "id": "linearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/linearAlgebra"
       }
     ],
     "standalone": false
@@ -2193,6 +2439,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2213,6 +2465,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2233,6 +2491,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2253,6 +2517,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2273,6 +2543,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2293,6 +2569,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2313,6 +2595,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2333,6 +2621,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2353,6 +2647,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2373,6 +2673,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2393,6 +2699,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "chemistry-notes",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/chemistry-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/highSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2413,6 +2725,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2433,6 +2751,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2453,6 +2777,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2473,6 +2803,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2493,6 +2829,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2513,6 +2855,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2533,6 +2881,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2553,6 +2907,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2573,6 +2933,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2593,6 +2959,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2613,6 +2985,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2633,6 +3011,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2653,6 +3037,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2673,6 +3063,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2693,6 +3089,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2713,6 +3115,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2733,6 +3141,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2753,6 +3167,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2773,6 +3193,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2793,6 +3219,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2813,6 +3245,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2833,6 +3271,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2853,6 +3297,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2873,6 +3323,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2893,6 +3349,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2913,6 +3375,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2933,6 +3401,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2953,6 +3427,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2973,6 +3453,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "physics-notes",
         "title": "High School Physics Notes Summary",
         "url": "/note/physics-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/highSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2993,6 +3479,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3013,6 +3505,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3033,6 +3531,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3053,6 +3557,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3073,6 +3583,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3093,6 +3609,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3113,6 +3635,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3133,6 +3661,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3153,6 +3687,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3173,6 +3713,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3193,6 +3739,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3213,6 +3765,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3233,6 +3791,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3253,6 +3817,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3273,6 +3843,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3293,6 +3869,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3313,6 +3895,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3333,6 +3921,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3353,6 +3947,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3373,6 +3973,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3393,6 +3999,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3413,6 +4025,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3433,6 +4051,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3453,6 +4077,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3473,6 +4103,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3493,6 +4129,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3513,6 +4155,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3533,6 +4181,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3553,6 +4207,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
@@ -3573,6 +4233,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "maths-notes",
         "title": "High School Maths Notes Summary",
         "url": "/note/maths-notes"
+      },
+      {
+        "type": "note",
+        "id": "highSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/highSchoolMaths"
       }
     ],
     "standalone": false
