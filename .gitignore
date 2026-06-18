@@ -44,3 +44,4 @@ src/data/docs/**/*.avif
 prompt/
 sample/
 backend
+.playwright-mcp
