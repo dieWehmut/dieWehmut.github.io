@@ -26,8 +26,25 @@ const loadedDocCache = new Map<string, Promise<LoadedDoc | null>>()
 
 export const docContentVersion = ref(0)
 
+// During dev, editing a markdown file regenerates `generated.ts` and triggers a
+// Vite module HMR cascade that remounts the doc view. That transiently collapses
+// the document height and clamps scrollY to 0. Stash the reader's position in
+// sessionStorage (which survives the remount) so MarkdownContent can restore it
+// once the new content has finished rendering, instead of forcing a full reload.
+const HMR_SCROLL_KEY = 'md-hmr-scroll'
+
 if (import.meta.hot) {
   import.meta.hot.on('md-content-update', () => {
+    if (typeof window !== 'undefined' && window.scrollY > 0) {
+      try {
+        sessionStorage.setItem(
+          HMR_SCROLL_KEY,
+          JSON.stringify({ y: window.scrollY }),
+        )
+      } catch {
+        // sessionStorage may be unavailable; scroll preservation is best-effort.
+      }
+    }
     loadedDocCache.clear()
     docContentVersion.value += 1
   })
