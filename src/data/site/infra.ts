@@ -21,6 +21,7 @@ const initialInfra: InfraEntry[] = [
   { name: 'Music Station', key: 'music', url: 'https://music.diesw.tech', date: '2026-06-15' },
   { name: 'Cloud Drive', key: 'cloud', url: 'https://cloud.diesw.tech', date: '2026-06-15' },
   { name: 'Uptime Kuma', key: 'uptime', url: 'https://kuma.diesw.tech', date: '2026-06-15' },
+  { name: 'Nginx', key: 'nginx', url: 'https://nginx-ui.diesw.tech', date: '2026-06-19' },
 ]
 
 initialInfra.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())

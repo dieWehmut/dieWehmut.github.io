@@ -18,8 +18,6 @@ Start-Service ssh-agent
 ssh-add C:\path\to\your\private_key
 ```
 
->e.g:
-
 ```powershell
 ssh-add $HOME\.ssh\aws-key1.pem
 ```

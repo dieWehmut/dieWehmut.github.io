@@ -14,52 +14,7 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
-    "id": "Database",
-    "type": "note",
-    "title": "Database Notes",
-    "date": "2026-06-18",
-    "tags": [
-      "Database",
-      "Notes"
-    ],
-    "summary": "",
-    "wordCount": 0,
-    "readingMinutes": 0,
-    "updated": "",
-    "path": "./notes/Database.md"
-  },
-  {
-    "id": "MachineLearning",
-    "type": "note",
-    "title": "Machine Learning Notes",
-    "date": "2026-06-18",
-    "tags": [
-      "Machine Learning",
-      "Notes"
-    ],
-    "summary": "",
-    "wordCount": 0,
-    "readingMinutes": 0,
-    "updated": "",
-    "path": "./notes/MachineLearning.md"
-  },
-  {
-    "id": "OperatingSystem",
-    "type": "note",
-    "title": "Operating System Notes",
-    "date": "2026-06-18",
-    "tags": [
-      "Operating System",
-      "Notes"
-    ],
-    "summary": "",
-    "wordCount": 0,
-    "readingMinutes": 0,
-    "updated": "",
-    "path": "./notes/OperatingSystem.md"
-  },
-  {
-    "id": "computingMethod",
+    "id": "ComputingMethod",
     "type": "note",
     "title": "Computing Method Notes",
     "date": "2026-06-16",
@@ -68,10 +23,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Notes"
     ],
     "summary": "计算方法 (Computing Method) / 数值分析 (Numerical Analysis) / 数值计算 (Numerical Computing)\n一.绪论\n1. 研究对象与特点\n2. 误差来源与分析\n3. 误差的基本概...",
-    "wordCount": 46090,
+    "wordCount": 46098,
     "readingMinutes": 116,
-    "updated": "2026/06/16 10:35",
-    "path": "./notes/computingMethod.md"
+    "updated": "",
+    "path": "./notes/ComputingMethod.md"
   },
   {
     "id": "TestSandkasten",
@@ -104,6 +59,21 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "path": "./posts/Win.md"
   },
   {
+    "id": "gpt-image2",
+    "type": "note",
+    "title": "gpt-image2笔记生图",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "无限号池那天玩image2生成的(\ncalculus\nchemistry\ndb\nlinear-algebra\nmath\nphysics\ncalculus\ncalculus/1 (1).png\ncalculus/1 (2).png\nca...",
+    "wordCount": 633,
+    "readingMinutes": 2,
+    "updated": "",
+    "path": "./notes/gpt-image2.md"
+  },
+  {
     "id": "PVE",
     "type": "post",
     "title": "Proxmox VE 初始化配置",
@@ -111,8 +81,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "自部署参考\n[https://community-scripts.org/]\nLXC初始化\ne.g:curl, git, unzip,wget, etc.\nDocker\nGit 登录\nPVE\nLXC扩容\n允许ssh root密码登录...",
-    "wordCount": 206,
+    "summary": "自部署脚本参考\n[https://community-scripts.org/]\nLXC初始化\ne.g:curl, git, unzip,wget, etc.\nDocker\nGit 登录\nPVE\nLXC扩容\n允许ssh root密码登...",
+    "wordCount": 208,
     "readingMinutes": 1,
     "updated": "",
     "path": "./posts/PVE.md"

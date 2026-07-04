@@ -60,6 +60,21 @@ tags: [Computing Method, Notes]
   - [4. QR 算法](#4-qr-算法)
   - [5. Jacobi 方法](#5-jacobi-方法)
 
+
+>考试小抄
+
+<div class="md-source-page">
+<figure class="md-source-page__figure">
+<img src="/capture-assets/docs/cm/cm1.jpg" alt="Computing Method 考试小抄第 1 张" loading="lazy" decoding="async">
+<figcaption>cm1.jpg</figcaption>
+</figure>
+<figure class="md-source-page__figure">
+<img src="/capture-assets/docs/cm/cm2.jpg" alt="Computing Method 考试小抄第 2 张" loading="lazy" decoding="async">
+<figcaption>cm2.jpg</figcaption>
+</figure>
+</div>
+
+
 ## 一.绪论
 
 ### 1. 研究对象与特点

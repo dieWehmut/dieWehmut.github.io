@@ -2,6 +2,3026 @@ import type { CaptureAsset } from '../../types/content'
 
 export const generatedCaptureAssets: CaptureAsset[] = [
   {
+    "id": "docs-cm-cm1",
+    "image": "/capture-assets/docs/cm/cm1.jpg",
+    "title": "Computing Method 考试小抄第 1 张",
+    "date": "2026-06-16",
+    "tags": [
+      "Computing Method",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "ComputingMethod",
+        "title": "Computing Method Notes",
+        "url": "/note/ComputingMethod"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cm-cm2",
+    "image": "/capture-assets/docs/cm/cm2.jpg",
+    "title": "Computing Method 考试小抄第 2 张",
+    "date": "2026-06-16",
+    "tags": [
+      "Computing Method",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "ComputingMethod",
+        "title": "Computing Method Notes",
+        "url": "/note/ComputingMethod"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (1)",
+    "image": "/capture-assets/docs/image2/calculus/1 (1).png",
+    "title": "gpt-image2 calculus/1 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (10)",
+    "image": "/capture-assets/docs/image2/calculus/1 (10).png",
+    "title": "gpt-image2 calculus/1 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (2)",
+    "image": "/capture-assets/docs/image2/calculus/1 (2).png",
+    "title": "gpt-image2 calculus/1 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (3)",
+    "image": "/capture-assets/docs/image2/calculus/1 (3).png",
+    "title": "gpt-image2 calculus/1 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (4)",
+    "image": "/capture-assets/docs/image2/calculus/1 (4).png",
+    "title": "gpt-image2 calculus/1 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (5)",
+    "image": "/capture-assets/docs/image2/calculus/1 (5).png",
+    "title": "gpt-image2 calculus/1 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (6)",
+    "image": "/capture-assets/docs/image2/calculus/1 (6).png",
+    "title": "gpt-image2 calculus/1 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (7)",
+    "image": "/capture-assets/docs/image2/calculus/1 (7).png",
+    "title": "gpt-image2 calculus/1 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (8)",
+    "image": "/capture-assets/docs/image2/calculus/1 (8).png",
+    "title": "gpt-image2 calculus/1 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-1 (9)",
+    "image": "/capture-assets/docs/image2/calculus/1 (9).png",
+    "title": "gpt-image2 calculus/1 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (1)",
+    "image": "/capture-assets/docs/image2/calculus/2 (1).png",
+    "title": "gpt-image2 calculus/2 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (10)",
+    "image": "/capture-assets/docs/image2/calculus/2 (10).png",
+    "title": "gpt-image2 calculus/2 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (11)",
+    "image": "/capture-assets/docs/image2/calculus/2 (11).png",
+    "title": "gpt-image2 calculus/2 (11).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (12)",
+    "image": "/capture-assets/docs/image2/calculus/2 (12).png",
+    "title": "gpt-image2 calculus/2 (12).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (13)",
+    "image": "/capture-assets/docs/image2/calculus/2 (13).png",
+    "title": "gpt-image2 calculus/2 (13).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (14)",
+    "image": "/capture-assets/docs/image2/calculus/2 (14).png",
+    "title": "gpt-image2 calculus/2 (14).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (15)",
+    "image": "/capture-assets/docs/image2/calculus/2 (15).png",
+    "title": "gpt-image2 calculus/2 (15).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (16)",
+    "image": "/capture-assets/docs/image2/calculus/2 (16).png",
+    "title": "gpt-image2 calculus/2 (16).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (17)",
+    "image": "/capture-assets/docs/image2/calculus/2 (17).png",
+    "title": "gpt-image2 calculus/2 (17).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (18)",
+    "image": "/capture-assets/docs/image2/calculus/2 (18).png",
+    "title": "gpt-image2 calculus/2 (18).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (19)",
+    "image": "/capture-assets/docs/image2/calculus/2 (19).png",
+    "title": "gpt-image2 calculus/2 (19).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (2)",
+    "image": "/capture-assets/docs/image2/calculus/2 (2).png",
+    "title": "gpt-image2 calculus/2 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (20)",
+    "image": "/capture-assets/docs/image2/calculus/2 (20).png",
+    "title": "gpt-image2 calculus/2 (20).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (21)",
+    "image": "/capture-assets/docs/image2/calculus/2 (21).png",
+    "title": "gpt-image2 calculus/2 (21).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (22)",
+    "image": "/capture-assets/docs/image2/calculus/2 (22).png",
+    "title": "gpt-image2 calculus/2 (22).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (23)",
+    "image": "/capture-assets/docs/image2/calculus/2 (23).png",
+    "title": "gpt-image2 calculus/2 (23).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (24)",
+    "image": "/capture-assets/docs/image2/calculus/2 (24).png",
+    "title": "gpt-image2 calculus/2 (24).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (25)",
+    "image": "/capture-assets/docs/image2/calculus/2 (25).png",
+    "title": "gpt-image2 calculus/2 (25).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (26)",
+    "image": "/capture-assets/docs/image2/calculus/2 (26).png",
+    "title": "gpt-image2 calculus/2 (26).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (27)",
+    "image": "/capture-assets/docs/image2/calculus/2 (27).png",
+    "title": "gpt-image2 calculus/2 (27).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (28)",
+    "image": "/capture-assets/docs/image2/calculus/2 (28).png",
+    "title": "gpt-image2 calculus/2 (28).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (29)",
+    "image": "/capture-assets/docs/image2/calculus/2 (29).png",
+    "title": "gpt-image2 calculus/2 (29).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (3)",
+    "image": "/capture-assets/docs/image2/calculus/2 (3).png",
+    "title": "gpt-image2 calculus/2 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (30)",
+    "image": "/capture-assets/docs/image2/calculus/2 (30).png",
+    "title": "gpt-image2 calculus/2 (30).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (4)",
+    "image": "/capture-assets/docs/image2/calculus/2 (4).png",
+    "title": "gpt-image2 calculus/2 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (5)",
+    "image": "/capture-assets/docs/image2/calculus/2 (5).png",
+    "title": "gpt-image2 calculus/2 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (6)",
+    "image": "/capture-assets/docs/image2/calculus/2 (6).png",
+    "title": "gpt-image2 calculus/2 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (7)",
+    "image": "/capture-assets/docs/image2/calculus/2 (7).png",
+    "title": "gpt-image2 calculus/2 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (8)",
+    "image": "/capture-assets/docs/image2/calculus/2 (8).png",
+    "title": "gpt-image2 calculus/2 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-calculus-2 (9)",
+    "image": "/capture-assets/docs/image2/calculus/2 (9).png",
+    "title": "gpt-image2 calculus/2 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-1",
+    "image": "/capture-assets/docs/image2/chemistry/1.png",
+    "title": "gpt-image2 chemistry/1.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-10",
+    "image": "/capture-assets/docs/image2/chemistry/10.png",
+    "title": "gpt-image2 chemistry/10.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-2",
+    "image": "/capture-assets/docs/image2/chemistry/2.png",
+    "title": "gpt-image2 chemistry/2.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-3",
+    "image": "/capture-assets/docs/image2/chemistry/3.png",
+    "title": "gpt-image2 chemistry/3.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-4",
+    "image": "/capture-assets/docs/image2/chemistry/4.png",
+    "title": "gpt-image2 chemistry/4.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-5",
+    "image": "/capture-assets/docs/image2/chemistry/5.png",
+    "title": "gpt-image2 chemistry/5.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-6",
+    "image": "/capture-assets/docs/image2/chemistry/6.png",
+    "title": "gpt-image2 chemistry/6.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-7",
+    "image": "/capture-assets/docs/image2/chemistry/7.png",
+    "title": "gpt-image2 chemistry/7.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-8",
+    "image": "/capture-assets/docs/image2/chemistry/8.png",
+    "title": "gpt-image2 chemistry/8.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-chemistry-9",
+    "image": "/capture-assets/docs/image2/chemistry/9.png",
+    "title": "gpt-image2 chemistry/9.png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (1)",
+    "image": "/capture-assets/docs/image2/db/1 (1).png",
+    "title": "gpt-image2 db/1 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (10)",
+    "image": "/capture-assets/docs/image2/db/1 (10).png",
+    "title": "gpt-image2 db/1 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (2)",
+    "image": "/capture-assets/docs/image2/db/1 (2).png",
+    "title": "gpt-image2 db/1 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (3)",
+    "image": "/capture-assets/docs/image2/db/1 (3).png",
+    "title": "gpt-image2 db/1 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (4)",
+    "image": "/capture-assets/docs/image2/db/1 (4).png",
+    "title": "gpt-image2 db/1 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (5)",
+    "image": "/capture-assets/docs/image2/db/1 (5).png",
+    "title": "gpt-image2 db/1 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (6)",
+    "image": "/capture-assets/docs/image2/db/1 (6).png",
+    "title": "gpt-image2 db/1 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (7)",
+    "image": "/capture-assets/docs/image2/db/1 (7).png",
+    "title": "gpt-image2 db/1 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (8)",
+    "image": "/capture-assets/docs/image2/db/1 (8).png",
+    "title": "gpt-image2 db/1 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-db-1 (9)",
+    "image": "/capture-assets/docs/image2/db/1 (9).png",
+    "title": "gpt-image2 db/1 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (1)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (1).png",
+    "title": "gpt-image2 linear-algebra/1 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (10)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (10).png",
+    "title": "gpt-image2 linear-algebra/1 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (2)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (2).png",
+    "title": "gpt-image2 linear-algebra/1 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (3)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (3).png",
+    "title": "gpt-image2 linear-algebra/1 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (4)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (4).png",
+    "title": "gpt-image2 linear-algebra/1 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (5)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (5).png",
+    "title": "gpt-image2 linear-algebra/1 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (6)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (6).png",
+    "title": "gpt-image2 linear-algebra/1 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (7)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (7).png",
+    "title": "gpt-image2 linear-algebra/1 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (8)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (8).png",
+    "title": "gpt-image2 linear-algebra/1 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-linear-algebra-1 (9)",
+    "image": "/capture-assets/docs/image2/linear-algebra/1 (9).png",
+    "title": "gpt-image2 linear-algebra/1 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (1)",
+    "image": "/capture-assets/docs/image2/math/1 (1).png",
+    "title": "gpt-image2 math/1 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (10)",
+    "image": "/capture-assets/docs/image2/math/1 (10).png",
+    "title": "gpt-image2 math/1 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (2)",
+    "image": "/capture-assets/docs/image2/math/1 (2).png",
+    "title": "gpt-image2 math/1 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (3)",
+    "image": "/capture-assets/docs/image2/math/1 (3).png",
+    "title": "gpt-image2 math/1 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (4)",
+    "image": "/capture-assets/docs/image2/math/1 (4).png",
+    "title": "gpt-image2 math/1 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (5)",
+    "image": "/capture-assets/docs/image2/math/1 (5).png",
+    "title": "gpt-image2 math/1 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (6)",
+    "image": "/capture-assets/docs/image2/math/1 (6).png",
+    "title": "gpt-image2 math/1 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (7)",
+    "image": "/capture-assets/docs/image2/math/1 (7).png",
+    "title": "gpt-image2 math/1 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (8)",
+    "image": "/capture-assets/docs/image2/math/1 (8).png",
+    "title": "gpt-image2 math/1 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-1 (9)",
+    "image": "/capture-assets/docs/image2/math/1 (9).png",
+    "title": "gpt-image2 math/1 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (1)",
+    "image": "/capture-assets/docs/image2/math/2 (1).png",
+    "title": "gpt-image2 math/2 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (10)",
+    "image": "/capture-assets/docs/image2/math/2 (10).png",
+    "title": "gpt-image2 math/2 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (11)",
+    "image": "/capture-assets/docs/image2/math/2 (11).png",
+    "title": "gpt-image2 math/2 (11).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (12)",
+    "image": "/capture-assets/docs/image2/math/2 (12).png",
+    "title": "gpt-image2 math/2 (12).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (13)",
+    "image": "/capture-assets/docs/image2/math/2 (13).png",
+    "title": "gpt-image2 math/2 (13).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (14)",
+    "image": "/capture-assets/docs/image2/math/2 (14).png",
+    "title": "gpt-image2 math/2 (14).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (15)",
+    "image": "/capture-assets/docs/image2/math/2 (15).png",
+    "title": "gpt-image2 math/2 (15).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (16)",
+    "image": "/capture-assets/docs/image2/math/2 (16).png",
+    "title": "gpt-image2 math/2 (16).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (17)",
+    "image": "/capture-assets/docs/image2/math/2 (17).png",
+    "title": "gpt-image2 math/2 (17).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (18)",
+    "image": "/capture-assets/docs/image2/math/2 (18).png",
+    "title": "gpt-image2 math/2 (18).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (19)",
+    "image": "/capture-assets/docs/image2/math/2 (19).png",
+    "title": "gpt-image2 math/2 (19).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (2)",
+    "image": "/capture-assets/docs/image2/math/2 (2).png",
+    "title": "gpt-image2 math/2 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (20)",
+    "image": "/capture-assets/docs/image2/math/2 (20).png",
+    "title": "gpt-image2 math/2 (20).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (21)",
+    "image": "/capture-assets/docs/image2/math/2 (21).png",
+    "title": "gpt-image2 math/2 (21).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (22)",
+    "image": "/capture-assets/docs/image2/math/2 (22).png",
+    "title": "gpt-image2 math/2 (22).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (23)",
+    "image": "/capture-assets/docs/image2/math/2 (23).png",
+    "title": "gpt-image2 math/2 (23).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (24)",
+    "image": "/capture-assets/docs/image2/math/2 (24).png",
+    "title": "gpt-image2 math/2 (24).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (25)",
+    "image": "/capture-assets/docs/image2/math/2 (25).png",
+    "title": "gpt-image2 math/2 (25).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (26)",
+    "image": "/capture-assets/docs/image2/math/2 (26).png",
+    "title": "gpt-image2 math/2 (26).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (27)",
+    "image": "/capture-assets/docs/image2/math/2 (27).png",
+    "title": "gpt-image2 math/2 (27).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (28)",
+    "image": "/capture-assets/docs/image2/math/2 (28).png",
+    "title": "gpt-image2 math/2 (28).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (29)",
+    "image": "/capture-assets/docs/image2/math/2 (29).png",
+    "title": "gpt-image2 math/2 (29).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (3)",
+    "image": "/capture-assets/docs/image2/math/2 (3).png",
+    "title": "gpt-image2 math/2 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (30)",
+    "image": "/capture-assets/docs/image2/math/2 (30).png",
+    "title": "gpt-image2 math/2 (30).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (4)",
+    "image": "/capture-assets/docs/image2/math/2 (4).png",
+    "title": "gpt-image2 math/2 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (5)",
+    "image": "/capture-assets/docs/image2/math/2 (5).png",
+    "title": "gpt-image2 math/2 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (6)",
+    "image": "/capture-assets/docs/image2/math/2 (6).png",
+    "title": "gpt-image2 math/2 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (7)",
+    "image": "/capture-assets/docs/image2/math/2 (7).png",
+    "title": "gpt-image2 math/2 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (8)",
+    "image": "/capture-assets/docs/image2/math/2 (8).png",
+    "title": "gpt-image2 math/2 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-math-2 (9)",
+    "image": "/capture-assets/docs/image2/math/2 (9).png",
+    "title": "gpt-image2 math/2 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (1)",
+    "image": "/capture-assets/docs/image2/physics/1 (1).png",
+    "title": "gpt-image2 physics/1 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (10)",
+    "image": "/capture-assets/docs/image2/physics/1 (10).png",
+    "title": "gpt-image2 physics/1 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (2)",
+    "image": "/capture-assets/docs/image2/physics/1 (2).png",
+    "title": "gpt-image2 physics/1 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (3)",
+    "image": "/capture-assets/docs/image2/physics/1 (3).png",
+    "title": "gpt-image2 physics/1 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (4)",
+    "image": "/capture-assets/docs/image2/physics/1 (4).png",
+    "title": "gpt-image2 physics/1 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (5)",
+    "image": "/capture-assets/docs/image2/physics/1 (5).png",
+    "title": "gpt-image2 physics/1 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (6)",
+    "image": "/capture-assets/docs/image2/physics/1 (6).png",
+    "title": "gpt-image2 physics/1 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (7)",
+    "image": "/capture-assets/docs/image2/physics/1 (7).png",
+    "title": "gpt-image2 physics/1 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (8)",
+    "image": "/capture-assets/docs/image2/physics/1 (8).png",
+    "title": "gpt-image2 physics/1 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-1 (9)",
+    "image": "/capture-assets/docs/image2/physics/1 (9).png",
+    "title": "gpt-image2 physics/1 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (1)",
+    "image": "/capture-assets/docs/image2/physics/2 (1).png",
+    "title": "gpt-image2 physics/2 (1).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (10)",
+    "image": "/capture-assets/docs/image2/physics/2 (10).png",
+    "title": "gpt-image2 physics/2 (10).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (11)",
+    "image": "/capture-assets/docs/image2/physics/2 (11).png",
+    "title": "gpt-image2 physics/2 (11).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (12)",
+    "image": "/capture-assets/docs/image2/physics/2 (12).png",
+    "title": "gpt-image2 physics/2 (12).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (13)",
+    "image": "/capture-assets/docs/image2/physics/2 (13).png",
+    "title": "gpt-image2 physics/2 (13).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (14)",
+    "image": "/capture-assets/docs/image2/physics/2 (14).png",
+    "title": "gpt-image2 physics/2 (14).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (15)",
+    "image": "/capture-assets/docs/image2/physics/2 (15).png",
+    "title": "gpt-image2 physics/2 (15).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (16)",
+    "image": "/capture-assets/docs/image2/physics/2 (16).png",
+    "title": "gpt-image2 physics/2 (16).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (17)",
+    "image": "/capture-assets/docs/image2/physics/2 (17).png",
+    "title": "gpt-image2 physics/2 (17).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (18)",
+    "image": "/capture-assets/docs/image2/physics/2 (18).png",
+    "title": "gpt-image2 physics/2 (18).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (19)",
+    "image": "/capture-assets/docs/image2/physics/2 (19).png",
+    "title": "gpt-image2 physics/2 (19).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (2)",
+    "image": "/capture-assets/docs/image2/physics/2 (2).png",
+    "title": "gpt-image2 physics/2 (2).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (20)",
+    "image": "/capture-assets/docs/image2/physics/2 (20).png",
+    "title": "gpt-image2 physics/2 (20).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (21)",
+    "image": "/capture-assets/docs/image2/physics/2 (21).png",
+    "title": "gpt-image2 physics/2 (21).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (22)",
+    "image": "/capture-assets/docs/image2/physics/2 (22).png",
+    "title": "gpt-image2 physics/2 (22).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (23)",
+    "image": "/capture-assets/docs/image2/physics/2 (23).png",
+    "title": "gpt-image2 physics/2 (23).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (24)",
+    "image": "/capture-assets/docs/image2/physics/2 (24).png",
+    "title": "gpt-image2 physics/2 (24).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (25)",
+    "image": "/capture-assets/docs/image2/physics/2 (25).png",
+    "title": "gpt-image2 physics/2 (25).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (26)",
+    "image": "/capture-assets/docs/image2/physics/2 (26).png",
+    "title": "gpt-image2 physics/2 (26).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (27)",
+    "image": "/capture-assets/docs/image2/physics/2 (27).png",
+    "title": "gpt-image2 physics/2 (27).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (28)",
+    "image": "/capture-assets/docs/image2/physics/2 (28).png",
+    "title": "gpt-image2 physics/2 (28).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (29)",
+    "image": "/capture-assets/docs/image2/physics/2 (29).png",
+    "title": "gpt-image2 physics/2 (29).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (3)",
+    "image": "/capture-assets/docs/image2/physics/2 (3).png",
+    "title": "gpt-image2 physics/2 (3).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (4)",
+    "image": "/capture-assets/docs/image2/physics/2 (4).png",
+    "title": "gpt-image2 physics/2 (4).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (5)",
+    "image": "/capture-assets/docs/image2/physics/2 (5).png",
+    "title": "gpt-image2 physics/2 (5).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (6)",
+    "image": "/capture-assets/docs/image2/physics/2 (6).png",
+    "title": "gpt-image2 physics/2 (6).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (7)",
+    "image": "/capture-assets/docs/image2/physics/2 (7).png",
+    "title": "gpt-image2 physics/2 (7).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (8)",
+    "image": "/capture-assets/docs/image2/physics/2 (8).png",
+    "title": "gpt-image2 physics/2 (8).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-image2-physics-2 (9)",
+    "image": "/capture-assets/docs/image2/physics/2 (9).png",
+    "title": "gpt-image2 physics/2 (9).png",
+    "date": "2026-06-09",
+    "tags": [
+      "OpenAI",
+      "gpt-image2"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "gpt-image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/gpt-image2"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "standalone-b456301e-24a6-47dd-9ebc-c8293f0feefd-0",
     "image": "/capture-assets/standalone/2026-03/b456301e-24a6-47dd-9ebc-c8293f0feefd/0.webp",
     "title": "2026-03-16 13:35:00 +0800",
@@ -527,6 +3547,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -553,6 +3579,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -579,6 +3611,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -605,6 +3643,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -631,6 +3675,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -657,6 +3707,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -683,6 +3739,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -709,6 +3771,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -735,6 +3803,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -761,6 +3835,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -787,6 +3867,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -813,6 +3899,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -839,6 +3931,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -865,6 +3963,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -891,6 +3995,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -917,6 +4027,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -943,6 +4059,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -969,6 +4091,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -995,6 +4123,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1021,6 +4155,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1047,6 +4187,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1073,6 +4219,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1099,6 +4251,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1125,6 +4283,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1151,6 +4315,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1177,6 +4347,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1203,6 +4379,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1229,6 +4411,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1255,6 +4443,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1281,6 +4475,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1307,6 +4507,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1333,6 +4539,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1359,6 +4571,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "calculus",
         "title": "Calculus Notes",
         "url": "/note/calculus"
+      },
+      {
+        "type": "note",
+        "id": "Calculus",
+        "title": "Calculus Notes",
+        "url": "/note/Calculus"
       }
     ],
     "standalone": false
@@ -1385,6 +4603,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1411,6 +4635,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1437,6 +4667,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1463,6 +4699,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1489,6 +4731,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1515,6 +4763,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1541,6 +4795,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -1567,6 +4827,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "linearAlgebra",
         "title": "Linear Algebra Notes",
         "url": "/note/linearAlgebra"
+      },
+      {
+        "type": "note",
+        "id": "LinearAlgebra",
+        "title": "Linear Algebra Notes",
+        "url": "/note/LinearAlgebra"
       }
     ],
     "standalone": false
@@ -2445,6 +5711,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2471,6 +5743,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2497,6 +5775,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2523,6 +5807,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2549,6 +5839,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2575,6 +5871,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2601,6 +5903,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2627,6 +5935,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2653,6 +5967,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2679,6 +5999,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2705,6 +6031,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolChemistry",
         "title": "High School Chemistry Notes Summary",
         "url": "/note/highSchoolChemistry"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolChemistry",
+        "title": "High School Chemistry Notes Summary",
+        "url": "/note/HighSchoolChemistry"
       }
     ],
     "standalone": false
@@ -2731,6 +6063,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2757,6 +6095,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2783,6 +6127,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2809,6 +6159,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2835,6 +6191,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2861,6 +6223,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2887,6 +6255,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2913,6 +6287,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2939,6 +6319,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2965,6 +6351,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -2991,6 +6383,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3017,6 +6415,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3043,6 +6447,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3069,6 +6479,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3095,6 +6511,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3121,6 +6543,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3147,6 +6575,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3173,6 +6607,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3199,6 +6639,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3225,6 +6671,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3251,6 +6703,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3277,6 +6735,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3303,6 +6767,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3329,6 +6799,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3355,6 +6831,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3381,6 +6863,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3407,6 +6895,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3433,6 +6927,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3459,6 +6959,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolPhysics",
         "title": "High School Physics Notes Summary",
         "url": "/note/highSchoolPhysics"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolPhysics",
+        "title": "High School Physics Notes Summary",
+        "url": "/note/HighSchoolPhysics"
       }
     ],
     "standalone": false
@@ -3485,6 +6991,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3511,6 +7023,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3537,6 +7055,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3563,6 +7087,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3589,6 +7119,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3615,6 +7151,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3641,6 +7183,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3667,6 +7215,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3693,6 +7247,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3719,6 +7279,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3745,6 +7311,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3771,6 +7343,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3797,6 +7375,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3823,6 +7407,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3849,6 +7439,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3875,6 +7471,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3901,6 +7503,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3927,6 +7535,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3953,6 +7567,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -3979,6 +7599,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4005,6 +7631,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4031,6 +7663,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4057,6 +7695,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4083,6 +7727,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4109,6 +7759,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4135,6 +7791,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4161,6 +7823,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4187,6 +7855,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4213,6 +7887,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false
@@ -4239,6 +7919,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "highSchoolMaths",
         "title": "High School Maths Notes Summary",
         "url": "/note/highSchoolMaths"
+      },
+      {
+        "type": "note",
+        "id": "HighSchoolMaths",
+        "title": "High School Maths Notes Summary",
+        "url": "/note/HighSchoolMaths"
       }
     ],
     "standalone": false

@@ -5,7 +5,7 @@ date: 2026-06-09
 tags: [Proxmox VE]
 ---
 
-## 自部署参考
+## 自部署脚本参考
 
 [https://community-scripts.org/]
 
@@ -116,5 +116,5 @@ cloudflared tunnel route dns uuid xxx.com
 ```
 
 ```bash
-systemctl start cloudflared
+systemctl restart cloudflared
 ```
