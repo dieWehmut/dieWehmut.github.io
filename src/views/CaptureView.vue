@@ -131,16 +131,20 @@
                       'capture-grid--single': group.assets.length === 1,
                       'capture-grid--double': group.assets.length === 2,
                     }"
+                    role="link"
+                    tabindex="0"
+                    :aria-label="`Open ${group.heading}`"
+                    @click="openCaptureGroup(group)"
+                    @keydown.enter.prevent="openCaptureGroup(group)"
+                    @keydown.space.prevent="openCaptureGroup(group)"
                   >
                     <div
-                      v-for="asset in group.assets"
+                      v-for="(asset, index) in previewAssets(group)"
                       :key="asset.id"
                       class="capture-card"
                     >
-                      <button
+                      <div
                         class="capture-card__media"
-                        type="button"
-                        @click="openAsset(asset)"
                       >
                         <img
                           :src="asset.image"
@@ -149,7 +153,14 @@
                           decoding="async"
                           @error="retryPublicAssetImage($event, asset.image)"
                         />
-                      </button>
+                        <span
+                          v-if="index === capturePreviewLimit - 1 && hiddenAssetCount(group) > 0"
+                          class="capture-card__more"
+                          aria-hidden="true"
+                        >
+                          +{{ hiddenAssetCount(group) }}
+                        </span>
+                      </div>
                       <button
                         v-if="canEdit"
                         class="capture-card__delete"
@@ -157,19 +168,21 @@
                         :aria-label="t('capture.deleteImage')"
                         :title="t('capture.deleteImage')"
                         :disabled="editorBusy"
-                        @click="deleteCapture(asset)"
+                        @click.stop="deleteCapture(asset)"
+                        @keydown.stop
                       >
                         <el-icon><Delete /></el-icon>
                       </button>
                     </div>
                     <button
-                      v-if="canEdit"
+                      v-if="canEdit && group.assets.length < capturePreviewLimit"
                       class="capture-card capture-card--add"
                       type="button"
                       :aria-label="t('capture.uploadImage')"
                       :title="t('capture.uploadImage')"
                       :disabled="editorBusy"
-                      @click="selectUploadGroup(group)"
+                      @click.stop="selectUploadGroup(group)"
+                      @keydown.stop
                     >
                       <el-icon><Plus /></el-icon>
                     </button>
@@ -296,6 +309,7 @@ import { formatTimelineMonthLabel, formatTimelineYearLabel } from '../utils/time
 
 const isDev = import.meta.env.DEV
 const captureScrollStorageKey = 'nexus:capture-scroll-y'
+const capturePreviewLimit = 9
 
 const allAssets = ref<CaptureAsset[]>(getCaptureAssets())
 const captureGroups = computed(() => groupCaptureAssets(allAssets.value))
@@ -415,6 +429,14 @@ function findCaptureGroupByRouteId(routeId: string) {
   ) || null
 }
 
+function previewAssets(group: CaptureGroup) {
+  return group.assets.slice(0, capturePreviewLimit)
+}
+
+function hiddenAssetCount(group: CaptureGroup) {
+  return Math.max(0, group.assets.length - capturePreviewLimit)
+}
+
 function groupByYearAndMonth(groups: CaptureGroup[]): YearGroup[] {
   const years = new Map<string, YearGroup>()
 
@@ -464,6 +486,11 @@ function openAsset(asset: CaptureAsset) {
     allAssets.value.map((item) => ({ src: item.image, alt: item.title || '' })),
     allAssets.value.findIndex((item) => item.id === asset.id)
   )
+}
+
+function openCaptureGroup(group: CaptureGroup) {
+  saveCaptureScrollPosition()
+  router.push(`/capture/${encodeURIComponent(group.id)}`)
 }
 
 function backToCapture() {
@@ -906,6 +933,15 @@ watch(isDetailRoute, (detail) => {
   gap: 0;
 }
 
+.capture-grid[role="link"] {
+  cursor: pointer;
+}
+
+.capture-grid[role="link"]:focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: -2px;
+}
+
 .capture-card {
   position: relative;
   min-width: 0;
@@ -922,7 +958,7 @@ watch(isDetailRoute, (detail) => {
   border: 0;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
-  cursor: zoom-in;
+  cursor: pointer;
 }
 
 .capture-card__media img {
@@ -939,16 +975,30 @@ watch(isDetailRoute, (detail) => {
   object-fit: contain;
 }
 
-.capture-card__media:hover img,
-.capture-card__media:focus-visible img {
+.capture-grid[role="link"]:hover .capture-card__media img,
+.capture-grid[role="link"]:focus-visible .capture-card__media img {
   transform: scale(1.03);
 }
 
-.capture-card__media:focus-visible {
-  position: relative;
+.capture-card__more {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
   z-index: 1;
-  outline: 2px solid var(--site-accent);
-  outline-offset: -2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 8px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.68);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .capture-card__delete {
