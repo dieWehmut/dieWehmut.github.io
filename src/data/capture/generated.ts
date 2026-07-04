@@ -17,6 +17,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "ComputingMethod",
         "title": "Computing Method Notes",
         "url": "/note/ComputingMethod"
+      },
+      {
+        "type": "note",
+        "id": "computingMethod",
+        "title": "Computing Method Notes",
+        "url": "/note/computingMethod"
       }
     ],
     "standalone": false
@@ -37,6 +43,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "ComputingMethod",
         "title": "Computing Method Notes",
         "url": "/note/ComputingMethod"
+      },
+      {
+        "type": "note",
+        "id": "computingMethod",
+        "title": "Computing Method Notes",
+        "url": "/note/computingMethod"
       }
     ],
     "standalone": false
