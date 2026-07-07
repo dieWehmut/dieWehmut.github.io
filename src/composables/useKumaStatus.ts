@@ -29,9 +29,8 @@ interface KumaHeartbeatResponse {
 }
 
 const DEFAULT_REFRESH_MS = 60_000
-const HIGH_LATENCY_MS = 1000
-
-function safeHostname(url: string): string | null {
+function safeHostname(url?: string): string | null {
+  if (!url) return null
   try {
     return new URL(url).hostname.toLowerCase()
   } catch {
@@ -67,9 +66,6 @@ function heartbeatToStatus(hb: KumaHeartbeat | undefined): UrlStatus | null {
 
   switch (hb.status) {
     case 1:
-      if (ping != null && ping >= HIGH_LATENCY_MS) {
-        return { status: 'highLatency', latency: ping }
-      }
       return { status: 'online', latency: ping }
     case 0:
       return { status: 'offline', latency: ping }

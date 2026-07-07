@@ -12,9 +12,9 @@
   <article
     v-else-if="infraEntry"
     class="search-result-infra"
-    :class="statusClass(infraEntry.url)"
-    role="link"
-    tabindex="0"
+    :class="[statusClass(infraEntry.url), { 'is-clickable': infraEntry.url }]"
+    :role="infraEntry.url ? 'link' : undefined"
+    :tabindex="infraEntry.url ? 0 : undefined"
     @click="openExternal(infraEntry.url, $event)"
     @keydown.enter.prevent="openExternal(infraEntry.url, $event)"
     @keydown.space.prevent="openExternal(infraEntry.url, $event)"
@@ -34,7 +34,7 @@
         <p v-if="!statusLabel(infraEntry.url)">Infrastructure endpoint</p>
       </div>
     </div>
-    <a :href="infraEntry.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
+    <a v-if="infraEntry.url" :href="infraEntry.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
   </article>
 
   <article
@@ -181,7 +181,7 @@ function isInteractiveTarget(target: EventTarget | null): boolean {
   return target instanceof HTMLElement && Boolean(target.closest('a, button'))
 }
 
-function openExternal(url: string, event?: MouseEvent | KeyboardEvent) {
+function openExternal(url: string | undefined, event?: MouseEvent | KeyboardEvent) {
   if (!url || isInteractiveTarget(event?.target || null)) return
   window.open(url, '_blank', 'noopener,noreferrer')
 }
@@ -191,15 +191,21 @@ function openInternal(url: string, event?: MouseEvent | KeyboardEvent) {
   router.push(url)
 }
 
-function statusLabel(url: string) {
+function normalizedStatus(url: string | undefined) {
+  if (!url) return ''
   const status = statusMap[url]
   if (!status || status.status === 'checking') return ''
-  const label = status.status === 'highLatency' ? 'online' : status.status
-  return status.latency != null ? `${label} ${status.latency}ms` : label
+  return status.status === 'online' ? 'online' : 'offline'
 }
 
-function statusClass(url: string) {
-  const status = statusMap[url]?.status
+function statusLabel(url: string | undefined) {
+  const status = normalizedStatus(url)
+  if (!status) return ''
+  return status === 'online' ? 'Online' : 'Offline'
+}
+
+function statusClass(url: string | undefined) {
+  const status = normalizedStatus(url)
   return status ? `is-${status}` : ''
 }
 </script>
@@ -224,12 +230,15 @@ function statusClass(url: string) {
   border: 1px solid transparent;
   border-top-color: var(--site-border);
   border-radius: 8px;
-  cursor: pointer;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.search-result-infra:hover,
-.search-result-infra:focus-visible {
+.search-result-infra.is-clickable {
+  cursor: pointer;
+}
+
+.search-result-infra.is-clickable:hover,
+.search-result-infra.is-clickable:focus-visible {
   border-color: rgba(31, 196, 31, 0.45);
   background: rgba(31, 196, 31, 0.04);
   transform: translateY(-2px);
@@ -265,21 +274,14 @@ function statusClass(url: string) {
   transition: color 160ms ease;
 }
 
-.search-result-infra:hover h2,
-.search-result-infra:focus-visible h2 {
+.search-result-infra.is-clickable:hover h2,
+.search-result-infra.is-clickable:focus-visible h2 {
   color: var(--site-accent);
 }
 
-.search-result-infra.is-offline:hover h2,
-.search-result-infra.is-offline:focus-visible h2,
-.search-result-infra.is-unreachable:hover h2,
-.search-result-infra.is-unreachable:focus-visible h2 {
+.search-result-infra.is-clickable.is-offline:hover h2,
+.search-result-infra.is-clickable.is-offline:focus-visible h2 {
   color: #ff7878;
-}
-
-.search-result-infra.is-timeout:hover h2,
-.search-result-infra.is-timeout:focus-visible h2 {
-  color: #f0c040;
 }
 
 .search-result-infra__date {
@@ -306,13 +308,8 @@ function statusClass(url: string) {
   white-space: nowrap;
 }
 
-.search-result-infra__status.is-offline,
-.search-result-infra__status.is-unreachable {
+.search-result-infra__status.is-offline {
   color: #ff7878;
-}
-
-.search-result-infra__status.is-timeout {
-  color: #f0c040;
 }
 
 .search-result-infra p {

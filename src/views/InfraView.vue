@@ -28,20 +28,24 @@
             :class="`is-${point.ring}-ring`"
             :style="lineStyle(point)"
           />
-          <a
+          <component
+            :is="point.item.url ? 'a' : 'span'"
             v-for="point in servicePoints"
             :key="point.item.key || point.item.name"
             class="infra-node"
-            :class="[statusClass(point.item.url), `is-${point.ring}-ring`]"
+            :class="[statusClass(point.item.url), `is-${point.ring}-ring`, { 'is-clickable': point.item.url }]"
             :style="point.style"
-            :href="point.item.url"
-            target="_blank"
-            rel="noopener noreferrer"
+            :href="point.item.url || undefined"
+            :target="point.item.url ? '_blank' : undefined"
+            :rel="point.item.url ? 'noopener noreferrer' : undefined"
+            :aria-disabled="point.item.url ? undefined : 'true'"
           >
             <span class="infra-node__inner">
               <span class="infra-node__orb">
                 <img class="infra-node__orb-ring" :src="rings[point.index % rings.length]" alt="" />
-                <img :src="icoSrc(point.index)" class="infra-node__icon-img" alt="" />
+                <span class="infra-node__icon-frame">
+                  <img :src="infraIconSrc(point.item, point.index)" class="infra-node__icon-img" alt="" />
+                </span>
               </span>
               <span class="infra-node__text">
                 <strong>{{ point.item.name }}</strong>
@@ -54,7 +58,7 @@
                 </em>
               </span>
             </span>
-          </a>
+          </component>
         </div>
       </div>
 
@@ -63,14 +67,19 @@
           v-for="item in serviceItems"
           :key="item.key || item.name"
           class="infra-mobile-item"
-          role="link"
-          tabindex="0"
+          :class="{ 'is-clickable': item.url }"
+          :role="item.url ? 'link' : undefined"
+          :tabindex="item.url ? 0 : undefined"
           @click="openInfra(item, $event)"
           @keydown.enter.prevent="openInfra(item, $event)"
           @keydown.space.prevent="openInfra(item, $event)"
         >
           <div class="infra-mobile-item__main">
-            <el-icon class="infra-mobile-item__icon"><Link /></el-icon>
+            <span class="infra-mobile-item__icon">
+              <span class="infra-mobile-item__icon-frame">
+                <img :src="infraIconSrc(item)" class="infra-mobile-item__icon-img" alt="" />
+              </span>
+            </span>
             <div class="infra-mobile-item__info">
               <div class="infra-mobile-item__topline">
                 <h2>{{ item.name }}</h2>
@@ -84,7 +93,7 @@
               </p>
             </div>
           </div>
-          <a :href="item.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
+          <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
         </article>
     </div>
   </section>
@@ -93,12 +102,48 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Link, Cpu, Calendar } from '@element-plus/icons-vue'
+import { Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
 import { useKumaStatus } from '../composables/useKumaStatus'
 const { t } = useI18n()
+const infraIconModules = import.meta.glob(
+  [
+    '../assets/infra/coder.svg',
+    '../assets/infra/codex-manager.png',
+    '../assets/infra/coolify.svg',
+    '../assets/infra/docker.svg',
+    '../assets/infra/dsm.svg',
+    '../assets/infra/gitea.svg',
+    '../assets/infra/gitlab.svg',
+    '../assets/infra/jenkins.svg',
+    '../assets/infra/mirror.svg',
+    '../assets/infra/navidrome.png',
+    '../assets/infra/netdata.svg',
+    '../assets/infra/netmaker.png',
+    '../assets/infra/nextcloud.svg',
+    '../assets/infra/nezha.svg',
+    '../assets/infra/nginx-ui.png',
+    '../assets/infra/nixos.svg',
+    '../assets/infra/openlist.svg',
+    '../assets/infra/openwrt.png',
+    '../assets/infra/plex.svg',
+    '../assets/infra/pve.svg',
+    '../assets/infra/sandkasten.svg',
+    '../assets/infra/sub2api.png',
+    '../assets/infra/uptime-kuma.svg',
+    '../assets/infra/vscode.png',
+  ],
+  {
+    eager: true,
+    import: 'default',
+    query: '?url',
+  }
+)
+const infraIconMap = Object.fromEntries(
+  Object.entries(infraIconModules).map(([path, url]) => [path.split('/').pop(), url])
+)
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
 const orbitImg = infraAsset('y-bg.png')
@@ -108,14 +153,7 @@ const c3 = infraAsset('c3.png')
 const c4 = infraAsset('c4.png')
 const c5 = infraAsset('c5.png')
 const c6 = infraAsset('c6.png')
-const ico1 = infraAsset('ico1.png')
-const ico2 = infraAsset('ico2.png')
-const ico3 = infraAsset('ico3.png')
-const ico4 = infraAsset('ico4.png')
-const ico5 = infraAsset('ico5.png')
-const ico6 = infraAsset('ico6.png')
 const rings = [c1, c2, c3, c4, c5, c6]
-const icons = [ico1, ico2, ico3, ico4, ico5, ico6]
 const STATUS_REFRESH_INTERVAL_MS = 60_000
 const FULL_CIRCLE = Math.PI * 2
 const INNER_RING_LIMIT = 8
@@ -215,21 +253,15 @@ onBeforeUnmount(() => {
 })
 
 const onlineCount = computed(() => {
-  return serviceItems.value.filter((item) => {
-    const status = mergedStatusMap.value[item.url]?.status
-    return status === 'online' || status === 'highLatency'
-  }).length
+  return serviceItems.value.filter((item) => normalizedStatus(item.url) === 'online').length
 })
 
 const offlineCount = computed(() => {
-  return serviceItems.value.filter((item) => {
-    const status = mergedStatusMap.value[item.url]?.status
-    return status && status !== 'checking' && status !== 'online' && status !== 'highLatency'
-  }).length
+  return serviceItems.value.filter((item) => normalizedStatus(item.url) === 'offline').length
 })
 
-function icoSrc(index) {
-  return icons[index % icons.length]
+function infraIconSrc(item, index = 0) {
+  return infraIconMap[item.icon] || infraIconMap[`${item.key}.svg`] || infraIconMap[`${item.key}.png`] || rings[index % rings.length]
 }
 
 function refreshStatuses(items, force = false) {
@@ -259,16 +291,21 @@ function formatDate(dateStr) {
   return `${d.getFullYear()}-${m}-${day}`
 }
 
+function normalizedStatus(url) {
+  if (!url) return ''
+  const status = mergedStatusMap.value[url]?.status
+  if (!status || status === 'checking') return ''
+  return status === 'online' ? 'online' : 'offline'
+}
+
 function statusLabel(url) {
-  const status = mergedStatusMap.value[url]
-  if (!status || status.status === 'checking') return ''
-  const labelKey = status.status === 'highLatency' ? 'status.online' : `status.${status.status}`
-  const label = t(labelKey)
-  return status.latency != null ? `${label} ${status.latency}ms` : label
+  const status = normalizedStatus(url)
+  if (!status) return ''
+  return status === 'online' ? 'Online' : 'Offline'
 }
 
 function statusClass(url) {
-  const status = mergedStatusMap.value[url]?.status
+  const status = normalizedStatus(url)
   return status ? `is-${status}` : ''
 }
 
@@ -299,7 +336,7 @@ function openInfra(item, event) {
 
 .infra-orbit {
   --infra-scale: 0.84;
-  --infra-core-size: calc(320px * var(--infra-scale));
+  --infra-core-size: calc(280px * var(--infra-scale));
   --infra-core-shadow: calc(24px * var(--infra-scale));
   --infra-core-text-size: calc(16px * var(--infra-scale));
   --infra-count-gap: calc(8px * var(--infra-scale));
@@ -308,7 +345,7 @@ function openInfra(item, event) {
   --infra-count-padding-x: calc(10px * var(--infra-scale));
   --infra-count-size: calc(12px * var(--infra-scale));
   --infra-node-size: calc(50px * var(--infra-scale));
-  --infra-node-icon-size: calc(22px * var(--infra-scale));
+  --infra-node-icon-size: calc(38px * var(--infra-scale));
   --infra-node-gap: calc(9px * var(--infra-scale));
   --infra-outer-node-gap: calc(7px * var(--infra-scale));
   --infra-title-size: calc(14px * var(--infra-scale));
@@ -409,44 +446,46 @@ function openInfra(item, event) {
 
 .infra-node {
   position: absolute;
-  display: inline-flex;
-  align-items: center;
+  display: block;
+  width: 0;
+  height: 0;
+  overflow: visible;
   color: var(--site-text);
   text-decoration: none;
-  transform: translate(-50%, -50%);
+}
+
+.infra-node.is-clickable {
+  cursor: pointer;
 }
 
 .infra-node__inner {
+  position: absolute;
+  top: 0;
+  left: calc(var(--infra-node-size) * -0.5);
   display: inline-flex;
   align-items: center;
   gap: var(--infra-node-gap);
   animation: orbit-spin-reverse 1200s linear infinite;
+  transform: translateY(-50%) scale(var(--infra-node-scale, 1));
+  transform-origin: calc(var(--infra-node-size) / 2) 50%;
 }
 
 .infra-node.is-outer-ring .infra-node__inner {
   gap: var(--infra-outer-node-gap);
 }
 
-.infra-node:hover .infra-node__inner,
-.infra-node:focus-visible .infra-node__inner {
+.infra-node.is-clickable:hover .infra-node__inner,
+.infra-node.is-clickable:focus-visible .infra-node__inner {
   color: var(--site-accent);
   filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(31, 196, 31, 0.25));
-  transform: scale(1.05);
+  --infra-node-scale: 1.05;
   outline: none;
 }
 
-.infra-node.is-offline:hover .infra-node__inner,
-.infra-node.is-offline:focus-visible .infra-node__inner,
-.infra-node.is-error:hover .infra-node__inner,
-.infra-node.is-error:focus-visible .infra-node__inner {
+.infra-node.is-clickable.is-offline:hover .infra-node__inner,
+.infra-node.is-clickable.is-offline:focus-visible .infra-node__inner {
   color: #ff7878;
   filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(255, 120, 120, 0.35));
-}
-
-.infra-node.is-timeout:hover .infra-node__inner,
-.infra-node.is-timeout:focus-visible .infra-node__inner {
-  color: #f0c040;
-  filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(240, 192, 64, 0.35));
 }
 
 .infra-node__orb {
@@ -480,27 +519,46 @@ function openInfra(item, event) {
   filter: drop-shadow(0 0 var(--infra-core-shadow) rgba(31, 196, 31, 0.24)) invert(1);
 }
 
-:root[data-theme="light"] .infra-node__icon-img {
-  filter: invert(25%) sepia(85%) saturate(2500%) hue-rotate(200deg) brightness(92%) contrast(95%);
-}
-
 :root[data-theme="light"] .infra-line {
   background: linear-gradient(to right, rgba(26, 158, 26, 0.7), rgba(26, 158, 26, 0.15));
 }
 
-.infra-node__icon-img {
+.infra-node__icon-frame {
   position: relative;
+  z-index: 1;
   width: var(--infra-node-icon-size);
   height: var(--infra-node-icon-size);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(3, 8, 10, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .infra-node__icon-frame {
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.infra-node__icon-img {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.45));
   transition: transform 350ms ease;
 }
 
-.infra-node:hover .infra-node__orb-ring {
+:root[data-theme="light"] .infra-node__icon-img {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.28));
+}
+
+.infra-node.is-clickable:hover .infra-node__orb-ring {
   animation: orb-spin 2.5s linear infinite;
 }
 
-.infra-node:hover .infra-node__icon-img {
+.infra-node.is-clickable:hover .infra-node__icon-img {
   transform: rotateY(180deg);
 }
 
@@ -545,10 +603,6 @@ function openInfra(item, event) {
   color: #ff7878;
 }
 
-.infra-node__text em.is-timeout {
-  color: #f0c040;
-}
-
 @keyframes orb-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -560,8 +614,8 @@ function openInfra(item, event) {
 }
 
 @keyframes orbit-spin-reverse {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+  from { transform: translateY(-50%) rotate(0deg) scale(var(--infra-node-scale, 1)); }
+  to { transform: translateY(-50%) rotate(-360deg) scale(var(--infra-node-scale, 1)); }
 }
 
 @keyframes core-orbit-spin {
@@ -641,12 +695,15 @@ function openInfra(item, event) {
   margin: 0 -22px;
   border: 1px solid transparent;
   border-radius: 8px;
-  cursor: pointer;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.infra-mobile-item:hover,
-.infra-mobile-item:focus-visible {
+.infra-mobile-item.is-clickable {
+  cursor: pointer;
+}
+
+.infra-mobile-item.is-clickable:hover,
+.infra-mobile-item.is-clickable:focus-visible {
   border-color: rgba(31, 196, 31, 0.45);
   background: rgba(31, 196, 31, 0.04);
   transform: translateY(-2px);
@@ -663,11 +720,39 @@ function openInfra(item, event) {
 
 .infra-mobile-item__icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   margin-top: 3px;
-  font-size: 20px;
-  color: var(--site-muted);
+  display: grid;
+  place-items: center;
+}
+
+.infra-mobile-item__icon-frame {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(3, 8, 10, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .infra-mobile-item__icon-frame {
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.infra-mobile-item__icon-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.45));
+}
+
+:root[data-theme="light"] .infra-mobile-item__icon-img {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.28));
 }
 
 .infra-mobile-item__info {
@@ -691,8 +776,8 @@ function openInfra(item, event) {
   transition: color 160ms ease;
 }
 
-.infra-mobile-item:hover h2,
-.infra-mobile-item:focus-within h2 {
+.infra-mobile-item.is-clickable:hover h2,
+.infra-mobile-item.is-clickable:focus-within h2 {
   color: var(--site-accent);
 }
 
@@ -721,10 +806,6 @@ function openInfra(item, event) {
 .infra-mobile-item p.is-offline,
 .infra-mobile-item p.is-error {
   color: #ff7878;
-}
-
-.infra-mobile-item p.is-timeout {
-  color: #f0c040;
 }
 
 .infra-mobile-item > a {

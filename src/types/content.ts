@@ -133,8 +133,9 @@ export interface SiteProfile {
 export interface InfraEntry {
   name: string
   key: string
-  url: string
+  url?: string
   date: string
+  icon?: string
 }
 
 export interface SiteProjectItem {

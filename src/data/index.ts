@@ -211,7 +211,7 @@ export function getSearchDocuments(): SearchDocument[] {
     type: 'infra',
     title: item.name,
     description: 'Infrastructure endpoint',
-    url: item.url,
+    url: item.url || '',
     date: item.date,
     tags: ['Infra'],
   }))

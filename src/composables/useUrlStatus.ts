@@ -1,6 +1,6 @@
 import { reactive, onBeforeUnmount } from 'vue'
 
-export type StatusKind = 'checking' | 'online' | 'offline' | 'unreachable' | 'highLatency' | 'timeout'
+export type StatusKind = 'checking' | 'online' | 'offline'
 
 export interface UrlStatus {
   status: StatusKind
@@ -59,27 +59,14 @@ export function useUrlStatus() {
       const httpStatus = Number(data.status)
 
       if (data.ok && httpStatus >= 200 && httpStatus < 300) {
-        const latency: number = data.latency
-        if (latency < 1000) {
-          statusMap[url] = { status: 'online', latency, httpStatus }
-        } else {
-          statusMap[url] = { status: 'highLatency', latency, httpStatus }
-        }
+        statusMap[url] = { status: 'online', latency: Number(data.latency), httpStatus }
       } else if (Number.isFinite(httpStatus)) {
         statusMap[url] = { status: 'offline', httpStatus }
-      } else if (data.error === 'timeout') {
-        statusMap[url] = { status: 'timeout' }
-      } else if (data.error === 'offline') {
+      } else {
         statusMap[url] = { status: 'offline' }
-      } else {
-        statusMap[url] = { status: 'unreachable' }
       }
-    } catch (_err: any) {
-      if (_err.name === 'AbortError') {
-        statusMap[url] = { status: 'timeout' }
-      } else {
-        statusMap[url] = { status: 'unreachable' }
-      }
+    } catch {
+      statusMap[url] = { status: 'offline' }
     } finally {
       pending.delete(url)
     }
@@ -99,11 +86,7 @@ export function useUrlStatus() {
       const latency = Math.round(performance.now() - t0)
 
       if (response.ok) {
-        if (latency < 1000) {
-          statusMap[url] = { status: 'online', latency, httpStatus: response.status }
-        } else {
-          statusMap[url] = { status: 'highLatency', latency, httpStatus: response.status }
-        }
+        statusMap[url] = { status: 'online', latency, httpStatus: response.status }
       } else {
         statusMap[url] = { status: 'offline', httpStatus: response.status }
       }
@@ -111,7 +94,7 @@ export function useUrlStatus() {
       clearTimeout(timeoutId)
 
       if (corsErr.name === 'AbortError') {
-        statusMap[url] = { status: 'timeout' }
+        statusMap[url] = { status: 'offline' }
         pending.delete(url)
         return
       }
@@ -128,17 +111,9 @@ export function useUrlStatus() {
         clearTimeout(noCorsTimeoutId)
         const latency = Math.round(performance.now() - t1)
 
-        if (latency < 1000) {
-          statusMap[url] = { status: 'online', latency }
-        } else {
-          statusMap[url] = { status: 'highLatency', latency }
-        }
-      } catch (noCorsErr: any) {
-        if (noCorsErr.name === 'AbortError') {
-          statusMap[url] = { status: 'timeout' }
-        } else {
-          statusMap[url] = { status: 'unreachable' }
-        }
+        statusMap[url] = { status: 'online', latency }
+      } catch {
+        statusMap[url] = { status: 'offline' }
       }
     } finally {
       pending.delete(url)
