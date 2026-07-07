@@ -21,49 +21,57 @@
         </div>
 
         <div class="infra-ring">
-          <span
-            v-for="point in servicePoints"
-            :key="'line-' + (point.item.key || point.item.name)"
-            class="infra-line"
-            :class="`is-${point.ring}-ring`"
-            :style="lineStyle(point)"
-          />
-          <component
-            :is="point.item.url ? 'a' : 'span'"
-            v-for="point in servicePoints"
-            :key="point.item.key || point.item.name"
-            class="infra-node"
-            :class="[
-              statusClass(point.item.url),
-              `is-${point.ring}-ring`,
-              `is-${point.labelSide}-side`,
-              { 'is-clickable': point.item.url },
-            ]"
-            :style="point.style"
-            :href="point.item.url || undefined"
-            :target="point.item.url ? '_blank' : undefined"
-            :rel="point.item.url ? 'noopener noreferrer' : undefined"
-            :aria-disabled="point.item.url ? undefined : 'true'"
+          <div
+            v-for="layer in ringLayers"
+            :key="layer.ring"
+            class="infra-ring__layer"
+            :class="`is-${layer.ring}-ring`"
           >
-            <span class="infra-node__inner">
-              <span class="infra-node__orb">
-                <img class="infra-node__orb-ring" :src="rings[point.index % rings.length]" alt="" />
-                <span class="infra-node__icon-frame">
-                  <img :src="infraIconSrc(point.item, point.index)" class="infra-node__icon-img" alt="" />
+            <span
+              v-for="point in layer.points"
+              :key="'line-' + (point.item.key || point.item.name)"
+              class="infra-line"
+              :class="`is-${point.ring}-ring`"
+              :style="lineStyle(point)"
+            />
+            <component
+              :is="point.item.url ? 'a' : 'span'"
+              v-for="point in layer.points"
+              :key="point.item.key || point.item.name"
+              class="infra-node"
+              :class="[
+                statusClass(point.item.url),
+                infraKeyClass(point.item),
+                `is-${point.ring}-ring`,
+                `is-${point.labelSide}-side`,
+                { 'is-clickable': point.item.url },
+              ]"
+              :style="point.style"
+              :href="point.item.url || undefined"
+              :target="point.item.url ? '_blank' : undefined"
+              :rel="point.item.url ? 'noopener noreferrer' : undefined"
+              :aria-disabled="point.item.url ? undefined : 'true'"
+            >
+              <span class="infra-node__inner">
+                <span class="infra-node__orb">
+                  <img class="infra-node__orb-ring" :src="rings[point.index % rings.length]" alt="" />
+                  <span class="infra-node__icon-frame">
+                    <img :src="infraIconSrc(point.item, point.index)" class="infra-node__icon-img" alt="" />
+                  </span>
+                </span>
+                <span class="infra-node__text">
+                  <strong>{{ point.item.name }}</strong>
+                  <time v-if="point.item.date" class="infra-node__date" :datetime="point.item.date">
+                    <el-icon class="infra-node__date-icon"><Calendar /></el-icon>
+                    {{ formatDate(point.item.date) }}
+                  </time>
+                  <em v-if="statusLabel(point.item.url)" :class="statusClass(point.item.url)">
+                    {{ statusLabel(point.item.url) }}
+                  </em>
                 </span>
               </span>
-              <span class="infra-node__text">
-                <strong>{{ point.item.name }}</strong>
-                <time v-if="point.item.date" class="infra-node__date" :datetime="point.item.date">
-                  <el-icon class="infra-node__date-icon"><Calendar /></el-icon>
-                  {{ formatDate(point.item.date) }}
-                </time>
-                <em v-if="statusLabel(point.item.url)" :class="statusClass(point.item.url)">
-                  {{ statusLabel(point.item.url) }}
-                </em>
-              </span>
-            </span>
-          </component>
+            </component>
+          </div>
         </div>
       </div>
 
@@ -72,7 +80,7 @@
           v-for="item in serviceItems"
           :key="item.key || item.name"
           class="infra-mobile-item"
-          :class="{ 'is-clickable': item.url }"
+          :class="[infraKeyClass(item), { 'is-clickable': item.url }]"
           :role="item.url ? 'link' : undefined"
           :tabindex="item.url ? 0 : undefined"
           @click="openInfra(item, $event)"
@@ -105,7 +113,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
@@ -165,11 +173,15 @@ const INNER_RING_LIMIT = 8
 const ORBIT_START_ANGLE = -Math.PI / 2
 const STACKED_INNER_RADIUS = 25
 const OUTER_RING_RADIUS = 33
-const OUTER_RING_VERTICAL_POLE_THRESHOLD = 0.98
-const OUTER_RING_POLE_INSET = 1
-const OUTER_RING_HORIZONTAL_PUSH = 14
+const ORBIT_ROTATION_DURATION_MS = 1_200_000
+const OUTER_RING_VERTICAL_INSET_THRESHOLD = 0.55
+const OUTER_RING_VERTICAL_INSET = 2
+const OUTER_RING_HORIZONTAL_PUSH = 20
 const OUTER_RING_HORIZONTAL_EPSILON = 0.001
 let refreshTimer
+let orbitFrame
+let orbitStartedAt = 0
+const orbitElapsed = ref(0)
 
 const serviceItems = computed(() =>
   (infra.value || [])
@@ -194,6 +206,7 @@ const mergedStatusMap = computed(() => {
 
 const totalCount = computed(() => serviceItems.value.length)
 const hasOuterRing = computed(() => totalCount.value > INNER_RING_LIMIT)
+const orbitRotation = computed(() => (orbitElapsed.value % ORBIT_ROTATION_DURATION_MS) / ORBIT_ROTATION_DURATION_MS * FULL_CIRCLE)
 
 const servicePoints = computed(() => {
   const items = serviceItems.value
@@ -207,24 +220,29 @@ const servicePoints = computed(() => {
     const isOuter = hasOuter && index >= INNER_RING_LIMIT
     const ringIndex = isOuter ? index - INNER_RING_LIMIT : index
     const radius = isOuter ? OUTER_RING_RADIUS : innerRadius
-    const angle = isOuter
+    const baseAngle = isOuter
       ? outerRingAngle(ringIndex, outerCount)
       : ORBIT_START_ANGLE + (ringIndex * FULL_CIRCLE) / innerCount
+    const angle = isOuter
+      ? baseAngle + orbitRotation.value
+      : baseAngle - orbitRotation.value
     const cos = Math.cos(angle)
     const sin = Math.sin(angle)
-    const isVerticalOuterPoint = isOuter && Math.abs(sin) > OUTER_RING_VERTICAL_POLE_THRESHOLD
-    const horizontalPush = isOuter && Math.abs(cos) > OUTER_RING_HORIZONTAL_EPSILON
+    const hasHorizontalComponent = Math.abs(cos) > OUTER_RING_HORIZONTAL_EPSILON
+    const hasVerticalInset = isOuter && Math.abs(sin) > OUTER_RING_VERTICAL_INSET_THRESHOLD
+    const horizontalPush = isOuter && hasHorizontalComponent
       ? Math.sign(cos) * OUTER_RING_HORIZONTAL_PUSH
       : 0
+    const verticalInset = hasVerticalInset ? -Math.sign(sin) * OUTER_RING_VERTICAL_INSET : 0
     const dx = cos * radius + horizontalPush
-    const dy = sin * radius + (isVerticalOuterPoint ? -Math.sign(sin) * OUTER_RING_POLE_INSET : 0)
+    const dy = sin * radius + verticalInset
     const x = 50 + dx
     const y = 50 + dy
     return {
       item,
       index,
       ring: isOuter ? 'outer' : 'inner',
-      labelSide: cos < -0.12 ? 'left' : 'right',
+      labelSide: hasHorizontalComponent && cos < 0 ? 'left' : 'right',
       angle: Math.atan2(dy, dx),
       radius: Math.sqrt(dx * dx + dy * dy),
       style: {
@@ -233,6 +251,23 @@ const servicePoints = computed(() => {
       },
     }
   })
+})
+
+const ringLayers = computed(() => {
+  const layers = [
+    {
+      ring: 'inner',
+      points: servicePoints.value.filter((point) => point.ring === 'inner'),
+    },
+  ]
+  const outerPoints = servicePoints.value.filter((point) => point.ring === 'outer')
+  if (outerPoints.length) {
+    layers.push({
+      ring: 'outer',
+      points: outerPoints,
+    })
+  }
+  return layers
 })
 
 function outerRingAngle(ringIndex, outerCount) {
@@ -252,10 +287,12 @@ onMounted(() => {
     refreshStatuses(serviceItems.value, true)
     kuma.refresh()
   }, STATUS_REFRESH_INTERVAL_MS)
+  orbitFrame = window.requestAnimationFrame(updateOrbitElapsed)
 })
 
 onBeforeUnmount(() => {
   if (refreshTimer) window.clearInterval(refreshTimer)
+  if (orbitFrame) window.cancelAnimationFrame(orbitFrame)
 })
 
 const onlineCount = computed(() => {
@@ -268,6 +305,10 @@ const offlineCount = computed(() => {
 
 function infraIconSrc(item, index = 0) {
   return infraIconMap[item.icon] || infraIconMap[`${item.key}.svg`] || infraIconMap[`${item.key}.png`] || rings[index % rings.length]
+}
+
+function infraKeyClass(item) {
+  return item?.key ? `is-key-${item.key}` : ''
 }
 
 function refreshStatuses(items, force = false) {
@@ -287,6 +328,12 @@ function lineStyle(point) {
     width: `${Math.max(dist, 1)}%`,
     transform: `rotate(${point.angle + Math.PI}rad)`,
   }
+}
+
+function updateOrbitElapsed(timestamp) {
+  if (!orbitStartedAt) orbitStartedAt = timestamp
+  orbitElapsed.value = timestamp - orbitStartedAt
+  orbitFrame = window.requestAnimationFrame(updateOrbitElapsed)
 }
 
 function formatDate(dateStr) {
@@ -378,6 +425,13 @@ function openInfra(item, event) {
   display: grid;
   place-items: center;
   transform: translate(-50%, -50%);
+  transition: filter 220ms ease, transform 220ms ease;
+  will-change: transform;
+}
+
+.infra-core:hover {
+  filter: drop-shadow(0 0 calc(var(--infra-core-shadow) * 0.7) rgba(0, 170, 255, 0.38));
+  transform: translate(-50%, -50%) scale(1.035);
 }
 
 .infra-core__orbit,
@@ -405,13 +459,16 @@ function openInfra(item, event) {
   position: relative;
   z-index: 1;
   text-align: center;
+  text-shadow:
+    0 0 calc(8px * var(--infra-scale)) rgba(0, 178, 255, 0.7),
+    0 1px calc(2px * var(--infra-scale)) rgba(0, 0, 0, 0.9);
 }
 
 .infra-core__text p {
   margin: 0;
-  color: var(--site-accent);
+  color: #30d8ff;
   font-size: var(--infra-core-text-size);
-  font-weight: 800;
+  font-weight: 950;
 }
 
 .infra-core__counts {
@@ -425,10 +482,10 @@ function openInfra(item, event) {
 .infra-core__counts span {
   padding: var(--infra-count-padding-y) var(--infra-count-padding-x);
   border-radius: 999px;
-  color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.1);
+  color: #32e47a;
+  background: rgba(0, 20, 28, 0.42);
   font-size: var(--infra-count-size);
-  font-weight: 800;
+  font-weight: 950;
 }
 
 .infra-core__counts--offline {
@@ -439,6 +496,22 @@ function openInfra(item, event) {
 .infra-ring {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+}
+
+.infra-ring__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+}
+
+.infra-ring__layer.is-inner-ring {
+  z-index: 2;
+}
+
+.infra-ring__layer.is-outer-ring {
+  z-index: 1;
 }
 
 .infra-line {
@@ -457,6 +530,7 @@ function openInfra(item, event) {
   overflow: visible;
   color: var(--site-text);
   text-decoration: none;
+  pointer-events: auto;
 }
 
 .infra-node.is-clickable {
@@ -478,14 +552,14 @@ function openInfra(item, event) {
   left: auto;
   right: calc(var(--infra-node-size) * -0.5);
   flex-direction: row-reverse;
-  transform-origin: 100% 50%;
+  transform-origin: calc(100% - var(--infra-node-size) / 2) 50%;
 }
 
 .infra-node.is-outer-ring .infra-node__inner {
   gap: var(--infra-outer-node-gap);
 }
 
-.infra-node.is-clickable:hover .infra-node__inner,
+.infra-node:hover .infra-node__inner,
 .infra-node.is-clickable:focus-visible .infra-node__inner {
   color: var(--site-accent);
   filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(31, 196, 31, 0.25));
@@ -493,7 +567,7 @@ function openInfra(item, event) {
   outline: none;
 }
 
-.infra-node.is-clickable.is-offline:hover .infra-node__inner,
+.infra-node.is-offline:hover .infra-node__inner,
 .infra-node.is-clickable.is-offline:focus-visible .infra-node__inner {
   color: #ff7878;
   filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(255, 120, 120, 0.35));
@@ -522,12 +596,28 @@ function openInfra(item, event) {
 }
 
 :root[data-theme="light"] .infra-core__orbit {
-  filter: invert(1);
-  opacity: 0.3;
+  opacity: 0.58;
 }
 
 :root[data-theme="light"] .infra-core__sphere {
-  filter: drop-shadow(0 0 var(--infra-core-shadow) rgba(31, 196, 31, 0.24)) invert(1);
+  filter: drop-shadow(0 0 var(--infra-core-shadow) rgba(0, 126, 210, 0.28));
+}
+
+:root[data-theme="light"] .infra-core__text {
+  text-shadow:
+    0 0 calc(8px * var(--infra-scale)) rgba(255, 255, 255, 0.95),
+    0 0 calc(12px * var(--infra-scale)) rgba(0, 126, 210, 0.55),
+    0 1px calc(2px * var(--infra-scale)) rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme="light"] .infra-core__text p {
+  color: #0078d4;
+}
+
+:root[data-theme="light"] .infra-core__counts span {
+  color: #078a31;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(0, 126, 210, 0.18);
 }
 
 :root[data-theme="light"] .infra-line {
@@ -558,19 +648,26 @@ function openInfra(item, event) {
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.45));
+  transform: scale(var(--infra-icon-scale, 1));
+  transform-origin: center;
   transition: transform 350ms ease;
+}
+
+.infra-node.is-key-gitlab,
+.infra-mobile-item.is-key-gitlab {
+  --infra-icon-scale: 1.7;
 }
 
 :root[data-theme="light"] .infra-node__icon-img {
   filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.28));
 }
 
-.infra-node.is-clickable:hover .infra-node__orb-ring {
+.infra-node:hover .infra-node__orb-ring {
   animation: orb-spin 2.5s linear infinite;
 }
 
-.infra-node.is-clickable:hover .infra-node__icon-img {
-  transform: rotateY(180deg);
+.infra-node:hover .infra-node__icon-img {
+  transform: scale(var(--infra-icon-scale, 1)) rotateY(180deg);
 }
 
 .infra-node__text {
@@ -617,16 +714,6 @@ function openInfra(item, event) {
 @keyframes orb-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-@keyframes orbit-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes orbit-spin-reverse {
-  from { transform: translateY(-50%) rotate(0deg) scale(var(--infra-node-scale, 1)); }
-  to { transform: translateY(-50%) rotate(-360deg) scale(var(--infra-node-scale, 1)); }
 }
 
 @keyframes core-orbit-spin {
@@ -713,7 +800,7 @@ function openInfra(item, event) {
   cursor: pointer;
 }
 
-.infra-mobile-item.is-clickable:hover,
+.infra-mobile-item:hover,
 .infra-mobile-item.is-clickable:focus-visible {
   border-color: rgba(31, 196, 31, 0.45);
   background: rgba(31, 196, 31, 0.04);
@@ -760,6 +847,8 @@ function openInfra(item, event) {
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.45));
+  transform: scale(var(--infra-icon-scale, 1));
+  transform-origin: center;
 }
 
 :root[data-theme="light"] .infra-mobile-item__icon-img {
@@ -787,7 +876,7 @@ function openInfra(item, event) {
   transition: color 160ms ease;
 }
 
-.infra-mobile-item.is-clickable:hover h2,
+.infra-mobile-item:hover h2,
 .infra-mobile-item.is-clickable:focus-within h2 {
   color: var(--site-accent);
 }

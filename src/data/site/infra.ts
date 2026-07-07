@@ -23,7 +23,7 @@ const initialInfra: InfraEntry[] = [
   { name: 'Music Station', key: 'music', url: 'https://music.diesw.tech', date: '2026-06-15', icon: 'navidrome.png' },
   { name: 'Cloud Drive', key: 'cloud', url: 'https://cloud.diesw.tech', date: '2026-06-15', icon: 'nextcloud.svg' },
   { name: 'Uptime Kuma', key: 'uptime', url: 'https://kuma.diesw.tech', date: '2026-06-15', icon: 'uptime-kuma.svg' },
-  { name: 'Nginx', key: 'nginx', url: 'https://nginx-ui.diesw.tech', date: '2026-06-19', icon: 'nginx-ui.png' },
+  { name: 'Nginx UI', key: 'nginx', url: 'https://nginx-ui.diesw.tech', date: '2026-06-19', icon: 'nginx-ui.png' },
   { name: 'Coder', key: 'coder', url: 'https://coder.diesw.tech', date: '2026-07-06', icon: 'coder.svg' },
   { name: 'VSCode', key: 'vscode', url: 'https://vscode.diesw.tech', date: '2026-07-06', icon: 'vscode.png' },
 ]
