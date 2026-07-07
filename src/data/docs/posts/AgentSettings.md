@@ -1,8 +1,8 @@
 ---
 
-title: 中转 Claude Code / Codex 配置
+title: Agent配置
 date: 2026-05-18
-tags: [APIKey, Codex, Claude, Deepseek, AgentRouter, OpenAI,Anthropic]
+tags: [APIKey, Codex, Claude, Opencode,Hermes,Deepseek, AgentRouter, OpenAI,Anthropic]
 ---
 
 ## Claude Code配置目录
@@ -21,6 +21,12 @@ tags: [APIKey, Codex, Claude, Deepseek, AgentRouter, OpenAI,Anthropic]
 ~/.codex/config.toml
 ```
 
+## Opencode配置目录
+
+```bash
+~/.config/opencode/opencode.jsonc
+```
+
 ## 安装
 
 ### 一键安装
@@ -31,6 +37,14 @@ curl -fsSL https://chatgpt.com/codex/install.sh | sh
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
+```
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+```bash
+
 ```
 
 ### 无法连接外网的情况
@@ -56,39 +70,56 @@ npm install -g @openai/codex
 ```
 
 ```bash
-npm install -g @anthropic/claude
+npm install -g @anthropic-ai/claude-code@latest
 ```
 
-## 官方
-
-```auth.json
-{
-  "OPENAI_API_KEY": "sk-xxx"
-}
+```bash
+npm install -g opencode-ai
 ```
 
 ## Proxy
 
 ### AgentRouter
 
-```json
+```settings.json
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://agentrouter.org",
     "ANTHROPIC_API_KEY": "sk-xx"
   },
-  "model": "claude-opus-4-7",
+  "model": "claude-opus-4-6",
   "effortLevel": "max"
+}
+```
+
+```opencode.jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "agentrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "AgentRouter (OpenAI Compatible)",
+      "options": {
+        "baseURL": "https://agentrouter.org/v1",
+        "apiKey": "sk-xx"
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "gpt5.5"
+        }
+      }
+    }
+  },
+  "model": "agentrouter/gpt5.5"
 }
 ```
 
 ### Deepseek Anthropic
 
-```json
+```settings.json
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
-    "ANTHROPIC_AUTH_TOKEN": "sk-xx",
     "ANTHROPIC_API_KEY": "sk-xx",
     "ANTHROPIC_CODE_EFFORT_LEVEL": "max"
   },
@@ -99,62 +130,58 @@ npm install -g @anthropic/claude
 
 ### 自建中转
 
-### Sub2api
-
-### CodexManager
-
-```toml
-model = "gpt-5.5"
-
-model_provider = "cm"
-
-review_model = "gpt-5.5"
-
-personality = "none"
-
-model_reasoning_effort = "xhigh"
-
-plan_mode_reasoning_effort = "xhigh"
-
-model_reasoning_summary = "detailed"
-
-model_verbosity = "high"
-
-model_supports_reasoning_summaries = true
-
-allow_login_shell = true
-
-sandbox_mode = "workspace-write"
-
-cli_auth_credentials_store = "file"
-
-chatgpt_base_url = "https://chatgpt.com/backend-api/"
-
-mcp_oauth_credentials_store = "auto"
-
-check_for_update_on_startup = true
-
-web_search = "live"
-
-approvals_reviewer = "user"
-
-[model_providers.cm]
-
-approval_policy = "on-request"
-
-web_search = "live"
-
-name = "OpenAI"
-
-base_url = "https://your-api.example.com"
-
-wire_api = "responses"
-
-```
-
 ```json
 {
   "OPENAI_API_KEY": "sk-xx",
-  "auth_mode": "apikey"
 }
+```
+
+#### Sub2api
+
+```toml
+model_provider = "OpenAI"
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "https://your-api.example.com"
+wire_api = "responses"
+requires_openai_auth = true
+
+[features]
+goals = true
+```
+
+#### CodexManager
+
+```toml
+model = "gpt-5.5"
+model_provider = "cm"
+review_model = "gpt-5.5"
+personality = "none"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
+model_reasoning_summary = "detailed"
+model_verbosity = "high"
+model_supports_reasoning_summaries = true
+allow_login_shell = true
+sandbox_mode = "workspace-write"
+cli_auth_credentials_store = "file"
+chatgpt_base_url = "https://chatgpt.com/backend-api/"
+mcp_oauth_credentials_store = "auto"
+check_for_update_on_startup = true
+web_search = "live"
+approvals_reviewer = "user"
+[model_providers.cm]
+approval_policy = "on-request"
+web_search = "live"
+name = "OpenAI"
+base_url = "https://your-api.example.com"
+wire_api = "responses"
+
 ```

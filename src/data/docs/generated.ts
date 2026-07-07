@@ -70,42 +70,44 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "无限号池那天玩image2生成的(\ncalculus\nchemistry\ndb\nlinear-algebra\nmath\nphysics\ncalculus\ncalculus/1 (1).png\ncalculus/1 (2).png\nca...",
     "wordCount": 633,
     "readingMinutes": 2,
-    "updated": "",
+    "updated": "2026/07/04 21:41",
     "path": "./notes/gpt-image2.md"
   },
   {
-    "id": "PVE",
+    "id": "pve",
     "type": "post",
     "title": "Proxmox VE 初始化配置",
     "date": "2026-06-09",
     "tags": [
       "Proxmox VE"
     ],
-    "summary": "自部署脚本参考\n[https://community-scripts.org/]\nLXC初始化\ne.g:curl, git, unzip,wget, etc.\nDocker\nGit 登录\nPVE\nLXC扩容\n允许ssh root密码登...",
-    "wordCount": 208,
+    "summary": "Debian LXC初始化\ne.g:curl, git, unzip,wget, etc.\nDocker\nGit 登录\nVM\nPVE\nLXC扩容\n允许ssh root密码登录\nPermitRootLogin yes\nSSH Key 登...",
+    "wordCount": 256,
     "readingMinutes": 1,
-    "updated": "",
-    "path": "./posts/PVE.md"
+    "updated": "2026/07/04 21:41",
+    "path": "./posts/pve.md"
   },
   {
-    "id": "ApiKey",
+    "id": "AgentSettings",
     "type": "post",
-    "title": "中转 Claude Code / Codex 配置",
+    "title": "Agent配置",
     "date": "2026-05-18",
     "tags": [
       "APIKey",
       "Codex",
       "Claude",
+      "Opencode",
+      "Hermes",
       "Deepseek",
       "AgentRouter",
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录\nCodex配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\n官方\nProxy\nAgentRouter\nDeepseek Anthropic\n自建中转\nSub2api\nCodexManager",
-    "wordCount": 263,
+    "summary": "Claude Code配置目录\nCodex配置目录\nOpencode配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\nProxy\nAgentRouter\nDeepseek Anthropic\n自建中转\nSub2api\nCodexM...",
+    "wordCount": 358,
     "readingMinutes": 1,
     "updated": "",
-    "path": "./posts/ApiKey.md"
+    "path": "./posts/AgentSettings.md"
   },
   {
     "id": "GoLearning",

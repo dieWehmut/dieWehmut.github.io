@@ -5,11 +5,7 @@ date: 2026-06-09
 tags: [Proxmox VE]
 ---
 
-## 自部署脚本参考
-
-[https://community-scripts.org/]
-
-## LXC初始化
+## Debian LXC初始化
 
 ```bash
 apt update && apt upgrade -y
@@ -22,7 +18,7 @@ apt install xxx -y
 >e.g:curl, git, unzip,wget, etc.
 
 ```bash
-apt install curl git unzip wget tree -y
+apt install curl git unzip wget tree vim htop gh -y
 ```
 
 ## Docker
@@ -40,11 +36,14 @@ systemctl start docker
 ## Git 登录
 
 ```bash
-apt install gh -y
+gh auth login
 ```
 
+## VM
+
 ```bash
-gh auth login
+apt install qemu-guest-agent -y
+systemctl enable --now qemu-guest-agent
 ```
 
 ## PVE
@@ -67,6 +66,32 @@ nano /etc/ssh/sshd_config
 systemctl restart ssh
 ```
 
+## SSH Key 登录
+
+```bash
+ssh-keygen -t ed25519 -C "xxx"
+```
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys
+```
+
+```bash
+chmod 600 ~/.ssh/authorized_keys
+```
+
+```bash
+sudo apt update
+sudo apt install openssh-server
+sudo systemctl enable ssh
+sudo systemctl start ssh
+```
 
 ## Nginx
 
