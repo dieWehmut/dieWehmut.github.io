@@ -33,7 +33,12 @@
             v-for="point in servicePoints"
             :key="point.item.key || point.item.name"
             class="infra-node"
-            :class="[statusClass(point.item.url), `is-${point.ring}-ring`, { 'is-clickable': point.item.url }]"
+            :class="[
+              statusClass(point.item.url),
+              `is-${point.ring}-ring`,
+              `is-${point.labelSide}-side`,
+              { 'is-clickable': point.item.url },
+            ]"
             :style="point.style"
             :href="point.item.url || undefined"
             :target="point.item.url ? '_blank' : undefined"
@@ -158,12 +163,12 @@ const STATUS_REFRESH_INTERVAL_MS = 60_000
 const FULL_CIRCLE = Math.PI * 2
 const INNER_RING_LIMIT = 8
 const ORBIT_START_ANGLE = -Math.PI / 2
-const INNER_RING_STEP = FULL_CIRCLE / INNER_RING_LIMIT
-const OUTER_RING_GAP_OFFSET = INNER_RING_STEP / 2
 const STACKED_INNER_RADIUS = 25
 const OUTER_RING_RADIUS = 33
-const OUTER_RING_HORIZONTAL_PUSH = 14
 const OUTER_RING_VERTICAL_POLE_THRESHOLD = 0.98
+const OUTER_RING_POLE_INSET = 1
+const OUTER_RING_HORIZONTAL_PUSH = 14
+const OUTER_RING_HORIZONTAL_EPSILON = 0.001
 let refreshTimer
 
 const serviceItems = computed(() =>
@@ -208,17 +213,18 @@ const servicePoints = computed(() => {
     const cos = Math.cos(angle)
     const sin = Math.sin(angle)
     const isVerticalOuterPoint = isOuter && Math.abs(sin) > OUTER_RING_VERTICAL_POLE_THRESHOLD
-    const horizontalPush = isOuter && !isVerticalOuterPoint
+    const horizontalPush = isOuter && Math.abs(cos) > OUTER_RING_HORIZONTAL_EPSILON
       ? Math.sign(cos) * OUTER_RING_HORIZONTAL_PUSH
       : 0
     const dx = cos * radius + horizontalPush
-    const dy = sin * radius
+    const dy = sin * radius + (isVerticalOuterPoint ? -Math.sign(sin) * OUTER_RING_POLE_INSET : 0)
     const x = 50 + dx
     const y = 50 + dy
     return {
       item,
       index,
       ring: isOuter ? 'outer' : 'inner',
+      labelSide: cos < -0.12 ? 'left' : 'right',
       angle: Math.atan2(dy, dx),
       radius: Math.sqrt(dx * dx + dy * dy),
       style: {
@@ -230,7 +236,7 @@ const servicePoints = computed(() => {
 })
 
 function outerRingAngle(ringIndex, outerCount) {
-  return ORBIT_START_ANGLE + OUTER_RING_GAP_OFFSET + (ringIndex * FULL_CIRCLE) / Math.max(outerCount, 1)
+  return ORBIT_START_ANGLE + (ringIndex * FULL_CIRCLE) / Math.max(outerCount, 1)
 }
 
 watch(
@@ -433,7 +439,6 @@ function openInfra(item, event) {
 .infra-ring {
   position: absolute;
   inset: 0;
-  animation: orbit-spin 1200s linear infinite;
 }
 
 .infra-line {
@@ -465,9 +470,15 @@ function openInfra(item, event) {
   display: inline-flex;
   align-items: center;
   gap: var(--infra-node-gap);
-  animation: orbit-spin-reverse 1200s linear infinite;
   transform: translateY(-50%) scale(var(--infra-node-scale, 1));
   transform-origin: calc(var(--infra-node-size) / 2) 50%;
+}
+
+.infra-node.is-left-side .infra-node__inner {
+  left: auto;
+  right: calc(var(--infra-node-size) * -0.5);
+  flex-direction: row-reverse;
+  transform-origin: 100% 50%;
 }
 
 .infra-node.is-outer-ring .infra-node__inner {

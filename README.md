@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/TEMPLATE-diesuwa--starter-1FC41F?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="Template">
 </a>
 <a href="https://github.com/dieWehmut/sandkasten" target="_blank">
-  <img src="https://img.shields.io/badge/BACKEND-Sandkasten-blue?style=flat-square&logo=go&logoColor=white&labelColor=555555" alt="Sandkasten">
+  <img src="https://img.shields.io/badge/BACKEND-Sandkasten-blue?style=flat-square&logo=serverless&logoColor=white&labelColor=555555" alt="Sandkasten">
 </a>
 
 </div>
@@ -74,12 +74,6 @@ pnpm build
 
 ```bash
 VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm dev
-```
-
-可以用 smoke 脚本直接验证后端能运行 Go：
-
-```bash
-VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm runner:smoke
 ```
 
 线上 GitHub Pages 需要把仓库变量 `VITE_CODE_RUNNER_API_URL` 设为 HTTPS Sandkasten API 地址；`VITE_CODE_RUNNER_API_TOKEN` 会被打进前端产物，只能放公开的客户端 token。

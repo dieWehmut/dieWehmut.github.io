@@ -102,20 +102,22 @@ const crumbs = computed<Crumb[]>(() => {
   position: fixed;
   top: 0;
   left: var(--site-sidebar-width);
-  right: calc(var(--site-right-rail-offset) + var(--site-scroll-spy-width) + var(--site-view-aside-gap));
+  right: auto;
   z-index: 40;
   display: flex;
   align-items: center;
   gap: 3px;
+  width: max-content;
+  max-width: calc(100vw - var(--site-sidebar-width) - 24px);
   height: var(--site-route-path-height);
   min-width: 0;
   padding: 1px 12px 0;
-  border-bottom: 1px solid var(--site-border);
-  background: var(--site-sidebar-bg);
+  border-bottom: 1px solid transparent;
+  background: transparent;
   color: var(--site-muted);
   font-size: 13px;
   font-weight: 760;
-  backdrop-filter: blur(14px);
+  pointer-events: none;
   animation: routePathSlide 220ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
 }
 
@@ -128,6 +130,8 @@ const crumbs = computed<Crumb[]>(() => {
   border-radius: 8px;
   color: inherit;
   text-decoration: none;
+  pointer-events: auto;
+  text-shadow: 0 1px 2px var(--site-bg), 0 0 10px var(--site-bg);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
