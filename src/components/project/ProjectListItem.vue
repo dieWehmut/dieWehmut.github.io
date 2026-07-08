@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Notebook, Headset, Menu, Document, Calendar } from '@element-plus/icons-vue'
+import { Notebook, Headset, Menu, Document, Calendar, Files } from '@element-plus/icons-vue'
 import type { ProjectEntry } from '../../types/content'
 
 const props = withDefaults(defineProps<{
@@ -48,6 +48,7 @@ const iconMap: Record<ProjectEntry['category'], unknown> = {
   games: Headset,
   apps: Menu,
   tools: Document,
+  templates: Files,
 }
 
 const itemIcon = computed(() => iconMap[props.category])

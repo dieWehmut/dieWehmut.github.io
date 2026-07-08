@@ -19,24 +19,26 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Connection, VideoPlay, Iphone, Setting } from '@element-plus/icons-vue'
+import { Connection, VideoPlay, Iphone, Setting, Collection } from '@element-plus/icons-vue'
 import ProjectListItem from '../components/project/ProjectListItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getProjectEntries } from '../data'
 import type { ProjectEntry } from '../types/content'
 
-const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'tools']
+const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'tools', 'templates']
 const labels: Record<ProjectEntry['category'], string> = {
   websites: 'Websites',
   games: 'Games',
   apps: 'Apps',
   tools: 'Tools',
+  templates: 'Templates',
 }
 const categoryIcons: Record<ProjectEntry['category'], unknown> = {
   websites: Connection,
   games: VideoPlay,
   apps: Iphone,
   tools: Setting,
+  templates: Collection,
 }
 
 const projectGroups = computed(() =>

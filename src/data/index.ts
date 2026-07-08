@@ -14,6 +14,7 @@ import { pages } from './site/page'
 import { games } from './site/game'
 import { apps } from './site/app'
 import { tools } from './site/tool'
+import { templates } from './site/template'
 import { infra } from './site/infra'
 import { getDocPosts, getDocNotes, loadDoc, preloadDoc, docContentVersion } from './docs'
 import { friends } from './site/friends'
@@ -102,7 +103,21 @@ export function getProjectEntries(): ProjectEntry[] {
     }))
   )
 
-  return sortByDate([...websiteEntries, ...gameEntries, ...appEntries, ...toolEntries])
+  const templateEntries: ProjectEntry[] = (templates.value || []).flatMap((group) =>
+    (group.manualItems || []).map((item: SiteProjectItem, index: number) => ({
+      id: `template:${item.name || index}`,
+      name: item.name || `Template ${index + 1}`,
+      category: 'templates',
+      categoryLabel: 'Templates',
+      date: item.lastModified || item.date,
+      url: projectUrl(item),
+      repoUrl: projectRepo(item),
+      description: 'Template project',
+      actionLabel: 'Open',
+    }))
+  )
+
+  return sortByDate([...websiteEntries, ...gameEntries, ...appEntries, ...toolEntries, ...templateEntries])
 }
 
 export function getTagGroups(): TagGroup[] {
