@@ -17,6 +17,7 @@ export const templates = ref<SiteProjectGroup[]>([
         showDownload: false,
         downloadToast: false,
         downloadToastMessage: 'Open the repository',
+        lastModified: '2026-05-28',
       },
       {
         name: 'sandkasten',
@@ -25,6 +26,7 @@ export const templates = ref<SiteProjectGroup[]>([
         showDownload: false,
         downloadToast: false,
         downloadToastMessage: 'Open the repository',
+        lastModified: '2026-06-10',
       },
     ],
   },

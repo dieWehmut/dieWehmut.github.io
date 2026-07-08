@@ -135,11 +135,21 @@ function drawPetalShape(p, x, y, scale) {
   ctx.closePath()
 
   // ── radial gradient: lighter center, richer edges ──
-  const grad = ctx.createRadialGradient(0, -s * 0.05, s * 0.04, 0, 0, s * 0.88)
-  grad.addColorStop(0,    `hsla(${h}, 85%, 96%, ${p.opacity})`)
-  grad.addColorStop(0.35, `hsla(${h}, 78%, ${p.lightness + 3}%, ${p.opacity})`)
-  grad.addColorStop(0.72, `hsla(${h}, 72%, ${p.lightness}%, ${p.opacity})`)
-  grad.addColorStop(1,    `hsla(${h}, 65%, ${p.lightness - 6}%, ${p.opacity * 0.72})`)
+  // Cached per petal: gradient geometry depends only on `s` (scale) and its
+  // colors only on the immutable hue/lightness plus opacity. Falling and
+  // collected petals keep a stable scale+opacity, so this rebuilds at most
+  // once; only fading burst petals recompute each frame (same as before).
+  let grad = p._grad
+  if (!grad || p._gradS !== s || p._gradOpacity !== p.opacity) {
+    grad = ctx.createRadialGradient(0, -s * 0.05, s * 0.04, 0, 0, s * 0.88)
+    grad.addColorStop(0,    `hsla(${h}, 85%, 96%, ${p.opacity})`)
+    grad.addColorStop(0.35, `hsla(${h}, 78%, ${p.lightness + 3}%, ${p.opacity})`)
+    grad.addColorStop(0.72, `hsla(${h}, 72%, ${p.lightness}%, ${p.opacity})`)
+    grad.addColorStop(1,    `hsla(${h}, 65%, ${p.lightness - 6}%, ${p.opacity * 0.72})`)
+    p._grad = grad
+    p._gradS = s
+    p._gradOpacity = p.opacity
+  }
   ctx.fillStyle = grad
   ctx.fill()
 

@@ -429,6 +429,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name].[ext]',
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          // Only hoist the small, universally-loaded core into stable vendor
+          // chunks (better long-term caching). Everything else is left to
+          // Vite's automatic per-route splitting so heavy libs (editor, math
+          // rendering, etc.) stay lazy-loaded with the routes that use them.
+          if (id.includes('/@vue/') || id.includes('/vue/') || id.includes('vue-router')) return 'vendor-vue'
+          if (id.includes('@element-plus/icons-vue')) return 'vendor-icons'
+        },
       },
     },
   },
