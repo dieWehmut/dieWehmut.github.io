@@ -184,6 +184,7 @@ const crumbs = computed<Crumb[]>(() => {
   z-index: auto;
   flex: 1 1 auto;
   width: auto;
+  max-width: none;
   height: 40px;
   min-width: 0;
   padding: 0;
