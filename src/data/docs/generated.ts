@@ -84,7 +84,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "Debian LXC初始化\ne.g:curl, git, unzip,wget, etc.\nDocker\nGit 登录\nVM\nPVE\nLXC扩容\n允许ssh root密码登录\nPermitRootLogin yes\nSSH Key 登...",
     "wordCount": 256,
     "readingMinutes": 1,
-    "updated": "2026/07/04 21:41",
+    "updated": "2026/07/07 22:40",
     "path": "./posts/pve.md"
   },
   {
@@ -106,7 +106,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "Claude Code配置目录\nCodex配置目录\nOpencode配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\nProxy\nAgentRouter\nDeepseek Anthropic\n自建中转\nSub2api\nCodexM...",
     "wordCount": 358,
     "readingMinutes": 1,
-    "updated": "",
+    "updated": "2026/07/07 22:40",
     "path": "./posts/AgentSettings.md"
   },
   {
