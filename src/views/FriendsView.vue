@@ -1,14 +1,18 @@
 <template>
   <section class="page-surface">
     <div class="friends-grid">
-      <FriendCard v-for="friend in friends" :key="friend.id" :friend="friend" />
+      <FriendCard v-for="friend in visibleFriends" :key="friend.id" :friend="friend" />
     </div>
   </section>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import FriendCard from '../components/content/FriendCard.vue'
 import { friends } from '../data'
+import { limitCardGroup } from '../utils/cardGroups'
+
+const visibleFriends = computed(() => limitCardGroup(friends))
 </script>
 
 <style scoped>

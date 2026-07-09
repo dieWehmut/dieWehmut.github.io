@@ -22,7 +22,7 @@
 
     <div class="tag-grid">
       <article
-        v-for="group in tagGroups"
+        v-for="group in visibleTagGroups"
         :key="group.tag"
         class="tag-card"
         role="link"
@@ -73,6 +73,7 @@ import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import { getTagGroups } from '../data'
+import { limitCardGroup } from '../utils/cardGroups'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 
 const captureTagCounts = ref(new Map())
@@ -80,6 +81,7 @@ const captureTagPreviews = ref(new Map())
 const router = useRouter()
 
 const tagGroups = computed(() => mergeCaptureTags(getTagGroups()))
+const visibleTagGroups = computed(() => limitCardGroup(tagGroups.value))
 const cloudPalette = [
   '#2dd4bf',
   '#ff5f8a',

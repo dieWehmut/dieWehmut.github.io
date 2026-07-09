@@ -59,6 +59,7 @@ import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { infra } from '../data/site/infra.ts'
 import { siteConfig } from '../data/site/config'
 import { getPosts, getProjectEntries, getNotes, getTagGroups } from '../data'
+import { limitCardGroup } from '../utils/cardGroups'
 import { getDateSortTimestamp } from '../utils/date'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
@@ -78,12 +79,13 @@ function timestamp(date) {
 }
 
 const feedItems = computed(() => {
-  return [
+  const latestEntries = [
     ...getPosts().map((post) => ({ kind: 'post', entry: post })),
     ...getNotes().map((note) => ({ kind: 'note', entry: note })),
   ]
     .sort((a, b) => timestamp(b.entry.date) - timestamp(a.entry.date))
-    .slice(0, 20)
+
+  return limitCardGroup(latestEntries)
     .map(({ kind, entry }) => ({
       id: `${kind}:${entry.id}`,
       title: entry.title,

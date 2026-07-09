@@ -21,6 +21,7 @@ import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getSearchDocuments } from '../data'
 import { getCaptureSearchDocuments } from '../data/capture'
 import type { SearchDocument, SearchResult } from '../types/content'
+import { limitCardGroup } from '../utils/cardGroups'
 import { getDateSortTimestamp } from '../utils/date'
 
 const query = ref('')
@@ -68,9 +69,9 @@ const allDocuments = computed(() => sortDocuments([...getSearchDocuments(), ...g
 const results = computed(() => {
   const q = query.value.trim().toLowerCase()
   const docs = allDocuments.value
-  if (!q) return docs
+  if (!q) return limitCardGroup(docs)
 
-  return docs
+  const scoredDocs = docs
     .map((doc): SearchResult => ({
       ...doc,
       score: scoreDocument(doc, q),
@@ -82,6 +83,8 @@ const results = computed(() => {
       if (byDate !== 0) return byDate
       return a.title.localeCompare(b.title)
     })
+
+  return limitCardGroup(scoredDocs)
 })
 </script>
 

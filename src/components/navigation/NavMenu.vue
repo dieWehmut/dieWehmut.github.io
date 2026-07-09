@@ -5,7 +5,9 @@
       :key="item.name"
       class="nav-menu__item"
       :to="item.to"
-      @click="$emit('navigate')"
+      @pointerenter="preloadNavItem(item.to)"
+      @focus="preloadNavItem(item.to)"
+      @click="handleNavigate(item.to)"
     >
       <el-icon class="nav-menu__icon">
         <component :is="item.icon" />
@@ -16,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import {
@@ -32,8 +34,9 @@ import {
   User,
 } from '@element-plus/icons-vue'
 import { siteConfig } from '../../data/site/config'
+import { preloadPrimaryRoutes, preloadRouteByPath } from '../../router'
 
-defineEmits(['navigate'])
+const emit = defineEmits(['navigate'])
 
 const { t } = useI18n()
 
@@ -56,6 +59,17 @@ function labelFor(key, fallbackLabel) {
   const value = t(key)
   return value === key ? fallbackLabel : value
 }
+
+function preloadNavItem(to) {
+  preloadRouteByPath(to)
+}
+
+function handleNavigate(to) {
+  preloadRouteByPath(to)
+  emit('navigate')
+}
+
+onMounted(preloadPrimaryRoutes)
 </script>
 
 <style scoped>

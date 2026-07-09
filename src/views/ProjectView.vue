@@ -24,6 +24,7 @@ import ProjectListItem from '../components/project/ProjectListItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getProjectEntries } from '../data'
 import type { ProjectEntry } from '../types/content'
+import { limitCardGroup } from '../utils/cardGroups'
 
 const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'tools', 'templates']
 const labels: Record<ProjectEntry['category'], string> = {
@@ -46,7 +47,7 @@ const projectGroups = computed(() =>
     .map((key) => ({
       key,
       label: labels[key],
-      items: getProjectEntries().filter((item) => item.category === key),
+      items: limitCardGroup(getProjectEntries().filter((item) => item.category === key)),
     }))
     .filter((group) => group.items.length > 0)
 )

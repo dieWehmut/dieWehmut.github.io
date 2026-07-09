@@ -31,10 +31,11 @@ import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getNotes } from '../data'
 import type { NoteEntry } from '../types/content'
+import { limitCardGroup } from '../utils/cardGroups'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
 const { locale } = useI18n()
-const notes = computed(() => getNotes())
+const notes = computed(() => limitCardGroup(getNotes()))
 const yearGroups = computed(() =>
   groupItemsByYearAndMonth(notes.value, {
     idPrefix: 'notes',

@@ -31,10 +31,11 @@ import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts } from '../data'
 import type { ArchivePost } from '../types/content'
+import { limitCardGroup } from '../utils/cardGroups'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
 const { locale } = useI18n()
-const posts = computed(() => getPosts())
+const posts = computed(() => limitCardGroup(getPosts()))
 const yearGroups = computed(() =>
   groupItemsByYearAndMonth(posts.value, {
     idPrefix: 'archive',

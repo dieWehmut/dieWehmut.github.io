@@ -302,6 +302,7 @@ import GiscusComments from '../components/system/GiscusComments.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'
 import type { CaptureAsset, CaptureSourceRef } from '../types/content'
+import { CARD_GROUP_LIMIT, limitCardGroup } from '../utils/cardGroups'
 import { formatTimelineDate, parseTimelineDate } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
@@ -309,11 +310,11 @@ import { formatTimelineMonthLabel, formatTimelineYearLabel } from '../utils/time
 
 const isDev = import.meta.env.DEV
 const captureScrollStorageKey = 'nexus:capture-scroll-y'
-const capturePreviewLimit = 9
+const capturePreviewLimit = CARD_GROUP_LIMIT
 
 const allAssets = ref<CaptureAsset[]>(getCaptureAssets())
 const captureGroups = computed(() => groupCaptureAssets(allAssets.value))
-const yearGroups = computed(() => groupByYearAndMonth(captureGroups.value))
+const yearGroups = computed(() => groupByYearAndMonth(limitCardGroup(captureGroups.value)))
 const route = useRoute()
 const router = useRouter()
 const selectedGroupId = computed(() => String(route.params.id || ''))

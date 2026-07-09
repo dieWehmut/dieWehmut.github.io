@@ -112,6 +112,7 @@ import MarkdownPreview from '../components/content/MarkdownPreview.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, CaptureSourceRef, TagContentEntry } from '../types/content'
+import { limitCardGroup } from '../utils/cardGroups'
 import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
@@ -122,7 +123,8 @@ const { locale } = useI18n()
 const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
-const captureGroups = computed(() => groupCapturesByDate(captures.value))
+const visibleCaptures = computed(() => limitCardGroup(captures.value))
+const captureGroups = computed(() => groupCapturesByDate(visibleCaptures.value))
 const timelineItems = computed<TagTimelineItem[]>(() => {
   const postItems: TagTimelineItem[] = posts.value.map((post, index) => ({
     id: `${post._isNote ? 'note' : 'post'}:${post.id}`,

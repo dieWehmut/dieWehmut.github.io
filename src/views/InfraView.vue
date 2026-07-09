@@ -77,7 +77,7 @@
 
       <div class="infra-mobile-list" aria-label="Infra endpoint list">
         <article
-          v-for="item in serviceItems"
+          v-for="item in visibleServiceItems"
           :key="item.key || item.name"
           class="infra-mobile-item"
           :class="[infraKeyClass(item), { 'is-clickable': item.url }]"
@@ -120,6 +120,7 @@ import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
 import { useKumaStatus } from '../composables/useKumaStatus'
+import { limitCardGroup } from '../utils/cardGroups'
 const { t } = useI18n()
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
@@ -152,6 +153,7 @@ const serviceItems = computed(() =>
     .slice()
     .sort((a, b) => (Date.parse(a.date) || 0) - (Date.parse(b.date) || 0))
 )
+const visibleServiceItems = computed(() => limitCardGroup(serviceItems.value))
 
 const kuma = useKumaStatus(serviceItems)
 const fallback = useUrlStatus()
