@@ -1049,8 +1049,8 @@ watch(isDetailRoute, (detail) => {
 .capture-card--add:hover,
 .capture-card--add:focus-visible {
   color: var(--site-text);
-  background-color: rgba(31, 196, 31, 0.08);
-  outline: 2px solid rgba(31, 196, 31, 0.46);
+  background-color: rgb(var(--site-accent-rgb) / 0.08);
+  outline: 2px solid rgb(var(--site-accent-rgb) / 0.46);
   outline-offset: -2px;
 }
 
@@ -1195,8 +1195,8 @@ watch(isDetailRoute, (detail) => {
 .capture-empty__upload:hover,
 .capture-empty__upload:focus-visible {
   color: var(--site-text);
-  border-color: rgba(31, 196, 31, 0.46);
-  background: rgba(31, 196, 31, 0.08);
+  border-color: rgb(var(--site-accent-rgb) / 0.46);
+  background: rgb(var(--site-accent-rgb) / 0.08);
   outline: none;
 }
 

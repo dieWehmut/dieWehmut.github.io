@@ -1,42 +1,42 @@
-@import url("https://giscus.app/themes/light.css");
+﻿@import url("https://giscus.app/themes/light.css");
 
 :root {
   --color-canvas-default: #fbfbfb;
   --color-canvas-overlay: #ffffff;
-  --color-canvas-inset: rgba(143, 53, 255, 0.035);
-  --color-canvas-subtle: rgba(143, 53, 255, 0.03);
+  --color-canvas-inset: rgba(26, 158, 26, 0.035);
+  --color-canvas-subtle: rgba(26, 158, 26, 0.03);
   --color-border-default: rgba(0, 0, 0, 0.16);
   --color-border-muted: rgba(0, 0, 0, 0.08);
   --color-fg-default: #111811;
   --color-fg-muted: #445044;
   --color-fg-subtle: #667066;
-  --color-accent-fg: #8f35ff;
-  --color-accent-emphasis: #8f35ff;
-  --color-accent-muted: rgba(143, 53, 255, 0.34);
-  --color-accent-subtle: rgba(143, 53, 255, 0.08);
-  --color-success-fg: #8f35ff;
+  --color-accent-fg: #1a9e1a;
+  --color-accent-emphasis: #1a9e1a;
+  --color-accent-muted: rgba(26, 158, 26, 0.34);
+  --color-accent-subtle: rgba(26, 158, 26, 0.08);
+  --color-success-fg: #1a9e1a;
   --color-attention-fg: #8a6500;
   --color-danger-fg: #c62828;
   --color-btn-text: #111811;
   --color-btn-bg: #ffffff;
   --color-btn-border: rgba(0, 0, 0, 0.16);
-  --color-btn-hover-bg: rgba(143, 53, 255, 0.08);
-  --color-btn-hover-border: rgba(143, 53, 255, 0.42);
-  --color-btn-active-bg: rgba(143, 53, 255, 0.12);
+  --color-btn-hover-bg: rgba(26, 158, 26, 0.08);
+  --color-btn-hover-border: rgba(26, 158, 26, 0.42);
+  --color-btn-active-bg: rgba(26, 158, 26, 0.12);
   --color-btn-primary-text: #ffffff;
-  --color-btn-primary-bg: #8f35ff;
-  --color-btn-primary-border: #8f35ff;
+  --color-btn-primary-bg: #1a9e1a;
+  --color-btn-primary-border: #1a9e1a;
   --color-btn-primary-hover-bg: #148514;
   --color-btn-primary-hover-border: #148514;
   --color-btn-primary-selected-bg: #127512;
-  --color-btn-primary-disabled-bg: rgba(143, 53, 255, 0.38);
-  --color-btn-primary-disabled-border: rgba(143, 53, 255, 0.22);
+  --color-btn-primary-disabled-bg: rgba(26, 158, 26, 0.38);
+  --color-btn-primary-disabled-border: rgba(26, 158, 26, 0.22);
   --color-input-bg: #ffffff;
-  --color-input-contrast-bg: rgba(143, 53, 255, 0.03);
+  --color-input-contrast-bg: rgba(26, 158, 26, 0.03);
   --color-input-border: rgba(0, 0, 0, 0.16);
   --color-neutral-muted: rgba(0, 0, 0, 0.08);
-  --color-neutral-subtle: rgba(143, 53, 255, 0.03);
-  --color-primer-shadow-focus: 0 0 0 3px rgba(143, 53, 255, 0.18);
+  --color-neutral-subtle: rgba(26, 158, 26, 0.03);
+  --color-primer-shadow-focus: 0 0 0 3px rgba(26, 158, 26, 0.18);
 }
 
 body {
@@ -83,7 +83,7 @@ a {
 .gsc-comment-box-bottom,
 .gsc-comment-header {
   border-color: var(--color-border-muted);
-  background: rgba(143, 53, 255, 0.03);
+  background: rgba(26, 158, 26, 0.03);
 }
 
 .gsc-comment-content,
@@ -115,8 +115,8 @@ a {
 .gsc-comment-box-write[aria-selected="true"],
 .gsc-comment-box-preview[aria-selected="true"] {
   color: var(--color-accent-fg);
-  border-color: rgba(143, 53, 255, 0.6);
-  background: rgba(143, 53, 255, 0.08);
+  border-color: rgba(26, 158, 26, 0.6);
+  background: rgba(26, 158, 26, 0.08);
 }
 
 .gsc-comment-author,
@@ -146,7 +146,7 @@ a {
 .gsc-comment-content pre {
   border-radius: 6px;
   color: #145914;
-  background: rgba(143, 53, 255, 0.1);
+  background: rgba(26, 158, 26, 0.1);
 }
 
 .gsc-reactions {

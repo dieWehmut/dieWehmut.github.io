@@ -155,8 +155,8 @@ onMounted(async () => {
 
 .home-view__panel:hover,
 .home-view__panel:focus-visible {
-  border-color: rgba(31, 196, 31, 0.42);
-  background: rgba(31, 196, 31, 0.04);
+  border-color: rgb(var(--site-accent-rgb) / 0.42);
+  background: rgb(var(--site-accent-rgb) / 0.04);
   transform: translateY(-2px);
   text-decoration: none;
   outline: none;

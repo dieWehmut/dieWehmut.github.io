@@ -93,18 +93,18 @@ const cloudPalette = [
   '#ff8a34',
   '#38bdf8',
   '#a855f7',
-  '#22c55e',
+  '#9b3dff',
   '#f59e0b',
   '#fb7185',
   '#60a5fa',
-  '#34d399',
+  '#f472b6',
   '#f97316',
   '#c084fc',
   '#e11d48',
-  '#84cc16',
+  '#7c3aed',
   '#0ea5e9',
   '#d946ef',
-  '#10b981',
+  '#a78bfa',
   '#f43f5e',
   '#7c3aed',
   '#22d3ee',
@@ -236,15 +236,15 @@ onMounted(async () => {
 <style scoped>
 .tag-view {
   --tag-accent: var(--site-accent);
-  --tag-accent-soft: rgba(31, 196, 31, 0.18);
-  --tag-accent-muted: rgba(31, 196, 31, 0.08);
+  --tag-accent-soft: rgb(var(--site-accent-rgb) / 0.18);
+  --tag-accent-muted: rgb(var(--site-accent-rgb) / 0.08);
   --tag-border: rgba(255, 255, 255, 0.08);
 }
 
 :global([data-theme="light"]) .tag-view {
   --tag-accent: var(--site-accent);
-  --tag-accent-soft: rgba(31, 196, 31, 0.14);
-  --tag-accent-muted: rgba(31, 196, 31, 0.06);
+  --tag-accent-soft: rgb(var(--site-accent-rgb) / 0.14);
+  --tag-accent-muted: rgb(var(--site-accent-rgb) / 0.06);
   --tag-border: rgba(0, 0, 0, 0.1);
 }
 
@@ -321,8 +321,8 @@ onMounted(async () => {
 
 .tag-card:hover,
 .tag-card:focus-visible {
-  border-color: rgba(31, 196, 31, 0.45);
-  background: rgba(31, 196, 31, 0.04);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
+  background: rgb(var(--site-accent-rgb) / 0.04);
   outline: none;
   transform: translateY(-1px);
 }

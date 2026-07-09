@@ -1,42 +1,42 @@
-@import url("https://giscus.app/themes/transparent_dark.css");
+﻿@import url("https://giscus.app/themes/transparent_dark.css");
 
 :root {
   --color-canvas-default: transparent;
   --color-canvas-overlay: #080b08;
   --color-canvas-inset: rgba(255, 255, 255, 0.035);
   --color-canvas-subtle: rgba(255, 255, 255, 0.035);
-  --color-border-default: rgba(155, 61, 255, 0.24);
-  --color-border-muted: rgba(155, 61, 255, 0.12);
+  --color-border-default: rgba(31, 196, 31, 0.24);
+  --color-border-muted: rgba(31, 196, 31, 0.12);
   --color-fg-default: #e0e0e0;
   --color-fg-muted: #999;
   --color-fg-subtle: #7f877f;
-  --color-accent-fg: #9b3dff;
-  --color-accent-emphasis: #9b3dff;
-  --color-accent-muted: rgba(155, 61, 255, 0.36);
-  --color-accent-subtle: rgba(155, 61, 255, 0.08);
-  --color-success-fg: #9b3dff;
+  --color-accent-fg: #1fc41f;
+  --color-accent-emphasis: #1fc41f;
+  --color-accent-muted: rgba(31, 196, 31, 0.36);
+  --color-accent-subtle: rgba(31, 196, 31, 0.08);
+  --color-success-fg: #1fc41f;
   --color-attention-fg: #d7ba7d;
   --color-danger-fg: #ff6b6b;
   --color-btn-text: #e0e0e0;
-  --color-btn-bg: rgba(155, 61, 255, 0.1);
-  --color-btn-border: rgba(155, 61, 255, 0.28);
-  --color-btn-hover-bg: rgba(155, 61, 255, 0.08);
-  --color-btn-hover-border: rgba(155, 61, 255, 0.42);
-  --color-btn-active-bg: rgba(155, 61, 255, 0.12);
+  --color-btn-bg: rgba(31, 196, 31, 0.1);
+  --color-btn-border: rgba(31, 196, 31, 0.28);
+  --color-btn-hover-bg: rgba(31, 196, 31, 0.08);
+  --color-btn-hover-border: rgba(31, 196, 31, 0.42);
+  --color-btn-active-bg: rgba(31, 196, 31, 0.12);
   --color-btn-primary-text: #071007;
-  --color-btn-primary-bg: #9b3dff;
-  --color-btn-primary-border: #9b3dff;
+  --color-btn-primary-bg: #1fc41f;
+  --color-btn-primary-border: #1fc41f;
   --color-btn-primary-hover-bg: #34df34;
   --color-btn-primary-hover-border: #34df34;
   --color-btn-primary-selected-bg: #1aa91a;
-  --color-btn-primary-disabled-bg: rgba(155, 61, 255, 0.38);
-  --color-btn-primary-disabled-border: rgba(155, 61, 255, 0.22);
+  --color-btn-primary-disabled-bg: rgba(31, 196, 31, 0.38);
+  --color-btn-primary-disabled-border: rgba(31, 196, 31, 0.22);
   --color-input-bg: rgba(8, 22, 8, 0.65);
-  --color-input-contrast-bg: rgba(155, 61, 255, 0.08);
-  --color-input-border: rgba(155, 61, 255, 0.28);
-  --color-neutral-muted: rgba(155, 61, 255, 0.12);
-  --color-neutral-subtle: rgba(155, 61, 255, 0.04);
-  --color-primer-shadow-focus: 0 0 0 3px rgba(155, 61, 255, 0.18);
+  --color-input-contrast-bg: rgba(31, 196, 31, 0.08);
+  --color-input-border: rgba(31, 196, 31, 0.28);
+  --color-neutral-muted: rgba(31, 196, 31, 0.12);
+  --color-neutral-subtle: rgba(31, 196, 31, 0.04);
+  --color-primer-shadow-focus: 0 0 0 3px rgba(31, 196, 31, 0.18);
 }
 
 body {
@@ -65,7 +65,7 @@ a {
 
 .gsc-header {
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(155, 61, 255, 0.16) !important;
+  border-bottom: 1px solid rgba(31, 196, 31, 0.16) !important;
 }
 
 .gsc-comments-count,
@@ -77,17 +77,17 @@ a {
 .gsc-comment-box,
 .gsc-comment {
   overflow: hidden;
-  border: 1px solid rgba(155, 61, 255, 0.26) !important;
+  border: 1px solid rgba(31, 196, 31, 0.26) !important;
   border-radius: 8px;
-  background: rgba(155, 61, 255, 0.04) !important;
-  box-shadow: 0 0 0 1px rgba(155, 61, 255, 0.05) inset;
+  background: rgba(31, 196, 31, 0.04) !important;
+  box-shadow: 0 0 0 1px rgba(31, 196, 31, 0.05) inset;
 }
 
 .gsc-comment-box-tabs,
 .gsc-comment-box-bottom,
 .gsc-comment-header {
-  border-color: rgba(155, 61, 255, 0.18) !important;
-  background: rgba(155, 61, 255, 0.05) !important;
+  border-color: rgba(31, 196, 31, 0.18) !important;
+  background: rgba(31, 196, 31, 0.05) !important;
 }
 
 .gsc-comment-content,
@@ -97,7 +97,7 @@ a {
 
 .gsc-comment-box-textarea {
   min-height: 116px;
-  border: 1px solid rgba(155, 61, 255, 0.2) !important;
+  border: 1px solid rgba(31, 196, 31, 0.2) !important;
   border-radius: 8px;
   color: var(--color-fg-default) !important;
   background: rgba(8, 22, 8, 0.65) !important;
@@ -106,7 +106,7 @@ a {
 }
 
 .gsc-comment-box-textarea:focus {
-  border-color: rgba(155, 61, 255, 0.6) !important;
+  border-color: rgba(31, 196, 31, 0.6) !important;
   box-shadow: var(--color-primer-shadow-focus) !important;
 }
 
@@ -121,9 +121,9 @@ a {
 .gsc-comment-box-write[aria-selected="true"],
 .gsc-comment-box-preview[aria-selected="true"] {
   color: var(--color-accent-fg) !important;
-  border-color: rgba(155, 61, 255, 0.4) !important;
-  border-bottom-color: rgba(155, 61, 255, 0.08) !important;
-  background: rgba(155, 61, 255, 0.08) !important;
+  border-color: rgba(31, 196, 31, 0.4) !important;
+  border-bottom-color: rgba(31, 196, 31, 0.08) !important;
+  background: rgba(31, 196, 31, 0.08) !important;
 }
 
 .gsc-comment-author {
@@ -151,11 +151,11 @@ a {
 .gsc-comment-content pre {
   border-radius: 6px;
   color: #d9fbd9;
-  background: rgba(155, 61, 255, 0.08);
+  background: rgba(31, 196, 31, 0.08);
 }
 
 .gsc-reactions {
-  border-top-color: rgba(155, 61, 255, 0.16) !important;
+  border-top-color: rgba(31, 196, 31, 0.16) !important;
 }
 
 .gsc-reactions-button,
@@ -163,8 +163,8 @@ a {
 .btn {
   border-radius: 8px;
   color: var(--color-btn-text) !important;
-  background: rgba(155, 61, 255, 0.06) !important;
-  border-color: rgba(155, 61, 255, 0.36) !important;
+  background: rgba(31, 196, 31, 0.06) !important;
+  border-color: rgba(31, 196, 31, 0.36) !important;
   box-shadow: none;
   transition:
     border-color 160ms ease,
@@ -176,8 +176,8 @@ a {
 .gsc-social-reaction-summary-item:hover,
 .btn:hover {
   color: var(--color-accent-fg) !important;
-  background: rgba(155, 61, 255, 0.13) !important;
-  border-color: rgba(155, 61, 255, 0.72) !important;
+  background: rgba(31, 196, 31, 0.13) !important;
+  border-color: rgba(31, 196, 31, 0.72) !important;
   transform: translateY(-1px);
 }
 
@@ -198,12 +198,12 @@ a {
   border-radius: 8px;
   color: var(--color-fg-default) !important;
   background: var(--color-input-bg) !important;
-  border-color: rgba(155, 61, 255, 0.36) !important;
+  border-color: rgba(31, 196, 31, 0.36) !important;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: rgba(155, 61, 255, 0.75) !important;
+  border-color: rgba(31, 196, 31, 0.75) !important;
   box-shadow: var(--color-primer-shadow-focus) !important;
 }
 

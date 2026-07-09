@@ -262,8 +262,8 @@ function statusClass(url: string | undefined) {
 
 .search-result-infra.is-clickable:hover,
 .search-result-infra.is-clickable:focus-visible {
-  border-color: rgba(31, 196, 31, 0.45);
-  background: rgba(31, 196, 31, 0.04);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
+  background: rgb(var(--site-accent-rgb) / 0.04);
   transform: translateY(-2px);
   outline: none;
 }
@@ -358,7 +358,7 @@ function statusClass(url: string | undefined) {
 .search-result-infra > a:hover,
 .search-result-infra > a:focus-visible {
   color: var(--site-accent);
-  border-color: rgba(31, 196, 31, 0.45);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
   transform: translateY(-1px);
   text-decoration: none;
   outline: none;
@@ -380,8 +380,8 @@ function statusClass(url: string | undefined) {
 
 .search-result-capture:hover,
 .search-result-capture:focus-visible {
-  border-color: rgba(31, 196, 31, 0.45);
-  background: rgba(31, 196, 31, 0.04);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
+  background: rgb(var(--site-accent-rgb) / 0.04);
   transform: translateY(-2px);
   text-decoration: none;
   outline: none;

@@ -1,4 +1,5 @@
 import { computed, readonly, ref } from 'vue'
+import { applyCurrentColorScheme } from './useColorSchemePreference'
 
 export type ThemeMode = 'light' | 'dark'
 
@@ -35,6 +36,7 @@ function applyTheme(nextTheme: ThemeMode) {
   const root = document.documentElement
   root.setAttribute('data-theme', nextTheme)
   root.style.colorScheme = nextTheme
+  applyCurrentColorScheme(nextTheme)
 }
 
 export function initThemePreference() {

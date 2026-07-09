@@ -17,7 +17,7 @@ import PageHeading from '../components/content/PageHeading.vue'
   min-height: 44px;
   align-items: center;
   padding: 0 16px;
-  border: 1px solid rgba(31, 196, 31, 0.4);
+  border: 1px solid rgb(var(--site-accent-rgb) / 0.4);
   border-radius: 8px;
   color: var(--site-accent);
   font-weight: 800;

@@ -33,6 +33,7 @@ export const siteConfig: SiteConfig = {
   description: 'Hi!This is dieWehmut.',
   siteUrl: 'https://diewehmut.github.io',
   startedAt: '2025-08-24T22:00:00+08:00',
+  colorScheme: 'purple',
 
   // --- External Services ---
   googleAnalyticsId: 'G-TZG91QDSZ5',

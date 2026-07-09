@@ -103,7 +103,7 @@ import aboutRaw from '../data/site/about.md?raw'
 }
 
 .about-contact__item a {
-  color: var(--site-accent, #1fc41f);
+  color: var(--site-accent, var(--site-accent));
   text-decoration: none;
   transition: opacity 0.2s;
 }
@@ -149,7 +149,7 @@ import aboutRaw from '../data/site/about.md?raw'
 }
 
 .about-content :deep(a) {
-  color: var(--site-accent, #1fc41f);
+  color: var(--site-accent, var(--site-accent));
   text-decoration: none;
 }
 

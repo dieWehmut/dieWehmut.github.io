@@ -15,6 +15,22 @@
       </button>
     </div>
 
+    <div class="float-controls__schemes" :class="{ 'is-open': colorSchemeOpen }" v-show="colorSchemeOpen">
+      <button
+        v-for="scheme in colorSchemeOptions"
+        :key="scheme.id"
+        class="float-controls__button float-controls__scheme"
+        :class="{ 'is-active': colorScheme === scheme.id }"
+        type="button"
+        :title="scheme.label"
+        :aria-label="scheme.label"
+        :style="{ '--scheme-color': scheme.preview }"
+        @click="selectColorScheme(scheme.id)"
+      >
+        <span class="float-controls__scheme-swatch" aria-hidden="true"></span>
+      </button>
+    </div>
+
     <button
       class="float-controls__button float-controls__opt-dynamic"
       :class="{ 'is-visible': settingsOpen, 'is-active': dynamicBackgroundEnabled }"
@@ -32,9 +48,20 @@
       type="button"
       title="Language"
       aria-label="Language"
-      @click="languageOpen = !languageOpen"
+      @click="toggleLanguagePanel"
     >
       <span class="float-controls__globe">Aa</span>
+    </button>
+
+    <button
+      class="float-controls__button float-controls__opt-color"
+      :class="{ 'is-visible': settingsOpen, 'is-active': colorSchemeOpen }"
+      type="button"
+      title="Color scheme"
+      aria-label="Color scheme"
+      @click="toggleColorSchemePanel"
+    >
+      <el-icon><Brush /></el-icon>
     </button>
 
     <button
@@ -73,16 +100,19 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { MagicStick, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
+import { Brush, MagicStick, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
+import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useThemePreference } from '../../composables/useThemePreference'
 
 const { locale } = useI18n()
 const { dynamicBackgroundEnabled, toggleDynamicBackground } = useBackgroundPreference()
+const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { theme, toggleTheme: toggleThemePreference } = useThemePreference()
 
 const settingsOpen = ref(false)
 const languageOpen = ref(false)
+const colorSchemeOpen = ref(false)
 const atTop = ref(true)
 
 function onScroll() {
@@ -109,7 +139,20 @@ const languages = [
 
 function toggleSettings() {
   settingsOpen.value = !settingsOpen.value
-  if (!settingsOpen.value) languageOpen.value = false
+  if (!settingsOpen.value) {
+    languageOpen.value = false
+    colorSchemeOpen.value = false
+  }
+}
+
+function toggleLanguagePanel() {
+  languageOpen.value = !languageOpen.value
+  if (languageOpen.value) colorSchemeOpen.value = false
+}
+
+function toggleColorSchemePanel() {
+  colorSchemeOpen.value = !colorSchemeOpen.value
+  if (colorSchemeOpen.value) languageOpen.value = false
 }
 
 function selectLanguage(code) {
@@ -117,6 +160,10 @@ function selectLanguage(code) {
   try {
     localStorage.setItem('locale', code)
   } catch {}
+}
+
+function selectColorScheme(scheme) {
+  setColorScheme(scheme)
 }
 
 function scrollToTop() {
@@ -169,7 +216,7 @@ function toggleTheme() {
 
 .float-controls__button:hover,
 .float-controls__button:focus-visible {
-  border-color: rgba(31, 196, 31, 0.5);
+  border-color: rgb(var(--site-accent-rgb) / 0.5);
   color: var(--site-accent);
   transform: translateY(-1px);
   outline: none;
@@ -188,7 +235,7 @@ function toggleTheme() {
 
 .float-controls__settings {
   bottom: 50px;
-  border-color: rgba(31, 196, 31, 0.18);
+  border-color: rgb(var(--site-accent-rgb) / 0.18);
   color: var(--site-text);
   background: rgba(10, 10, 10, 0.74);
   box-shadow:
@@ -215,11 +262,11 @@ function toggleTheme() {
 
 .float-controls__settings:hover,
 .float-controls__settings:focus-visible {
-  border-color: #1fc41f;
+  border-color: var(--site-accent);
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.1);
+  background: rgb(var(--site-accent-rgb) / 0.1);
   box-shadow:
-    0 0 0 1px rgba(31, 196, 31, 0.12),
+    0 0 0 1px rgb(var(--site-accent-rgb) / 0.12),
     0 14px 40px rgba(0, 0, 0, 0.52),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transform: translateY(-1px);
@@ -239,7 +286,7 @@ function toggleTheme() {
 
 :root[data-theme="light"] .float-controls__settings:hover,
 :root[data-theme="light"] .float-controls__settings:focus-visible {
-  border-color: #1fc41f;
+  border-color: var(--site-accent);
   color: var(--site-accent);
   background: rgba(255, 255, 255, 0.78);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
@@ -247,6 +294,7 @@ function toggleTheme() {
 
 .float-controls__opt-dynamic,
 .float-controls__opt-language,
+.float-controls__opt-color,
 .float-controls__opt-theme {
   opacity: 0;
   transform: translateY(8px) scale(0.95);
@@ -266,23 +314,32 @@ function toggleTheme() {
 }
 
 .float-controls__opt-language {
-  bottom: 150px;
+  bottom: 200px;
 }
 
 .float-controls.is-top-hidden .float-controls__opt-language {
+  bottom: 150px;
+}
+
+.float-controls__opt-color {
+  bottom: 150px;
+}
+
+.float-controls.is-top-hidden .float-controls__opt-color {
   bottom: 100px;
 }
 
 .float-controls__opt-dynamic {
-  bottom: 200px;
+  bottom: 250px;
 }
 
 .float-controls.is-top-hidden .float-controls__opt-dynamic {
-  bottom: 150px;
+  bottom: 200px;
 }
 
 .float-controls__opt-dynamic.is-visible,
 .float-controls__opt-language.is-visible,
+.float-controls__opt-color.is-visible,
 .float-controls__opt-theme.is-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -291,8 +348,8 @@ function toggleTheme() {
 
 .float-controls__button.is-active {
   color: var(--site-accent);
-  border-color: rgba(31, 196, 31, 0.58);
-  background: rgba(31, 196, 31, 0.14);
+  border-color: rgb(var(--site-accent-rgb) / 0.58);
+  background: rgb(var(--site-accent-rgb) / 0.14);
 }
 
 .float-controls__globe {
@@ -303,7 +360,7 @@ function toggleTheme() {
 .float-controls__langs {
   position: absolute;
   right: 54px;
-  bottom: 150px;
+  bottom: 200px;
   display: none;
   gap: 10px;
   opacity: 0;
@@ -313,7 +370,7 @@ function toggleTheme() {
 }
 
 .float-controls.is-top-hidden .float-controls__langs {
-  bottom: 100px;
+  bottom: 150px;
 }
 
 .float-controls__langs.is-open {
@@ -329,6 +386,44 @@ function toggleTheme() {
   height: 44px;
   font-size: 12px;
   font-weight: 900;
+}
+
+.float-controls__schemes {
+  position: absolute;
+  right: 54px;
+  bottom: 150px;
+  display: none;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+  transition: transform 180ms ease, opacity 180ms ease, bottom 200ms ease;
+}
+
+.float-controls.is-top-hidden .float-controls__schemes {
+  bottom: 100px;
+}
+
+.float-controls__schemes.is-open {
+  display: flex;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.float-controls__scheme {
+  position: static;
+  width: 44px;
+  height: 44px;
+}
+
+.float-controls__scheme-swatch {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.64);
+  border-radius: 50%;
+  background: var(--scheme-color);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.28);
 }
 
 @keyframes settings-spin {
@@ -366,24 +461,32 @@ function toggleTheme() {
   }
 
   .float-controls__opt-language {
-    bottom: 138px;
+    bottom: 184px;
   }
 
   .float-controls.is-top-hidden .float-controls__opt-language {
+    bottom: 138px;
+  }
+
+  .float-controls__opt-color {
+    bottom: 138px;
+  }
+
+  .float-controls.is-top-hidden .float-controls__opt-color {
     bottom: 92px;
   }
 
   .float-controls__opt-dynamic {
-    bottom: 184px;
+    bottom: 230px;
   }
 
   .float-controls.is-top-hidden .float-controls__opt-dynamic {
-    bottom: 138px;
+    bottom: 184px;
   }
 
   .float-controls__langs {
     right: 48px;
-    bottom: 138px;
+    bottom: 184px;
     grid-template-columns: repeat(3, 38px);
     column-gap: 8px;
     row-gap: 6px;
@@ -396,13 +499,33 @@ function toggleTheme() {
   }
 
   .float-controls.is-top-hidden .float-controls__langs {
+    bottom: 138px;
+  }
+
+  .float-controls__schemes {
+    right: 48px;
+    bottom: 138px;
+  }
+
+  .float-controls.is-top-hidden .float-controls__schemes {
     bottom: 92px;
+  }
+
+  .float-controls__scheme {
+    width: 38px;
+    height: 38px;
+  }
+
+  .float-controls__scheme-swatch {
+    width: 18px;
+    height: 18px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .float-controls__button,
-  .float-controls__langs {
+  .float-controls__langs,
+  .float-controls__schemes {
     transition: none;
   }
 

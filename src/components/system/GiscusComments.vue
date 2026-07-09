@@ -38,6 +38,7 @@ const containerRef = ref(null)
 const renderKey = ref(0)
 const isActiveLayout = ref(false)
 const currentTheme = ref('dark')
+const currentColorScheme = ref('purple')
 const excludedRouteNames = new Set(['search', 'capture-detail', 'not-found'])
 const showConfigHint = import.meta.env.DEV
 
@@ -116,13 +117,20 @@ function readSiteTheme() {
   return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
 }
 
-function updateCurrentTheme() {
+function readSiteColorScheme() {
+  if (typeof document === 'undefined') return 'purple'
+  return document.documentElement.getAttribute('data-color-scheme') === 'green' ? 'green' : 'purple'
+}
+
+function updateCurrentAppearance() {
   currentTheme.value = readSiteTheme()
+  currentColorScheme.value = readSiteColorScheme()
 }
 
 function resolveTheme(theme) {
   if (theme === 'nexus') {
-    const themeFile = currentTheme.value === 'light' ? 'giscus-nexus-light.css' : 'giscus-nexus.css'
+    const themeBase = currentColorScheme.value === 'green' ? 'giscus-nexus-green' : 'giscus-nexus'
+    const themeFile = currentTheme.value === 'light' ? `${themeBase}-light.css` : `${themeBase}.css`
     return new URL(`${import.meta.env.BASE_URL}${themeFile}`, window.location.origin).toString()
   }
 
@@ -196,11 +204,11 @@ function resetAndRender() {
 onMounted(() => {
   initGiscusAuthBridge()
   mediaQuery = window.matchMedia('(max-width: 900px)')
-  updateCurrentTheme()
-  themeObserver = new MutationObserver(updateCurrentTheme)
+  updateCurrentAppearance()
+  themeObserver = new MutationObserver(updateCurrentAppearance)
   themeObserver.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme'],
+    attributeFilter: ['data-theme', 'data-color-scheme'],
   })
   updateActiveLayout()
 
@@ -236,7 +244,7 @@ watch(() => route.fullPath, resetAndRender)
 watch(() => props.term, resetAndRender)
 watch(() => props.source, resetAndRender)
 watch(shouldRender, resetAndRender)
-watch(currentTheme, () => {
+watch([currentTheme, currentColorScheme], () => {
   if (activeConfig.value.theme === 'nexus') syncGiscusTheme()
 })
 </script>

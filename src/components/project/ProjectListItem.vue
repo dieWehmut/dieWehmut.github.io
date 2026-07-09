@@ -98,8 +98,8 @@ function openProject(event?: MouseEvent | KeyboardEvent) {
 
 .project-item:hover,
 .project-item:focus-visible {
-  border-color: rgba(31, 196, 31, 0.45);
-  background: rgba(31, 196, 31, 0.04);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
+  background: rgb(var(--site-accent-rgb) / 0.04);
   transform: translateY(-2px);
   outline: none;
 }
@@ -175,7 +175,7 @@ function openProject(event?: MouseEvent | KeyboardEvent) {
 .project-item__actions a:hover,
 .project-item__actions a:focus-visible {
   color: var(--site-accent);
-  border-color: rgba(31, 196, 31, 0.45);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
   transform: translateY(-1px);
   text-decoration: none;
   outline: none;

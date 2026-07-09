@@ -429,7 +429,7 @@ function serviceOverflowCount(item) {
 .infra-core__sphere {
   width: 82%;
   height: 82%;
-  filter: drop-shadow(0 0 var(--infra-core-shadow) rgba(31, 196, 31, 0.24));
+  filter: drop-shadow(0 0 var(--infra-core-shadow) rgb(var(--site-accent-rgb) / 0.24));
   animation: core-sphere-spin 35s linear infinite;
 }
 
@@ -460,7 +460,7 @@ function serviceOverflowCount(item) {
 .infra-core__counts span {
   padding: var(--infra-count-padding-y) var(--infra-count-padding-x);
   border-radius: 999px;
-  color: #32e47a;
+  color: var(--site-accent);
   background: rgba(0, 20, 28, 0.42);
   font-size: var(--infra-count-size);
   font-weight: 950;
@@ -497,7 +497,7 @@ function serviceOverflowCount(item) {
   height: 1px;
   pointer-events: none;
   transform-origin: 0 50%;
-  background: linear-gradient(to right, rgba(31, 196, 31, 0.55), rgba(31, 196, 31, 0.12));
+  background: linear-gradient(to right, rgb(var(--site-accent-rgb) / 0.55), rgb(var(--site-accent-rgb) / 0.12));
 }
 
 .infra-node {
@@ -540,7 +540,7 @@ function serviceOverflowCount(item) {
 .infra-node:hover .infra-node__inner,
 .infra-node.is-clickable:focus-visible .infra-node__inner {
   color: var(--site-accent);
-  filter: drop-shadow(0 0 var(--infra-hover-shadow) rgba(31, 196, 31, 0.25));
+  filter: drop-shadow(0 0 var(--infra-hover-shadow) rgb(var(--site-accent-rgb) / 0.25));
   --infra-node-scale: 1.05;
   outline: none;
 }
@@ -593,13 +593,13 @@ function serviceOverflowCount(item) {
 }
 
 :root[data-theme="light"] .infra-core__counts span {
-  color: #078a31;
+  color: var(--site-accent);
   background: rgba(255, 255, 255, 0.72);
   box-shadow: inset 0 0 0 1px rgba(0, 126, 210, 0.18);
 }
 
 :root[data-theme="light"] .infra-line {
-  background: linear-gradient(to right, rgba(26, 158, 26, 0.7), rgba(26, 158, 26, 0.15));
+  background: linear-gradient(to right, rgb(var(--site-accent-rgb) / 0.7), rgb(var(--site-accent-rgb) / 0.15));
 }
 
 .infra-node__icon-frame {
@@ -784,8 +784,8 @@ function serviceOverflowCount(item) {
 
 .infra-mobile-item:hover,
 .infra-mobile-item.is-clickable:focus-visible {
-  border-color: rgba(31, 196, 31, 0.45);
-  background: rgba(31, 196, 31, 0.04);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
+  background: rgb(var(--site-accent-rgb) / 0.04);
   transform: translateY(-2px);
   outline: none;
 }
@@ -906,7 +906,7 @@ function serviceOverflowCount(item) {
 .infra-mobile-item > a:hover,
 .infra-mobile-item > a:focus-visible {
   color: var(--site-accent);
-  border-color: rgba(31, 196, 31, 0.45);
+  border-color: rgb(var(--site-accent-rgb) / 0.45);
   transform: translateY(-1px);
   text-decoration: none;
   outline: none;

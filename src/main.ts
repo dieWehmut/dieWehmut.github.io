@@ -11,11 +11,13 @@ import "katex/dist/katex.min.css";
 import App from "./App.vue";
 import i18n from "./i18n";
 import router from "./router";
+import { initColorSchemePreference } from "./composables/useColorSchemePreference";
 import { initThemePreference } from "./composables/useThemePreference";
 import { siteConfig } from "./data/site/config";
 import { getGitHubAvatarUrl } from "./utils/githubAvatar";
 
-initThemePreference();
+const initialTheme = initThemePreference();
+initColorSchemePreference(initialTheme);
 
 document.title = siteConfig.title;
 const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');

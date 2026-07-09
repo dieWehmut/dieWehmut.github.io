@@ -116,7 +116,7 @@ h2 {
   place-items: center;
   border-radius: 999px;
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.1);
+  background: rgb(var(--site-accent-rgb) / 0.1);
   font-weight: 800;
 }
 

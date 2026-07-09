@@ -36,7 +36,7 @@ function onInput(event: Event) {
 }
 
 .search-input:focus-within {
-  border-color: rgba(31, 196, 31, 0.55);
+  border-color: rgb(var(--site-accent-rgb) / 0.55);
 }
 
 .search-input__icon {

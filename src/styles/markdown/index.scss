@@ -22,8 +22,8 @@
   --md-mark-text: #e6edf3;
   --md-del-color: #f85149;
   --md-ins-color: #56d364;
-  --md-math-bg: rgba(31, 196, 31, 0.055);
-  --md-math-border: rgba(31, 196, 31, 0.18);
+  --md-math-bg: rgb(var(--site-accent-rgb) / 0.055);
+  --md-math-border: rgb(var(--site-accent-rgb) / 0.18);
   --md-kbd-bg: #161b22;
   --md-kbd-border: #30363d;
   --md-kbd-shadow: rgba(110, 118, 129, 0.4);
@@ -52,8 +52,8 @@
   --md-mark-text: #1f2328;
   --md-del-color: #82071e;
   --md-ins-color: #116329;
-  --md-math-bg: rgba(31, 196, 31, 0.06);
-  --md-math-border: rgba(31, 196, 31, 0.22);
+  --md-math-bg: rgb(var(--site-accent-rgb) / 0.06);
+  --md-math-border: rgb(var(--site-accent-rgb) / 0.22);
   --md-kbd-bg: #f6f8fa;
   --md-kbd-border: #d0d7de;
   --md-kbd-shadow: rgba(175, 184, 193, 0.2);
@@ -282,17 +282,17 @@
 
 .md-editable-action--restore {
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.12);
+  background: rgb(var(--site-accent-rgb) / 0.12);
 }
 
 .md-code-copy.is-copied {
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.12);
+  background: rgb(var(--site-accent-rgb) / 0.12);
 }
 
 .md-code-copy.is-copied:hover {
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.18);
+  background: rgb(var(--site-accent-rgb) / 0.18);
 }
 
 .md-code-copy.is-failed {
@@ -308,18 +308,18 @@
 
 .md-editable-action--run {
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.1);
+  background: rgb(var(--site-accent-rgb) / 0.1);
 }
 
 .md-editable-action--run:hover,
 .md-editable-action--run:focus-visible {
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.18);
+  background: rgb(var(--site-accent-rgb) / 0.18);
 }
 
 .md-editable-action--run.is-running {
   color: var(--site-accent);
-  background: rgba(31, 196, 31, 0.16);
+  background: rgb(var(--site-accent-rgb) / 0.16);
 }
 
 .md-run-output {
@@ -625,7 +625,7 @@
 }
 
 .md-copy-toast--success {
-  border-color: rgba(31, 196, 31, 0.26);
+  border-color: rgb(var(--site-accent-rgb) / 0.26);
 }
 
 .md-copy-toast--failed {

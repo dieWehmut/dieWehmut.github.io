@@ -893,17 +893,26 @@ function escapeStyleEndTag(value: string): string {
   return value.replace(/<\/style/gi, '<\\/style')
 }
 
-const IFRAME_SCROLLBAR_CSS = `
-*{scrollbar-width:thin;scrollbar-color:rgba(31,196,31,0.58) rgba(31,196,31,0.10);}
+function readSiteAccentRgb(): string {
+  if (typeof window === 'undefined') return '155 61 255'
+  return getComputedStyle(document.documentElement).getPropertyValue('--site-accent-rgb').trim() || '155 61 255'
+}
+
+function iframeScrollbarCss(): string {
+  const accentRgb = readSiteAccentRgb()
+
+  return `
+*{scrollbar-width:thin;scrollbar-color:rgb(${accentRgb} / 0.58) rgb(${accentRgb} / 0.10);}
 *::-webkit-scrollbar{width:12px;height:12px;}
-*::-webkit-scrollbar-track{border-radius:999px;background:rgba(31,196,31,0.10);box-shadow:inset 0 0 0 1px rgba(31,196,31,0.08);}
-*::-webkit-scrollbar-thumb{border:3px solid transparent;border-radius:999px;background:rgba(31,196,31,0.72);background-clip:padding-box;}
-*::-webkit-scrollbar-thumb:hover{background:#1fc41f;background-clip:padding-box;}
-*::-webkit-scrollbar-thumb:active{background:#0a8a0a;background-clip:padding-box;}
+*::-webkit-scrollbar-track{border-radius:999px;background:rgb(${accentRgb} / 0.10);box-shadow:inset 0 0 0 1px rgb(${accentRgb} / 0.08);}
+*::-webkit-scrollbar-thumb{border:3px solid transparent;border-radius:999px;background:rgb(${accentRgb} / 0.72);background-clip:padding-box;}
+*::-webkit-scrollbar-thumb:hover{background:rgb(${accentRgb} / 1);background-clip:padding-box;}
+*::-webkit-scrollbar-thumb:active{background:rgb(${accentRgb} / 0.82);background-clip:padding-box;}
 `
+}
 
 function injectStyleIntoHtml(html: string, css: string): string {
-  const combined = `${IFRAME_SCROLLBAR_CSS}\n${css}`
+  const combined = `${iframeScrollbarCss()}\n${css}`
   const style = `<style>${escapeStyleEndTag(combined)}</style>`
   if (/<\/head\s*>/i.test(html)) return html.replace(/<\/head\s*>/i, `${style}</head>`)
   if (/<html[\s>]/i.test(html)) return html.replace(/<html([^>]*)>/i, `<html$1><head>${style}</head>`)
@@ -911,7 +920,7 @@ function injectStyleIntoHtml(html: string, css: string): string {
 }
 
 function defaultStylePreviewHtml(css: string): string {
-  const combined = `${IFRAME_SCROLLBAR_CSS}\n${css}`
+  const combined = `${iframeScrollbarCss()}\n${css}`
   return [
     '<!doctype html>',
     '<html lang="en">',
