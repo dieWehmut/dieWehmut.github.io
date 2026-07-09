@@ -38,6 +38,13 @@ export const pages = ref<WebsiteEntry[]>([
     url: 'https://ba-network.hc-dsw-nexus.me',
   },
   {
+    name: 'monogatari',
+    displayName: 'monogatari',
+    repoUrl: 'https://github.com/dieWehmut/monogatari',
+    date: '2026-3-14',
+    url: 'https://diewehmut.github.io/monogatari',
+  },
+  {
     name: 'leereriss',
     displayName: 'leereriss',
     repoUrl: 'https://github.com/dieWehmut/LeereRiss',

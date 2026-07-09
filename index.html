@@ -18,6 +18,26 @@
         document.documentElement.style.colorScheme = theme;
       })();
     </script>
+    <script>
+      // This file is also emitted as 404.html (see copy404Plugin in vite.config).
+      // GitHub Pages serves it as the fallback for any path this user site does
+      // not own, including deep links into the separate "monogatari" project
+      // site. Route those deep links to the project entry so its SPA can boot.
+      (function () {
+        try {
+          var base = '/monogatari/';
+          var path = window.location.pathname;
+          // Only redirect DEEPER paths (e.g. /monogatari/story/1), never the
+          // entry itself. If monogatari is not published yet its entry also
+          // falls back here; skipping it prevents an infinite redirect loop.
+          // On this site's own pages (path does not start with base) nothing
+          // happens, so the Nexus home is unaffected.
+          if (path.indexOf(base) === 0 && path !== base) {
+            window.location.replace(base);
+          }
+        } catch (error) {}
+      })();
+    </script>
     <title>My Site</title>
   </head>
   <body>
