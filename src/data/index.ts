@@ -106,13 +106,13 @@ export function getProjectEntries(): ProjectEntry[] {
   const templateEntries: ProjectEntry[] = (templates.value || []).flatMap((group) =>
     (group.manualItems || []).map((item: SiteProjectItem, index: number) => ({
       id: `template:${item.name || index}`,
-      name: item.name || `Template ${index + 1}`,
+      name: item.name || `模板 ${index + 1}`,
       category: 'templates',
-      categoryLabel: 'Templates',
+      categoryLabel: '模板',
       date: item.lastModified || item.date,
       url: projectUrl(item),
       repoUrl: projectRepo(item),
-      description: 'Template project',
+      description: '模板项目',
       actionLabel: 'Open',
     }))
   )

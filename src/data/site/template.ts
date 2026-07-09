@@ -4,11 +4,11 @@ import { siteConfig } from './config'
 
 export const templates = ref<SiteProjectGroup[]>([
   {
-    name: 'Templates',
+    name: '模板',
     autoLoad: true,
     owner: siteConfig.githubUser,
     repo: 'diesuwa-starter',
-    description: 'Static templates list',
+    description: '静态模板列表',
     manualItems: [
       {
         name: 'diesuwa-starter',

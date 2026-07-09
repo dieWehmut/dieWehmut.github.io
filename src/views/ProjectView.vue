@@ -31,7 +31,7 @@ const labels: Record<ProjectEntry['category'], string> = {
   games: 'Games',
   apps: 'Apps',
   tools: 'Tools',
-  templates: 'Templates',
+  templates: '模板',
 }
 const categoryIcons: Record<ProjectEntry['category'], unknown> = {
   websites: Connection,

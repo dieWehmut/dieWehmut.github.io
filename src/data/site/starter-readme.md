@@ -6,16 +6,12 @@
 
 <div align="center">
 
-<div>
 <a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
   <img src="https://img.shields.io/badge/%E6%A8%A1%E6%9D%BF-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="模板 Demo">
 </a>
 <a href="https://diewehmut.github.io/" target="_blank">
   <img src="https://img.shields.io/badge/%E6%88%90%E5%93%81-DEMO-F9D553?style=flat-square&logo=google-chrome&logoColor=white&labelColor=555555" alt="成品 Demo">
 </a>
-</div>
-
-<div>
 <a href="https://vuejs.org/" target="_blank">
   <img src="https://img.shields.io/badge/VUE-3-42B883?style=flat-square&logo=vuedotjs&logoColor=white&labelColor=555555" alt="Vue 3">
 </a>
@@ -25,27 +21,26 @@
 <a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
 </a>
-</div>
 
 </div>
 
 <div align="center">
 
-简体中文 | [繁體中文](docs/README.zh-TW.md) | [English](docs/README.en.md) | [日本語](docs/README.ja.md)
+简体中文 | [繁體中文](docs/README.zh-TW.md) | [English](docs/README.en.md)
 
 </div>
 
 ---
 
-`diesuwa-starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，集成了 **Sandkasten 在线代码沙箱** 与 **Uptime Kuma 服务器监控**，适合搭建博客、笔记、项目展示、友链页和带运维看板的静态资料页。模板可以直接部署到 GitHub Pages，也支持 Vercel / Netlify 等静态托管平台。
+`diesuwa-starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，适合用来搭建博客、笔记、项目展示、友链页和轻量级状态看板。它可以部署到 GitHub Pages，也可以部署到 Vercel、Netlify、Cloudflare Pages 等静态托管平台。
+
+如果你希望长期跟进模板更新，推荐使用 **Fork**，而不是 `Use this template`。Fork 会保留上游仓库关系，后续可以直接同步最新模板代码。
 
 ## 示例
 
-- 示例仓库：<https://github.com/dieWehmut/dieWehmut.github.io>
+- 模板仓库：<https://github.com/dieWehmut/diesuwa-starter>
 - 模板示例：<https://diewehmut.github.io/diesuwa-starter/>
 - 成品示例：<https://diewehmut.github.io/>
-
-如果模板示例无法打开，请先检查仓库 `Settings -> Pages -> Source` 是否设置为 `GitHub Actions`。模板的部署工作流会自动为项目页仓库设置 Vite `base`，例如 `diesuwa-starter` 会构建为 `/diesuwa-starter/`。
 
 ## 功能
 
@@ -55,9 +50,8 @@
 - KaTeX 数学公式
 - 归档、标签、搜索
 - 友链页面
-- 项目展示页，可关闭
-- 基础设施状态页（可关闭），支持接入 [Uptime Kuma](https://github.com/louislam/uptime-kuma) 公开状态页，自动渲染心跳/延迟
-- 内置 [Sandkasten](https://github.com/dieWehmut/sandkasten) 在线代码沙箱前端，可直接在文章中跑代码
+- 项目展示页，可通过配置关闭
+- 基础设施状态页，可通过配置关闭
 - Giscus 评论，可选
 - 多语言界面
 - 响应式移动端布局
@@ -65,32 +59,46 @@
 
 ## 快速开始
 
-### 1. 创建仓库
+### 1. Fork 仓库
 
-在 GitHub 点击 `Use this template`，或手动克隆：
+在 GitHub 打开 <https://github.com/dieWehmut/diesuwa-starter>，点击 `Fork`，创建到自己的账号或组织下。
+
+然后克隆你的 Fork：
 
 ```bash
-git clone https://github.com/dieWehmut/diesuwa-starter.git my-site
-cd my-site
-rm -rf .git
-git init
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/YOUR_USERNAME/diesuwa-starter.git
+cd diesuwa-starter
+git remote add upstream https://github.com/dieWehmut/diesuwa-starter.git
+```
+
+如果你已经用 `Use this template` 创建了仓库，也可以继续使用，只是后续同步上游会麻烦一些。建议手动添加上游：
+
+```bash
+git remote add upstream https://github.com/dieWehmut/diesuwa-starter.git
 ```
 
 ### 2. 安装依赖
+
+推荐使用 pnpm：
 
 ```bash
 pnpm install
 ```
 
-### 3. 修改个人配置
+也可以使用 npm：
 
-编辑 `src/data/site/config.ts`：
+```bash
+npm install
+```
+
+### 3. 修改站点配置
+
+优先编辑 `src/data/site/config.ts`：
 
 ```ts
 export const siteConfig = {
   githubUser: 'your-github-username',
-  githubRepo: 'your-github-username.github.io',
+  githubRepo: 'your-repo-name',
   owner: 'your-name',
   displayName: 'your-name',
   email: 'you@example.com',
@@ -98,8 +106,8 @@ export const siteConfig = {
   title: 'my-nexus',
   subtitle: 'my-nexus',
   description: 'Hi! This is my personal site.',
-  siteUrl: 'https://your-github-username.github.io',
-  startedAt: '2026-05-01T00:00:00+08:00',
+  siteUrl: 'https://your-github-username.github.io/your-repo-name',
+  startedAt: '2026-01-01T00:00:00+08:00',
 
   googleAnalyticsId: '',
 
@@ -109,20 +117,43 @@ export const siteConfig = {
   enableInfra: false,
   enableProject: false,
 
-  codeRunner: {
-    backendApiUrl: import.meta.env.VITE_CODE_RUNNER_API_URL || '',
-    backendToken: import.meta.env.VITE_CODE_RUNNER_API_TOKEN || '',
-  },
-
   links: [
     { label: 'GitHub', url: 'https://github.com/your-github-username' },
   ],
 }
 ```
 
-如果部署到 `https://YOUR_USERNAME.github.io/YOUR_REPO/`，请把 `siteUrl` 改成完整地址。工作流会自动处理构建路径。
+几个容易忽略的字段：
 
-### 4. 添加内容
+- `githubUser`：你的 GitHub 用户名或组织名。
+- `githubRepo`：部署这个站点的仓库名。
+- `siteUrl`：最终访问地址。项目页仓库通常是 `https://YOUR_USERNAME.github.io/YOUR_REPO/`。
+- `enableInfra`：是否显示基础设施状态页。
+- `enableProject`：是否显示项目展示页。
+
+### 4. 配置 GitHub Pages 路径
+
+如果仓库名是 `YOUR_USERNAME.github.io`，或者你使用自定义域名，`vite.config.ts` 里的 `base` 保持 `/` 即可。
+
+如果部署到项目页仓库，例如 `https://YOUR_USERNAME.github.io/diesuwa-starter/`，请把 `vite.config.ts` 里的：
+
+```ts
+const base = '/'
+```
+
+改成：
+
+```ts
+const base = '/diesuwa-starter/'
+```
+
+如果你把仓库改名为 `my-site`，这里就写：
+
+```ts
+const base = '/my-site/'
+```
+
+### 5. 添加内容
 
 | 内容 | 位置 | 格式 |
 |---|---|---|
@@ -130,7 +161,7 @@ export const siteConfig = {
 | 笔记 | `src/data/docs/notes/*.md` | Markdown + frontmatter |
 | 关于页 | `src/data/site/about.md` | Markdown |
 | 友链 | `src/data/site/friends.ts` | TypeScript 数组 |
-| 项目 | `src/data/site/app.ts`、`game.ts`、`page.ts`、`tool.ts` | TypeScript |
+| 项目 | `src/data/site/app.ts`, `game.ts`, `page.ts`, `tool.ts` | TypeScript |
 | 基础设施 | `src/data/site/infra.ts` | TypeScript 数组 |
 
 Frontmatter 示例：
@@ -145,7 +176,7 @@ tags: [hello, intro]
 这里写正文。支持代码高亮、表格、链接、图片和 KaTeX 数学公式。
 ```
 
-### 5. 本地运行
+### 6. 本地运行
 
 ```bash
 pnpm dev
@@ -153,19 +184,52 @@ pnpm dev
 
 默认地址是 `http://localhost:5173`。
 
-### 6. 部署到 GitHub Pages
+构建检查：
+
+```bash
+pnpm build
+```
+
+预览生产构建：
+
+```bash
+pnpm preview
+```
+
+## 部署到 GitHub Pages
 
 模板自带 `.github/workflows/deploy.yml`。推送到 `main` 后会自动构建并部署。
 
 你需要在 GitHub 仓库里确认：
 
-1. 进入 `Settings -> Pages`
-2. `Source` 选择 `GitHub Actions`
-3. 如果仓库名不是 `YOUR_USERNAME.github.io`，访问地址会是 `https://YOUR_USERNAME.github.io/YOUR_REPO/`
+1. 进入 `Settings -> Pages`。
+2. `Source` 选择 `GitHub Actions`。
+3. 如果使用项目页仓库，确认 `vite.config.ts` 的 `base` 与仓库名一致。
+4. 如果使用自定义域名，在 `public/CNAME` 写入域名，并在 DNS 里配置到 GitHub Pages。
+
+部署完成后，GitHub Actions 的 `Deploy to GitHub Pages` 任务会给出最终访问地址。
+
+## 部署到 Vercel / Netlify / Cloudflare Pages
+
+通用配置：
+
+- Framework preset：`Vite`
+- Install command：`pnpm install`
+- Build command：`pnpm build`
+- Output directory：`dist`
+- Node.js：建议 `20`
+
+如果平台部署在域名根路径，`vite.config.ts` 的 `base` 使用 `/`。如果部署在子路径，需要按平台文档配置子路径并同步修改 `base`。
 
 ## Giscus 评论
 
-复制 `.env.example` 为 `.env.local`，然后填入 Giscus 配置：
+评论功能是可选的。先在 <https://giscus.app> 为你的仓库生成配置，然后复制 `.env.example`：
+
+```bash
+cp .env.example .env.local
+```
+
+填入：
 
 ```env
 VITE_GISCUS_REPO=your-username/your-repo
@@ -174,18 +238,55 @@ VITE_GISCUS_CATEGORY=Announcements
 VITE_GISCUS_CATEGORY_ID=DIC_xxxxx
 ```
 
-为空时评论区会自动隐藏。
+这些 `VITE_` 变量会被打包进前端，请不要放入私密 token。部署到 GitHub Pages 时，可以提交只包含公开 Giscus ID 的 `.env.production`，也可以把变量写入 GitHub Actions 的 `env`。
 
-## Go 代码运行
+## 同步上游更新
 
-模板统一使用 Sandkasten 后端运行代码。部署前请配置：
+如果你是 Fork 仓库，GitHub 页面上通常会出现 `Sync fork` 按钮，点击即可同步上游。
 
-```env
-VITE_CODE_RUNNER_API_URL=https://your-sandkasten-api.example.com
-VITE_CODE_RUNNER_API_TOKEN=
+也可以用命令行同步：
+
+```bash
+git remote -v
+git fetch upstream
+git checkout main
+git merge upstream/main
+pnpm install
+pnpm build
+git push origin main
 ```
 
-`VITE_CODE_RUNNER_API_TOKEN` 会出现在构建后的前端 JavaScript 中，不要把私密服务端 token 放在这里；生产环境应使用公开客户端 token、限流网关或反向代理。
+如果出现冲突，优先保留你自己的站点内容文件，例如：
+
+- `src/data/site/config.ts`
+- `src/data/site/about.md`
+- `src/data/site/friends.ts`
+- `src/data/site/app.ts`
+- `src/data/site/game.ts`
+- `src/data/site/page.ts`
+- `src/data/site/tool.ts`
+- `src/data/site/infra.ts`
+- `src/data/docs/posts/**`
+- `src/data/docs/notes/**`
+
+处理冲突后运行：
+
+```bash
+pnpm build
+git status
+git add .
+git commit
+git push origin main
+```
+
+如果你是用 `Use this template` 创建的仓库，第一次合并上游时可能需要：
+
+```bash
+git fetch upstream
+git merge upstream/main --allow-unrelated-histories
+```
+
+长期维护仍然建议改成 Fork 工作流。
 
 ## 项目结构
 
@@ -217,18 +318,29 @@ src/
 
 ```bash
 pnpm dev
-pnpm typecheck
 pnpm build
 pnpm preview
 ```
 
 ## 自定义建议
 
-- 主题颜色：修改 `src/styles/theme/`
-- 字体：替换 `src/assets/fonts/` 并更新 `src/styles/fonts/index.scss`
-- 背景效果：修改 `src/components/background/`
-- 多语言：修改 `src/locales/`
-- 页面开关：修改 `src/data/site/config.ts`
+- 主题颜色：修改 `src/styles/theme/`。
+- 字体：替换 `src/assets/fonts/` 并更新 `src/styles/fonts/index.scss`。
+- 背景效果：修改 `src/components/background/`。
+- 多语言：修改 `src/locales/`。
+- 页面开关：修改 `src/data/site/config.ts`。
+- 项目与内容：优先改 `src/data/site/` 和 `src/data/docs/`，减少和模板核心代码的冲突。
+
+## 贡献指南
+
+欢迎提交 Issue 和 Pull Request。为了让维护和同步更顺畅，请尽量遵守这些约定：
+
+1. 大改动先开 Issue 说明动机、影响范围和预期行为。
+2. 从最新 `main` 新建分支，例如 `feat/search-polish` 或 `fix/pages-base`。
+3. 保持改动聚焦，不要把个人站点内容和模板功能改动混在同一个 PR。
+4. 提交前运行 `pnpm build`。
+5. 如果改动影响配置、部署或使用方式，同步更新 README。
+6. PR 描述里写清楚改了什么、如何验证、是否有兼容性影响。
 
 ## 许可
 
