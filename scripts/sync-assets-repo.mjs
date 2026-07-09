@@ -8,7 +8,6 @@ const defaultAssetsDir = path.resolve(rootDir, '..', 'diesw-assets')
 const assetsDir = path.resolve(rootDir, process.env.DIESW_ASSETS_DIR?.trim() || defaultAssetsDir)
 const docsDir = path.join(rootDir, 'src', 'data', 'docs')
 const publicCaptureDir = path.join(rootDir, 'public', 'capture-assets')
-const infraAssetsDir = path.join(rootDir, 'src', 'assets', 'infra')
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true })
@@ -73,7 +72,6 @@ function mirrorPublicCaptureAssetsToAssetsRepo() {
   copyDirContents(path.join(publicCaptureDir, 'standalone'), path.join(assetsDir, 'standalone'))
   copyDirContents(path.join(publicCaptureDir, 'local'), path.join(assetsDir, 'local'))
   copyDirContents(path.join(publicCaptureDir, 'infra'), path.join(assetsDir, 'infra'))
-  copyDirContents(infraAssetsDir, path.join(assetsDir, 'infra'))
 }
 
 function fail(message) {

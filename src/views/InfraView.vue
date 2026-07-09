@@ -121,42 +121,6 @@ import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
 import { useKumaStatus } from '../composables/useKumaStatus'
 const { t } = useI18n()
-const infraIconModules = import.meta.glob(
-  [
-    '../assets/infra/coder.svg',
-    '../assets/infra/codex-manager.png',
-    '../assets/infra/coolify.svg',
-    '../assets/infra/docker.svg',
-    '../assets/infra/dsm.svg',
-    '../assets/infra/gitea.svg',
-    '../assets/infra/gitlab.svg',
-    '../assets/infra/jenkins.svg',
-    '../assets/infra/mirror.svg',
-    '../assets/infra/navidrome.png',
-    '../assets/infra/netdata.svg',
-    '../assets/infra/netmaker.png',
-    '../assets/infra/nextcloud.svg',
-    '../assets/infra/nezha.svg',
-    '../assets/infra/nginx-ui.png',
-    '../assets/infra/nixos.svg',
-    '../assets/infra/openlist.svg',
-    '../assets/infra/openwrt.png',
-    '../assets/infra/plex.svg',
-    '../assets/infra/pve.svg',
-    '../assets/infra/sandkasten.svg',
-    '../assets/infra/sub2api.png',
-    '../assets/infra/uptime-kuma.svg',
-    '../assets/infra/vscode.png',
-  ],
-  {
-    eager: true,
-    import: 'default',
-    query: '?url',
-  }
-)
-const infraIconMap = Object.fromEntries(
-  Object.entries(infraIconModules).map(([path, url]) => [path.split('/').pop(), url])
-)
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
 const orbitImg = infraAsset('y-bg.png')
@@ -304,7 +268,7 @@ const offlineCount = computed(() => {
 })
 
 function infraIconSrc(item, index = 0) {
-  return infraIconMap[item.icon] || infraIconMap[`${item.key}.svg`] || infraIconMap[`${item.key}.png`] || rings[index % rings.length]
+  return item.icon ? infraAsset(item.icon) : rings[index % rings.length]
 }
 
 function infraKeyClass(item) {
