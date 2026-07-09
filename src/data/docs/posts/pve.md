@@ -18,7 +18,7 @@ apt install xxx -y
 >e.g:curl, git, unzip,wget, etc.
 
 ```bash
-apt install curl git unzip wget tree vim htop gh -y
+apt install curl git unzip wget tree vim htop gh sudo -y
 ```
 
 ## Docker
