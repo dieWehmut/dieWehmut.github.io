@@ -156,6 +156,21 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "path": "./notes/LinearAlgebra.md"
   },
   {
+    "id": "cognitiveScience",
+    "type": "note",
+    "title": "Cognitive Science Notes",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "认知科学 (Cognitive Science) 手写笔记原图存档。\n1 (1).png\n1 (2).png\n1 (3).png\n1 (4).png\n1 (5).png\n1 (6).png\n1 (7).png\n1 (8).png\n1...",
+    "wordCount": 214,
+    "readingMinutes": 1,
+    "updated": "",
+    "path": "./notes/cognitiveScience.md"
+  },
+  {
     "id": "HighSchoolChemistry",
     "type": "note",
     "title": "High School Chemistry Notes Summary",

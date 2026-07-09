@@ -45,6 +45,32 @@ function copyFilesToDir(files, sourceDir, targetDir) {
   }
 }
 
+function parseFrontmatterDate(markdownText) {
+  const match = markdownText.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!match) return ''
+  const dateLine = match[1].split(/\r?\n/).find((line) => /^date:/.test(line.trim()))
+  if (!dateLine) return ''
+  return dateLine.replace(/^\s*date:\s*/, '').replace(/^["']|["']$/g, '').trim()
+}
+
+function docsFolderFromMarkdown(markdownText) {
+  const match = markdownText.match(/capture-assets\/docs\/([^/"'\s)]+)\//)
+  return match ? match[1] : ''
+}
+
+// Derive a folder->date manifest straight from the markdown frontmatter so
+// monogatari (which has no markdown) can still date each docs image group.
+function buildDocsMetaManifest() {
+  const meta = {}
+  for (const filePath of walkFiles(docsDir).filter(isMarkdown)) {
+    const markdownText = fs.readFileSync(filePath, 'utf8')
+    const folder = docsFolderFromMarkdown(markdownText)
+    const date = parseFrontmatterDate(markdownText)
+    if (folder && date && !meta[folder]) meta[folder] = date
+  }
+  return meta
+}
+
 function mirrorDocsImagesToAssetsRepo() {
   const targetDocsDir = path.join(assetsDir, 'docs')
   const publicDocsDir = path.join(publicCaptureDir, 'docs')
@@ -60,6 +86,14 @@ function mirrorDocsImagesToAssetsRepo() {
   fs.rmSync(targetDocsDir, { recursive: true, force: true })
   copyFilesToDir(publicDocImages, publicDocsDir, targetDocsDir)
   copyFilesToDir(localDocImages, docsDir, targetDocsDir)
+
+  const docsMeta = buildDocsMetaManifest()
+  ensureDir(targetDocsDir)
+  fs.writeFileSync(
+    path.join(targetDocsDir, 'docs-meta.json'),
+    `${JSON.stringify(docsMeta, null, 2)}\n`,
+  )
+  console.log(`Wrote docs-meta.json with ${Object.keys(docsMeta).length} dated folders.`)
 }
 
 function copyDirContents(sourceDir, targetDir) {
