@@ -5114,6 +5114,406 @@ export const generatedCaptureAssets: CaptureAsset[] = [
     "standalone": true
   },
   {
+    "id": "docs-cognitiveScience-1 (1)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (1).png",
+    "title": "Cognitive Science 第 1 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (10)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (10).png",
+    "title": "Cognitive Science 第 10 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (11)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (11).png",
+    "title": "Cognitive Science 第 11 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (12)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (12).png",
+    "title": "Cognitive Science 第 12 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (13)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (13).png",
+    "title": "Cognitive Science 第 13 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (14)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (14).png",
+    "title": "Cognitive Science 第 14 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (15)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (15).png",
+    "title": "Cognitive Science 第 15 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (16)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (16).png",
+    "title": "Cognitive Science 第 16 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (17)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (17).png",
+    "title": "Cognitive Science 第 17 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (18)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (18).png",
+    "title": "Cognitive Science 第 18 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (19)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (19).png",
+    "title": "Cognitive Science 第 19 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (2)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (2).png",
+    "title": "Cognitive Science 第 2 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (20)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (20).png",
+    "title": "Cognitive Science 第 20 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (3)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (3).png",
+    "title": "Cognitive Science 第 3 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (4)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (4).png",
+    "title": "Cognitive Science 第 4 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (5)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (5).png",
+    "title": "Cognitive Science 第 5 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (6)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (6).png",
+    "title": "Cognitive Science 第 6 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (7)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (7).png",
+    "title": "Cognitive Science 第 7 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (8)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (8).png",
+    "title": "Cognitive Science 第 8 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-cognitiveScience-1 (9)",
+    "image": "/capture-assets/docs/cognitiveScience/1 (9).png",
+    "title": "Cognitive Science 第 9 页原图",
+    "date": "2025-06-16",
+    "tags": [
+      "CognitiveScience",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "cognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/cognitiveScience"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "standalone-95099b95-45c0-486c-bb47-0e0c1a703be6-0",
     "image": "/capture-assets/standalone/2025-03/95099b95-45c0-486c-bb47-0e0c1a703be6/0.webp",
     "title": "2025-03-26 23:39:00 +0800",
