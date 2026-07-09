@@ -40,7 +40,12 @@
             </h3>
 
             <div class="content-timeline__items">
-              <FeedEntryCard v-for="item in month.items" :key="item.id" :entry="item" />
+              <FeedEntryCard
+                v-for="item in month.items"
+                :key="item.id"
+                :entry="item"
+                :overflow-count="feedOverflowCount(item)"
+              />
             </div>
           </section>
         </section>
@@ -59,7 +64,7 @@ import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { infra } from '../data/site/infra.ts'
 import { siteConfig } from '../data/site/config'
 import { getPosts, getProjectEntries, getNotes, getTagGroups } from '../data'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { getDateSortTimestamp } from '../utils/date'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
@@ -78,14 +83,12 @@ function timestamp(date) {
   return getDateSortTimestamp(date)
 }
 
-const feedItems = computed(() => {
-  const latestEntries = [
+const allFeedItems = computed(() => {
+  return [
     ...getPosts().map((post) => ({ kind: 'post', entry: post })),
     ...getNotes().map((note) => ({ kind: 'note', entry: note })),
   ]
     .sort((a, b) => timestamp(b.entry.date) - timestamp(a.entry.date))
-
-  return limitCardGroup(latestEntries)
     .map(({ kind, entry }) => ({
       id: `${kind}:${entry.id}`,
       title: entry.title,
@@ -100,6 +103,9 @@ const feedItems = computed(() => {
     }))
 })
 
+const feedItems = computed(() => limitCardGroup(allFeedItems.value))
+const feedHiddenCount = computed(() => hiddenCardCount(allFeedItems.value))
+
 const feedYearGroups = computed(() =>
   groupItemsByYearAndMonth(feedItems.value, {
     idPrefix: 'home',
@@ -107,6 +113,10 @@ const feedYearGroups = computed(() =>
     getDate: (item) => item.date,
   })
 )
+
+function feedOverflowCount(item) {
+  return overflowCountForItem(item, feedItems.value, feedHiddenCount.value)
+}
 
 onMounted(async () => {
   const { getCaptureAssets } = await import('../data/capture')

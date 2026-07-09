@@ -1,7 +1,12 @@
 <template>
   <section class="page-surface">
     <div class="friends-grid">
-      <FriendCard v-for="friend in visibleFriends" :key="friend.id" :friend="friend" />
+      <FriendCard
+        v-for="friend in visibleFriends"
+        :key="friend.id"
+        :friend="friend"
+        :overflow-count="friendOverflowCount(friend)"
+      />
     </div>
   </section>
 </template>
@@ -10,9 +15,14 @@
 import { computed } from 'vue'
 import FriendCard from '../components/content/FriendCard.vue'
 import { friends } from '../data'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 
 const visibleFriends = computed(() => limitCardGroup(friends))
+const friendsHiddenCount = computed(() => hiddenCardCount(friends))
+
+function friendOverflowCount(friend) {
+  return overflowCountForItem(friend, visibleFriends.value, friendsHiddenCount.value)
+}
 </script>
 
 <style scoped>

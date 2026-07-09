@@ -4,8 +4,13 @@
       <SearchInput v-model="query" />
 
       <div class="search-view__results">
-        <SearchResultItem v-for="result in results" :key="result.id" :result="result" />
-        <p v-if="query && results.length === 0" class="search-view__empty">No results found.</p>
+        <SearchResultItem
+          v-for="result in results"
+          :key="result.id"
+          :result="result"
+          :overflow-count="resultOverflowCount(result)"
+        />
+        <p v-if="query && filteredResults.length === 0" class="search-view__empty">No results found.</p>
       </div>
     </div>
 
@@ -21,7 +26,7 @@ import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getSearchDocuments } from '../data'
 import { getCaptureSearchDocuments } from '../data/capture'
 import type { SearchDocument, SearchResult } from '../types/content'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { getDateSortTimestamp } from '../utils/date'
 
 const query = ref('')
@@ -66,12 +71,12 @@ function scoreDocument(doc: SearchDocument, queryText: string): number {
 
 const allDocuments = computed(() => sortDocuments([...getSearchDocuments(), ...getCaptureSearchDocuments()]))
 
-const results = computed(() => {
+const filteredResults = computed(() => {
   const q = query.value.trim().toLowerCase()
   const docs = allDocuments.value
-  if (!q) return limitCardGroup(docs)
+  if (!q) return docs
 
-  const scoredDocs = docs
+  return docs
     .map((doc): SearchResult => ({
       ...doc,
       score: scoreDocument(doc, q),
@@ -83,9 +88,14 @@ const results = computed(() => {
       if (byDate !== 0) return byDate
       return a.title.localeCompare(b.title)
     })
-
-  return limitCardGroup(scoredDocs)
 })
+
+const results = computed(() => limitCardGroup(filteredResults.value))
+const resultsHiddenCount = computed(() => hiddenCardCount(filteredResults.value))
+
+function resultOverflowCount(result: SearchDocument) {
+  return overflowCountForItem(result, results.value, resultsHiddenCount.value)
+}
 </script>
 
 <style scoped>

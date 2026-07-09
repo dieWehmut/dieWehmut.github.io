@@ -4,15 +4,21 @@
     class="search-result__project"
     :project="projectEntry"
     :category="projectEntry.category"
+    :overflow-count="overflowCount"
     hide-icon
   />
 
-  <FriendCard v-else-if="friendEntry" class="search-result__friend" :friend="friendEntry" />
+  <FriendCard
+    v-else-if="friendEntry"
+    class="search-result__friend"
+    :friend="friendEntry"
+    :overflow-count="overflowCount"
+  />
 
   <article
     v-else-if="infraEntry"
-    class="search-result-infra"
-    :class="[statusClass(infraEntry.url), { 'is-clickable': infraEntry.url }]"
+    class="search-result-infra card-overflow-host"
+    :class="[statusClass(infraEntry.url), { 'is-clickable': infraEntry.url, 'has-overflow-badge': overflowCount > 0 }]"
     :role="infraEntry.url ? 'link' : undefined"
     :tabindex="infraEntry.url ? 0 : undefined"
     @click="openExternal(infraEntry.url, $event)"
@@ -35,11 +41,15 @@
       </div>
     </div>
     <a v-if="infraEntry.url" :href="infraEntry.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
+    <span v-if="overflowCount > 0" class="card-overflow-badge" aria-hidden="true">
+      +{{ overflowCount }}
+    </span>
   </article>
 
   <article
     v-else-if="capturePreview"
-    class="search-result-capture"
+    class="search-result-capture card-overflow-host"
+    :class="{ 'has-overflow-badge': overflowCount > 0 }"
     role="link"
     tabindex="0"
     @click="openInternal(capturePreview.url, $event)"
@@ -81,9 +91,12 @@
         </RouterLink>
       </div>
     </div>
+    <span v-if="overflowCount > 0" class="card-overflow-badge" aria-hidden="true">
+      +{{ overflowCount }}
+    </span>
   </article>
 
-  <FeedEntryCard v-else class="search-result__feed" :entry="feedEntry" />
+  <FeedEntryCard v-else class="search-result__feed" :entry="feedEntry" :overflow-count="overflowCount" />
 </template>
 
 <script setup lang="ts">
@@ -102,7 +115,12 @@ import FriendCard from '../content/FriendCard.vue'
 import MarkdownPreview from '../content/MarkdownPreview.vue'
 import ProjectListItem from '../project/ProjectListItem.vue'
 
-const props = defineProps<{ result: SearchDocument }>()
+const props = withDefaults(defineProps<{
+  result: SearchDocument
+  overflowCount?: number
+}>(), {
+  overflowCount: 0,
+})
 const router = useRouter()
 const { statusMap, checkUrl } = useUrlStatus()
 
@@ -235,6 +253,11 @@ function statusClass(url: string | undefined) {
 
 .search-result-infra.is-clickable {
   cursor: pointer;
+}
+
+.search-result-infra.has-overflow-badge,
+.search-result-capture.has-overflow-badge {
+  padding-right: 96px;
 }
 
 .search-result-infra.is-clickable:hover,
@@ -495,6 +518,11 @@ function statusClass(url: string | undefined) {
     flex-direction: column;
     padding: 14px 18px;
     margin: 0 -18px;
+  }
+
+  .search-result-infra.has-overflow-badge,
+  .search-result-capture.has-overflow-badge {
+    padding-right: 82px;
   }
 
   .search-result-capture {

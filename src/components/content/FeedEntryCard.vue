@@ -1,7 +1,7 @@
 <template>
   <article
-    class="feed-entry-card"
-    :class="{ 'is-clickable': !!entry.url }"
+    class="feed-entry-card card-overflow-host"
+    :class="{ 'is-clickable': !!entry.url, 'has-overflow-badge': overflowCount > 0 }"
     :role="entry.url ? 'link' : undefined"
     :tabindex="entry.url ? 0 : undefined"
     @click="openEntry"
@@ -41,6 +41,9 @@
         </RouterLink>
       </div>
     </div>
+    <span v-if="overflowCount > 0" class="card-overflow-badge" aria-hidden="true">
+      +{{ overflowCount }}
+    </span>
   </article>
 </template>
 
@@ -64,9 +67,12 @@ type FeedEntry = {
   updated?: string
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   entry: FeedEntry
-}>()
+  overflowCount?: number
+}>(), {
+  overflowCount: 0,
+})
 const router = useRouter()
 
 function formatDate(date: string) {
@@ -98,6 +104,10 @@ function openEntry(event?: MouseEvent | KeyboardEvent) {
 
 .feed-entry-card.is-clickable {
   cursor: pointer;
+}
+
+.feed-entry-card.has-overflow-badge {
+  padding-right: 82px;
 }
 
 .feed-entry-card:hover,

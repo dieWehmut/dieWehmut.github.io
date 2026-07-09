@@ -1,11 +1,20 @@
 <template>
-  <a class="friend-card" :href="friend.url" target="_blank" rel="noopener noreferrer">
+  <a
+    class="friend-card card-overflow-host"
+    :class="{ 'has-overflow-badge': overflowCount > 0 }"
+    :href="friend.url"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     <img v-if="friend.avatar" class="friend-card__avatar" :src="friend.avatar" alt="" />
     <div v-else class="friend-card__avatar friend-card__avatar--fallback">{{ initials }}</div>
     <div class="friend-card__body">
       <h2>{{ friend.name }}</h2>
       <MarkdownPreview class="friend-card__description" :source="friend.description" />
     </div>
+    <span v-if="overflowCount > 0" class="card-overflow-badge" aria-hidden="true">
+      +{{ overflowCount }}
+    </span>
   </a>
 </template>
 
@@ -14,7 +23,12 @@ import { computed } from 'vue'
 import type { FriendLink } from '../../types/content'
 import MarkdownPreview from './MarkdownPreview.vue'
 
-const props = defineProps<{ friend: FriendLink }>()
+const props = withDefaults(defineProps<{
+  friend: FriendLink
+  overflowCount?: number
+}>(), {
+  overflowCount: 0,
+})
 const initials = computed(() => props.friend.name.slice(0, 2).toUpperCase())
 </script>
 
@@ -39,6 +53,10 @@ const initials = computed(() => props.friend.name.slice(0, 2).toUpperCase())
   transform: translateY(-2px);
   text-decoration: none;
   outline: none;
+}
+
+.friend-card.has-overflow-badge .friend-card__body {
+  padding-right: 76px;
 }
 
 .friend-card__avatar {

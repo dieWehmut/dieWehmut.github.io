@@ -24,7 +24,8 @@
       <article
         v-for="group in visibleTagGroups"
         :key="group.tag"
-        class="tag-card"
+        class="tag-card card-overflow-host"
+        :class="{ 'has-overflow-badge': tagOverflowCount(group) > 0 }"
         role="link"
         tabindex="0"
         @click="openTag($event, group.tag)"
@@ -63,6 +64,9 @@
             <RouterLink :to="postUrl(post)" @click.stop>{{ post.title }}</RouterLink>
           </li>
         </ul>
+        <span v-if="tagOverflowCount(group) > 0" class="card-overflow-badge" aria-hidden="true">
+          +{{ tagOverflowCount(group) }}
+        </span>
       </article>
     </div>
   </section>
@@ -73,7 +77,7 @@ import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import { getTagGroups } from '../data'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 
 const captureTagCounts = ref(new Map())
@@ -82,6 +86,7 @@ const router = useRouter()
 
 const tagGroups = computed(() => mergeCaptureTags(getTagGroups()))
 const visibleTagGroups = computed(() => limitCardGroup(tagGroups.value))
+const tagGroupsHiddenCount = computed(() => hiddenCardCount(tagGroups.value))
 const cloudPalette = [
   '#2dd4bf',
   '#ff5f8a',
@@ -198,6 +203,10 @@ function visiblePostLimit(group) {
   return group.captures?.length ? 2 : 3
 }
 
+function tagOverflowCount(group) {
+  return overflowCountForItem(group, visibleTagGroups.value, tagGroupsHiddenCount.value)
+}
+
 function tagUrl(tag) {
   return `/tags/${encodeURIComponent(tag)}`
 }
@@ -304,6 +313,10 @@ onMounted(async () => {
   background: rgba(255, 255, 255, 0.02);
   cursor: pointer;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.tag-card.has-overflow-badge {
+  padding-bottom: 54px;
 }
 
 .tag-card:hover,

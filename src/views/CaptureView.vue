@@ -123,7 +123,8 @@
                 <article
                   v-for="group in month.groups"
                   :key="group.id"
-                  class="capture-group"
+                  class="capture-group card-overflow-host"
+                  :class="{ 'has-overflow-badge': captureGroupOverflowCount(group) > 0 }"
                 >
                   <div
                     class="capture-grid"
@@ -155,7 +156,7 @@
                         />
                         <span
                           v-if="index === capturePreviewLimit - 1 && hiddenAssetCount(group) > 0"
-                          class="capture-card__more"
+                          class="card-overflow-badge"
                           aria-hidden="true"
                         >
                           +{{ hiddenAssetCount(group) }}
@@ -225,6 +226,13 @@
                       </RouterLink>
                     </div>
                   </div>
+                  <span
+                    v-if="captureGroupOverflowCount(group) > 0"
+                    class="card-overflow-badge"
+                    aria-hidden="true"
+                  >
+                    +{{ captureGroupOverflowCount(group) }}
+                  </span>
                 </article>
               </div>
             </section>
@@ -302,7 +310,7 @@ import GiscusComments from '../components/system/GiscusComments.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'
 import type { CaptureAsset, CaptureSourceRef } from '../types/content'
-import { CARD_GROUP_LIMIT, limitCardGroup } from '../utils/cardGroups'
+import { CARD_GROUP_LIMIT, hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { formatTimelineDate, parseTimelineDate } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
@@ -314,7 +322,9 @@ const capturePreviewLimit = CARD_GROUP_LIMIT
 
 const allAssets = ref<CaptureAsset[]>(getCaptureAssets())
 const captureGroups = computed(() => groupCaptureAssets(allAssets.value))
-const yearGroups = computed(() => groupByYearAndMonth(limitCardGroup(captureGroups.value)))
+const visibleCaptureGroups = computed(() => limitCardGroup(captureGroups.value))
+const captureGroupHiddenCount = computed(() => hiddenCardCount(captureGroups.value))
+const yearGroups = computed(() => groupByYearAndMonth(visibleCaptureGroups.value))
 const route = useRoute()
 const router = useRouter()
 const selectedGroupId = computed(() => String(route.params.id || ''))
@@ -436,6 +446,10 @@ function previewAssets(group: CaptureGroup) {
 
 function hiddenAssetCount(group: CaptureGroup) {
   return Math.max(0, group.assets.length - capturePreviewLimit)
+}
+
+function captureGroupOverflowCount(group: CaptureGroup) {
+  return overflowCountForItem(group, visibleCaptureGroups.value, captureGroupHiddenCount.value)
 }
 
 function groupByYearAndMonth(groups: CaptureGroup[]): YearGroup[] {
@@ -981,27 +995,6 @@ watch(isDetailRoute, (detail) => {
   transform: scale(1.03);
 }
 
-.capture-card__more {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  height: 32px;
-  padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.36);
-  border-radius: 8px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.68);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1;
-}
-
 .capture-card__delete {
   position: absolute;
   top: 6px;
@@ -1065,6 +1058,10 @@ watch(isDetailRoute, (detail) => {
   display: grid;
   gap: 10px;
   padding: 12px 14px 14px;
+}
+
+.capture-group.has-overflow-badge .capture-group__body {
+  padding-right: 82px;
 }
 
 .capture-group__sources {

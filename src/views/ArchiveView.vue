@@ -13,7 +13,12 @@
             </h3>
 
             <div class="content-timeline__items">
-              <FeedEntryCard v-for="post in month.items" :key="post.id" :entry="postEntry(post)" />
+              <FeedEntryCard
+                v-for="post in month.items"
+                :key="post.id"
+                :entry="postEntry(post)"
+                :overflow-count="postOverflowCount(post)"
+              />
             </div>
           </section>
         </section>
@@ -31,11 +36,13 @@ import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts } from '../data'
 import type { ArchivePost } from '../types/content'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
 const { locale } = useI18n()
-const posts = computed(() => limitCardGroup(getPosts()))
+const allPosts = computed(() => getPosts())
+const posts = computed(() => limitCardGroup(allPosts.value))
+const postsHiddenCount = computed(() => hiddenCardCount(allPosts.value))
 const yearGroups = computed(() =>
   groupItemsByYearAndMonth(posts.value, {
     idPrefix: 'archive',
@@ -43,6 +50,10 @@ const yearGroups = computed(() =>
     getDate: (post) => post.date,
   })
 )
+
+function postOverflowCount(post: ArchivePost) {
+  return overflowCountForItem(post, posts.value, postsHiddenCount.value)
+}
 
 function postEntry(post: ArchivePost) {
   return {

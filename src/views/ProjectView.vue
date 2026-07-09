@@ -5,10 +5,16 @@
         <div class="project-group__heading">
           <el-icon class="project-group__icon"><component :is="categoryIcons[group.key]" /></el-icon>
           <h2>{{ group.label }}</h2>
-          <span>{{ group.items.length }}</span>
+          <span>{{ group.totalCount }}</span>
         </div>
         <div class="project-list">
-          <ProjectListItem v-for="item in group.items" :key="item.id" :project="item" :category="group.key" />
+          <ProjectListItem
+            v-for="item in group.items"
+            :key="item.id"
+            :project="item"
+            :category="group.key"
+            :overflow-count="projectOverflowCount(group, item)"
+          />
         </div>
       </section>
     </div>
@@ -24,7 +30,7 @@ import ProjectListItem from '../components/project/ProjectListItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getProjectEntries } from '../data'
 import type { ProjectEntry } from '../types/content'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 
 const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'tools', 'templates']
 const labels: Record<ProjectEntry['category'], string> = {
@@ -44,13 +50,25 @@ const categoryIcons: Record<ProjectEntry['category'], unknown> = {
 
 const projectGroups = computed(() =>
   order
-    .map((key) => ({
-      key,
-      label: labels[key],
-      items: limitCardGroup(getProjectEntries().filter((item) => item.category === key)),
-    }))
+    .map((key) => {
+      const allItems = getProjectEntries().filter((item) => item.category === key)
+      return {
+        key,
+        label: labels[key],
+        totalCount: allItems.length,
+        hiddenCount: hiddenCardCount(allItems),
+        items: limitCardGroup(allItems),
+      }
+    })
     .filter((group) => group.items.length > 0)
 )
+
+function projectOverflowCount(
+  group: { items: ProjectEntry[]; hiddenCount: number },
+  item: ProjectEntry
+) {
+  return overflowCountForItem(item, group.items, group.hiddenCount)
+}
 </script>
 
 <style scoped>

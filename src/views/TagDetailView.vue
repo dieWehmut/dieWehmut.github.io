@@ -40,7 +40,7 @@
                     <button
                       v-for="capture in item.group.assets"
                       :key="capture.id"
-                      class="tag-detail__capture-media"
+                      class="tag-detail__capture-media card-overflow-host"
                       type="button"
                       @click="openCapture(capture)"
                     >
@@ -51,6 +51,13 @@
                         decoding="async"
                         @error="retryPublicAssetImage($event, capture.image)"
                       />
+                      <span
+                        v-if="captureOverflowCount(capture) > 0"
+                        class="card-overflow-badge"
+                        aria-hidden="true"
+                      >
+                        +{{ captureOverflowCount(capture) }}
+                      </span>
                     </button>
                   </div>
 
@@ -112,7 +119,7 @@ import MarkdownPreview from '../components/content/MarkdownPreview.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, CaptureSourceRef, TagContentEntry } from '../types/content'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
@@ -124,6 +131,7 @@ const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
 const visibleCaptures = computed(() => limitCardGroup(captures.value))
+const captureHiddenCount = computed(() => hiddenCardCount(captures.value))
 const captureGroups = computed(() => groupCapturesByDate(visibleCaptures.value))
 const timelineItems = computed<TagTimelineItem[]>(() => {
   const postItems: TagTimelineItem[] = posts.value.map((post, index) => ({
@@ -217,6 +225,10 @@ function postUrl(post: TagContentEntry): string {
 
 function formattedDate(dateStr?: string): string {
   return formatTimelineDate(dateStr)
+}
+
+function captureOverflowCount(capture: CaptureAsset): number {
+  return overflowCountForItem(capture, visibleCaptures.value, captureHiddenCount.value)
 }
 
 function groupCapturesByDate(assets: CaptureAsset[]): CaptureGroup[] {

@@ -13,7 +13,12 @@
             </h3>
 
             <div class="content-timeline__items">
-              <FeedEntryCard v-for="note in month.items" :key="note.id" :entry="noteEntry(note)" />
+              <FeedEntryCard
+                v-for="note in month.items"
+                :key="note.id"
+                :entry="noteEntry(note)"
+                :overflow-count="noteOverflowCount(note)"
+              />
             </div>
           </section>
         </section>
@@ -31,11 +36,13 @@ import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getNotes } from '../data'
 import type { NoteEntry } from '../types/content'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
 
 const { locale } = useI18n()
-const notes = computed(() => limitCardGroup(getNotes()))
+const allNotes = computed(() => getNotes())
+const notes = computed(() => limitCardGroup(allNotes.value))
+const notesHiddenCount = computed(() => hiddenCardCount(allNotes.value))
 const yearGroups = computed(() =>
   groupItemsByYearAndMonth(notes.value, {
     idPrefix: 'notes',
@@ -43,6 +50,10 @@ const yearGroups = computed(() =>
     getDate: (note) => note.date,
   })
 )
+
+function noteOverflowCount(note: NoteEntry) {
+  return overflowCountForItem(note, notes.value, notesHiddenCount.value)
+}
 
 function noteEntry(note: NoteEntry) {
   return {

@@ -79,8 +79,8 @@
         <article
           v-for="item in visibleServiceItems"
           :key="item.key || item.name"
-          class="infra-mobile-item"
-          :class="[infraKeyClass(item), { 'is-clickable': item.url }]"
+          class="infra-mobile-item card-overflow-host"
+          :class="[infraKeyClass(item), { 'is-clickable': item.url, 'has-overflow-badge': serviceOverflowCount(item) > 0 }]"
           :role="item.url ? 'link' : undefined"
           :tabindex="item.url ? 0 : undefined"
           @click="openInfra(item, $event)"
@@ -107,6 +107,13 @@
             </div>
           </div>
           <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
+          <span
+            v-if="serviceOverflowCount(item) > 0"
+            class="card-overflow-badge"
+            aria-hidden="true"
+          >
+            +{{ serviceOverflowCount(item) }}
+          </span>
         </article>
     </div>
   </section>
@@ -120,7 +127,7 @@ import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
 import { useKumaStatus } from '../composables/useKumaStatus'
-import { limitCardGroup } from '../utils/cardGroups'
+import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 const { t } = useI18n()
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
@@ -154,6 +161,7 @@ const serviceItems = computed(() =>
     .sort((a, b) => (Date.parse(a.date) || 0) - (Date.parse(b.date) || 0))
 )
 const visibleServiceItems = computed(() => limitCardGroup(serviceItems.value))
+const serviceItemsHiddenCount = computed(() => hiddenCardCount(serviceItems.value))
 
 const kuma = useKumaStatus(serviceItems)
 const fallback = useUrlStatus()
@@ -335,6 +343,10 @@ function isInteractiveTarget(target) {
 function openInfra(item, event) {
   if (!item?.url || isInteractiveTarget(event?.target || null)) return
   window.open(item.url, '_blank', 'noopener,noreferrer')
+}
+
+function serviceOverflowCount(item) {
+  return overflowCountForItem(item, visibleServiceItems.value, serviceItemsHiddenCount.value)
 }
 </script>
 
@@ -764,6 +776,10 @@ function openInfra(item, event) {
 
 .infra-mobile-item.is-clickable {
   cursor: pointer;
+}
+
+.infra-mobile-item.has-overflow-badge {
+  padding-right: 82px;
 }
 
 .infra-mobile-item:hover,
