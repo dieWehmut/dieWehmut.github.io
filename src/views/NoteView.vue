@@ -3,22 +3,16 @@
     <div class="note-view__main">
       <div v-if="note" class="note-view__card">
           <h1 class="note-view__title">{{ note.title }}</h1>
-          <div v-if="note.updated" class="note-view__updated"><el-icon class="note-view__updated-icon"><Edit /></el-icon>最后更新: {{ note.updated }}</div>
-          <div v-if="note.wordCount || note.readingMinutes" class="note-view__stats">
-            <ContentStats :word-count="note.wordCount" :reading-minutes="note.readingMinutes" />
-          </div>
+          <ArticleMeta
+            :date="note.date"
+            :updated="note.updated"
+            :word-count="note.wordCount"
+            :reading-minutes="note.readingMinutes"
+            :tags="note.tags"
+          />
           <div v-if="isLoading" class="note-view__loading" role="status">Loading note...</div>
           <div v-else-if="loadError" class="note-view__loading" role="alert">{{ loadError }}</div>
           <MarkdownContent v-else-if="note.body" class="note-view__body markdown-body" :source="note.body" />
-          <div v-if="note.date || note.tags?.length" class="note-view__meta-row">
-            <time v-if="note.date" class="note-view__meta-date" :datetime="note.date"><el-icon class="note-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
-            <RouterLink
-              v-for="tag in note.tags"
-              :key="tag"
-              class="note-view__meta-tag"
-              :to="`/tags/${encodeURIComponent(tag)}`"
-            ><el-icon class="note-view__meta-icon--tag"><PriceTag /></el-icon>{{ tag }}</RouterLink>
-        </div>
       </div>
       <div v-else class="note-view__not-found">
         <p>Note not found.</p>
@@ -33,12 +27,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { Calendar, PriceTag, Edit } from '@element-plus/icons-vue'
-import ContentStats from '../components/content/ContentStats.vue'
+import ArticleMeta from '../components/content/ArticleMeta.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getNotes, loadDoc, docContentVersion } from '../data'
-import { formatTimelineDate } from '../utils/date'
 import type { NoteEntry } from '../types/content'
 
 const route = useRoute()
@@ -55,11 +47,6 @@ const note = computed(() => {
     ...meta,
     body: body.value,
   } satisfies NoteEntry
-})
-
-const formattedDate = computed(() => {
-  if (!note.value) return ''
-  return formatTimelineDate(note.value.date)
 })
 
 watch(
@@ -117,84 +104,12 @@ watch(
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
 }
 
-.note-view__meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 22px;
-  font-size: 15px;
-}
-
-.note-view__meta-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--site-muted);
-  font-weight: 800;
-}
-
-.note-view__meta-icon {
-  width: 15px;
-  height: 15px;
-  font-size: 15px;
-}
-
-.note-view__meta-icon--tag {
-  width: 13px;
-  height: 13px;
-  font-size: 13px;
-}
-
-.note-view__meta-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--site-tag-color);
-  text-decoration: none;
-  transition: color 160ms ease, text-decoration-color 160ms ease;
-}
-
-.note-view__meta-tag:hover,
-.note-view__meta-tag:focus-visible {
-  color: var(--site-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  outline: none;
-}
-
 .note-view__title {
   margin: 0;
   color: var(--site-text);
   font-size: 19px;
   font-weight: 700;
   line-height: 1.3;
-}
-
-.note-view__updated {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 10px;
-  color: var(--site-muted);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.4;
-}
-
-.note-view__updated-icon {
-  font-size: 14px;
-}
-
-.note-view__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-  color: var(--site-muted);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.4;
 }
 
 .note-view__body {

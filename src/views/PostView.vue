@@ -3,10 +3,13 @@
     <div class="post-view__main">
       <div v-if="post" class="post-view__card">
           <h1 class="post-view__title">{{ post.title }}</h1>
-          <div v-if="post.updated" class="post-view__updated"><el-icon class="post-view__updated-icon"><Edit /></el-icon>最后更新: {{ post.updated }}</div>
-          <div v-if="post.wordCount || post.readingMinutes" class="post-view__stats">
-            <ContentStats :word-count="post.wordCount" :reading-minutes="post.readingMinutes" />
-          </div>
+          <ArticleMeta
+            :date="post.date"
+            :updated="post.updated"
+            :word-count="post.wordCount"
+            :reading-minutes="post.readingMinutes"
+            :tags="post.tags"
+          />
           <div v-if="isLoading" class="post-view__loading" role="status">Loading post...</div>
           <div v-else-if="loadError" class="post-view__loading" role="alert">{{ loadError }}</div>
           <MarkdownContent
@@ -16,15 +19,6 @@
             :doc-id="post.id"
             :code-runner="post.codeRunner"
           />
-          <div v-if="post.date || post.tags?.length" class="post-view__meta-row">
-            <time v-if="post.date" class="post-view__meta-date" :datetime="post.date"><el-icon class="post-view__meta-icon"><Calendar /></el-icon>{{ formattedDate }}</time>
-            <RouterLink
-              v-for="tag in post.tags"
-              :key="tag"
-              class="post-view__meta-tag"
-              :to="`/tags/${encodeURIComponent(tag)}`"
-            ><el-icon class="post-view__meta-icon--tag"><PriceTag /></el-icon>{{ tag }}</RouterLink>
-        </div>
       </div>
       <div v-else class="post-view__not-found">
         <p>Post not found.</p>
@@ -39,12 +33,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { Calendar, PriceTag, Edit } from '@element-plus/icons-vue'
-import ContentStats from '../components/content/ContentStats.vue'
+import ArticleMeta from '../components/content/ArticleMeta.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts, loadDoc, docContentVersion } from '../data'
-import { formatTimelineDate } from '../utils/date'
 import type { ArchivePost } from '../types/content'
 
 const route = useRoute()
@@ -61,11 +53,6 @@ const post = computed(() => {
     ...meta,
     body: body.value,
   } satisfies ArchivePost
-})
-
-const formattedDate = computed(() => {
-  if (!post.value) return ''
-  return formatTimelineDate(post.value.date)
 })
 
 watch(
@@ -123,91 +110,12 @@ watch(
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
 }
 
-.post-view__meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 22px;
-  font-size: 15px;
-}
-
-.post-view__meta-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--site-muted);
-  font-weight: 800;
-}
-
-.post-view__meta-icon {
-  width: 15px;
-  height: 15px;
-  font-size: 15px;
-}
-
-.post-view__meta-icon--tag {
-  width: 13px;
-  height: 13px;
-  font-size: 13px;
-}
-
-.post-view__meta-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--site-tag-color);
-  text-decoration: none;
-  transition: color 160ms ease, text-decoration-color 160ms ease;
-}
-
-.post-view__meta-tag:hover,
-.post-view__meta-tag:focus-visible {
-  color: var(--site-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  outline: none;
-}
-
 .post-view__title {
   margin: 0;
   color: var(--site-text);
   font-size: 19px;
   font-weight: 700;
   line-height: 1.3;
-}
-
-.post-view__summary {
-  margin: 8px 0 0;
-  color: var(--site-muted);
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.post-view__updated {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 10px;
-  color: var(--site-muted);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.4;
-}
-
-.post-view__updated-icon {
-  font-size: 14px;
-}
-
-.post-view__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-  color: var(--site-muted);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.4;
 }
 
 .post-view__body {
