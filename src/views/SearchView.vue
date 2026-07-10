@@ -8,7 +8,6 @@
           v-for="result in results"
           :key="result.id"
           :result="result"
-          :overflow-count="resultOverflowCount(result)"
         />
         <p v-if="query && filteredResults.length === 0" class="search-view__empty">No results found.</p>
       </div>
@@ -26,7 +25,6 @@ import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getSearchDocuments } from '../data'
 import { getCaptureSearchDocuments } from '../data/capture'
 import type { SearchDocument, SearchResult } from '../types/content'
-import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { getDateSortTimestamp } from '../utils/date'
 
 const query = ref('')
@@ -90,12 +88,7 @@ const filteredResults = computed(() => {
     })
 })
 
-const results = computed(() => limitCardGroup(filteredResults.value))
-const resultsHiddenCount = computed(() => hiddenCardCount(filteredResults.value))
-
-function resultOverflowCount(result: SearchDocument) {
-  return overflowCountForItem(result, results.value, resultsHiddenCount.value)
-}
+const results = computed(() => filteredResults.value)
 </script>
 
 <style scoped>

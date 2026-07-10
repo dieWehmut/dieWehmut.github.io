@@ -5,6 +5,8 @@ date: 2026-07-10
 tags: [Rust, Tauri]
 ---
 
+>接触Vue的Capacity，Android studio，react-nativeexpo go，qt，之后，终于决定尝试一下Tauri，顺便熟悉Rust
+
 ## 环境安装
 
 Rust，Tauri，Node.js

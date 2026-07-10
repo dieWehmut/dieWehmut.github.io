@@ -22,10 +22,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Rust",
       "Tauri"
     ],
-    "summary": "环境安装\nRust，Tauri，Node.js\npnpm初始化\n配置图标\n自动更新",
-    "wordCount": 55,
+    "summary": "接触Vue的Capacity，Android studio，react-nativeexpo go，qt，之后，终于决定尝试一下Tauri，顺便熟悉Rust\n环境安装\nRust，Tauri，Node.js\npnpm初始化\n配置图标\n自动更新",
+    "wordCount": 81,
     "readingMinutes": 1,
-    "updated": "",
+    "updated": "2026/07/10 20:28",
     "path": "./posts/Tauri.md"
   },
   {
