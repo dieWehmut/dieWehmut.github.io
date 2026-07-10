@@ -14,6 +14,21 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "Tauri",
+    "type": "post",
+    "title": "Tauri",
+    "date": "2026-07-10",
+    "tags": [
+      "Rust",
+      "Tauri"
+    ],
+    "summary": "环境安装\nRust，Tauri，Node.js\npnpm初始化\n配置图标\n自动更新",
+    "wordCount": 55,
+    "readingMinutes": 1,
+    "updated": "",
+    "path": "./posts/Tauri.md"
+  },
+  {
     "id": "ComputingMethod",
     "type": "note",
     "title": "Computing Method Notes",
@@ -47,7 +62,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
   {
     "id": "Win",
     "type": "post",
-    "title": "Win服务器控制",
+    "title": "Win控制机",
     "date": "2026-06-13",
     "tags": [
       "Windows"
@@ -82,9 +97,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Proxmox VE"
     ],
     "summary": "Debian LXC初始化\ne.g:curl, git, unzip,wget, etc.\nDocker\nGit 登录\nVM\nPVE\nLXC扩容\n允许ssh root密码登录\nPermitRootLogin yes\nSSH Key 登...",
-    "wordCount": 256,
+    "wordCount": 257,
     "readingMinutes": 1,
-    "updated": "2026/07/07 22:40",
+    "updated": "2026/07/09 20:50",
     "path": "./posts/pve.md"
   },
   {
@@ -167,7 +182,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "认知科学 (Cognitive Science) 手写笔记原图存档。\n1 (1).png\n1 (2).png\n1 (3).png\n1 (4).png\n1 (5).png\n1 (6).png\n1 (7).png\n1 (8).png\n1...",
     "wordCount": 214,
     "readingMinutes": 1,
-    "updated": "",
+    "updated": "2026/07/09 16:28",
     "path": "./notes/cognitiveScience.md"
   },
   {

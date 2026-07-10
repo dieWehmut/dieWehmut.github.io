@@ -1,6 +1,6 @@
 ---
 
-title: Win服务器控制
+title: Win控制机
 date: 2026-06-13
 tags: [Windows]
 ---
