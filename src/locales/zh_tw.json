@@ -68,6 +68,15 @@
     "title": "歡迎！",
     "subtitle": "{owner} 的 Nexus"
   },
+  "project": {
+    "categories": {
+      "websites": "網站",
+      "games": "遊戲",
+      "apps": "應用",
+      "tools": "工具",
+      "templates": "模板"
+    }
+  },
   "float": {
     "viewMode": "切換視圖",
     "toggleSidebar": "切換單雙欄"

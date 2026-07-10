@@ -65,6 +65,15 @@
     "title": "Welcome!",
     "subtitle": "{owner}'s Nexus"
   },
+  "project": {
+    "categories": {
+      "websites": "Websites",
+      "games": "Games",
+      "apps": "Apps",
+      "tools": "Tools",
+      "templates": "Templates"
+    }
+  },
   "float": {
     "viewMode": "Toggle View",
     "toggleSidebar": "Toggle columns"

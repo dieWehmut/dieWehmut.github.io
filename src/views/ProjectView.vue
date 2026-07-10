@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Connection, VideoPlay, Iphone, Setting, Collection } from '@element-plus/icons-vue'
 import ProjectListItem from '../components/project/ProjectListItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
@@ -32,13 +33,15 @@ import { getProjectEntries } from '../data'
 import type { ProjectEntry } from '../types/content'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 
+const { t } = useI18n()
+
 const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'tools', 'templates']
-const labels: Record<ProjectEntry['category'], string> = {
-  websites: 'Websites',
-  games: 'Games',
-  apps: 'Apps',
-  tools: 'Tools',
-  templates: '模板',
+const labelKeys: Record<ProjectEntry['category'], string> = {
+  websites: 'project.categories.websites',
+  games: 'project.categories.games',
+  apps: 'project.categories.apps',
+  tools: 'project.categories.tools',
+  templates: 'project.categories.templates',
 }
 const categoryIcons: Record<ProjectEntry['category'], unknown> = {
   websites: Connection,
@@ -54,7 +57,7 @@ const projectGroups = computed(() =>
       const allItems = getProjectEntries().filter((item) => item.category === key)
       return {
         key,
-        label: labels[key],
+        label: t(labelKeys[key]),
         totalCount: allItems.length,
         hiddenCount: hiddenCardCount(allItems),
         items: limitCardGroup(allItems),

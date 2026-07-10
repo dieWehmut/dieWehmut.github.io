@@ -68,6 +68,15 @@
     "title": "ようこそ！",
     "subtitle": "{owner} の Nexus"
   },
+  "project": {
+    "categories": {
+      "websites": "ウェブサイト",
+      "games": "ゲーム",
+      "apps": "アプリ",
+      "tools": "ツール",
+      "templates": "テンプレート"
+    }
+  },
   "float": {
     "viewMode": "ビュー切替",
     "toggleSidebar": "1列/2列を切り替え"

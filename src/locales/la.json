@@ -68,6 +68,15 @@
     "title": "Salve!",
     "subtitle": "Nexus {owner}"
   },
+  "project": {
+    "categories": {
+      "websites": "Paginae",
+      "games": "Ludi",
+      "apps": "Applicationes",
+      "tools": "Instrumenta",
+      "templates": "Exempla"
+    }
+  },
   "float": {
     "viewMode": "Mutare Visum",
     "toggleSidebar": "Commutare columnas"

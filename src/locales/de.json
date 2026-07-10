@@ -68,6 +68,15 @@
     "title": "Willkommen!",
     "subtitle": "{owner}s Nexus"
   },
+  "project": {
+    "categories": {
+      "websites": "Websites",
+      "games": "Spiele",
+      "apps": "Apps",
+      "tools": "Werkzeuge",
+      "templates": "Vorlagen"
+    }
+  },
   "float": {
     "viewMode": "Ansicht wechseln",
     "toggleSidebar": "Spaltenansicht umschalten"

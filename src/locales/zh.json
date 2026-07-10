@@ -65,6 +65,15 @@
     "title": "欢迎！",
     "subtitle": "{owner} 的 Nexus"
   },
+  "project": {
+    "categories": {
+      "websites": "网站",
+      "games": "游戏",
+      "apps": "应用",
+      "tools": "工具",
+      "templates": "模板"
+    }
+  },
   "float": {
     "viewMode": "切换视图",
     "toggleSidebar": "切换单双栏"
