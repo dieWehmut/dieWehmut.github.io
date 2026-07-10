@@ -1,6 +1,6 @@
 <template>
   <div class="float-controls" :class="{ 'is-top-hidden': atTop }" aria-label="Quick controls">
-    <div class="float-controls__langs" :class="{ 'is-open': languageOpen }" v-show="languageOpen">
+    <div class="float-controls__langs" :class="{ 'is-open': languageOpen }">
       <button
         v-for="lang in languages"
         :key="lang.code"
@@ -15,7 +15,7 @@
       </button>
     </div>
 
-    <div class="float-controls__schemes" :class="{ 'is-open': colorSchemeOpen }" v-show="colorSchemeOpen">
+    <div class="float-controls__schemes" :class="{ 'is-open': colorSchemeOpen }">
       <button
         v-for="scheme in colorSchemeOptions"
         :key="scheme.id"
@@ -361,12 +361,13 @@ function toggleTheme() {
   position: absolute;
   right: 54px;
   bottom: 200px;
-  display: none;
+  display: flex;
   gap: 10px;
   opacity: 0;
-  transform: translateX(8px);
+  visibility: hidden;
+  transform: translateX(8px) scale(0.95);
   pointer-events: none;
-  transition: transform 180ms ease, opacity 180ms ease, bottom 200ms ease;
+  transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 200ms ease, visibility 0ms 200ms, bottom 200ms ease;
 }
 
 .float-controls.is-top-hidden .float-controls__langs {
@@ -374,10 +375,11 @@ function toggleTheme() {
 }
 
 .float-controls__langs.is-open {
-  display: flex;
   opacity: 1;
-  transform: translateX(0);
+  visibility: visible;
+  transform: translateX(0) scale(1);
   pointer-events: auto;
+  transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 200ms ease, visibility 0ms 0ms;
 }
 
 .float-controls__lang {
@@ -386,18 +388,34 @@ function toggleTheme() {
   height: 44px;
   font-size: 12px;
   font-weight: 900;
+  opacity: 0;
+  transform: translateX(8px) scale(0.9);
+  transition: opacity 180ms ease, transform 180ms ease;
 }
+
+.float-controls__langs.is-open .float-controls__lang {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.float-controls__langs.is-open .float-controls__lang:nth-child(1) { transition-delay: 20ms; }
+.float-controls__langs.is-open .float-controls__lang:nth-child(2) { transition-delay: 50ms; }
+.float-controls__langs.is-open .float-controls__lang:nth-child(3) { transition-delay: 80ms; }
+.float-controls__langs.is-open .float-controls__lang:nth-child(4) { transition-delay: 110ms; }
+.float-controls__langs.is-open .float-controls__lang:nth-child(5) { transition-delay: 140ms; }
+.float-controls__langs.is-open .float-controls__lang:nth-child(6) { transition-delay: 170ms; }
 
 .float-controls__schemes {
   position: absolute;
   right: 54px;
   bottom: 150px;
-  display: none;
+  display: flex;
   gap: 10px;
   opacity: 0;
-  transform: translateX(8px);
+  visibility: hidden;
+  transform: translateX(8px) scale(0.95);
   pointer-events: none;
-  transition: transform 180ms ease, opacity 180ms ease, bottom 200ms ease;
+  transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 200ms ease, visibility 0ms 200ms, bottom 200ms ease;
 }
 
 .float-controls.is-top-hidden .float-controls__schemes {
@@ -405,17 +423,35 @@ function toggleTheme() {
 }
 
 .float-controls__schemes.is-open {
-  display: flex;
   opacity: 1;
-  transform: translateX(0);
+  visibility: visible;
+  transform: translateX(0) scale(1);
   pointer-events: auto;
+  transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 200ms ease, visibility 0ms 0ms;
 }
 
 .float-controls__scheme {
   position: static;
   width: 44px;
   height: 44px;
+  opacity: 0;
+  transform: translateX(8px) scale(0.9);
+  transition: opacity 180ms ease, transform 180ms ease;
 }
+
+.float-controls__schemes.is-open .float-controls__scheme {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(1) { transition-delay: 20ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(2) { transition-delay: 50ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(3) { transition-delay: 80ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(4) { transition-delay: 110ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(5) { transition-delay: 140ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(6) { transition-delay: 170ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(7) { transition-delay: 200ms; }
+.float-controls__schemes.is-open .float-controls__scheme:nth-child(8) { transition-delay: 230ms; }
 
 .float-controls__scheme-swatch {
   width: 20px;
@@ -487,15 +523,12 @@ function toggleTheme() {
   .float-controls__langs {
     right: 48px;
     bottom: 184px;
+    display: grid;
     grid-template-columns: repeat(3, 38px);
     column-gap: 8px;
     row-gap: 6px;
     width: auto;
     justify-content: end;
-  }
-
-  .float-controls__langs.is-open {
-    display: grid;
   }
 
   .float-controls.is-top-hidden .float-controls__langs {
