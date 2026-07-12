@@ -50,6 +50,7 @@ let mediaQuery = null
 let isEnabled = true
 let pendingScrollId = ''
 let pendingScrollHandle = 0
+let spyEl = null
 
 function registerButton(id, el) {
   if (el) buttonEls.set(id, el)
@@ -212,6 +213,11 @@ function followActive() {
   }
 }
 
+function onSidebarWheel(event) {
+  event.preventDefault()
+  window.scrollBy({ top: event.deltaY, behavior: 'auto' })
+}
+
 function onScroll() {
   if (!isEnabled) return
   if (scrollFrame) return
@@ -219,6 +225,7 @@ function onScroll() {
     scrollFrame = 0
     updateProgress()
     updateActive()
+    followActive()
   })
 }
 
@@ -264,6 +271,16 @@ onMounted(async () => {
 
   collectHeadings()
   updateNow()
+
+  // Redirect sidebar wheel events to page scroll, so scrolling inside the
+  // sidebar moves the page content. followActive() keeps the active item
+  // visible inside the sidebar as the page moves.
+  await nextTick()
+  spyEl = navRef.value?.closest('.scroll-spy')
+  if (spyEl) {
+    spyEl.addEventListener('wheel', onSidebarWheel, { passive: false })
+  }
+
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', onResize)
 
@@ -301,6 +318,7 @@ onBeforeUnmount(() => {
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame)
   if (collectFrame) window.cancelAnimationFrame(collectFrame)
   cancelPendingScroll()
+  if (spyEl) spyEl.removeEventListener('wheel', onSidebarWheel)
   resizeObserver?.disconnect()
   mutationObserver?.disconnect()
   if (mediaQuery?.removeEventListener) {
