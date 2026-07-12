@@ -24,8 +24,14 @@
       </time>
     </div>
     <div class="project-item__actions">
-      <a v-if="project.url" :href="project.url" target="_blank" rel="noopener noreferrer">Open</a>
-      <a v-if="project.repoUrl && project.repoUrl !== project.url" :href="project.repoUrl" target="_blank" rel="noopener noreferrer">Repo</a>
+      <a v-if="project.category === 'websites' && project.url" :href="project.url" target="_blank" rel="noopener noreferrer">
+        <el-icon class="project-item__action-icon"><Link /></el-icon>
+        Open
+      </a>
+      <a v-if="project.repoUrl" :href="project.repoUrl" target="_blank" rel="noopener noreferrer">
+        <el-icon class="project-item__action-icon"><FolderOpened /></el-icon>
+        Repo
+      </a>
     </div>
     <span v-if="overflowCount > 0" class="card-overflow-badge" aria-hidden="true">
       +{{ overflowCount }}
@@ -35,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Notebook, Headset, Menu, Document, Calendar, Files } from '@element-plus/icons-vue'
+import { Notebook, Headset, Menu, Document, Calendar, Files, Link, FolderOpened } from '@element-plus/icons-vue'
 import type { ProjectEntry } from '../../types/content'
 
 const props = withDefaults(defineProps<{
@@ -157,6 +163,13 @@ function openProject(event?: MouseEvent | KeyboardEvent) {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.project-item__action-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+  margin-right: 5px;
 }
 
 .project-item__actions a {
