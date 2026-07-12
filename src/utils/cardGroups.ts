@@ -1,10 +1,13 @@
+// Max preview images shown inside a single capture card group.
 export const CARD_GROUP_LIMIT = 9
 
-export function limitCardGroup<T>(items: readonly T[], limit = CARD_GROUP_LIMIT): T[] {
+// Page-level card lists (Archive, Home, Tags, Project, capture groups, ...)
+// render every item by default. Callers can still pass an explicit limit.
+export function limitCardGroup<T>(items: readonly T[], limit = Infinity): T[] {
   return items.slice(0, limit)
 }
 
-export function hiddenCardCount(items: readonly unknown[], limit = CARD_GROUP_LIMIT): number {
+export function hiddenCardCount(items: readonly unknown[], limit = Infinity): number {
   return Math.max(0, items.length - limit)
 }
 
