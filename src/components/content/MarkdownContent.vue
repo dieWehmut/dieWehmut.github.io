@@ -223,24 +223,19 @@ watch(
       return
     }
 
-    // Render the first chunk as soon as the markdown module is ready instead
-    // of waiting on an idle gap, so navigating to a doc paints immediately.
+    // Render all content synchronously so the full document (headings, etc.)
+    // is available immediately for ScrollSpySidebar and other observers.
     void (async () => {
-      const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
+      const { renderMarkdown } = await loadMarkdownModule()
       if (token !== renderToken) return
-      const chunks = splitMarkdownForProgressiveRender(source)
-      const firstChunkHtml = renderMarkdown(chunks[0] || '', {
+      const renderedHtml = renderMarkdown(source, {
         codeRunner: props.codeRunner,
         docId: props.docId,
       })
       if (token !== renderToken) return
-      setRenderedHtml(firstChunkHtml)
+      setRenderedHtml(renderedHtml)
       bindInteractions(token)
-      if (chunks.length <= 1) {
-        bumpHmrSettle()
-        return
-      }
-      renderRemainingChunks(chunks, 1, token, renderMarkdown)
+      bumpHmrSettle()
     })()
   },
   { immediate: true }
