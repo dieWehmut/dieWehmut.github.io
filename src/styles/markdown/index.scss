@@ -1315,6 +1315,27 @@
   color: var(--md-blockquote-text);
 }
 
+/* Mind map – light theme overrides */
+:root[data-theme="light"] .markdown-body .md-mindmap__node {
+  background: #ffffff;
+  color: #1f2328;
+  border-color: #d0d7de;
+}
+
+:root[data-theme="light"] .markdown-body .md-mindmap__node--depth-0 {
+  color: #1f2328;
+  border-color: var(--site-accent);
+}
+
+:root[data-theme="light"] .markdown-body .md-mindmap__node--depth-2 {
+  background: color-mix(in srgb, #ffffff 82%, var(--site-accent));
+}
+
+:root[data-theme="light"] .markdown-body .md-mindmap__node--depth-3,
+:root[data-theme="light"] .markdown-body .md-mindmap__node--depth-4 {
+  color: #656d76;
+}
+
 /* ===== Table of contents (heading-anchor lists) =====
    Detected via :has() — a list is treated as a TOC when at least one
    direct child <li> starts with an in-page anchor link. */
