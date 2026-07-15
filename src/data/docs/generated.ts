@@ -14,6 +14,23 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "Harness",
+    "type": "post",
+    "title": "Harness自进化初探",
+    "date": "2026-07-14",
+    "tags": [
+      "Harness",
+      "Agent",
+      "LLM",
+      "self-evolution"
+    ],
+    "summary": "前置知识\nAgent\nagent自拉丁语agere(做，行动)->能够感知环境，并采取行动实现目标,类似于以前说的机器人啥的,这几年llm强大起来之后大家的讨论基本上转向了软件工程界(前几年对ai的认知还是对话机器)，即编程界\n从Re...",
+    "wordCount": 710,
+    "readingMinutes": 2,
+    "updated": "",
+    "path": "./posts/Harness.md"
+  },
+  {
     "id": "Tauri",
     "type": "post",
     "title": "Tauri",
@@ -22,10 +39,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Rust",
       "Tauri"
     ],
-    "summary": "接触Vue的Capacity，Android studio，react-nativeexpo go，qt，之后，终于决定尝试一下Tauri，顺便熟悉Rust\n环境安装\nRust，Tauri，Node.js\npnpm初始化\n配置图标\n自动更新",
-    "wordCount": 81,
+    "summary": "接触Vue的Capacity，Android studio，react-nativeexpo go，qt，之后，终于决定尝试一下Tauri，顺便熟悉Rust\n环境安装\nRust，Tauri，Node.js\npnpm初始化\n配置图标\n自...",
+    "wordCount": 92,
     "readingMinutes": 1,
-    "updated": "2026/07/10 20:28",
+    "updated": "2026/07/10 22:20",
     "path": "./posts/Tauri.md"
   },
   {

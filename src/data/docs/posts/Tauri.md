@@ -42,3 +42,5 @@ pnpm tauri icon path\icon.png
 ```bash
 pnpm tauri add updater
 ```
+
+>GitHub Release检测+workflow，配置TAURI_SIGNING_PRIVATE_KEY
