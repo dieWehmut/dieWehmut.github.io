@@ -211,9 +211,15 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
-.page-fade-enter-active,
+/* 快速淡出 + 平滑淡入，enter 用 ease-out 减速落位，leave 只淡出不位移，避免上滑跳动 */
+.page-fade-enter-active {
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+  will-change: opacity, transform;
+}
+
 .page-fade-leave-active {
-  transition: opacity 140ms ease, transform 140ms ease;
+  transition: opacity 100ms ease-in;
+  will-change: opacity;
 }
 
 .page-fade-enter-from {
@@ -223,7 +229,6 @@ onBeforeUnmount(() => {
 
 .page-fade-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
 }
 
 @media (max-width: 900px) {
@@ -240,6 +245,9 @@ onBeforeUnmount(() => {
   .page-fade-enter-active,
   .page-fade-leave-active {
     transition-duration: 1ms;
+  }
+  .page-fade-enter-from {
+    transform: none;
   }
 }
 </style>

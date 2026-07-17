@@ -75,19 +75,34 @@ import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
   padding: 46px 0 54px;
 }
 
-.page-fade-enter-active,
+/* 快速淡出 + 平滑淡入，enter 用 ease-out 减速落位，leave 只淡出不位移，避免上滑跳动 */
+.page-fade-enter-active {
+  transition: opacity 220ms ease-out, transform 220ms ease-out;
+  will-change: opacity, transform;
+}
+
 .page-fade-leave-active {
-  transition: opacity 160ms ease, transform 160ms ease;
+  transition: opacity 110ms ease-in;
+  will-change: opacity;
 }
 
 .page-fade-enter-from {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
 }
 
 .page-fade-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade-enter-active,
+  .page-fade-leave-active {
+    transition-duration: 1ms;
+  }
+  .page-fade-enter-from {
+    transform: none;
+  }
 }
 
 @media (max-width: 900px) {
