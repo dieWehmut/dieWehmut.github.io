@@ -55,6 +55,8 @@ let dotsW = 0
 let dotsH = 0
 let dotsDpr = 1
 let ringNodes = []          // 弹性点节点
+// 上一帧点环包围盒（逻辑坐标），脏矩形清除用，避免全屏 clearRect
+let prevDirty = null
 let ringAnimId = null
 // 头点目标（爱心中心，逻辑坐标）
 const ringTarget = { x: -9999, y: -9999 }
@@ -99,6 +101,7 @@ function resizeDots() {
   dotsCtx = canvas.getContext('2d', { alpha: true })
   dotsCtx.setTransform(1, 0, 0, 1, 0, 0)
   dotsCtx.scale(dotsDpr, dotsDpr)
+  prevDirty = null // 画布尺寸变了，旧脏矩形失效
 }
 
 function stepRing() {
@@ -116,16 +119,40 @@ function stepRing() {
   }
 }
 
+// 上一帧点环包围盒（逻辑坐标），用于脏矩形清除，避免全屏 clearRect
 function drawRing() {
   if (!dotsCtx) return
-  dotsCtx.clearRect(0, 0, dotsW, dotsH)
   const half = RING_DOT_SIZE / 2
   const n = ringNodes.length
-  // 单一主题色，一趟绘制 → 更丝滑
+
+  // 只清除上一帧绘制过的区域，而不是整块全屏画布
+  if (prevDirty) {
+    dotsCtx.clearRect(prevDirty.x, prevDirty.y, prevDirty.w, prevDirty.h)
+  }
+
+  // 一趟计算包围盒并绘制（单一主题色）
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
   dotsCtx.fillStyle = ringColor
   for (let i = 1; i < n; i++) {
     const node = ringNodes[i]
-    dotsCtx.fillRect(node.x - half, node.y - half, RING_DOT_SIZE, RING_DOT_SIZE)
+    const x = node.x, y = node.y
+    dotsCtx.fillRect(x - half, y - half, RING_DOT_SIZE, RING_DOT_SIZE)
+    if (x < minX) minX = x
+    if (y < minY) minY = y
+    if (x > maxX) maxX = x
+    if (y > maxY) maxY = y
+  }
+
+  // 记录本帧脏矩形（含点尺寸 + 1px 余量），供下一帧清除
+  if (maxX >= minX) {
+    prevDirty = {
+      x: minX - half - 1,
+      y: minY - half - 1,
+      w: (maxX - minX) + RING_DOT_SIZE + 2,
+      h: (maxY - minY) + RING_DOT_SIZE + 2,
+    }
+  } else {
+    prevDirty = null
   }
 }
 
@@ -162,6 +189,7 @@ function stopRing() {
     ringAnimId = null
   }
   if (dotsCtx) dotsCtx.clearRect(0, 0, dotsW, dotsH)
+  prevDirty = null
 }
 
 const CLICKABLE_SELECTOR = [
