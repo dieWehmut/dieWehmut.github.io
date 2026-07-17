@@ -58,7 +58,7 @@ export function useUrlStatus() {
       const data = await res.json()
       const httpStatus = Number(data.status)
 
-      if (data.ok && httpStatus >= 200 && httpStatus < 300) {
+      if (data.ok && httpStatus === 200) {
         statusMap[url] = { status: 'online', latency: Number(data.latency), httpStatus }
       } else if (Number.isFinite(httpStatus)) {
         statusMap[url] = { status: 'offline', httpStatus }
@@ -85,36 +85,17 @@ export function useUrlStatus() {
       clearTimeout(timeoutId)
       const latency = Math.round(performance.now() - t0)
 
-      if (response.ok) {
+      // 只有 HTTP 200 才算 online，其余（含 3xx 之后的非 200、4xx、5xx）一律 offline
+      if (response.status === 200) {
         statusMap[url] = { status: 'online', latency, httpStatus: response.status }
       } else {
         statusMap[url] = { status: 'offline', httpStatus: response.status }
       }
-    } catch (corsErr: any) {
+    } catch {
+      // 超时 / 网络错误 / CORS 拦截：无法证明是 200，一律 offline
+      // （no-cors 兜底响应不透明，读不到状态码，按规则不能判为 online，故不再尝试）
       clearTimeout(timeoutId)
-
-      if (corsErr.name === 'AbortError') {
-        statusMap[url] = { status: 'offline' }
-        pending.delete(url)
-        return
-      }
-
-      // CORS blocked — fall back to no-cors
-      try {
-        const noCorsCtrl = new AbortController()
-        pending.set(url, noCorsCtrl)
-        const t1 = performance.now()
-        const noCorsTimeoutId = setTimeout(() => noCorsCtrl.abort(), 5000)
-
-        await fetch(url, { mode: 'no-cors', signal: noCorsCtrl.signal })
-
-        clearTimeout(noCorsTimeoutId)
-        const latency = Math.round(performance.now() - t1)
-
-        statusMap[url] = { status: 'online', latency }
-      } catch {
-        statusMap[url] = { status: 'offline' }
-      }
+      statusMap[url] = { status: 'offline' }
     } finally {
       pending.delete(url)
     }
