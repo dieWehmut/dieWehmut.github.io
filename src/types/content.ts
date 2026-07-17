@@ -1,7 +1,7 @@
 export type ContentKind = 'post' | 'note' | 'capture' | 'friend' | 'project' | 'infra'
 export type ProjectCategory = 'websites' | 'games' | 'apps' | 'tools' | 'templates'
 export type CaptureSourceKind = 'post' | 'note'
-export type SiteColorScheme = 'green' | 'purple'
+export type SiteColorScheme = 'green' | 'purple' | 'pink'
 
 export interface ArchivePost {
   id: string

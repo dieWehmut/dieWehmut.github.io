@@ -49,12 +49,27 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
       tagColor: 'rgba(214, 194, 255, 0.9)',
     },
   },
+  pink: {
+    id: 'pink',
+    label: 'Pink',
+    preview: '#ff69b4',
+    light: {
+      accent: '#e64a97',
+      accentRgb: '230 74 151',
+      tagColor: 'rgba(126, 62, 96, 0.92)',
+    },
+    dark: {
+      accent: '#ff69b4',
+      accentRgb: '255 105 180',
+      tagColor: 'rgba(255, 194, 224, 0.9)',
+    },
+  },
 }
 
 export const siteColorSchemeOptions = Object.values(siteColorSchemes)
 
 export function isSiteColorScheme(value: unknown): value is SiteColorScheme {
-  return value === 'green' || value === 'purple'
+  return value === 'green' || value === 'purple' || value === 'pink'
 }
 
 export function resolveSiteColorScheme(value: unknown): SiteColorScheme {

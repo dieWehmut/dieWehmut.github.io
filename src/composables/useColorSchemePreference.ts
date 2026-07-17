@@ -32,7 +32,7 @@ function readStoredColorScheme(): SiteColorScheme | null {
 function readDocumentColorScheme(): SiteColorScheme | null {
   if (typeof document === 'undefined') return null
   const current = document.documentElement.getAttribute('data-color-scheme')
-  return current === 'green' || current === 'purple' ? current : null
+  return isSiteColorScheme(current) ? current : null
 }
 
 function readDocumentTheme(): SiteThemeMode {
