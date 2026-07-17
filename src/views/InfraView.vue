@@ -146,6 +146,7 @@ const ORBIT_START_ANGLE = -Math.PI / 2
 const STACKED_INNER_RADIUS = 25
 const OUTER_RING_RADIUS = 33
 const ORBIT_ROTATION_DURATION_MS = 1_200_000
+const ORBIT_UPDATE_THROTTLE_MS = 800
 const OUTER_RING_VERTICAL_INSET_THRESHOLD = 0.55
 const OUTER_RING_VERTICAL_INSET = 2
 const OUTER_RING_HORIZONTAL_PUSH = 20
@@ -306,7 +307,12 @@ function lineStyle(point) {
 
 function updateOrbitElapsed(timestamp) {
   if (!orbitStartedAt) orbitStartedAt = timestamp
-  orbitElapsed.value = timestamp - orbitStartedAt
+  const elapsed = timestamp - orbitStartedAt
+  // 轨道一圈 20 分钟，无需每帧重算 servicePoints（24 次三角运算）。
+  // 节流到 ~800ms 才写入响应式，避免与光标 rAF 争用主线程导致卡顿。
+  if (elapsed - orbitElapsed.value >= ORBIT_UPDATE_THROTTLE_MS) {
+    orbitElapsed.value = elapsed
+  }
   orbitFrame = window.requestAnimationFrame(updateOrbitElapsed)
 }
 
