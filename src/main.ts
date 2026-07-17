@@ -16,8 +16,10 @@ import { initThemePreference } from "./composables/useThemePreference";
 import { siteConfig } from "./data/site/config";
 import { getGitHubAvatarUrl } from "./utils/githubAvatar";
 
-const initialTheme = initThemePreference();
-initColorSchemePreference(initialTheme);
+// 先定配色（无手动偏好时随机选定 green/purple/pink），再定明暗主题。
+// 顺序很重要：主题初始化会套用当前配色，若颠倒则配色会被默认值覆盖，随机失效。
+initColorSchemePreference();
+initThemePreference();
 
 document.title = siteConfig.title;
 const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
