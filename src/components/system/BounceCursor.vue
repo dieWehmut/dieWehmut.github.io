@@ -9,15 +9,160 @@
       <div class="ripple" aria-hidden="true"></div>
     </div>
   </div>
+  <canvas
+    ref="dotsCanvasRef"
+    v-show="visible"
+    class="heart-dots-canvas"
+    aria-hidden="true"
+  ></canvas>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useMotionPreferences } from '../../composables/useMotionPreferences'
+import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 
 const cursorRef = ref(null)
+const dotsCanvasRef = ref(null)
 const visible = ref(false)
 const { canUsePointerEffects } = useMotionPreferences()
+const { colorScheme } = useColorSchemePreference()
+
+// ── 弹性点环（仿 cnblogs type:12 / mouseType3）─────────────────────────────
+// 头点跟随爱心中心，多条链沿角度放射，每个点弹性追踪父点
+// 点的颜色跟随当前主题的 accent 色（绿/紫/粉随配色切换而变）
+const RING_SPEED   = 4     // 追踪阻尼（越大越滞后柔软）
+const RING_ANIM_R  = 2     // 弹簧系数
+const RING_ANGLE_STEP = 30 // 每条链的角度间隔（度）→ 12 条
+const RING_R_MIN   = 10    // 链上点的最小半径
+const RING_R_MAX   = 34    // 链上点的最大半径
+const RING_R_STEP  = 2     // 半径步进（越大点越少）→ 每链 12 点
+const RING_DOT_SIZE = 2.5   // 点直径 px
+const RING_FALLBACK_COLOR = '#ff69b4' // 读不到主题色时的兜底（爱心粉）
+let ringColor = RING_FALLBACK_COLOR   // 当前点环颜色，来自 --site-accent
+
+/** 从主题 CSS 变量读取当前 accent 色，主题切换时刷新 */
+function refreshRingColor() {
+  if (typeof document === 'undefined') return
+  const accent = getComputedStyle(document.documentElement)
+    .getPropertyValue('--site-accent')
+    .trim()
+  ringColor = accent || RING_FALLBACK_COLOR
+}
+
+let dotsCtx = null
+let dotsW = 0
+let dotsH = 0
+let dotsDpr = 1
+let ringNodes = []          // 弹性点节点
+let ringAnimId = null
+// 头点目标（爱心中心，逻辑坐标）
+const ringTarget = { x: -9999, y: -9999 }
+
+/** 一个弹性点节点：cx/cy 是相对父点的偏移目标 */
+function makeRingNode(parent, cx, cy) {
+  return {
+    parent, cx, cy,
+    ddx: 0, ddy: 0, px: 0, py: 0, x: 0, y: 0,
+  }
+}
+
+function buildRing() {
+  ringNodes = []
+  // 头点（index 0）：直接跟随爱心中心
+  const head = makeRingNode(null, 0, 0)
+  ringNodes.push(head)
+  for (let ang = 0; ang < 360; ang += RING_ANGLE_STEP) {
+    const rad = (ang * Math.PI) / 180
+    let prev = head
+    for (let r = RING_R_MIN; r < RING_R_MAX; r += RING_R_STEP) {
+      // 与样例一致：偏移 = r/4 * (cos, sin)
+      const cx = (r / 4) * Math.cos(rad)
+      const cy = (r / 4) * Math.sin(rad)
+      const node = makeRingNode(prev, cx, cy)
+      ringNodes.push(node)
+      prev = node
+    }
+  }
+}
+
+function resizeDots() {
+  const canvas = dotsCanvasRef.value
+  if (!canvas) return
+  dotsDpr = window.devicePixelRatio || 1
+  dotsW = window.innerWidth
+  dotsH = window.innerHeight
+  canvas.width = dotsW * dotsDpr
+  canvas.height = dotsH * dotsDpr
+  canvas.style.width = dotsW + 'px'
+  canvas.style.height = dotsH + 'px'
+  dotsCtx = canvas.getContext('2d', { alpha: true })
+  dotsCtx.setTransform(1, 0, 0, 1, 0, 0)
+  dotsCtx.scale(dotsDpr, dotsDpr)
+}
+
+function stepRing() {
+  const n = ringNodes.length
+  for (let i = 0; i < n; i++) {
+    const node = ringNodes[i]
+    const x0 = node.parent ? node.parent.x : ringTarget.x
+    const y0 = node.parent ? node.parent.y : ringTarget.y
+    node.ddx += (x0 - node.px - node.ddx + node.cx) / RING_ANIM_R
+    node.ddy += (y0 - node.py - node.ddy + node.cy) / RING_ANIM_R
+    node.px += node.ddx / RING_SPEED
+    node.py += node.ddy / RING_SPEED
+    node.x = node.px
+    node.y = node.py
+  }
+}
+
+function drawRing() {
+  if (!dotsCtx) return
+  dotsCtx.clearRect(0, 0, dotsW, dotsH)
+  const half = RING_DOT_SIZE / 2
+  const n = ringNodes.length
+  // 单一主题色，一趟绘制 → 更丝滑
+  dotsCtx.fillStyle = ringColor
+  for (let i = 1; i < n; i++) {
+    const node = ringNodes[i]
+    dotsCtx.fillRect(node.x - half, node.y - half, RING_DOT_SIZE, RING_DOT_SIZE)
+  }
+}
+
+function ringLoop() {
+  stepRing()
+  drawRing()
+  ringAnimId = requestAnimationFrame(ringLoop)
+}
+
+function seedRingAtTarget() {
+  // 把所有节点初始位置对齐到当前目标，避免从 (0,0) 飞入的突兀感
+  if (ringTarget.x < 0) return
+  for (let i = 0; i < ringNodes.length; i++) {
+    const node = ringNodes[i]
+    node.px = node.x = ringTarget.x + node.cx
+    node.py = node.y = ringTarget.y + node.cy
+    node.ddx = 0
+    node.ddy = 0
+  }
+}
+
+function startRing() {
+  if (ringAnimId != null) return
+  resizeDots()
+  refreshRingColor()
+  if (!ringNodes.length) buildRing()
+  seedRingAtTarget()
+  ringLoop()
+}
+
+function stopRing() {
+  if (ringAnimId != null) {
+    cancelAnimationFrame(ringAnimId)
+    ringAnimId = null
+  }
+  if (dotsCtx) dotsCtx.clearRect(0, 0, dotsW, dotsH)
+}
 
 const CLICKABLE_SELECTOR = [
   'button',
@@ -48,25 +193,23 @@ let eventsBound = false
 
 function updateHoverState(target) {
   const root = document.documentElement
+  // 全局显示：除文本输入区外，任意位置都显示爱心 + 点环
   if (!target || isTextInputLike(target)) {
     visible.value = false
     root.classList.remove('heart-bounce-active')
     return
   }
-
-  const hit = target.closest?.(CLICKABLE_SELECTOR)
-  if (hit) {
-    visible.value = true
-    root.classList.add('heart-bounce-active')
-  } else {
-    visible.value = false
-    root.classList.remove('heart-bounce-active')
-  }
+  visible.value = true
+  root.classList.add('heart-bounce-active')
 }
 
 function onMouseMove(e) {
   pendingX = e.clientX
   pendingY = e.clientY
+
+  // 点环头点目标 = 爱心中心（图标 24×24，锚点在 x-12,y-20 → 中心约 x, y-8）
+  ringTarget.x = pendingX
+  ringTarget.y = pendingY - 8
 
   if (rafId) return
   rafId = requestAnimationFrame(() => {
@@ -110,6 +253,7 @@ function syncPointerEffects() {
     _lastTarget = null
     document.documentElement.classList.remove('heart-bounce-active')
     unbindEvents()
+    stopRing()
     return
   }
   bindEvents()
@@ -117,14 +261,37 @@ function syncPointerEffects() {
 
 watch(canUsePointerEffects, syncPointerEffects, { immediate: true })
 
+// 点环随爱心显隐启停
+watch(visible, (v) => {
+  if (v && canUsePointerEffects.value) startRing()
+  else stopRing()
+})
+
+// 主题配色切换时，点环颜色同步刷新
+watch(colorScheme, () => {
+  refreshRingColor()
+})
+
+let ringResizeTimer = null
+function onRingResize() {
+  clearTimeout(ringResizeTimer)
+  ringResizeTimer = setTimeout(() => {
+    if (ringAnimId != null) resizeDots()
+  }, 120)
+}
+
 onMounted(() => {
   syncPointerEffects()
+  window.addEventListener('resize', onRingResize, { passive: true })
 })
 
 onBeforeUnmount(() => {
   unbindEvents()
   document.documentElement.classList.remove('heart-bounce-active')
   if (rafId) cancelAnimationFrame(rafId)
+  stopRing()
+  window.removeEventListener('resize', onRingResize)
+  clearTimeout(ringResizeTimer)
 })
 </script>
 
@@ -140,6 +307,15 @@ onBeforeUnmount(() => {
   z-index: 2147483647 !important;
   will-change: transform;
   contain: layout style paint;
+}
+
+.heart-dots-canvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 2147483646; /* 紧贴爱心之下 */
+  will-change: transform;
 }
 
 .heart-bounce-cursor__icon {
@@ -181,29 +357,17 @@ onBeforeUnmount(() => {
   60% { transform: translate3d(0, 2px, 0) scale(0.96); }
 }
 
-:global(html.heart-bounce-active a),
-:global(html.heart-bounce-active button),
-:global(html.heart-bounce-active [role="button"]),
-:global(html.heart-bounce-active .clickable),
-:global(html.heart-bounce-active .action-btn),
-:global(html.heart-bounce-active .repo-link),
-:global(html.heart-bounce-active .repo-button),
-:global(html.heart-bounce-active .link-button),
-:global(html.heart-bounce-active .copy-btn),
-:global(html.heart-bounce-active .nav-btn),
-:global(html.heart-bounce-active .github-btn),
-:global(html.heart-bounce-active .tool-row) {
+/* 全局隐藏原生光标，只保留爱心 + 点环（文本输入区除外，见下方恢复规则）*/
+:global(html.heart-bounce-active),
+:global(html.heart-bounce-active *) {
   cursor: none !important;
 }
 
-/* Also cover float controls and custom buttons so native cursor is hidden there too */
-:global(html.heart-bounce-active .btt-button),
-:global(html.heart-bounce-active .lang-btn),
-:global(html.heart-bounce-active .sidebar-toggle),
-:global(html.heart-bounce-active .settings-button),
-:global(html.heart-bounce-active .lang-toggle),
-:global(html.heart-bounce-active .clean-toggle),
-:global(html.heart-bounce-active .float-container) {
-  cursor: none !important;
+/* 文本输入区恢复原生光标，方便编辑 */
+:global(html.heart-bounce-active input),
+:global(html.heart-bounce-active textarea),
+:global(html.heart-bounce-active select),
+:global(html.heart-bounce-active [contenteditable="true"]) {
+  cursor: auto !important;
 }
 </style>
