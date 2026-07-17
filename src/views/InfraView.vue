@@ -460,7 +460,7 @@ function serviceOverflowCount(item) {
 .infra-core__counts span {
   padding: var(--infra-count-padding-y) var(--infra-count-padding-x);
   border-radius: 999px;
-  color: var(--site-accent);
+  color: #22c55e; /* online 固定绿，不随主题配色变化 */
   background: rgba(0, 20, 28, 0.42);
   font-size: var(--infra-count-size);
   font-weight: 950;
@@ -593,7 +593,7 @@ function serviceOverflowCount(item) {
 }
 
 :root[data-theme="light"] .infra-core__counts span {
-  color: var(--site-accent);
+  color: #1a9e1a; /* online 固定绿（亮色主题下略深以保证对比度）*/
   background: rgba(255, 255, 255, 0.72);
   box-shadow: inset 0 0 0 1px rgba(0, 126, 210, 0.18);
 }
@@ -684,9 +684,14 @@ function serviceOverflowCount(item) {
   white-space: nowrap;
 }
 
+/* online / offline 固定绿/红，不随主题配色变化 */
+.infra-node__text em.is-online {
+  color: #22c55e;
+}
+
 .infra-node__text em.is-offline,
 .infra-node__text em.is-error {
-  color: #ff7878;
+  color: #ff5555;
 }
 
 @keyframes orb-spin {
@@ -885,9 +890,14 @@ function serviceOverflowCount(item) {
   font-weight: 900;
 }
 
+/* online / offline 固定绿/红，不随主题配色变化 */
+.infra-mobile-item p.is-online {
+  color: #22c55e;
+}
+
 .infra-mobile-item p.is-offline,
 .infra-mobile-item p.is-error {
-  color: #ff7878;
+  color: #ff5555;
 }
 
 .infra-mobile-item > a {
