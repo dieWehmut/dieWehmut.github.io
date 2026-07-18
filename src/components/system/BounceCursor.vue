@@ -39,6 +39,8 @@ const RING_R_MAX   = 34    // 链上点的最大半径
 const RING_R_STEP  = 2     // 半径步进（越大点越少）→ 每链 12 点
 const RING_DOT_SIZE = 2.5   // 点直径 px
 const RING_SPIN_SPEED = 0.012 // 自旋角速度（rad/帧）→ 60fps 下约一圈 8.7s
+const RING_TRAIL_LEN = 7      // 尾点流线长度 px（沿切向）
+const RING_TRAIL_WIDTH = 1    // 流线宽度 px
 const RING_FALLBACK_COLOR = '#ff69b4' // 读不到主题色时的兜底（爱心粉）
 let ringColor = RING_FALLBACK_COLOR   // 当前点环颜色，来自 --site-accent
 
@@ -71,6 +73,7 @@ function makeRingNode(parent, baseRad, offR) {
     parent, baseRad, offR,
     cx: 0, cy: 0, // 每帧由 baseRad + ringSpin 重算
     ddx: 0, ddy: 0, px: 0, py: 0, x: 0, y: 0,
+    isTail: false,
   }
 }
 
@@ -82,12 +85,16 @@ function buildRing() {
   for (let ang = 0; ang < 360; ang += RING_ANGLE_STEP) {
     const rad = (ang * Math.PI) / 180
     let prev = head
+    let tail = null
     for (let r = RING_R_MIN; r < RING_R_MAX; r += RING_R_STEP) {
       // 偏移半径 = r/4（与样例一致），角度随全局自旋旋转
       const node = makeRingNode(prev, rad, r / 4)
       ringNodes.push(node)
       prev = node
+      tail = node
     }
+    // 每条链最外侧的点：旋转时拖一条细小切向流线
+    if (tail) tail.isTail = true
   }
 }
 
@@ -146,14 +153,34 @@ function drawRing() {
   // 一趟计算包围盒并绘制（单一主题色）
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
   dotsCtx.fillStyle = ringColor
-  for (let i = 1; i < n; i++) {
-    const node = ringNodes[i]
-    const x = node.x, y = node.y
-    dotsCtx.fillRect(x - half, y - half, RING_DOT_SIZE, RING_DOT_SIZE)
+  dotsCtx.strokeStyle = ringColor
+  dotsCtx.lineWidth = RING_TRAIL_WIDTH
+  dotsCtx.lineCap = 'round'
+  const acc = (x, y) => {
     if (x < minX) minX = x
     if (y < minY) minY = y
     if (x > maxX) maxX = x
     if (y > maxY) maxY = y
+  }
+  for (let i = 1; i < n; i++) {
+    const node = ringNodes[i]
+    const x = node.x, y = node.y
+    dotsCtx.fillRect(x - half, y - half, RING_DOT_SIZE, RING_DOT_SIZE)
+    acc(x, y)
+    // 尾点：沿切向反方向拖一条细流线（旋转的瞬时速度反向 = 拖尾）
+    if (node.isTail) {
+      const ang = node.baseRad + ringSpin
+      // 切向 = 半径方向 +90°；自旋角递增，拖尾指向切向反方向
+      const tx = Math.sin(ang)
+      const ty = -Math.cos(ang)
+      const ex = x + tx * RING_TRAIL_LEN
+      const ey = y + ty * RING_TRAIL_LEN
+      dotsCtx.beginPath()
+      dotsCtx.moveTo(x, y)
+      dotsCtx.lineTo(ex, ey)
+      dotsCtx.stroke()
+      acc(ex, ey)
+    }
   }
 
   // 记录本帧脏矩形（含点尺寸 + 1px 余量），供下一帧清除
