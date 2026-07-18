@@ -39,8 +39,9 @@ const RING_R_MAX   = 34    // 链上点的最大半径
 const RING_R_STEP  = 2     // 半径步进（越大点越少）→ 每链 12 点
 const RING_DOT_SIZE = 2.5   // 点直径 px
 const RING_SPIN_SPEED = 0.012 // 自旋角速度（rad/帧）→ 60fps 下约一圈 8.7s
-const RING_TRAIL_LEN = 7      // 尾点流线长度 px（沿切向）
-const RING_TRAIL_WIDTH = 1    // 流线宽度 px
+const RING_TRAIL_LEN = 11     // 尾点流线长度 px（沿切向）
+const RING_TRAIL_WIDTH = 0.6  // 流线宽度 px
+const RING_TRAIL_CURVE = 3    // 流线弯曲量 px（沿半径方向偏移控制点）
 const RING_FALLBACK_COLOR = '#ff69b4' // 读不到主题色时的兜底（爱心粉）
 let ringColor = RING_FALLBACK_COLOR   // 当前点环颜色，来自 --site-accent
 
@@ -167,7 +168,7 @@ function drawRing() {
     const x = node.x, y = node.y
     dotsCtx.fillRect(x - half, y - half, RING_DOT_SIZE, RING_DOT_SIZE)
     acc(x, y)
-    // 尾点：沿切向反方向拖一条细流线（旋转的瞬时速度反向 = 拖尾）
+    // 尾点：沿切向反方向拖一条细流线，用贝塞尔弯曲成顺圆周的弧
     if (node.isTail) {
       const ang = node.baseRad + ringSpin
       // 切向 = 半径方向 +90°；自旋角递增，拖尾指向切向反方向
@@ -175,11 +176,17 @@ function drawRing() {
       const ty = -Math.cos(ang)
       const ex = x + tx * RING_TRAIL_LEN
       const ey = y + ty * RING_TRAIL_LEN
+      // 控制点在流线中点，沿半径方向（cos,sin）外偏，形成弯月弧度
+      const rx = Math.cos(ang)
+      const ry = Math.sin(ang)
+      const cxp = x + tx * RING_TRAIL_LEN * 0.5 + rx * RING_TRAIL_CURVE
+      const cyp = y + ty * RING_TRAIL_LEN * 0.5 + ry * RING_TRAIL_CURVE
       dotsCtx.beginPath()
       dotsCtx.moveTo(x, y)
-      dotsCtx.lineTo(ex, ey)
+      dotsCtx.quadraticCurveTo(cxp, cyp, ex, ey)
       dotsCtx.stroke()
       acc(ex, ey)
+      acc(cxp, cyp)
     }
   }
 
