@@ -38,6 +38,7 @@ const RING_R_MIN   = 10    // 链上点的最小半径
 const RING_R_MAX   = 34    // 链上点的最大半径
 const RING_R_STEP  = 2     // 半径步进（越大点越少）→ 每链 12 点
 const RING_DOT_SIZE = 2.5   // 点直径 px
+const RING_SPIN_SPEED = 0.012 // 自旋角速度（rad/帧）→ 60fps 下约一圈 8.7s
 const RING_FALLBACK_COLOR = '#ff69b4' // 读不到主题色时的兜底（爱心粉）
 let ringColor = RING_FALLBACK_COLOR   // 当前点环颜色，来自 --site-accent
 
@@ -61,27 +62,29 @@ let ringAnimId = null
 // 头点目标（爱心中心，逻辑坐标）
 const ringTarget = { x: -9999, y: -9999 }
 
-/** 一个弹性点节点：cx/cy 是相对父点的偏移目标 */
-function makeRingNode(parent, cx, cy) {
+// 全局自旋角（每帧递增），让点环静止时也缓慢绕中心自转
+let ringSpin = 0
+
+/** 一个弹性点节点：以极坐标 (baseRad, offR) 存相对父点的偏移，便于整体旋转 */
+function makeRingNode(parent, baseRad, offR) {
   return {
-    parent, cx, cy,
+    parent, baseRad, offR,
+    cx: 0, cy: 0, // 每帧由 baseRad + ringSpin 重算
     ddx: 0, ddy: 0, px: 0, py: 0, x: 0, y: 0,
   }
 }
 
 function buildRing() {
   ringNodes = []
-  // 头点（index 0）：直接跟随爱心中心
+  // 头点（index 0）：直接跟随爱心中心，无偏移
   const head = makeRingNode(null, 0, 0)
   ringNodes.push(head)
   for (let ang = 0; ang < 360; ang += RING_ANGLE_STEP) {
     const rad = (ang * Math.PI) / 180
     let prev = head
     for (let r = RING_R_MIN; r < RING_R_MAX; r += RING_R_STEP) {
-      // 与样例一致：偏移 = r/4 * (cos, sin)
-      const cx = (r / 4) * Math.cos(rad)
-      const cy = (r / 4) * Math.sin(rad)
-      const node = makeRingNode(prev, cx, cy)
+      // 偏移半径 = r/4（与样例一致），角度随全局自旋旋转
+      const node = makeRingNode(prev, rad, r / 4)
       ringNodes.push(node)
       prev = node
     }
@@ -105,9 +108,19 @@ function resizeDots() {
 }
 
 function stepRing() {
+  // 每帧推进全局自旋角，保持在 [0, 2π) 避免浮点无限增长
+  ringSpin += RING_SPIN_SPEED
+  if (ringSpin >= Math.PI * 2) ringSpin -= Math.PI * 2
+
   const n = ringNodes.length
   for (let i = 0; i < n; i++) {
     const node = ringNodes[i]
+    // 头点（无 parent）不旋转；其余按 baseRad + 自旋角实时重算偏移目标
+    if (node.parent) {
+      const ang = node.baseRad + ringSpin
+      node.cx = node.offR * Math.cos(ang)
+      node.cy = node.offR * Math.sin(ang)
+    }
     const x0 = node.parent ? node.parent.x : ringTarget.x
     const y0 = node.parent ? node.parent.y : ringTarget.y
     node.ddx += (x0 - node.px - node.ddx + node.cx) / RING_ANIM_R
@@ -167,6 +180,12 @@ function seedRingAtTarget() {
   if (ringTarget.x < 0) return
   for (let i = 0; i < ringNodes.length; i++) {
     const node = ringNodes[i]
+    // 先按当前自旋角算好偏移，否则 cx/cy 尚为 0 会让点先堆在中心再炸开
+    if (node.parent) {
+      const ang = node.baseRad + ringSpin
+      node.cx = node.offR * Math.cos(ang)
+      node.cy = node.offR * Math.sin(ang)
+    }
     node.px = node.x = ringTarget.x + node.cx
     node.py = node.y = ringTarget.y + node.cy
     node.ddx = 0
