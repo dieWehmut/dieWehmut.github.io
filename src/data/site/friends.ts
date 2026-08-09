@@ -16,6 +16,13 @@ export const friends: FriendLink[] = [
     avatar: 'https://avatars.githubusercontent.com/Je1ghtxyuN',
   },
   {
+    id: 'AkiMisaka',
+    name: 'AkiMisaka',
+    description: '不是糖猫',
+    url: 'blog.1343263.xyz',
+    avatar: 'https://avatars.githubusercontent.com/asdetycv1zzc',
+  },
+  {
     id: 'fugod',
     name: 'fugod',
     description: 'fufu142857',
@@ -28,5 +35,19 @@ export const friends: FriendLink[] = [
     description: 'Focusing on bandit algorithms and LLM and VLA inference acceleration',
     url: 'https://ken1301225.github.io/',
     avatar: 'https://avatars.githubusercontent.com/ken1301225',
-  }
+  },
+  {
+    id: 'shanmeng-chunyu',
+    name: "山梦春雨",
+    description: 'NJU 山梦春雨',
+    url: 'https://shanmeng-chunyu.github.io/personal-homepage',
+    avatar: 'https://avatars.githubusercontent.com/shanmeng-chunyu',
+  },
+  {
+    id: 'Lilythos',
+    name: "Lilythos",
+    description: 'Think, Act, Reflect',
+    url: 'https://lilythos.github.io/TD/',
+    avatar: 'https://avatars.githubusercontent.com/lilythos',
+  },
 ]

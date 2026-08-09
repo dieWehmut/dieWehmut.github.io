@@ -27,7 +27,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "前置知识\nAgent\nagent自拉丁语agere(做，行动)->能够感知环境，并采取行动实现目标,类似于以前说的机器人啥的,这几年llm强大起来之后大家的讨论基本上转向了软件工程界(前几年对ai的认知还是对话机器)，即编程界\n从Re...",
     "wordCount": 710,
     "readingMinutes": 2,
-    "updated": "2026/07/15 21:34",
+    "updated": "2026/07/15 21:35",
     "path": "./posts/Harness.md"
   },
   {
