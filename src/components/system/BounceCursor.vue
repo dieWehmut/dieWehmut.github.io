@@ -11,22 +11,29 @@
   </div>
   <canvas
     ref="dotsCanvasRef"
-    v-show="visible"
+    v-show="ringVisible"
     class="heart-dots-canvas"
     aria-hidden="true"
   ></canvas>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useMotionPreferences } from '../../composables/useMotionPreferences'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
+import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 
 const cursorRef = ref(null)
 const dotsCanvasRef = ref(null)
 const visible = ref(false)
 const { canUsePointerEffects } = useMotionPreferences()
 const { colorScheme } = useColorSchemePreference()
+const { dynamicBackgroundEnabled } = useBackgroundPreference()
+
+// 点环与流线只属于「动态背景」这一档效果，关掉后只剩爱心本体
+const ringVisible = computed(
+  () => visible.value && canUsePointerEffects.value && dynamicBackgroundEnabled.value,
+)
 
 // ── 弹性点环（仿 cnblogs type:12 / mouseType3）─────────────────────────────
 // 头点跟随爱心中心，多条链沿角度放射，每个点弹性追踪父点
@@ -342,9 +349,9 @@ function syncPointerEffects() {
 
 watch(canUsePointerEffects, syncPointerEffects, { immediate: true })
 
-// 点环随爱心显隐启停
-watch(visible, (v) => {
-  if (v && canUsePointerEffects.value) startRing()
+// 点环随「爱心可见 + 动态背景开启」启停
+watch(ringVisible, (v) => {
+  if (v) startRing()
   else stopRing()
 })
 
