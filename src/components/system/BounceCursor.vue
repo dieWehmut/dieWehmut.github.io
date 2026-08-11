@@ -46,9 +46,9 @@ const RING_R_MAX   = 34    // 链上点的最大半径
 const RING_R_STEP  = 2     // 半径步进（越大点越少）→ 每链 12 点
 const RING_DOT_SIZE = 2.5   // 点直径 px
 const RING_SPIN_SPEED = 0.012 // 自旋角速度（rad/帧）→ 60fps 下约一圈 8.7s
-const RING_TRAIL_LEN = 11     // 尾点流线长度 px（沿切向）
-const RING_TRAIL_WIDTH = 0.6  // 流线宽度 px
-const RING_TRAIL_CURVE = 3    // 流线弯曲量 px（沿半径方向偏移控制点）
+const RING_TRAIL_LEN = 16     // 尾点流线长度 px（沿切向）
+const RING_TRAIL_WIDTH = 0.42 // 流线宽度 px
+const RING_TRAIL_CURVE = 4.5  // 流线弯曲量 px（沿半径方向偏移控制点，随长度等比放大保持弧度）
 const RING_FALLBACK_COLOR = '#ff69b4' // 读不到主题色时的兜底（爱心粉）
 let ringColor = RING_FALLBACK_COLOR   // 当前点环颜色，来自 --site-accent
 
