@@ -198,7 +198,37 @@ async function renderGiscus() {
 function resetAndRender() {
   renderKey.value += 1
   renderedRoute = ''
-  renderGiscus()
+  scheduleRender()
+}
+
+// 换页时重挂 giscus 会拆 iframe + 注入第三方 script，和 page-fade 抢同一帧。
+// 推迟到空闲时段再做，过渡动画就不会被这段同步 DOM 工作卡住。
+let renderHandle = null
+let renderHandleKind = null
+
+function cancelScheduledRender() {
+  if (renderHandle == null) return
+  if (renderHandleKind === 'idle') window.cancelIdleCallback(renderHandle)
+  else window.clearTimeout(renderHandle)
+  renderHandle = null
+  renderHandleKind = null
+}
+
+function scheduleRender() {
+  cancelScheduledRender()
+  const run = () => {
+    renderHandle = null
+    renderHandleKind = null
+    renderGiscus()
+  }
+
+  if (typeof window.requestIdleCallback === 'function') {
+    renderHandleKind = 'idle'
+    renderHandle = window.requestIdleCallback(run, { timeout: 600 })
+  } else {
+    renderHandleKind = 'timeout'
+    renderHandle = window.setTimeout(run, 240)
+  }
 }
 
 onMounted(() => {
@@ -224,10 +254,11 @@ onMounted(() => {
     }
   })
 
-  renderGiscus()
+  scheduleRender()
 })
 
 onBeforeUnmount(() => {
+  cancelScheduledRender()
   unwatchGiscusAuth?.()
   themeObserver?.disconnect()
 
