@@ -19,7 +19,7 @@ export const friends: FriendLink[] = [
     id: 'AkiMisaka',
     name: 'AkiMisaka',
     description: '不是糖猫',
-    url: 'blog.1343263.xyz',
+    url: 'https://blog.1343263.xyz',
     avatar: 'https://avatars.githubusercontent.com/asdetycv1zzc',
   },
   {
