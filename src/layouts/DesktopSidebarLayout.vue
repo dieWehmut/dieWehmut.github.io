@@ -77,18 +77,18 @@ import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
 
 /* 快速淡出 + 平滑淡入，enter 用 ease-out 减速落位，leave 只淡出不位移，避免上滑跳动 */
 .page-fade-enter-active {
-  transition: opacity 220ms ease-out, transform 220ms ease-out;
+  transition: opacity 160ms ease-out, transform 160ms ease-out;
   will-change: opacity, transform;
 }
 
 .page-fade-leave-active {
-  transition: opacity 110ms ease-in;
+  transition: opacity 60ms ease-in;
   will-change: opacity;
 }
 
 .page-fade-enter-from {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(5px);
 }
 
 .page-fade-leave-to {

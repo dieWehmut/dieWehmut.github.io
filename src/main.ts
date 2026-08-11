@@ -10,7 +10,7 @@ import "katex/dist/katex.min.css";
 
 import App from "./App.vue";
 import i18n from "./i18n";
-import router from "./router";
+import router, { installHoverPrefetch } from "./router";
 import { initColorSchemePreference } from "./composables/useColorSchemePreference";
 import { initThemePreference } from "./composables/useThemePreference";
 import { siteConfig } from "./data/site/config";
@@ -41,5 +41,7 @@ app.use(ElConfigProvider);
 app.use(ElIcon);
 app.use(i18n);
 app.use(router);
+
+installHoverPrefetch();
 
 app.mount("#app");

@@ -30,6 +30,13 @@ const primaryRoutePreloaders = new Map<string, () => Promise<unknown>>([
   ['/friends', viewLoaders.friends],
   ['/search', viewLoaders.search],
 ])
+// 详情页按首段路径前缀匹配：/post/:id、/note/:id、/tags/:tag
+// 这些 chunk 很重（尤其 markdown 渲染链），不进空闲预热队列，只在鼠标悬停链接时按需拉取
+const detailRoutePreloaders = new Map<string, () => Promise<unknown>>([
+  ['post', viewLoaders.postDetail],
+  ['note', viewLoaders.noteDetail],
+  ['tags', viewLoaders.tagDetail],
+])
 const preloadedRoutePaths = new Set<string>()
 
 const routes = [
@@ -53,10 +60,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior(to, _from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
     if (to.hash) return { el: to.hash, top: 24, behavior: 'smooth' }
-    return { top: 0, behavior: 'smooth' }
+    // 仅 query 变化（搜索、筛选）时留在原处，别把用户弹回顶部
+    if (to.path === from.path) return false
+    // 换页瞬时回顶：平滑滚动会和 page-fade 串行叠加，长文里尤其拖沓；
+    // out-in 过渡期间旧内容已淡出，这一跳看不见
+    return { top: 0 }
   },
 })
 
@@ -70,15 +81,49 @@ function normalizePreloadPath(path: string) {
   return pathname.replace(/\/+$/, '') || '/'
 }
 
+function resolvePreloader(normalizedPath: string) {
+  const exact = primaryRoutePreloaders.get(normalizedPath)
+  if (exact) return exact
+  const [, head] = normalizedPath.split('/')
+  return detailRoutePreloaders.get(head)
+}
+
 export function preloadRouteByPath(path: string) {
   const normalizedPath = normalizePreloadPath(path)
-  const loader = primaryRoutePreloaders.get(normalizedPath)
+  const loader = resolvePreloader(normalizedPath)
   if (!loader || preloadedRoutePaths.has(normalizedPath)) return
 
   preloadedRoutePaths.add(normalizedPath)
   void loader().catch(() => {
     preloadedRoutePaths.delete(normalizedPath)
   })
+}
+
+/**
+ * 全站链接悬停预取：用事件委托在 document 上挂一个 pointerover，
+ * 命中站内 <a> 就提前拉对应视图 chunk。比给每个卡片组件加 @pointerenter
+ * 少改十几个文件，且自动覆盖正文里的站内链接。
+ */
+export function installHoverPrefetch() {
+  if (typeof document === 'undefined') return
+
+  const base = import.meta.env.BASE_URL.replace(/\/+$/, '')
+
+  document.addEventListener(
+    'pointerover',
+    (event) => {
+      const target = event.target as Element | null
+      const anchor = target?.closest?.('a[href]') as HTMLAnchorElement | null
+      if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return
+      if (anchor.origin !== window.location.origin) return
+
+      const path = base && anchor.pathname.startsWith(base)
+        ? anchor.pathname.slice(base.length) || '/'
+        : anchor.pathname
+      preloadRouteByPath(path)
+    },
+    { passive: true },
+  )
 }
 
 export function preloadPrimaryRoutes() {
