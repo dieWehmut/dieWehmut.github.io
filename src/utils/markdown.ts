@@ -1078,7 +1078,7 @@ const marked = new Marked({
 marked.use(markedKatex({
   nonStandard: true,
   throwOnError: false,
-  output: 'html',
+  output: 'htmlAndMathml',
 }))
 
 let currentMarkdownRenderOptions: Required<RenderMarkdownOptions> = {

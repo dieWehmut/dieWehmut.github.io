@@ -46,6 +46,19 @@ function readAccentColor(): string {
   )
 }
 
+function tintWithWhite(hex: string, ratio: number): string {
+  const match = hex.replace('#', '').match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i)
+  if (!match) return '#f5f5f5'
+  const mix = (value: number) =>
+    Math.round(value + (255 - value) * ratio)
+  const channels = [match[1], match[2], match[3]].map((part) =>
+    mix(parseInt(part, 16))
+  )
+  return `#${channels
+    .map((value) => value.toString(16).padStart(2, '0'))
+    .join('')}`
+}
+
 export function sanitizeFilename(name: string): string {
   const cleaned = name
     .replace(/[\\/:*?"<>|\s]+/g, '-')
@@ -207,11 +220,18 @@ function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
   if (kind === 'math') {
     const formula = raw ? decodeHtml(raw) : block.textContent?.trim() || ''
     return formula
-      ? [{ text: formula, style: 'mathBlock', preserveLeadingSpaces: true }]
+      ? [
+          { text: 'LaTeX', style: 'codeHeader', color: accent },
+          { text: formula, style: 'mathBlock', preserveLeadingSpaces: true },
+        ]
       : []
   }
   if (pre) {
+    const lang = block.dataset.mdLang || ''
+    const fileName = block.dataset.mdFileName || ''
+    const label = fileName ? `file: ${fileName}` : lang || 'text'
     return [
+      { text: label, style: 'codeHeader', color: accent },
       {
         text: pre.textContent || '',
         style: 'codeBlock',
@@ -224,13 +244,89 @@ function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
   )
 }
 
+function cleanText(value: string): string {
+  return value.replace(/\s+/g, ' ').trim()
+}
+
+function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
+  const items: Content[] = []
+  const pushItem = (item: Content) => {
+    if (items.length) {
+      items.push({ text: '  ·  ', color: '#b5b5b5', fontSize: 9 })
+    }
+    items.push(item)
+  }
+
+  const date = meta.querySelector('.article-meta__date')
+  if (date) pushItem({ text: cleanText(date.textContent || ''), style: 'metaItem' })
+
+  const updated = meta.querySelector('.article-meta__updated')
+  if (updated) {
+    pushItem({ text: cleanText(updated.textContent || ''), style: 'metaItem' })
+  }
+
+  for (const stat of meta.querySelectorAll('.article-meta__stat')) {
+    pushItem({ text: cleanText(stat.textContent || ''), style: 'metaItem' })
+  }
+
+  const license = meta.querySelector<HTMLAnchorElement>('.article-meta__license')
+  if (license) {
+    pushItem({
+      text: cleanText(license.textContent || ''),
+      link: license.href || undefined,
+      style: 'metaLink',
+    })
+  }
+
+  const result: Content[] = []
+  if (items.length) result.push({ text: items, style: 'metaRow' })
+
+  const tagLinks = Array.from(
+    meta.querySelectorAll<HTMLAnchorElement>('a.article-meta__tag')
+  )
+  if (tagLinks.length) {
+    const tagText: Content[] = []
+    tagLinks.forEach((link, index) => {
+      if (index > 0) tagText.push({ text: '  ' })
+      const tag = cleanText(link.textContent || '')
+      tagText.push({
+        text: `# ${tag}`,
+        link: link.href || undefined,
+        color: accent,
+        background: tintWithWhite(accent, 0.88),
+        fontSize: 8.5,
+        bold: true,
+      })
+    })
+    result.push({ text: tagText, style: 'tagRow' })
+  }
+
+  // A subtle accent rule separates the article header from the body, like the
+  // card border on the website.
+  result.push({
+    canvas: [
+      {
+        type: 'line',
+        x1: 0,
+        y1: 0,
+        x2: 499,
+        y2: 0,
+        lineWidth: 0.8,
+        lineColor: accent,
+      },
+    ],
+    margin: [0, 4, 0, 10],
+  })
+
+  return result
+}
+
 function elementToBlocks(element: Element, accent: string): Content[] {
   const tag = element.tagName.toLowerCase()
   const classes = element.classList
 
   if (classes.contains('article-meta')) {
-    const text = element.textContent?.replace(/\s+/g, ' ').trim()
-    return text ? [{ text, style: 'meta' }] : []
+    return articleMetaToBlocks(element as HTMLElement, accent)
   }
 
   if (
@@ -258,7 +354,13 @@ function elementToBlocks(element: Element, accent: string): Content[] {
     case 'h4':
     case 'h5':
     case 'h6':
-      return [{ text: inlineContent(element, accent), style: tag }]
+      {
+        const heading: Content = { text: inlineContent(element, accent), style: tag }
+        if (element.closest('.markdown-body')) {
+          ;(heading as Content & { tocItem: boolean }).tocItem = true
+        }
+        return [heading]
+      }
     case 'p':
       return [{ text: inlineContent(element, accent), style: 'paragraph' }]
     case 'ul':
@@ -266,6 +368,29 @@ function elementToBlocks(element: Element, accent: string): Content[] {
     case 'ol':
       return [{ ol: listItems(element, accent), style: 'list' }]
     case 'blockquote':
+      {
+        const quoteContent = Array.from(element.children).flatMap((child) =>
+          elementToBlocks(child, accent)
+        )
+        return [
+          {
+            table: {
+              widths: [3, '*'],
+              body: [
+                [
+                  { text: '', fillColor: accent },
+                  {
+                    stack: quoteContent,
+                    margin: [10, 4, 4, 4],
+                  },
+                ],
+              ],
+            },
+            layout: 'noBorders',
+            style: 'blockquote',
+          },
+        ]
+      }
       return [
         {
           stack: Array.from(element.children).flatMap((child) =>
@@ -303,6 +428,13 @@ function elementToBlocks(element: Element, accent: string): Content[] {
       ]
     case 'img':
       return [imageToContent(element as HTMLImageElement)]
+    case 'figcaption':
+      return [
+        {
+          text: cleanText(element.textContent || ''),
+          style: 'figcaption',
+        },
+      ]
     default:
       return [{ text: inlineContent(element, accent), style: 'paragraph' }]
   }
@@ -345,63 +477,118 @@ async function embedImages(root: HTMLElement): Promise<void> {
 function buildDocumentDefinition(
   title: string,
   content: Content[],
-  accent: string
+  accent: string,
+  siteTitle: string,
+  hasHeadings: boolean
 ): TDocumentDefinitions {
+  const tocContent: Content[] = hasHeadings
+    ? [
+        {
+          toc: {
+            title: { text: 'Contents', style: 'tocTitle' },
+            textStyle: { fontSize: 10, color: '#333' },
+            numberStyle: { color: accent, bold: true },
+          },
+          pageBreak: 'after',
+        } as Content,
+      ]
+    : []
+  const truncatedTitle = title.length > 42 ? `${title.slice(0, 42)}…` : title
+
   return {
     pageSize: 'A4',
     pageMargins: [48, 54, 48, 50],
     info: { title },
     defaultStyle: {
       font: 'LXGW',
-      fontSize: 10.5,
-      lineHeight: 1.5,
+      fontSize: 10.8,
+      lineHeight: 1.6,
       color: '#1f1f1f',
     },
-    content,
+    content: [...tocContent, ...content],
     styles: {
-      h1: { fontSize: 19, bold: true, color: accent, margin: [0, 0, 0, 8] },
-      h2: { fontSize: 15.5, bold: true, color: accent, margin: [0, 16, 0, 6] },
-      h3: { fontSize: 13, bold: true, color: accent, margin: [0, 12, 0, 5] },
-      h4: { fontSize: 12, bold: true, color: accent, margin: [0, 10, 0, 4] },
-      h5: { fontSize: 11, bold: true, color: accent, margin: [0, 8, 0, 4] },
-      h6: { fontSize: 10.5, bold: true, color: accent, margin: [0, 8, 0, 4] },
-      paragraph: { fontSize: 10.5, lineHeight: 1.5, margin: [0, 3, 0, 3] },
-      meta: { fontSize: 9, color: '#666', margin: [0, 0, 0, 12] },
-      list: { fontSize: 10.5, lineHeight: 1.45, margin: [0, 4, 0, 6] },
+      tocTitle: { fontSize: 16, bold: true, color: accent, margin: [0, 0, 0, 10] },
+      h1: { fontSize: 20, bold: true, color: accent, margin: [0, 0, 0, 8] },
+      h2: { fontSize: 16, bold: true, color: accent, margin: [0, 18, 0, 7] },
+      h3: { fontSize: 13.5, bold: true, color: accent, margin: [0, 14, 0, 6] },
+      h4: { fontSize: 12, bold: true, color: accent, margin: [0, 11, 0, 5] },
+      h5: { fontSize: 11, bold: true, color: accent, margin: [0, 9, 0, 4] },
+      h6: { fontSize: 10.8, bold: true, color: accent, margin: [0, 8, 0, 4] },
+      paragraph: { fontSize: 10.8, lineHeight: 1.6, margin: [0, 4, 0, 4] },
+      metaRow: {
+        fontSize: 9,
+        lineHeight: 1.45,
+        color: '#666',
+        margin: [0, 2, 0, 2],
+      },
+      metaItem: { fontSize: 9, color: '#666' },
+      metaLink: { fontSize: 9, color: accent, decoration: 'underline' },
+      tagRow: { fontSize: 8.5, lineHeight: 1.4, margin: [0, 4, 0, 0] },
+      list: { fontSize: 10.8, lineHeight: 1.55, margin: [0, 4, 0, 8] },
       blockquote: {
-        fontSize: 10.5,
-        italics: true,
+        fontSize: 10.6,
         color: '#444',
-        margin: [12, 4, 0, 8],
+        margin: [0, 5, 0, 9],
+      },
+      codeHeader: {
+        fontSize: 8,
+        bold: true,
+        margin: [0, 7, 0, 0],
       },
       codeBlock: {
         fontSize: 8.8,
-        lineHeight: 1.35,
-        background: '#f5f5f5',
+        lineHeight: 1.4,
+        background: tintWithWhite(accent, 0.93),
         color: '#24292e',
-        margin: [0, 6, 0, 8],
+        margin: [0, 0, 0, 9],
       },
       mathBlock: {
         fontSize: 9,
         italics: true,
-        background: '#fafafa',
+        background: tintWithWhite(accent, 0.95),
         color: '#333',
-        margin: [0, 6, 0, 8],
+        margin: [0, 0, 0, 9],
       },
-      table: { fontSize: 9, lineHeight: 1.35, margin: [0, 6, 0, 10] },
-      tableHeader: { bold: true, color: accent, background: '#f2f2f2' },
+      table: { fontSize: 9, lineHeight: 1.35, margin: [0, 7, 0, 11] },
+      tableHeader: {
+        bold: true,
+        color: accent,
+        background: tintWithWhite(accent, 0.92),
+      },
       tableCell: {},
       image: { margin: [0, 6, 0, 6] },
+      figcaption: {
+        fontSize: 8.5,
+        color: '#777',
+        alignment: 'center',
+        margin: [0, 2, 0, 9],
+      },
     },
     header: (_currentPage, _pageCount, pageSize) => ({
-      canvas: [
+      stack: [
         {
-          type: 'rect',
-          x: 0,
-          y: 0,
-          w: pageSize.width,
-          h: 4,
-          color: accent,
+          canvas: [
+            {
+              type: 'rect',
+              x: 0,
+              y: 0,
+              w: pageSize.width,
+              h: 4,
+              color: accent,
+            },
+          ],
+        },
+        {
+          columns: [
+            { text: siteTitle, fontSize: 8, color: '#999' },
+            {
+              text: truncatedTitle,
+              fontSize: 8,
+              color: accent,
+              alignment: 'right',
+            },
+          ],
+          margin: [0, 6, 0, 0],
         },
       ],
     }),
@@ -416,16 +603,26 @@ function buildDocumentDefinition(
 }
 
 export async function generateArticlePdf(
-  source: PdfExportSource
+  source: PdfExportSource,
+  siteTitle = 'Nexus'
 ): Promise<void> {
   await ensurePdfFonts()
   await embedImages(source.element)
 
   const accent = readAccentColor()
+  const hasHeadings =
+    source.element.querySelectorAll('.markdown-body h2, .markdown-body h3, .markdown-body h4')
+      .length >= 2
   const content = Array.from(source.element.children)
     .flatMap((child) => elementToBlocks(child, accent))
     .filter(Boolean)
-  const definition = buildDocumentDefinition(source.title, content, accent)
+  const definition = buildDocumentDefinition(
+    source.title,
+    content,
+    accent,
+    siteTitle,
+    hasHeadings
+  )
 
   pdfMake.createPdf(definition).download(`${sanitizeFilename(source.title)}.pdf`)
 }

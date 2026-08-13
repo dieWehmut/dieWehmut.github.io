@@ -126,7 +126,7 @@ async function exportArticlePdf() {
   exporting.value = true
   try {
     const { generateArticlePdf } = await import('../../utils/exportPdf')
-    await generateArticlePdf(source)
+    await generateArticlePdf(source, siteProfile.title || 'Nexus')
   } catch (error) {
     console.error('PDF export failed:', error)
   } finally {
