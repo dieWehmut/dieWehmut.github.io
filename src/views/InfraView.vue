@@ -26,6 +26,7 @@
             :key="layer.ring"
             class="infra-ring__layer"
             :class="`is-${layer.ring}-ring`"
+            :ref="(el) => layerEls[layer.ring] = el"
           >
             <span
               v-for="point in layer.points"
@@ -51,6 +52,7 @@
               :target="point.item.url ? '_blank' : undefined"
               :rel="point.item.url ? 'noopener noreferrer' : undefined"
               :aria-disabled="point.item.url ? undefined : 'true'"
+              :data-point-index="point.index"
             >
               <span class="infra-node__inner">
                 <span class="infra-node__orb">
@@ -120,7 +122,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
@@ -146,15 +148,11 @@ const ORBIT_START_ANGLE = -Math.PI / 2
 const STACKED_INNER_RADIUS = 25
 const OUTER_RING_RADIUS = 33
 const ORBIT_ROTATION_DURATION_MS = 1_200_000
-const ORBIT_UPDATE_THROTTLE_MS = 800
-const OUTER_RING_VERTICAL_INSET_THRESHOLD = 0.55
 const OUTER_RING_VERTICAL_INSET = 2
 const OUTER_RING_HORIZONTAL_PUSH = 20
-const OUTER_RING_HORIZONTAL_EPSILON = 0.001
 let refreshTimer
-let orbitFrame
-let orbitStartedAt = 0
-const orbitElapsed = ref(0)
+let sideTicker
+const layerEls = { inner: null, outer: null }
 
 const serviceItems = computed(() =>
   (infra.value || [])
@@ -181,7 +179,6 @@ const mergedStatusMap = computed(() => {
 
 const totalCount = computed(() => serviceItems.value.length)
 const hasOuterRing = computed(() => totalCount.value > INNER_RING_LIMIT)
-const orbitRotation = computed(() => (orbitElapsed.value % ORBIT_ROTATION_DURATION_MS) / ORBIT_ROTATION_DURATION_MS * FULL_CIRCLE)
 
 const servicePoints = computed(() => {
   const items = serviceItems.value
@@ -194,30 +191,24 @@ const servicePoints = computed(() => {
   return items.map((item, index) => {
     const isOuter = hasOuter && index >= INNER_RING_LIMIT
     const ringIndex = isOuter ? index - INNER_RING_LIMIT : index
-    const radius = isOuter ? OUTER_RING_RADIUS : innerRadius
     const baseAngle = isOuter
       ? outerRingAngle(ringIndex, outerCount)
       : ORBIT_START_ANGLE + (ringIndex * FULL_CIRCLE) / innerCount
-    const angle = isOuter
-      ? baseAngle + orbitRotation.value
-      : baseAngle - orbitRotation.value
-    const cos = Math.cos(angle)
-    const sin = Math.sin(angle)
-    const hasHorizontalComponent = Math.abs(cos) > OUTER_RING_HORIZONTAL_EPSILON
-    const hasVerticalInset = isOuter && Math.abs(sin) > OUTER_RING_VERTICAL_INSET_THRESHOLD
-    const horizontalPush = isOuter && hasHorizontalComponent
-      ? Math.sign(cos) * OUTER_RING_HORIZONTAL_PUSH
-      : 0
-    const verticalInset = hasVerticalInset ? -Math.sign(sin) * OUTER_RING_VERTICAL_INSET : 0
-    const dx = cos * radius + horizontalPush
-    const dy = sin * radius + verticalInset
+    const cos = Math.cos(baseAngle)
+    const sin = Math.sin(baseAngle)
+    // 外环用平滑椭圆路径：横向半径 33+20，纵向半径 33-2，避免经过上下顶点时位置跳变。
+    const radiusX = isOuter ? OUTER_RING_RADIUS + OUTER_RING_HORIZONTAL_PUSH : innerRadius
+    const radiusY = isOuter ? OUTER_RING_RADIUS - OUTER_RING_VERTICAL_INSET : innerRadius
+    const dx = cos * radiusX
+    const dy = sin * radiusY
     const x = 50 + dx
     const y = 50 + dy
     return {
       item,
       index,
       ring: isOuter ? 'outer' : 'inner',
-      labelSide: hasHorizontalComponent && cos < 0 ? 'left' : 'right',
+      baseAngle,
+      labelSide: cos < 0 ? 'left' : 'right',
       angle: Math.atan2(dy, dx),
       radius: Math.sqrt(dx * dx + dy * dy),
       style: {
@@ -262,12 +253,12 @@ onMounted(() => {
     refreshStatuses(serviceItems.value, true)
     kuma.refresh()
   }, STATUS_REFRESH_INTERVAL_MS)
-  orbitFrame = window.requestAnimationFrame(updateOrbitElapsed)
+  sideTicker = window.setInterval(syncLabelSides, 250)
 })
 
 onBeforeUnmount(() => {
   if (refreshTimer) window.clearInterval(refreshTimer)
-  if (orbitFrame) window.cancelAnimationFrame(orbitFrame)
+  if (sideTicker) window.clearInterval(sideTicker)
 })
 
 const onlineCount = computed(() => {
@@ -305,15 +296,30 @@ function lineStyle(point) {
   }
 }
 
-function updateOrbitElapsed(timestamp) {
-  if (!orbitStartedAt) orbitStartedAt = timestamp
-  const elapsed = timestamp - orbitStartedAt
-  // 轨道一圈 20 分钟，无需每帧重算 servicePoints（24 次三角运算）。
-  // 节流到 ~800ms 才写入响应式，避免与光标 rAF 争用主线程导致卡顿。
-  if (elapsed - orbitElapsed.value >= ORBIT_UPDATE_THROTTLE_MS) {
-    orbitElapsed.value = elapsed
+function layerAngle(ring) {
+  const layer = layerEls[ring]
+  const anim = layer?.getAnimations?.().find(
+    (a) => a.effect?.target === layer && a.animationName?.startsWith(`infra-layer-spin-${ring}`)
+  )
+  if (!anim) return 0
+  const t = Number(anim.currentTime ?? 0)
+  return ((t % ORBIT_ROTATION_DURATION_MS) / ORBIT_ROTATION_DURATION_MS) * FULL_CIRCLE
+}
+
+function syncLabelSides() {
+  const innerAngle = layerAngle('inner')
+  const outerAngle = layerAngle('outer')
+  for (const point of servicePoints.value) {
+    const angle = point.ring === 'inner' ? innerAngle : outerAngle
+    const direction = point.ring === 'inner' ? -1 : 1
+    const wantsLeft = Math.cos(point.baseAngle + direction * angle) < 0
+    if (point.labelSide === (wantsLeft ? 'left' : 'right')) continue
+    point.labelSide = wantsLeft ? 'left' : 'right'
+    const nodeEl = layerEls[point.ring]?.querySelector(
+      `[data-point-index="${point.index}"]`
+    )
+    nodeEl?.classList.toggle('is-left-side', wantsLeft)
   }
-  orbitFrame = window.requestAnimationFrame(updateOrbitElapsed)
 }
 
 function formatDate(dateStr) {
@@ -373,6 +379,7 @@ function serviceOverflowCount(item) {
 
 .infra-orbit {
   --infra-scale: 0.84;
+  --infra-orbit-duration: 1200000ms;
   --infra-core-size: calc(280px * var(--infra-scale));
   --infra-core-shadow: calc(24px * var(--infra-scale));
   --infra-core-text-size: calc(16px * var(--infra-scale));
@@ -492,10 +499,12 @@ function serviceOverflowCount(item) {
 
 .infra-ring__layer.is-inner-ring {
   z-index: 2;
+  animation: infra-layer-spin-inner var(--infra-orbit-duration) linear infinite;
 }
 
 .infra-ring__layer.is-outer-ring {
   z-index: 1;
+  animation: infra-layer-spin-outer var(--infra-orbit-duration) linear infinite;
 }
 
 .infra-line {
@@ -530,6 +539,7 @@ function serviceOverflowCount(item) {
   gap: var(--infra-node-gap);
   transform: translateY(-50%) scale(var(--infra-node-scale, 1));
   transform-origin: calc(var(--infra-node-size) / 2) 50%;
+  animation: infra-node-counter-inner var(--infra-orbit-duration) linear infinite;
 }
 
 .infra-node.is-left-side .infra-node__inner {
@@ -541,6 +551,7 @@ function serviceOverflowCount(item) {
 
 .infra-node.is-outer-ring .infra-node__inner {
   gap: var(--infra-outer-node-gap);
+  animation-name: infra-node-counter-outer;
 }
 
 .infra-node:hover .infra-node__inner,
@@ -713,6 +724,34 @@ function serviceOverflowCount(item) {
 @keyframes core-sphere-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(-360deg); }
+}
+
+@keyframes infra-layer-spin-inner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes infra-layer-spin-outer {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes infra-node-counter-inner {
+  from { transform: translateY(-50%) scale(var(--infra-node-scale, 1)) rotate(0deg); }
+  to { transform: translateY(-50%) scale(var(--infra-node-scale, 1)) rotate(360deg); }
+}
+
+@keyframes infra-node-counter-outer {
+  from { transform: translateY(-50%) scale(var(--infra-node-scale, 1)) rotate(0deg); }
+  to { transform: translateY(-50%) scale(var(--infra-node-scale, 1)) rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .infra-ring__layer.is-inner-ring,
+  .infra-ring__layer.is-outer-ring,
+  .infra-node__inner {
+    animation: none;
+  }
 }
 
 @media (max-width: 1180px) {
