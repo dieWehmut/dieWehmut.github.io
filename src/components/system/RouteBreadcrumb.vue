@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { getNotes, getPosts, siteProfile } from '../../data'
 import { getCaptureAssetById } from '../../data/capture'
@@ -60,6 +60,30 @@ type Crumb = {
 const route = useRoute()
 const readingPath = useReadingPath()
 const exporting = ref(false)
+const isMobile = ref(false)
+let mobileQuery: MediaQueryList | null = null
+
+function syncMobileLayout() {
+  if (mobileQuery) isMobile.value = mobileQuery.matches
+}
+
+onMounted(() => {
+  mobileQuery = window.matchMedia('(max-width: 900px)')
+  syncMobileLayout()
+  if (mobileQuery.addEventListener) {
+    mobileQuery.addEventListener('change', syncMobileLayout)
+  } else {
+    mobileQuery.addListener(syncMobileLayout)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (mobileQuery?.removeEventListener) {
+    mobileQuery.removeEventListener('change', syncMobileLayout)
+  } else {
+    mobileQuery?.removeListener?.(syncMobileLayout)
+  }
+})
 
 const isArticleDetail = computed(() => {
   const name = String(route.name || '')
@@ -319,7 +343,7 @@ const crumbs = computed<Crumb[]>(() => {
   const siteCrumb = { label: siteProfile.title || 'Nexus', to: '/' }
   const name = String(route.name || '')
   const section = readingPath.value
-  const sectionCrumb = section?.title
+  const sectionCrumb = !isMobile.value && section?.title
     ? { label: section.title, sectionId: section.activeId }
     : null
 
