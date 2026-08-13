@@ -32,14 +32,14 @@
       class="route-breadcrumb__export"
       type="button"
       :disabled="exporting"
-      :title="exporting ? 'Preparing PDF…' : 'Export article as PDF'"
+      :title="exporting ? 'Generating PDF…' : 'Export article as PDF'"
       @click="exportArticlePdf"
     >
       <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true">
         <path d="M12 3v10m0 0 3.5-3.5M12 13 8.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
         <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
       </svg>
-      <span>{{ exporting ? '…' : 'PDF' }}</span>
+      <span>{{ exporting ? 'PDF…' : 'PDF' }}</span>
     </button>
   </nav>
 </template>
@@ -90,78 +90,7 @@ const isArticleDetail = computed(() => {
   return name === 'post-detail' || name === 'note-detail'
 })
 
-const PDF_PRINT_CSS = `
-  @page { size: A4; margin: 13mm 12mm; }
-  html { background: #fff !important; }
-  body {
-    background: #fff !important;
-    color: #111 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .pdf-doc { color: #111; }
-  .pdf-doc h1 {
-    margin: 0 0 10px;
-    color: #111;
-    font-size: 23px;
-    line-height: 1.35;
-  }
-  .pdf-doc .article-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 12px;
-    margin: 0 0 16px;
-    color: #444;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .pdf-doc .article-meta a { color: inherit; text-decoration: none; }
-  .pdf-doc .article-meta .article-meta__tags { display: none; }
-  .pdf-doc .markdown-body {
-    color: #111;
-    font-size: 13.5px;
-    line-height: 1.7;
-  }
-  .pdf-doc .markdown-body a { color: #0645ad; word-break: break-all; }
-  .pdf-doc .markdown-body img { max-width: 100%; }
-  .pdf-doc .markdown-body pre,
-  .pdf-doc .markdown-body blockquote,
-  .pdf-doc .markdown-body table,
-  .pdf-doc .markdown-body .md-editable-block {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-  .pdf-doc .markdown-body h1,
-  .pdf-doc .markdown-body h2,
-  .pdf-doc .markdown-body h3,
-  .pdf-doc .markdown-body h4 {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-  .pdf-doc .md-editable-toolbar,
-  .pdf-doc .md-editable-source,
-  .pdf-doc .md-code-preview__fold,
-  .pdf-doc button {
-    display: none !important;
-  }
-  .pdf-doc .md-code-preview {
-    max-height: none !important;
-    overflow: visible !important;
-  }
-  .pdf-doc .md-editable-content { display: block !important; }
-  .pdf-doc .katex-display,
-  .pdf-doc .md-math-block { overflow-x: auto; }
-`
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-}
-
-function buildPdfDocument() {
+function buildPdfSource() {
   const body = document.querySelector<HTMLElement>(
     '.post-view__body.markdown-body, .note-view__body.markdown-body, .markdown-body'
   )
@@ -185,106 +114,20 @@ function buildPdfDocument() {
 
   return {
     title: titleClone?.textContent?.trim() || route.path,
-    html: article.outerHTML,
+    element: article,
   }
-}
-
-function copyStylesAndTheme(frameDoc: Document) {
-  for (const element of Array.from(
-    document.head.querySelectorAll('style, link[rel="stylesheet"]')
-  )) {
-    frameDoc.head.appendChild(element.cloneNode(true))
-  }
-
-  for (const attribute of Array.from(document.documentElement.attributes)) {
-    frameDoc.documentElement.setAttribute(attribute.name, attribute.value)
-  }
-
-  const sourceStyles = getComputedStyle(document.documentElement)
-  for (let index = 0; index < sourceStyles.length; index += 1) {
-    const name = sourceStyles[index]
-    if (name.startsWith('--')) {
-      frameDoc.documentElement.style.setProperty(
-        name,
-        sourceStyles.getPropertyValue(name)
-      )
-    }
-  }
-}
-
-function waitForPrintDocument(frame: HTMLIFrameElement) {
-  return new Promise<void>((resolve) => {
-    const frameDoc = frame.contentDocument
-    if (!frameDoc) {
-      resolve()
-      return
-    }
-    let settled = false
-    const done = () => {
-      if (settled) return
-      settled = true
-      resolve()
-    }
-    const timer = window.setTimeout(done, 1800)
-    const stylesheets = Array.from(
-      frameDoc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')
-    )
-    const pendingSheets = stylesheets.filter((link) => !link.sheet)
-    const finish = () => {
-      window.clearTimeout(timer)
-      done()
-    }
-    Promise.all([
-      frameDoc.fonts?.ready ?? Promise.resolve(),
-      ...pendingSheets.map(
-        (link) =>
-          new Promise<void>((resolveLink) => {
-            link.addEventListener('load', () => resolveLink(), { once: true })
-            link.addEventListener('error', () => resolveLink(), { once: true })
-          })
-      ),
-    ]).then(finish)
-  })
 }
 
 async function exportArticlePdf() {
   if (exporting.value) return
-  const documentSource = buildPdfDocument()
-  if (!documentSource) return
+  const source = buildPdfSource()
+  if (!source) return
 
   exporting.value = true
-  const frame = document.createElement('iframe')
-  frame.setAttribute('aria-hidden', 'true')
-  frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;'
-  document.body.appendChild(frame)
-
-  const cleanup = () => {
-    frame.remove()
-  }
-  window.setTimeout(cleanup, 120_000)
-  frame.contentWindow?.addEventListener('afterprint', cleanup, { once: true })
-
   try {
-    const frameDoc = frame.contentDocument
-    if (!frameDoc) throw new Error('Unable to create the print document.')
-    frameDoc.open()
-    frameDoc.write(
-      `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(documentSource.title)}</title></head><body></body></html>`
-    )
-    frameDoc.close()
-
-    copyStylesAndTheme(frameDoc)
-    frameDoc.body.innerHTML = documentSource.html
-
-    const printStyle = frameDoc.createElement('style')
-    printStyle.textContent = PDF_PRINT_CSS
-    frameDoc.head.appendChild(printStyle)
-
-    await waitForPrintDocument(frame)
-    frame.contentWindow?.focus()
-    frame.contentWindow?.print()
+    const { generateArticlePdf } = await import('../../utils/exportPdf')
+    await generateArticlePdf(source)
   } catch (error) {
-    cleanup()
     console.error('PDF export failed:', error)
   } finally {
     exporting.value = false
