@@ -10,14 +10,15 @@
             :reading-minutes="post.readingMinutes"
             :tags="post.tags"
           />
-          <div v-if="isLoading" class="post-view__loading" role="status">Loading post...</div>
-          <div v-else-if="loadError" class="post-view__loading" role="alert">{{ loadError }}</div>
+          <DocLoading v-if="isLoading">Loading post...</DocLoading>
+          <div v-if="loadError" class="post-view__loading" role="alert">{{ loadError }}</div>
           <MarkdownContent
-            v-else-if="post.body"
+            v-if="post.body"
             class="post-view__body markdown-body"
             :source="post.body"
             :doc-id="post.id"
             :code-runner="post.codeRunner"
+            @ready="isLoading = false"
           />
       </div>
       <div v-else class="post-view__not-found">
@@ -34,6 +35,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import ArticleMeta from '../components/content/ArticleMeta.vue'
+import DocLoading from '../components/content/DocLoading.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getPosts, loadDoc, docContentVersion } from '../data'
@@ -84,7 +86,7 @@ watch(
       if (latestLoadToken !== token) return
       loadError.value = error instanceof Error ? error.message : String(error)
     } finally {
-      if (latestLoadToken === token) isLoading.value = false
+      if (latestLoadToken === token && !body.value) isLoading.value = false
     }
   },
   { immediate: true }

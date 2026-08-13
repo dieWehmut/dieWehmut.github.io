@@ -11,17 +11,15 @@ const props = defineProps<{
   codeRunner?: boolean
 }>()
 
+const emit = defineEmits(['ready'])
+
 const containerRef = ref<HTMLElement | null>(null)
 
 let cleanup: (() => void) | null = null
 let renderToken = 0
+let readyEmitted = false
 let markdownModulePromise: Promise<typeof import('../../utils/markdown')> | null = null
 const scheduledHandles = new Set<number>()
-
-type IdleScheduler = Window & typeof globalThis & {
-  requestIdleCallback?: (callback: (deadline: IdleDeadline) => void, options?: { timeout?: number }) => number
-  cancelIdleCallback?: (handle: number) => void
-}
 
 function bindInteractions(token: number) {
   cleanup?.()
@@ -43,44 +41,35 @@ function setRenderedHtml(renderedHtml: string) {
 
 function appendRenderedHtml(renderedHtml: string) {
   if (!containerRef.value) return
+  if (!readyEmitted) {
+    readyEmitted = true
+    emit('ready')
+  }
   const section = document.createElement('section')
   section.className = 'markdown-content__chunk'
   section.innerHTML = renderedHtml
   containerRef.value.append(section)
 }
 
-function scheduleIdle(callback: (deadline?: IdleDeadline) => void, timeout = 700): number {
+function scheduleDrain(callback: () => void): number {
   if (typeof window === 'undefined') {
     callback()
     return 0
   }
 
-  const scheduler = window as IdleScheduler
-  const wrapped = (deadline?: IdleDeadline) => {
+  const wrapped = () => {
     scheduledHandles.delete(handle)
-    callback(deadline)
+    callback()
   }
-  let handle = 0
-
-  if (scheduler.requestIdleCallback) {
-    handle = scheduler.requestIdleCallback(wrapped, { timeout })
-  } else {
-    handle = window.setTimeout(wrapped, 0)
-  }
-
+  const handle = window.setTimeout(wrapped, 0)
   scheduledHandles.add(handle)
   return handle
 }
 
 function cancelScheduledWork() {
   if (typeof window === 'undefined') return
-  const scheduler = window as IdleScheduler
   scheduledHandles.forEach((handle) => {
-    if (scheduler.cancelIdleCallback) {
-      scheduler.cancelIdleCallback(handle)
-    } else {
-      window.clearTimeout(handle)
-    }
+    window.clearTimeout(handle)
   })
   scheduledHandles.clear()
 }
@@ -172,45 +161,38 @@ function renderRemainingChunks(
   chunks: string[],
   index: number,
   token: number,
-  renderMarkdown: typeof import('../../utils/markdown').renderMarkdown
+  renderMarkdown: typeof import('../../utils/markdown').renderMarkdown,
+  onDone?: () => void
 ) {
   if (token !== renderToken) return
   if (index >= chunks.length) {
     // All chunks painted; the document just reached its full height, so keep
     // the HMR restore loop alive long enough to re-pin against this layout.
     bumpHmrSettle()
+    onDone?.()
     return
   }
 
-  scheduleIdle((deadline) => {
+  scheduleDrain(() => {
     if (token !== renderToken) return
-    let cursor = index
-    // Drain as many chunks as fit in this idle slice instead of one per
-    // callback, so a large doc finishes in a couple of frames rather than
-    // dribbling out over many seconds.
-    do {
-      appendRenderedHtml(renderMarkdown(chunks[cursor], {
-        codeRunner: props.codeRunner,
-        docId: props.docId,
-      }))
-      cursor += 1
-      if (token !== renderToken) return
-    } while (
-      cursor < chunks.length &&
-      (!deadline || deadline.timeRemaining() > 4)
-    )
-    // Each appended batch grows the document, so keep the HMR restore loop alive
-    // across the whole drain rather than only at final completion. On a saturated
-    // main thread the full render can outlast a single settle grace window.
+    // Render one chunk per macrotask: each chunk gets a chance to paint before
+    // the next one starts, and a long document no longer blocks the main
+    // thread for the whole render at once.
+    appendRenderedHtml(renderMarkdown(chunks[index], {
+      codeRunner: props.codeRunner,
+      docId: props.docId,
+    }))
+    if (token !== renderToken) return
     bumpHmrSettle()
-    renderRemainingChunks(chunks, cursor, token, renderMarkdown)
-  }, 300)
+    renderRemainingChunks(chunks, index + 1, token, renderMarkdown, onDone)
+  })
 }
 
 watch(
   () => [props.source, props.docId, props.codeRunner] as const,
   ([source]) => {
     const token = ++renderToken
+    readyEmitted = false
     cleanup?.()
     cleanup = null
     cancelScheduledWork()
@@ -223,19 +205,36 @@ watch(
       return
     }
 
-    // Render all content synchronously so the full document (headings, etc.)
-    // is available immediately for ScrollSpySidebar and other observers.
+    // Short documents render synchronously so the full document (headings,
+    // etc.) is available immediately; large documents render progressively in
+    // idle slices so the first content appears without a long main-thread block.
     void (async () => {
-      const { renderMarkdown } = await loadMarkdownModule()
+      const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
       if (token !== renderToken) return
-      const renderedHtml = renderMarkdown(source, {
-        codeRunner: props.codeRunner,
-        docId: props.docId,
+      const chunks = splitMarkdownForProgressiveRender(source)
+      if (chunks.length <= 1) {
+        const renderedHtml = renderMarkdown(source, {
+          codeRunner: props.codeRunner,
+          docId: props.docId,
+        })
+        if (token !== renderToken) return
+        setRenderedHtml(renderedHtml)
+        if (!readyEmitted) {
+          readyEmitted = true
+          emit('ready')
+        }
+        bindInteractions(token)
+        bumpHmrSettle()
+        return
+      }
+
+      // Large documents render progressively in idle slices: the first chunk
+      // paints right away and the remaining chunks drain without blocking the
+      // main thread, so big articles appear much sooner.
+      setRenderedHtml('')
+      renderRemainingChunks(chunks, 0, token, renderMarkdown, () => {
+        bindInteractions(token)
       })
-      if (token !== renderToken) return
-      setRenderedHtml(renderedHtml)
-      bindInteractions(token)
-      bumpHmrSettle()
     })()
   },
   { immediate: true }

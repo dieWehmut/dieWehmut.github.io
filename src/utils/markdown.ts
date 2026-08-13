@@ -84,8 +84,8 @@ const MARKDOWN_CACHE_LIMIT = 24
 const MARKDOWN_PREVIEW_CACHE_LIMIT = 80
 const MARKDOWN_PROGRESSIVE_MIN_LENGTH = 12000
 const MARKDOWN_CHUNK_MIN_LENGTH = 3600
-const MARKDOWN_CHUNK_TARGET_LENGTH = 7200
-const MARKDOWN_CHUNK_MAX_LENGTH = 12000
+const MARKDOWN_CHUNK_TARGET_LENGTH = 6000
+const MARKDOWN_CHUNK_MAX_LENGTH = 8000
 const SOURCE_IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 const renderedMarkdownCache = new Map<string, string>()
 const renderedMarkdownPreviewCache = new Map<string, string>()
@@ -405,7 +405,7 @@ function splitMarkdownIntoChunks(source: string): string[] {
 
   for (const line of lines) {
     const stableBeforeLine = isChunkBoundaryStable(state)
-    const isHeading = /^#{2,6}\s+/.test(line)
+    const isHeading = /^#{1,6}\s+/.test(line)
     if (stableBeforeLine && isHeading && currentLength >= MARKDOWN_CHUNK_MIN_LENGTH) {
       flush()
     }
@@ -421,7 +421,7 @@ function splitMarkdownIntoChunks(source: string): string[] {
       stableAfterLine &&
       (
         (currentLength >= MARKDOWN_CHUNK_TARGET_LENGTH && (isBlank || endsDetails)) ||
-        (currentLength >= MARKDOWN_CHUNK_MAX_LENGTH && isBlank)
+        currentLength >= MARKDOWN_CHUNK_MAX_LENGTH
       )
     ) {
       flush()

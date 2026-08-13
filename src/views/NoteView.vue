@@ -10,9 +10,14 @@
             :reading-minutes="note.readingMinutes"
             :tags="note.tags"
           />
-          <div v-if="isLoading" class="note-view__loading" role="status">Loading note...</div>
-          <div v-else-if="loadError" class="note-view__loading" role="alert">{{ loadError }}</div>
-          <MarkdownContent v-else-if="note.body" class="note-view__body markdown-body" :source="note.body" />
+          <DocLoading v-if="isLoading">Loading note...</DocLoading>
+          <div v-if="loadError" class="note-view__loading" role="alert">{{ loadError }}</div>
+          <MarkdownContent
+            v-if="note.body"
+            class="note-view__body markdown-body"
+            :source="note.body"
+            @ready="isLoading = false"
+          />
       </div>
       <div v-else class="note-view__not-found">
         <p>Note not found.</p>
@@ -28,6 +33,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import ArticleMeta from '../components/content/ArticleMeta.vue'
+import DocLoading from '../components/content/DocLoading.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getNotes, loadDoc, docContentVersion } from '../data'
@@ -78,7 +84,7 @@ watch(
       if (latestLoadToken !== token) return
       loadError.value = error instanceof Error ? error.message : String(error)
     } finally {
-      if (latestLoadToken === token) isLoading.value = false
+      if (latestLoadToken === token && !body.value) isLoading.value = false
     }
   },
   { immediate: true }
