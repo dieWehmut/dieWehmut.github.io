@@ -210,7 +210,9 @@ function getSortTimestamp(date) {
 
 function getGitLastUpdated(filePath) {
   try {
-    const output = execSync(`git log -1 --format="%ad" --date=format:"%Y/%m/%d %H:%M" -- "${filePath}"`, { stdio: 'pipe' }).toString().trim()
+    // Windows/macOS 文件系统不区分大小写，磁盘上的文件名可能与 git 跟踪路径
+    // 大小写不一致；用 :(icase) pathspec 让 git log 仍然能匹配到对应文件。
+    const output = execSync(`git log -1 --format="%ad" --date=format:"%Y/%m/%d %H:%M" -- ":(icase)${filePath}"`, { stdio: 'pipe' }).toString().trim()
     return output || null
   } catch (e) {
     return null
