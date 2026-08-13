@@ -9,6 +9,16 @@
       >
         {{ crumb.label }}
       </RouterLink>
+      <button
+        v-else-if="crumb.sectionId"
+        class="route-breadcrumb__item route-breadcrumb__item--section"
+        type="button"
+        :data-section-id="crumb.sectionId"
+        :title="`Jump to ${crumb.label}`"
+        @click="requestScrollToSection(crumb.sectionId)"
+      >
+        {{ crumb.label }}
+      </button>
       <span
         v-else
         class="route-breadcrumb__item route-breadcrumb__item--current"
@@ -25,13 +35,16 @@ import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { getNotes, getPosts, siteProfile } from '../../data'
 import { getCaptureAssetById } from '../../data/capture'
+import { requestScrollToSection, useReadingPath } from '../../composables/useReadingPath'
 
 type Crumb = {
   label: string
   to?: string
+  sectionId?: string
 }
 
 const route = useRoute()
+const readingPath = useReadingPath()
 
 defineProps({
   variant: { type: String, default: 'bar' },
@@ -84,9 +97,21 @@ function detailTitle() {
 const crumbs = computed<Crumb[]>(() => {
   const siteCrumb = { label: siteProfile.title || 'Nexus', to: '/' }
   const name = String(route.name || '')
+  const section = readingPath.value
+  const sectionCrumb = section?.title
+    ? { label: section.title, sectionId: section.activeId }
+    : null
 
-  if (name === 'post-detail') return [{ label: 'Archive', to: '/archive' }, { label: detailTitle() }]
-  if (name === 'note-detail') return [{ label: 'Notes', to: '/notes' }, { label: detailTitle() }]
+  if (name === 'post-detail') {
+    const crumbs: Crumb[] = [{ label: 'Archive', to: '/archive' }, { label: detailTitle() }]
+    if (sectionCrumb) crumbs.push(sectionCrumb)
+    return crumbs
+  }
+  if (name === 'note-detail') {
+    const crumbs: Crumb[] = [{ label: 'Notes', to: '/notes' }, { label: detailTitle() }]
+    if (sectionCrumb) crumbs.push(sectionCrumb)
+    return crumbs
+  }
   if (name === 'capture-detail') return [{ label: 'Capture', to: '/capture' }, { label: detailTitle() }]
   if (name === 'tag-detail') return [{ label: 'Tags', to: '/tags' }, { label: detailTitle() }]
   if (name === 'not-found') return [siteCrumb, { label: 'Not Found' }]
@@ -150,6 +175,14 @@ const crumbs = computed<Crumb[]>(() => {
 
 .route-breadcrumb__item--current {
   color: var(--site-text);
+}
+
+.route-breadcrumb__item--section {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--site-accent);
+  cursor: pointer;
 }
 
 .route-breadcrumb__separator {

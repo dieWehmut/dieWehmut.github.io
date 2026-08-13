@@ -25,6 +25,7 @@
 
 <script setup>
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { setReadingPath, useScrollRequests } from '../../composables/useReadingPath'
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
@@ -34,6 +35,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['navigate'])
+const scrollRequests = useScrollRequests()
 
 const items = ref([])
 const activeId = ref('')
@@ -69,6 +71,7 @@ function clearHeadings() {
   headings = []
   items.value = []
   activeId.value = ''
+  setReadingPath(null)
 }
 
 function updateEnabledState() {
@@ -146,6 +149,12 @@ function updateActive() {
 
   const nextActiveId = current?.id || ''
   if (nextActiveId !== activeId.value) activeId.value = nextActiveId
+  const heading = headings.find((item) => item.id === nextActiveId)
+  setReadingPath(
+    heading
+      ? { activeId: heading.id, title: heading.title, progress: progress.value }
+      : null
+  )
 }
 
 function jumpToElement(el) {
@@ -249,6 +258,10 @@ watch(activeId, () => {
   nextTick(followActive)
 })
 
+watch(scrollRequests, (request) => {
+  if (request?.id) scrollToHeading(request.id)
+})
+
 function onResize() {
   scheduleCollectHeadings()
 }
@@ -315,6 +328,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  setReadingPath(null)
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame)
   if (collectFrame) window.cancelAnimationFrame(collectFrame)
   cancelPendingScroll()
