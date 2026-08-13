@@ -2,6 +2,7 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import type { Content, TDocumentDefinitions } from 'pdfmake/interfaces'
 import lxgwFontUrl from '../assets/fonts/LXGWWenKai-Regular.ttf'
+import { siteConfig } from '../data/site/config'
 
 export type PdfExportSource = {
   title: string
@@ -10,6 +11,7 @@ export type PdfExportSource = {
 
 const ACCENT_COLOR_FALLBACK = '#9b3dff'
 const IMAGE_MAX_WIDTH_PT = 460
+const SITE_BASE_URL = siteConfig.siteUrl || 'https://diewehmut.github.io'
 
 let pdfFontsReady: Promise<void> | null = null
 
@@ -44,6 +46,13 @@ function readAccentColor(): string {
       .getPropertyValue('--site-accent')
       .trim() || ACCENT_COLOR_FALLBACK
   )
+}
+
+function absoluteUrl(href: string): string {
+  if (!href) return ''
+  if (/^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//')) return href
+  const prefix = href.startsWith('/') ? '' : '/'
+  return `${SITE_BASE_URL}${prefix}${href}`
 }
 
 function tintWithWhite(hex: string, ratio: number): string {
@@ -141,9 +150,9 @@ function inlineContent(node: Node, accent: string): Content {
     style.color = '#c7254e'
   }
   if (tag === 'a') {
-    const href = (node as HTMLAnchorElement).getAttribute('href') || ''
-    if (href) {
-      style.link = href
+    const rawHref = (node as HTMLAnchorElement).getAttribute('href') || ''
+    if (rawHref) {
+      style.link = absoluteUrl(rawHref)
       style.color = accent
       style.decoration = 'underline'
     }
@@ -244,6 +253,8 @@ function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
   )
 }
 
+let tocEntries: Array<{ id: string; title: string; level: number }> = []
+
 function cleanText(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
 }
@@ -273,7 +284,7 @@ function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
   if (license) {
     pushItem({
       text: cleanText(license.textContent || ''),
-      link: license.href || undefined,
+      link: absoluteUrl(license.getAttribute('href') || ''),
       style: 'metaLink',
     })
   }
@@ -291,7 +302,7 @@ function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
       const tag = cleanText(link.textContent || '')
       tagText.push({
         text: `# ${tag}`,
-        link: link.href || undefined,
+        link: absoluteUrl(link.getAttribute('href') || ''),
         color: accent,
         background: tintWithWhite(accent, 0.88),
         fontSize: 8.5,
@@ -357,7 +368,13 @@ function elementToBlocks(element: Element, accent: string): Content[] {
       {
         const heading: Content = { text: inlineContent(element, accent), style: tag }
         if (element.closest('.markdown-body')) {
-          ;(heading as Content & { tocItem: boolean }).tocItem = true
+          const tocId = `pdf-toc-${tocEntries.length + 1}`
+          ;(heading as Content & { id: string }).id = tocId
+          tocEntries.push({
+            id: tocId,
+            title: cleanText(element.textContent || ''),
+            level: Number(tag.slice(1)) || 2,
+          })
         }
         return [heading]
       }
@@ -375,7 +392,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
         return [
           {
             table: {
-              widths: [3, '*'],
+              widths: [1.2, '*'],
               body: [
                 [
                   { text: '', fillColor: accent },
@@ -477,22 +494,56 @@ async function embedImages(root: HTMLElement): Promise<void> {
 function buildDocumentDefinition(
   title: string,
   content: Content[],
+  toc: Array<{ id: string; title: string; level: number }>,
   accent: string,
-  siteTitle: string,
-  hasHeadings: boolean
+  siteTitle: string
 ): TDocumentDefinitions {
-  const tocContent: Content[] = hasHeadings
-    ? [
-        {
-          toc: {
-            title: { text: 'Contents', style: 'tocTitle' },
-            textStyle: { fontSize: 10, color: '#333' },
-            numberStyle: { color: accent, bold: true },
-          },
-          pageBreak: 'after',
-        } as Content,
-      ]
-    : []
+  const tocContent: Content[] =
+    toc.length >= 2
+      ? [
+          {
+            stack: [
+              { text: 'Contents', style: 'tocTitle' },
+              {
+                canvas: [
+                  {
+                    type: 'line',
+                    x1: 0,
+                    y1: 0,
+                    x2: 499,
+                    y2: 0,
+                    lineWidth: 1,
+                    lineColor: accent,
+                  },
+                ],
+                margin: [0, 4, 0, 10],
+              },
+              ...toc.map((entry) => ({
+                columns: [
+                  {
+                    width: '*',
+                    text: [
+                      {
+                        text: entry.level > 2 ? '·  ' : '▪  ',
+                        color: accent,
+                        bold: true,
+                      },
+                      { text: entry.title, style: 'tocEntry' },
+                    ],
+                  },
+                  {
+                    width: 'auto',
+                    pageReference: entry.id,
+                    style: 'tocPage',
+                  },
+                ],
+                margin: [(entry.level - 2) * 12, 2.5, 0, 2.5],
+              })),
+            ],
+            pageBreak: 'after',
+          } as Content,
+        ]
+      : []
   const truncatedTitle = title.length > 42 ? `${title.slice(0, 42)}…` : title
 
   return {
@@ -508,7 +559,9 @@ function buildDocumentDefinition(
     content: [...tocContent, ...content],
     styles: {
       tocTitle: { fontSize: 16, bold: true, color: accent, margin: [0, 0, 0, 10] },
-      h1: { fontSize: 20, bold: true, color: accent, margin: [0, 0, 0, 8] },
+      tocEntry: { fontSize: 10.2, color: '#333' },
+      tocPage: { fontSize: 10.2, bold: true, color: accent },
+      h1: { fontSize: 21, bold: true, color: accent, margin: [0, 0, 0, 10] },
       h2: { fontSize: 16, bold: true, color: accent, margin: [0, 18, 0, 7] },
       h3: { fontSize: 13.5, bold: true, color: accent, margin: [0, 14, 0, 6] },
       h4: { fontSize: 12, bold: true, color: accent, margin: [0, 11, 0, 5] },
@@ -610,18 +663,16 @@ export async function generateArticlePdf(
   await embedImages(source.element)
 
   const accent = readAccentColor()
-  const hasHeadings =
-    source.element.querySelectorAll('.markdown-body h2, .markdown-body h3, .markdown-body h4')
-      .length >= 2
+  tocEntries = []
   const content = Array.from(source.element.children)
     .flatMap((child) => elementToBlocks(child, accent))
     .filter(Boolean)
   const definition = buildDocumentDefinition(
     source.title,
     content,
+    tocEntries,
     accent,
-    siteTitle,
-    hasHeadings
+    siteTitle
   )
 
   pdfMake.createPdf(definition).download(`${sanitizeFilename(source.title)}.pdf`)

@@ -111,11 +111,25 @@ watch(
 }
 
 .note-view__title {
+  position: relative;
   margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--site-accent) 26%, transparent);
   color: var(--site-text);
   font-size: 19px;
   font-weight: 700;
   line-height: 1.3;
+}
+
+.note-view__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 46px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--site-accent);
 }
 
 .note-view__body {
@@ -200,7 +214,7 @@ watch(
 .note-view__body :deep(blockquote) {
   margin: 12px 0;
   padding: 4px 16px;
-  border-left: 3px solid var(--site-accent);
+  border-left: 2px solid var(--site-accent);
   color: var(--site-muted);
 }
 

@@ -115,7 +115,7 @@ h2 {
 .note-card__body :deep(blockquote) {
   margin: 10px 0;
   padding-left: 14px;
-  border-left: 3px solid var(--site-accent);
+  border-left: 2px solid var(--site-accent);
   color: var(--site-muted);
 }
 
