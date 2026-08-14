@@ -81,6 +81,47 @@ npm install -g opencode-ai
 
 ### AgentRouter
 
+```config.toml
+model_provider = "deepseek"
+model = "deepseek-v4-flash"
+review_model = "deepseek-v4-flash"
+model_reasoning_effort = "max"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+approvals_reviewer = "user"
+plan_mode_reasoning_effort = "ultra"
+service_tier = "default"
+model_catalog_json = "~/.codex/models.json"
+preferred_auth_method = "apikey"
+forced_login_method = "api"
+
+[model_providers.deepseek]
+name = "deepseek"
+base_url = "https://agentrouter.org/v1"
+wire_api = "responses"
+requires_openai_auth = true
+experimental_bearer_token = "sk-xx"
+
+[features]
+goals = true
+
+
+[tui]
+status_line = ["current-dir", "model",  "reasoning", "permissions", "fast-mode","task-progress"]
+status_line_use_colors = false
+
+[tui.model_availability_nux]
+"gpt-5.6-sol" = 4
+
+[windows]
+sandbox = "elevated"
+
+[notice]
+hide_full_access_warning = true
+hide_rate_limit_model_nudge = true
+```
+
 ```settings.json
 {
   "env": {
@@ -114,7 +155,7 @@ npm install -g opencode-ai
 }
 ```
 
-### Deepseek Anthropic
+### Deepseek
 
 ```settings.json
 {
@@ -126,6 +167,47 @@ npm install -g opencode-ai
   "model": "deepseek-v4-pro[1m]",
   "effortLevel": "xhigh"
 }
+```
+
+```config.toml
+model_provider = "deepseek"
+model = "deepseek-v4-flash"
+review_model = "deepseek-v4-flash"
+model_reasoning_effort = "max"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+approvals_reviewer = "user"
+plan_mode_reasoning_effort = "ultra"
+service_tier = "default"
+model_catalog_json = "~/.codex/models.json"
+preferred_auth_method = "apikey"
+forced_login_method = "api"
+
+[model_providers.deepseek]
+name = "deepseek"
+base_url = "https://api.deepseek.com/"
+wire_api = "responses"
+experimental_bearer_token = "sk-xx"
+
+[features]
+goals = true
+
+
+[tui]
+status_line = ["current-dir", "model",  "reasoning", "permissions", "fast-mode","task-progress"]
+status_line_use_colors = false
+
+[tui.model_availability_nux]
+"gpt-5.6-sol" = 4
+
+[windows]
+sandbox = "elevated"
+
+[notice]
+hide_full_access_warning = true
+hide_rate_limit_model_nudge = true
+
 ```
 
 ### 自建中转

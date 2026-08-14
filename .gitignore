@@ -45,3 +45,4 @@ prompt/
 sample/
 backend
 .playwright-mcp
+docs

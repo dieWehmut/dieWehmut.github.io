@@ -24,9 +24,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Notes"
     ],
     "summary": "一、时代变了，但问题没变：如何找到自己人生的解法？\n**原文标题**：There Are No Rules for Success（成功，没有铁律）\n**作者**：Andy Kessler\n**发布日期**：2026.01.06...",
-    "wordCount": 23577,
+    "wordCount": 23578,
     "readingMinutes": 59,
-    "updated": "",
+    "updated": "2026/08/14 21:42",
     "path": "./notes/CurrentAffairsReading.md"
   },
   {
@@ -151,9 +151,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录\nCodex配置目录\nOpencode配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\nProxy\nAgentRouter\nDeepseek Anthropic\n自建中转\nSub2api\nCodexM...",
-    "wordCount": 358,
-    "readingMinutes": 1,
+    "summary": "Claude Code配置目录\nCodex配置目录\nOpencode配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\nProxy\nAgentRouter\nDeepseek\n自建中转\nSub2api\nCodexManager",
+    "wordCount": 573,
+    "readingMinutes": 2,
     "updated": "2026/07/07 22:40",
     "path": "./posts/AgentSettings.md"
   },
