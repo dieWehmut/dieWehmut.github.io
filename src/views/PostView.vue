@@ -164,13 +164,14 @@ watch(
 
 .post-view__body :deep(a:hover) {
   text-decoration: underline;
+  text-decoration-color: var(--md-color-secondary);
 }
 
 .post-view__body :deep(code) {
   padding: 2px 6px;
   border-radius: 4px;
-  background: var(--md-inline-code-bg);
-  color: var(--md-inline-code-text);
+  background: color-mix(in srgb, var(--md-color-tertiary-soft) 74%, var(--md-inline-code-bg));
+  color: var(--md-color-secondary);
   font-size: 14px;
   font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
 }
@@ -211,7 +212,16 @@ watch(
 }
 
 .post-view__body :deep(em) {
+  color: var(--md-color-tertiary);
   font-style: italic;
+}
+
+.post-view__body :deep(u) {
+  color: var(--md-color-tertiary);
+  text-decoration-line: underline;
+  text-decoration-color: var(--md-underline-color);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.16em;
 }
 
 .post-view__body :deep(h1),
@@ -219,11 +229,14 @@ watch(
 .post-view__body :deep(h3),
 .post-view__body :deep(h4) {
   margin: 24px 0 12px;
-  color: var(--site-text);
   font-weight: 700;
   line-height: 1.4;
 }
 
+.post-view__body :deep(h1) { color: var(--md-color-primary); }
+.post-view__body :deep(h2) { color: var(--md-color-secondary); }
+.post-view__body :deep(h3) { color: var(--md-color-tertiary); }
+.post-view__body :deep(h4) { color: var(--md-color-primary); }
 .post-view__body :deep(h1) { font-size: 22px; }
 .post-view__body :deep(h2) { font-size: 19px; }
 .post-view__body :deep(h3) { font-size: 16px; }
@@ -242,7 +255,7 @@ watch(
 .post-view__body :deep(blockquote) {
   margin: 12px 0;
   padding: 4px 16px;
-  border-left: 2px solid var(--site-accent);
+  border-left: 2px solid var(--md-color-secondary);
   color: var(--site-muted);
 }
 
@@ -265,14 +278,15 @@ watch(
 }
 
 .post-view__body :deep(th) {
-  background: var(--md-inline-code-bg);
+  background: var(--md-color-secondary-soft);
+  color: var(--md-color-secondary);
   font-weight: 700;
 }
 
 .post-view__body :deep(hr) {
   margin: 24px 0;
   border: none;
-  border-top: 1px solid var(--site-border);
+  border-top: 2px solid var(--md-color-tertiary);
 }
 
 .post-view__body :deep(img) {
@@ -287,7 +301,7 @@ watch(
 
 .post-view__body :deep(summary) {
   cursor: pointer;
-  color: var(--site-text);
+  color: var(--md-color-primary);
   font-weight: 700;
   padding: 6px 0;
 }

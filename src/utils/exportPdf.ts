@@ -10,8 +10,18 @@ export type PdfExportSource = {
 }
 
 const ACCENT_COLOR_FALLBACK = '#9b3dff'
+const SECONDARY_COLOR_FALLBACK = '#ff69b4'
+const TERTIARY_COLOR_FALLBACK = '#1fc41f'
+const PDF_UNDERLINE_COLOR = '#000'
 const IMAGE_MAX_WIDTH_PT = 460
 const SITE_BASE_URL = siteConfig.siteUrl || 'https://diewehmut.github.io'
+
+type PdfPalette = {
+  accent: string
+  secondary: string
+  tertiary: string
+  underline: string
+}
 
 let pdfFontsReady: Promise<void> | null = null
 
@@ -40,12 +50,18 @@ function decodeHtml(value: string): string {
   return textarea.value
 }
 
-function readAccentColor(): string {
-  return (
-    getComputedStyle(document.documentElement)
-      .getPropertyValue('--site-accent')
-      .trim() || ACCENT_COLOR_FALLBACK
-  )
+function readPdfPalette(): PdfPalette {
+  const root = document.documentElement
+  const styles = getComputedStyle(root)
+  const read = (name: string, fallback: string) =>
+    styles.getPropertyValue(name).trim() || fallback
+
+  return {
+    accent: read('--site-accent', ACCENT_COLOR_FALLBACK),
+    secondary: read('--site-secondary', SECONDARY_COLOR_FALLBACK),
+    tertiary: read('--site-tertiary', TERTIARY_COLOR_FALLBACK),
+    underline: PDF_UNDERLINE_COLOR,
+  }
 }
 
 function absoluteUrl(href: string): string {
@@ -108,7 +124,7 @@ function extractInlineLatex(node: HTMLElement): string {
   return annotation?.textContent?.trim() || ''
 }
 
-function inlineContent(node: Node, accent: string): Content {
+function inlineContent(node: Node, palette: PdfPalette): Content {
   if (node.nodeType === Node.TEXT_NODE) {
     const text = node.textContent || ''
     return text.trim() ? { text } : ''
@@ -133,7 +149,7 @@ function inlineContent(node: Node, accent: string): Content {
   }
 
   const children = Array.from(node.childNodes)
-    .map((child) => inlineContent(child, accent))
+    .map((child) => inlineContent(child, palette))
     .filter(Boolean)
   if (!children.length) return ''
 
@@ -142,23 +158,47 @@ function inlineContent(node: Node, accent: string): Content {
   else base = { text: children }
 
   const style: Record<string, unknown> = {}
-  if (tag === 'strong' || tag === 'b') style.bold = true
-  if (tag === 'em' || tag === 'i') style.italics = true
+  if (tag === 'strong' || tag === 'b') {
+    style.bold = true
+    style.color = palette.secondary
+  }
+  if (tag === 'em' || tag === 'i') {
+    style.italics = true
+    style.color = palette.tertiary
+  }
   if (tag === 'code' || tag === 'kbd' || tag === 'samp') {
     style.fontSize = 8.8
-    style.background = '#f2f2f2'
-    style.color = '#c7254e'
+    style.background = tintWithWhite(palette.tertiary, 0.88)
+    style.color = palette.secondary
   }
   if (tag === 'a') {
     const rawHref = (node as HTMLAnchorElement).getAttribute('href') || ''
     if (rawHref) {
       style.link = absoluteUrl(rawHref)
-      style.color = accent
+      style.color = palette.accent
       style.decoration = 'underline'
+      style.decorationColor = palette.accent
     }
   }
-  if (tag === 'mark') style.background = '#fff3bf'
-  if (tag === 'del' || tag === 's') style.decoration = 'lineThrough'
+  if (tag === 'mark') {
+    style.background = tintWithWhite(palette.secondary, 0.76)
+    style.color = palette.secondary
+  }
+  if (tag === 'u') {
+    style.decoration = 'underline'
+    style.decorationColor = palette.underline
+    style.decorationThickness = 0.7
+  }
+  if (tag === 'ins') {
+    style.color = palette.tertiary
+    style.decoration = 'underline'
+    style.decorationColor = palette.tertiary
+  }
+  if (tag === 'del' || tag === 's') {
+    style.color = '#b42318'
+    style.decoration = 'lineThrough'
+    style.decorationColor = '#b42318'
+  }
 
   if (!Object.keys(style).length) return base
   if (typeof base === 'object' && base !== null && 'text' in base) {
@@ -167,7 +207,7 @@ function inlineContent(node: Node, accent: string): Content {
   return { text: [base], ...style } as Content
 }
 
-function listItems(list: Element, accent: string): Content[] {
+function listItems(list: Element, palette: PdfPalette): Content[] {
   return Array.from(list.children)
     .filter((child) => child.tagName.toLowerCase() === 'li')
     .map((item) => {
@@ -178,20 +218,20 @@ function listItems(list: Element, accent: string): Content[] {
         (child) => !(child instanceof Element) || !nestedLists.includes(child)
       )
       const text = directNodes
-        .map((child) => inlineContent(child, accent))
+        .map((child) => inlineContent(child, palette))
         .filter(Boolean)
       const nested = nestedLists.map((list) => ({
-        [list.tagName.toLowerCase() === 'ul' ? 'ul' : 'ol']: listItems(list, accent),
+        [list.tagName.toLowerCase() === 'ul' ? 'ul' : 'ol']: listItems(list, palette),
       }))
       return { text, ...(nested.length ? { ul: nested } : {}) } as Content
     })
 }
 
-function tableToContent(table: HTMLTableElement, accent: string): Content {
+function tableToContent(table: HTMLTableElement, palette: PdfPalette): Content {
   const rows = Array.from(table.querySelectorAll('tr'))
   const body = rows.map((row) =>
     Array.from(row.children).map((cell) => ({
-      text: inlineContent(cell, accent),
+      text: inlineContent(cell, palette),
       style: cell.tagName.toLowerCase() === 'th' ? 'tableHeader' : 'tableCell',
     }))
   )
@@ -221,7 +261,7 @@ function imageToContent(image: HTMLImageElement): Content {
   }
 }
 
-function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
+function editableBlockToBlocks(block: HTMLElement, palette: PdfPalette): Content[] {
   const kind = block.dataset.mdKind
   const raw = block.dataset.mdOriginal || block.dataset.mdCurrent || ''
   const pre = block.querySelector('pre')
@@ -230,7 +270,7 @@ function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
     const formula = raw ? decodeHtml(raw) : block.textContent?.trim() || ''
     return formula
       ? [
-          { text: 'LaTeX', style: 'codeHeader', color: accent },
+          { text: 'LaTeX', style: 'codeHeader', color: palette.accent },
           { text: formula, style: 'mathBlock', preserveLeadingSpaces: true },
         ]
       : []
@@ -240,7 +280,7 @@ function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
     const fileName = block.dataset.mdFileName || ''
     const label = fileName ? `file: ${fileName}` : lang || 'text'
     return [
-      { text: label, style: 'codeHeader', color: accent },
+      { text: label, style: 'codeHeader', color: palette.secondary },
       {
         text: pre.textContent || '',
         style: 'codeBlock',
@@ -249,7 +289,7 @@ function editableBlockToBlocks(block: HTMLElement, accent: string): Content[] {
     ]
   }
   return Array.from(block.children).flatMap((child) =>
-    elementToBlocks(child, accent)
+    elementToBlocks(child, palette)
   )
 }
 
@@ -259,7 +299,7 @@ function cleanText(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
 }
 
-function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
+function articleMetaToBlocks(meta: HTMLElement, palette: PdfPalette): Content[] {
   const items: Content[] = []
   const pushItem = (item: Content) => {
     if (items.length) {
@@ -303,8 +343,8 @@ function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
       tagText.push({
         text: `# ${tag}`,
         link: absoluteUrl(link.getAttribute('href') || ''),
-        color: accent,
-        background: tintWithWhite(accent, 0.88),
+        color: palette.accent,
+        background: tintWithWhite(palette.accent, 0.88),
         fontSize: 8.5,
         bold: true,
       })
@@ -323,7 +363,7 @@ function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
         x2: 499,
         y2: 0,
         lineWidth: 0.8,
-        lineColor: accent,
+        lineColor: palette.accent,
       },
     ],
     margin: [0, 4, 0, 10],
@@ -332,12 +372,12 @@ function articleMetaToBlocks(meta: HTMLElement, accent: string): Content[] {
   return result
 }
 
-function elementToBlocks(element: Element, accent: string): Content[] {
+function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
   const tag = element.tagName.toLowerCase()
   const classes = element.classList
 
   if (classes.contains('article-meta')) {
-    return articleMetaToBlocks(element as HTMLElement, accent)
+    return articleMetaToBlocks(element as HTMLElement, palette)
   }
 
   if (
@@ -351,10 +391,10 @@ function elementToBlocks(element: Element, accent: string): Content[] {
     tag === 'summary'
   ) {
     if (classes.contains('md-editable-block')) {
-      return editableBlockToBlocks(element as HTMLElement, accent)
+      return editableBlockToBlocks(element as HTMLElement, palette)
     }
     return Array.from(element.children).flatMap((child) =>
-      elementToBlocks(child, accent)
+      elementToBlocks(child, palette)
     )
   }
 
@@ -366,7 +406,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
     case 'h5':
     case 'h6':
       {
-        const heading: Content = { text: inlineContent(element, accent), style: tag }
+        const heading: Content = { text: inlineContent(element, palette), style: tag }
         if (element.closest('.markdown-body')) {
           const tocId = `pdf-toc-${tocEntries.length + 1}`
           ;(heading as Content & { id: string }).id = tocId
@@ -379,15 +419,15 @@ function elementToBlocks(element: Element, accent: string): Content[] {
         return [heading]
       }
     case 'p':
-      return [{ text: inlineContent(element, accent), style: 'paragraph' }]
+      return [{ text: inlineContent(element, palette), style: 'paragraph' }]
     case 'ul':
-      return [{ ul: listItems(element, accent), style: 'list' }]
+      return [{ ul: listItems(element, palette), style: 'list' }]
     case 'ol':
-      return [{ ol: listItems(element, accent), style: 'list' }]
+      return [{ ol: listItems(element, palette), style: 'list' }]
     case 'blockquote':
       {
         const quoteContent = Array.from(element.children).flatMap((child) =>
-          elementToBlocks(child, accent)
+          elementToBlocks(child, palette)
         )
         return [
           {
@@ -395,7 +435,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
               widths: [1.2, '*'],
               body: [
                 [
-                  { text: '', fillColor: accent },
+                  { text: '', fillColor: palette.secondary },
                   {
                     stack: quoteContent,
                     margin: [10, 4, 4, 4],
@@ -411,7 +451,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
       return [
         {
           stack: Array.from(element.children).flatMap((child) =>
-            elementToBlocks(child, accent)
+            elementToBlocks(child, palette)
           ),
           style: 'blockquote',
         },
@@ -425,7 +465,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
         },
       ]
     case 'table':
-      return [tableToContent(element as HTMLTableElement, accent)]
+      return [tableToContent(element as HTMLTableElement, palette)]
     case 'hr':
       return [
         {
@@ -437,7 +477,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
               x2: 499,
               y2: 0,
               lineWidth: 0.7,
-              lineColor: accent,
+              lineColor: palette.tertiary,
             },
           ],
           margin: [0, 8, 0, 8],
@@ -453,7 +493,7 @@ function elementToBlocks(element: Element, accent: string): Content[] {
         },
       ]
     default:
-      return [{ text: inlineContent(element, accent), style: 'paragraph' }]
+      return [{ text: inlineContent(element, palette), style: 'paragraph' }]
   }
 }
 
@@ -495,9 +535,10 @@ function buildDocumentDefinition(
   title: string,
   content: Content[],
   toc: Array<{ id: string; title: string; level: number }>,
-  accent: string,
+  palette: PdfPalette,
   siteTitle: string
 ): TDocumentDefinitions {
+  const { accent, secondary, tertiary } = palette
   const tocContent: Content[] =
     toc.length >= 2
       ? [
@@ -525,7 +566,7 @@ function buildDocumentDefinition(
                     text: [
                       {
                         text: entry.level > 2 ? '·  ' : '▪  ',
-                        color: accent,
+                        color: tertiary,
                         bold: true,
                       },
                       { text: entry.title, style: 'tocEntry' },
@@ -560,13 +601,13 @@ function buildDocumentDefinition(
     styles: {
       tocTitle: { fontSize: 16, bold: true, color: accent, margin: [0, 0, 0, 10] },
       tocEntry: { fontSize: 10.2, color: '#333' },
-      tocPage: { fontSize: 10.2, bold: true, color: accent },
+      tocPage: { fontSize: 10.2, bold: true, color: secondary },
       h1: { fontSize: 21, bold: true, color: accent, margin: [0, 0, 0, 10] },
-      h2: { fontSize: 16, bold: true, color: accent, margin: [0, 18, 0, 7] },
-      h3: { fontSize: 13.5, bold: true, color: accent, margin: [0, 14, 0, 6] },
+      h2: { fontSize: 16, bold: true, color: secondary, margin: [0, 18, 0, 7] },
+      h3: { fontSize: 13.5, bold: true, color: tertiary, margin: [0, 14, 0, 6] },
       h4: { fontSize: 12, bold: true, color: accent, margin: [0, 11, 0, 5] },
-      h5: { fontSize: 11, bold: true, color: accent, margin: [0, 9, 0, 4] },
-      h6: { fontSize: 10.8, bold: true, color: accent, margin: [0, 8, 0, 4] },
+      h5: { fontSize: 11, bold: true, color: secondary, margin: [0, 9, 0, 4] },
+      h6: { fontSize: 10.8, bold: true, color: tertiary, margin: [0, 8, 0, 4] },
       paragraph: { fontSize: 10.8, lineHeight: 1.6, margin: [0, 4, 0, 4] },
       metaRow: {
         fontSize: 9,
@@ -575,7 +616,7 @@ function buildDocumentDefinition(
         margin: [0, 2, 0, 2],
       },
       metaItem: { fontSize: 9, color: '#666' },
-      metaLink: { fontSize: 9, color: accent, decoration: 'underline' },
+      metaLink: { fontSize: 9, color: accent, decoration: 'underline', decorationColor: accent },
       tagRow: { fontSize: 8.5, lineHeight: 1.4, margin: [0, 4, 0, 0] },
       list: { fontSize: 10.8, lineHeight: 1.55, margin: [0, 4, 0, 8] },
       blockquote: {
@@ -591,22 +632,22 @@ function buildDocumentDefinition(
       codeBlock: {
         fontSize: 8.8,
         lineHeight: 1.4,
-        background: tintWithWhite(accent, 0.93),
+        background: tintWithWhite(tertiary, 0.93),
         color: '#24292e',
         margin: [0, 0, 0, 9],
       },
       mathBlock: {
         fontSize: 9,
         italics: true,
-        background: tintWithWhite(accent, 0.95),
+        background: tintWithWhite(secondary, 0.95),
         color: '#333',
         margin: [0, 0, 0, 9],
       },
       table: { fontSize: 9, lineHeight: 1.35, margin: [0, 7, 0, 11] },
       tableHeader: {
         bold: true,
-        color: accent,
-        background: tintWithWhite(accent, 0.92),
+        color: secondary,
+        background: tintWithWhite(secondary, 0.92),
       },
       tableCell: {},
       image: { margin: [0, 6, 0, 6] },
@@ -627,7 +668,7 @@ function buildDocumentDefinition(
               y: 0,
               w: pageSize.width,
               h: 4,
-              color: accent,
+              color: secondary,
             },
           ],
         },
@@ -649,7 +690,7 @@ function buildDocumentDefinition(
       text: `${currentPage} / ${pageCount}`,
       alignment: 'right',
       margin: [0, 0, 48, 0],
-      color: accent,
+      color: tertiary,
       fontSize: 8.5,
     }),
   }
@@ -662,16 +703,16 @@ export async function generateArticlePdf(
   await ensurePdfFonts()
   await embedImages(source.element)
 
-  const accent = readAccentColor()
+  const palette = readPdfPalette()
   tocEntries = []
   const content = Array.from(source.element.children)
-    .flatMap((child) => elementToBlocks(child, accent))
+    .flatMap((child) => elementToBlocks(child, palette))
     .filter(Boolean)
   const definition = buildDocumentDefinition(
     source.title,
     content,
     tocEntries,
-    accent,
+    palette,
     siteTitle
   )
 

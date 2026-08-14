@@ -59,7 +59,7 @@ const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
   'figure', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'img', 'input', 'ins', 'kbd',
   'li', 'mark', 'ol', 'p', 'path', 'pre', 's', 'section', 'small', 'span', 'strong', 'svg',
-  'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'th', 'thead', 'tr', 'ul',
+  'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'th', 'thead', 'tr', 'u', 'ul',
 ])
 
 const GLOBAL_ALLOWED_ATTRS = new Set([
@@ -1017,6 +1017,19 @@ function renderDisplayLatexBlock(text: string): string {
   return `\n\n${renderEditableBlock('math', text.trim())}\n\n`
 }
 
+function normalizeMarkdownMetadataBreaks(source: string): string {
+  // Metadata is commonly authored as three consecutive bold lines. Markdown's
+  // default line-break rules keep those lines in one paragraph unless the
+  // author adds trailing spaces, so make the intended breaks explicit.
+  const codeFencePattern = /(```[\s\S]*?```|~~~[\s\S]*?~~~)/g
+  const metadataLinePattern = /(^\*\*(?:\u539f\u6587\u6807\u9898|\u4f5c\u8005)\*\*[^\r\n]*?)(?:<br>)?[ \t]*\r?\n(?=\*\*(?:\u4f5c\u8005|\u53d1\u5e03\u65e5\u671f)\*\*)/gmu
+
+  return source
+    .split(codeFencePattern)
+    .map((part, index) => index % 2 === 1 ? part : part.replace(metadataLinePattern, '$1<br>\n'))
+    .join('')
+}
+
 function preprocessMarkdownMath(source: string): string {
   const codeFencePattern = /(```[\s\S]*?```|~~~[\s\S]*?~~~)/g
 
@@ -1125,7 +1138,9 @@ export function renderMarkdown(source: string, options: RenderMarkdownOptions = 
   if (cached !== undefined) return cached
 
   const rendered = withMarkdownRenderOptions(options, () => (
-    deferClosedSourcePageImages(sanitizeHtml(marked.parse(preprocessMarkdownMath(source)) as string))
+    deferClosedSourcePageImages(
+      sanitizeHtml(marked.parse(preprocessMarkdownMath(normalizeMarkdownMetadataBreaks(source))) as string)
+    )
   ))
   renderedMarkdownCache.set(cacheKey, rendered)
 

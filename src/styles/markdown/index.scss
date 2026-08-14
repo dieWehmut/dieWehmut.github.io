@@ -4,6 +4,12 @@
 [data-theme="dark"] {
   --md-code-bg: #161b22;
   --md-code-text: #e6edf3;
+  --md-color-primary: var(--site-accent, #9b3dff);
+  --md-color-secondary: var(--site-secondary, #ff69b4);
+  --md-color-tertiary: var(--site-tertiary, #1fc41f);
+  --md-color-secondary-soft: rgb(var(--site-secondary-rgb, 255 105 180) / 0.16);
+  --md-color-tertiary-soft: rgb(var(--site-tertiary-rgb, 31 196 31) / 0.16);
+  --md-underline-color: #fff;
   --md-inline-code-bg: rgba(110, 118, 129, 0.25);
   --md-inline-code-text: #e6edf3;
   --md-pre-border: rgba(240, 246, 252, 0.1);
@@ -34,6 +40,12 @@
 :root[data-theme="light"] {
   --md-code-bg: #161b22;
   --md-code-text: #e6edf3;
+  --md-color-primary: var(--site-accent, #8f35ff);
+  --md-color-secondary: var(--site-secondary, #e64a97);
+  --md-color-tertiary: var(--site-tertiary, #1a9e1a);
+  --md-color-secondary-soft: rgb(var(--site-secondary-rgb, 230 74 151) / 0.13);
+  --md-color-tertiary-soft: rgb(var(--site-tertiary-rgb, 26 158 26) / 0.13);
+  --md-underline-color: #000;
   --md-inline-code-bg: rgba(175, 184, 193, 0.2);
   --md-inline-code-text: #1f2328;
   --md-pre-border: rgba(240, 246, 252, 0.1);
@@ -234,7 +246,7 @@
 .md-code-lang {
   min-width: 0;
   overflow: hidden;
-  color: var(--md-copy-text);
+  color: var(--md-color-secondary);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0;
@@ -841,21 +853,23 @@
 }
 
 .markdown-body h1 {
+  color: var(--md-color-primary);
   font-size: 2em;
   padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--md-hr-color);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-color-primary) 48%, var(--md-hr-color));
 }
 
 .markdown-body h2 {
+  color: var(--md-color-secondary);
   font-size: 1.5em;
   padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--md-hr-color);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-color-secondary) 48%, var(--md-hr-color));
 }
 
-.markdown-body h3 { font-size: 1.25em; }
-.markdown-body h4 { font-size: 1em; }
-.markdown-body h5 { font-size: 0.875em; }
-.markdown-body h6 { font-size: 0.85em; color: var(--md-blockquote-text); }
+.markdown-body h3 { color: var(--md-color-tertiary); font-size: 1.25em; }
+.markdown-body h4 { color: var(--md-color-primary); font-size: 1em; }
+.markdown-body h5 { color: var(--md-color-secondary); font-size: 0.875em; }
+.markdown-body h6 { color: var(--md-color-tertiary); font-size: 0.85em; }
 
 .markdown-body p {
   margin-top: 0;
@@ -863,30 +877,47 @@
 }
 
 .markdown-body a {
-  color: var(--md-link-color);
+  color: var(--md-color-primary);
   text-decoration: none;
 }
 
 .markdown-body a:hover {
   text-decoration: underline;
+  text-decoration-color: var(--md-color-secondary);
 }
 
 .markdown-body strong {
   font-weight: 600;
-  color: var(--md-heading-color);
+  color: var(--md-color-secondary);
 }
 
 .markdown-body em {
+  color: var(--md-color-tertiary);
   font-style: italic;
+}
+
+.markdown-body u {
+  color: var(--md-color-tertiary);
+  text-decoration-line: underline;
+  text-decoration-color: var(--md-underline-color);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.16em;
 }
 
 .markdown-body del {
   color: var(--md-del-color);
 }
 
+.markdown-body ins {
+  color: var(--md-color-tertiary);
+  text-decoration-color: var(--md-color-tertiary);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.16em;
+}
+
 .markdown-body mark {
-  background: var(--md-mark-bg);
-  color: var(--md-mark-text);
+  background: var(--md-color-secondary-soft);
+  color: var(--md-color-secondary);
   padding: 0.1em 0.3em;
   border-radius: 3px;
 }
@@ -894,7 +925,7 @@
 .markdown-body blockquote {
   margin: 0 0 16px;
   padding: 0 1em;
-  border-left: 2px solid var(--md-blockquote-border);
+  border-left: 2px solid var(--md-color-secondary);
   color: var(--md-blockquote-text);
 }
 
@@ -913,6 +944,10 @@
 .markdown-body ul ul { list-style-type: circle; }
 .markdown-body ul ul ul { list-style-type: square; }
 
+.markdown-body li::marker {
+  color: var(--md-color-tertiary);
+}
+
 .markdown-body li {
   margin-top: 0.25em;
 }
@@ -930,8 +965,8 @@
   margin: 0;
   font-size: 85%;
   white-space: break-spaces;
-  background: var(--md-inline-code-bg);
-  color: var(--md-inline-code-text);
+  background: color-mix(in srgb, var(--md-color-tertiary-soft) 74%, var(--md-inline-code-bg));
+  color: var(--md-color-secondary);
   border-radius: 6px;
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
 }
@@ -978,7 +1013,8 @@
 
 .markdown-body table th {
   font-weight: 600;
-  background: var(--md-table-header-bg);
+  color: var(--md-color-secondary);
+  background: var(--md-color-secondary-soft);
 }
 
 .markdown-body table tr:nth-child(2n) {
@@ -989,7 +1025,7 @@
   height: 0.25em;
   padding: 0;
   margin: 24px 0;
-  background-color: var(--md-hr-color);
+  background-color: var(--md-color-tertiary);
   border: 0;
   border-radius: 2px;
 }
@@ -1015,7 +1051,7 @@
 .markdown-body details summary {
   cursor: pointer;
   font-weight: 600;
-  color: var(--md-heading-color);
+  color: var(--md-color-primary);
 }
 
 .markdown-body kbd {
@@ -1026,7 +1062,7 @@
   color: var(--md-kbd-text);
   vertical-align: middle;
   background-color: var(--md-kbd-bg);
-  border: solid 1px var(--md-kbd-border);
+  border: solid 1px color-mix(in srgb, var(--md-color-secondary) 56%, var(--md-kbd-border));
   border-bottom-color: var(--md-kbd-shadow);
   border-radius: 6px;
   box-shadow: inset 0 -1px 0 var(--md-kbd-shadow);
@@ -1098,12 +1134,39 @@
 }
 
 .markdown-preview :where(strong) {
-  color: var(--site-text);
+  color: var(--md-color-secondary);
   font-weight: 800;
 }
 
 .markdown-preview :where(em) {
+  color: var(--md-color-tertiary);
   font-style: italic;
+}
+
+.markdown-preview :where(u) {
+  color: var(--md-color-tertiary);
+  text-decoration-line: underline;
+  text-decoration-color: var(--md-underline-color);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.14em;
+}
+
+.markdown-preview :where(mark) {
+  padding: 0 0.12em;
+  border-radius: 2px;
+  background: var(--md-color-secondary-soft);
+  color: var(--md-color-secondary);
+}
+
+.markdown-preview :where(del, s) {
+  color: var(--md-del-color);
+  text-decoration-color: var(--md-del-color);
+}
+
+.markdown-preview :where(ins) {
+  color: var(--md-color-tertiary);
+  text-decoration-color: var(--md-color-tertiary);
+  text-decoration-line: underline;
 }
 
 .markdown-preview :where(code) {
