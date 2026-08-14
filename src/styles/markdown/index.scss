@@ -891,6 +891,96 @@
   color: var(--md-color-secondary);
 }
 
+.markdown-body li.md-vocabulary-entry {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0 16px;
+  padding-left: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+.markdown-body .md-vocabulary-entry__word {
+  color: var(--md-color-secondary);
+  font-size: 1.04em;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.markdown-body .md-vocabulary-entry__row {
+  display: grid;
+  grid-template-columns: 28px 24px minmax(0, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  color: var(--md-color-primary);
+  line-height: 1.5;
+}
+
+.markdown-body .md-vocabulary-entry__label {
+  color: var(--md-color-tertiary);
+  font-weight: 700;
+}
+
+.markdown-body .md-vocabulary-entry__phonetic {
+  color: var(--md-color-primary);
+  font-family: 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.94em;
+  white-space: normal;
+}
+
+.markdown-body .md-vocabulary-entry__suffix {
+  min-width: 0;
+  color: var(--md-color-tertiary);
+}
+
+.markdown-body .md-vocabulary-entry__play {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--md-color-secondary);
+  background: color-mix(in srgb, var(--md-color-secondary-soft) 72%, transparent);
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.markdown-body .md-vocabulary-entry__play:hover,
+.markdown-body .md-vocabulary-entry__play:focus-visible,
+.markdown-body .md-vocabulary-entry__play.is-speaking {
+  color: var(--md-color-tertiary);
+  background: color-mix(in srgb, var(--md-color-tertiary-soft) 82%, transparent);
+  outline: none;
+}
+
+.markdown-body .md-vocabulary-entry__play.is-speaking {
+  transform: scale(1.08);
+}
+
+.markdown-body .md-vocabulary-entry__play.is-unavailable {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.markdown-body .md-vocabulary-entry > ul,
+.markdown-body .md-vocabulary-entry > ol {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .markdown-body .md-vocabulary-entry__row {
+    grid-template-columns: 28px 24px minmax(0, 1fr);
+  }
+
+  .markdown-body .md-vocabulary-entry__suffix {
+    grid-column: 3;
+  }
+}
+
 .markdown-body em {
   color: var(--md-color-tertiary);
   font-style: italic;

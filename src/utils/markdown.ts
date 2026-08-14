@@ -64,7 +64,7 @@ const ALLOWED_TAGS = new Set([
 
 const GLOBAL_ALLOWED_ATTRS = new Set([
   'class', 'id', 'title', 'lang', 'dir', 'role', 'hidden',
-  'aria-hidden', 'aria-label', 'aria-describedby', 'aria-expanded',
+  'aria-hidden', 'aria-label', 'aria-describedby', 'aria-expanded', 'aria-pressed',
 ])
 const PER_TAG_ALLOWED_ATTRS: Record<string, Set<string>> = {
   a: new Set(['href', 'target', 'rel']),
@@ -855,6 +855,56 @@ function computeFoldRanges(rawLines: string[]): Map<number, number> {
 
 const FOLD_CHEVRON_SVG = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3.22 5.47a.75.75 0 0 1 1.06 0L8 9.19l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L3.22 6.53a.75.75 0 0 1 0-1.06Z"/></svg>'
 
+const VOCABULARY_SPEAKER_SVG = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M1.5 5.5h2.25L7.5 2.75v10.5l-3.75-2.75H1.5v-5Zm8.03-.96a.75.75 0 0 1 1.06.02 4.84 4.84 0 0 1 0 6.88.75.75 0 1 1-1.06-1.06 3.34 3.34 0 0 0 0-4.76.75.75 0 0 1 0-1.08Zm1.91-1.83a.75.75 0 0 1 1.06.02 7.43 7.43 0 0 1 0 10.54.75.75 0 1 1-1.06-1.06 5.93 5.93 0 0 0 0-8.42.75.75 0 0 1 0-1.08Z"/></svg>'
+
+type VocabularyEntry = {
+  word: string
+  british: string
+  american: string
+  suffix: string
+}
+
+function parseVocabularyEntry(text: string): VocabularyEntry | null {
+  const match = text.trim().match(
+    /^\*\*([^*]+)\*\*\s+英\s+\[([^\]]+)\]\s*\/\s*美\s+\[([^\]]+)\](.*)$/u,
+  )
+  if (!match) return null
+
+  return {
+    word: match[1].trim(),
+    british: match[2].trim(),
+    american: match[3].trim(),
+    suffix: match[4] || '',
+  }
+}
+
+function renderVocabularyAudioButton(word: string, lang: 'en-GB' | 'en-US', label: string): string {
+  return [
+    `<button class="md-vocabulary-entry__play" type="button" data-md-action="audio" data-md-audio-word="${escapeHtml(word)}" data-md-audio-lang="${lang}" aria-label="Play ${escapeHtml(label)} pronunciation" aria-pressed="false">`,
+    VOCABULARY_SPEAKER_SVG,
+    '</button>',
+  ].join('')
+}
+
+function renderVocabularyEntry(entry: VocabularyEntry, definitions: string): string {
+  const suffix = entry.suffix.trim()
+  return [
+    '<li class="md-vocabulary-entry">',
+    `<div class="md-vocabulary-entry__word">${escapeHtml(entry.word)}</div>`,
+    '<div class="md-vocabulary-entry__row" data-md-vocabulary-locale="british">',
+    renderVocabularyAudioButton(entry.word, 'en-GB', 'British'),
+    `<span class="md-vocabulary-entry__label">英</span><span class="md-vocabulary-entry__phonetic">[${escapeHtml(entry.british)}]</span>`,
+    '</div>',
+    '<div class="md-vocabulary-entry__row" data-md-vocabulary-locale="american">',
+    renderVocabularyAudioButton(entry.word, 'en-US', 'American'),
+    `<span class="md-vocabulary-entry__label">美</span><span class="md-vocabulary-entry__phonetic">[${escapeHtml(entry.american)}]</span>`,
+    suffix ? `<span class="md-vocabulary-entry__suffix">${escapeHtml(suffix)}</span>` : '',
+    '</div>',
+    definitions,
+    '</li>',
+  ].join('')
+}
+
 function renderHighlightedCode(source: string, lang: string | undefined): string {
   const { langClass, validLang } = resolveCodeLanguage(lang)
   const highlighted = validLang
@@ -1080,6 +1130,13 @@ const marked = new Marked({
       return `<${tag}${startAttr}>\n${body}</${tag}>\n`
     },
     listitem({ tokens, task, checked }) {
+      const vocabulary = !task && tokens[0]?.type === 'text'
+        ? parseVocabularyEntry(tokens[0].text || '')
+        : null
+      if (vocabulary) {
+        return renderVocabularyEntry(vocabulary, this.parser.parse(tokens.slice(1)))
+      }
+
       const text = this.parser.parse(tokens)
       if (!task) return `<li>${text}</li>\n`
       const checkedAttr = checked ? ' checked' : ''
@@ -1212,6 +1269,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   const activeTimers = new Set<number>()
   const cleanupHandlers: Array<() => void> = []
   let toastTimer: number | null = null
+  let activeSpeech: SpeechSynthesisUtterance | null = null
+  let activeSpeechButton: HTMLElement | null = null
   const ownerDocument = root instanceof Document ? root : root.ownerDocument
 
   if (ownerDocument) {
@@ -1878,6 +1937,57 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     }
   }
 
+  const resetSpeechState = () => {
+    if (!activeSpeechButton) return
+    activeSpeechButton.classList.remove('is-speaking')
+    activeSpeechButton.setAttribute('aria-pressed', 'false')
+    activeSpeechButton = null
+    activeSpeech = null
+  }
+
+  const speakVocabularyWord = (button: HTMLElement) => {
+    const word = button.dataset.mdAudioWord?.trim()
+    const lang = button.dataset.mdAudioLang === 'en-US' ? 'en-US' : 'en-GB'
+    const speechWindow = ownerDocument?.defaultView
+    const synth = speechWindow?.speechSynthesis
+    const Utterance = speechWindow?.SpeechSynthesisUtterance
+
+    if (!word || !synth || !Utterance) {
+      button.classList.add('is-unavailable')
+      button.setAttribute('aria-label', 'Speech playback is unavailable')
+      return
+    }
+
+    if (activeSpeechButton) {
+      activeSpeechButton.classList.remove('is-speaking')
+      activeSpeechButton.setAttribute('aria-pressed', 'false')
+    }
+    synth.cancel()
+
+    const utterance = new Utterance(word)
+    utterance.lang = lang
+    utterance.rate = 0.9
+    utterance.volume = 1
+    const voices = synth.getVoices()
+    const exactVoice = voices.find((voice) => voice.lang.toLowerCase() === lang.toLowerCase())
+    const regionalVoice = voices.find((voice) => voice.lang.toLowerCase().startsWith(lang.slice(0, 2).toLowerCase()))
+    if (exactVoice || regionalVoice) utterance.voice = exactVoice || regionalVoice || null
+
+    activeSpeech = utterance
+    activeSpeechButton = button
+    button.classList.remove('is-unavailable')
+    button.classList.add('is-speaking')
+    button.setAttribute('aria-pressed', 'true')
+
+    const finish = () => {
+      if (activeSpeech !== utterance) return
+      resetSpeechState()
+    }
+    utterance.onend = finish
+    utterance.onerror = finish
+    synth.speak(utterance)
+  }
+
   const warmupEditorFromTarget = (target: EventTarget | null) => {
     if (!(target instanceof HTMLElement)) return
     const editButton = target.closest<HTMLElement>('[data-md-action="edit"]')
@@ -1908,6 +2018,11 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     const action = actionButton.dataset.mdAction || (actionButton.hasAttribute('data-copy-code') ? 'copy' : '')
     const block = actionButton.closest<HTMLElement>('.md-editable-block')
+
+    if (action === 'audio') {
+      speakVocabularyWord(actionButton)
+      return
+    }
 
     if (action === 'copy') {
       await copyBlockSource(actionButton)
@@ -1978,6 +2093,10 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
     root.removeEventListener('pointerover', onPointerOver)
     root.removeEventListener('focusin', onFocusIn)
     root.removeEventListener('click', onClick)
+    if (activeSpeech) {
+      ownerDocument?.defaultView?.speechSynthesis?.cancel()
+      resetSpeechState()
+    }
     cleanupHandlers.forEach((cleanupHandler) => cleanupHandler())
     activeMonacoEditors.forEach((editor) => editor.dispose())
     activeMonacoEditors.clear()
