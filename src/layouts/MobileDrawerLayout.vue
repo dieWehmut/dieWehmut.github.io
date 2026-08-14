@@ -18,7 +18,7 @@
 
     <aside class="mobile-layout__toc-drawer" :class="{ 'is-open': tocDrawerOpen }" aria-label="Page timeline">
       <ScrollSpySidebar
-        :key="`${route.fullPath}:${tocKey}`"
+        :key="`${routeViewKey(route)}:${tocKey}`"
         class="mobile-layout__toc"
         root-selector=".mobile-layout__main"
         :heading-selector="tocHeadingSelector"
@@ -31,7 +31,7 @@
     <main class="mobile-layout__main">
       <RouterView v-slot="{ Component, route }">
         <Transition name="page-fade" mode="out-in">
-          <component :is="Component" :key="route.fullPath" />
+          <component :is="Component" :key="routeViewKey(route)" />
         </Transition>
       </RouterView>
     </main>
@@ -62,6 +62,10 @@ const tocHeadingSelector = computed(() => {
   return 'h1, h2, h3'
 })
 let previousBodyOverflow = ''
+
+function routeViewKey(routeValue) {
+  return String(routeValue.fullPath || '').split('#')[0]
+}
 
 function lockBody() {
   if (typeof document === 'undefined') return

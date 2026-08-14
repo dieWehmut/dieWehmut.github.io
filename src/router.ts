@@ -62,7 +62,7 @@ const router = createRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
-    if (to.hash) return { el: to.hash, top: 24, behavior: 'smooth' }
+    if (to.hash) return false
     // 仅 query 变化（搜索、筛选）时留在原处，别把用户弹回顶部
     if (to.path === from.path) return false
     // 换页瞬时回顶：平滑滚动会和 page-fade 串行叠加，长文里尤其拖沓；

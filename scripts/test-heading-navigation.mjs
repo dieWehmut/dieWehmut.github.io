@@ -38,6 +38,24 @@ if (!fs.existsSync(helperPath)) {
   if (helper.normalizeHeadingText('  Example   Heading ') !== 'example heading') {
     failures.push('heading text matching normalizes whitespace')
   }
+  const quotedTitle = '\u4e8c\u3001\u4e8b\u60c5\u7167\u505a\u3001\u60c5\u7eea\u7f3a\u5e2d:\u8c01\u5077\u8d70\u4e86\u6211\u4eec\u7684"\u6d3b\u4eba\u611f"?'
+  const encodedTitle = quotedTitle.replaceAll('"', '&quot;')
+  if (helper.plainHeadingText(encodedTitle) !== quotedTitle || helper.slugifyHeadingText(encodedTitle).includes('quot')) {
+    failures.push('heading entities decode before titles and slugs are generated')
+  }
+  if (helper.decodeHtmlEntities('javascript&colon;alert&lpar;1&rpar;') !== 'javascript:alert&lpar;1&rpar;') {
+    failures.push('URL-significant entities decode before sanitizer checks')
+  }
+  const heading = {
+    id: expected,
+    dataset: { mdHeadingTitle: title },
+    getAttribute: () => null,
+    textContent: title,
+  }
+  const rootNode = { querySelectorAll: () => [heading] }
+  if (helper.resolveHeading(rootNode, `#${encodeURIComponent(title)}`) !== heading) {
+    failures.push('encoded raw title resolves to its canonical heading')
+  }
 }
 
 if (failures.length) {

@@ -25,7 +25,14 @@
 
 <script setup>
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { setReadingPath, useScrollRequests } from '../../composables/useReadingPath'
+import {
+  canonicalHeadingHash,
+  resolveHeading,
+  scrollHeadingIntoView,
+  waitForHeading,
+} from '../../utils/headingNavigation'
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
@@ -36,6 +43,8 @@ const props = defineProps({
 
 const emit = defineEmits(['navigate'])
 const scrollRequests = useScrollRequests()
+const route = useRoute()
+const router = useRouter()
 
 const items = ref([])
 const activeId = ref('')
@@ -50,8 +59,14 @@ let resizeObserver = null
 let mutationObserver = null
 let mediaQuery = null
 let isEnabled = true
-let pendingScrollId = ''
-let pendingScrollHandle = 0
+let pendingHashController = null
+let hashScrollFrame = 0
+let queuedHash = ''
+let queuedHashShouldEmit = false
+let pendingRequestHash = ''
+let handledHash = ''
+let handledRequestHash = ''
+let ignoredRouteHash = ''
 let spyEl = null
 
 function registerButton(id, el) {
@@ -99,7 +114,12 @@ function collectHeadings() {
   const root = findRoot()
   const nodes = Array.from(root.querySelectorAll(props.headingSelector))
   const collected = nodes.map((node, index) => {
-    const rawText = (node.getAttribute('data-scroll-title') || node.textContent || '').trim()
+    const rawText = (
+      node.getAttribute('data-md-heading-title')
+      || node.getAttribute('data-scroll-title')
+      || node.textContent
+      || ''
+    ).trim()
     const title = rawText || `Section ${index + 1}`
     let id = node.id
     if (!id) {
@@ -157,51 +177,88 @@ function updateActive() {
   )
 }
 
-function jumpToElement(el) {
-  const top = el.getBoundingClientRect().top + window.scrollY - props.offset
-  window.scrollTo({ top, behavior: 'smooth' })
-}
-
 function cancelPendingScroll() {
-  if (pendingScrollHandle) {
-    window.cancelAnimationFrame(pendingScrollHandle)
-    pendingScrollHandle = 0
+  pendingHashController?.abort()
+  pendingHashController = null
+  pendingRequestHash = ''
+  if (hashScrollFrame) {
+    window.cancelAnimationFrame(hashScrollFrame)
+    hashScrollFrame = 0
   }
-  pendingScrollId = ''
+  queuedHash = ''
+  queuedHashShouldEmit = false
 }
 
-// A deep heading may live in a markdown chunk that progressive rendering has
-// not appended yet, so getElementById can be null on the first click. Retry
-// across a few frames (capped) until the element materialises, then jump.
-function scrollToHeading(id) {
+async function scrollToHash(hash, shouldEmit = false) {
   cancelPendingScroll()
-  const el = document.getElementById(id)
-  if (el) {
-    jumpToElement(el)
-    emit('navigate', id)
+  if (!hash) {
+    handledHash = ''
+    handledRequestHash = ''
     return
   }
 
-  pendingScrollId = id
-  const startedAt = performance.now()
+  const controller = new AbortController()
+  pendingHashController = controller
+  pendingRequestHash = hash
+  const root = findRoot()
+  const immediate = root ? resolveHeading(root, hash, props.headingSelector) : null
+  const target = immediate || await waitForHeading({
+    getRoot: findRoot,
+    hash,
+    selector: props.headingSelector,
+    signal: controller.signal,
+  })
 
-  const attempt = () => {
-    if (pendingScrollId !== id) return
-    const target = document.getElementById(id)
-    if (target) {
-      cancelPendingScroll()
-      jumpToElement(target)
-      emit('navigate', id)
-      return
-    }
-    if (performance.now() - startedAt > 4000) {
-      cancelPendingScroll()
-      return
-    }
-    pendingScrollHandle = window.requestAnimationFrame(attempt)
+  if (controller.signal.aborted || !target) {
+    if (pendingRequestHash === hash) pendingRequestHash = ''
+    return
+  }
+  pendingHashController = null
+  pendingRequestHash = ''
+
+  const canonicalHash = canonicalHeadingHash(target.id)
+  handledHash = canonicalHash || hash
+  handledRequestHash = hash
+  if (canonicalHash && route.hash !== canonicalHash) {
+    ignoredRouteHash = canonicalHash
+    void router.replace({ hash: canonicalHash }).catch(() => {
+      if (ignoredRouteHash === canonicalHash) ignoredRouteHash = ''
+    })
   }
 
-  pendingScrollHandle = window.requestAnimationFrame(attempt)
+  scrollHeadingIntoView(target, props.offset)
+  if (shouldEmit) emit('navigate', target.id)
+}
+
+function scheduleHashScroll(hash, shouldEmit = false) {
+  if (!isEnabled) return
+  if (!hash) {
+    cancelPendingScroll()
+    handledHash = ''
+    handledRequestHash = ''
+    return
+  }
+  if (!shouldEmit && (
+    pendingRequestHash === hash
+    || handledHash === hash
+    || handledRequestHash === hash
+  )) return
+  queuedHash = hash
+  queuedHashShouldEmit = queuedHashShouldEmit || shouldEmit
+  if (hashScrollFrame) return
+
+  hashScrollFrame = window.requestAnimationFrame(() => {
+    hashScrollFrame = 0
+    const nextHash = queuedHash
+    const nextShouldEmit = queuedHashShouldEmit
+    queuedHash = ''
+    queuedHashShouldEmit = false
+    void scrollToHash(nextHash, nextShouldEmit)
+  })
+}
+
+function scrollToHeading(id) {
+  scheduleHashScroll(canonicalHeadingHash(id), true)
 }
 
 function followActive() {
@@ -262,12 +319,28 @@ watch(scrollRequests, (request) => {
   if (request?.id) scrollToHeading(request.id)
 })
 
+watch(() => route.hash, (hash) => {
+  if (hash && hash === ignoredRouteHash) {
+    ignoredRouteHash = ''
+    handledHash = hash
+    handledRequestHash = hash
+    return
+  }
+  ignoredRouteHash = ''
+  handledHash = ''
+  handledRequestHash = ''
+  scheduleHashScroll(hash)
+})
+
 function onResize() {
   scheduleCollectHeadings()
 }
 
 function onContentMutation() {
   scheduleCollectHeadings()
+  if (route.hash && handledHash !== route.hash && handledRequestHash !== route.hash) {
+    scheduleHashScroll(route.hash)
+  }
 }
 
 onMounted(async () => {
@@ -310,21 +383,11 @@ onMounted(async () => {
       subtree: true,
       characterData: true,
       attributes: true,
-      attributeFilter: ['id', 'data-scroll-title'],
+      attributeFilter: ['id', 'data-md-heading-title', 'data-scroll-title'],
     })
   }
 
-  // handle initial hash with smooth scroll
-  if (window.location.hash) {
-    const id = window.location.hash.slice(1)
-    const el = document.getElementById(id)
-    if (el) {
-      requestAnimationFrame(() => {
-        const top = el.getBoundingClientRect().top + window.scrollY - props.offset
-        window.scrollTo({ top, behavior: 'smooth' })
-      })
-    }
-  }
+  if (route.hash) scheduleHashScroll(route.hash)
 })
 
 onBeforeUnmount(() => {

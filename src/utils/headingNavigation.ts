@@ -1,5 +1,17 @@
 const DEFAULT_HEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6'
 
+const HEADING_ENTITIES: Record<string, string> = {
+  amp: '&',
+  apos: "'",
+  colon: ':',
+  gt: '>',
+  lt: '<',
+  newline: '\n',
+  nbsp: '\u00a0',
+  quot: '"',
+  tab: '\t',
+}
+
 export type WaitForHeadingOptions = {
   getRoot: () => ParentNode | null
   hash: string
@@ -8,19 +20,35 @@ export type WaitForHeadingOptions = {
   signal?: AbortSignal
 }
 
-function stripHeadingMarkup(value: string): string {
-  return value.replace(/<[^>]*>/g, '')
+export function decodeHtmlEntities(value: string): string {
+  return value.replace(
+    /&(#x[\da-f]+|#\d+|amp|apos|colon|gt|lt|newline|nbsp|quot|tab);/giu,
+    (match, entity: string) => {
+      const normalized = entity.toLowerCase()
+      if (!normalized.startsWith('#')) return HEADING_ENTITIES[normalized] || match
+
+      const radix = normalized.startsWith('#x') ? 16 : 10
+      const digits = normalized.slice(radix === 16 ? 2 : 1)
+      const codePoint = Number.parseInt(digits, radix)
+      if (!Number.isInteger(codePoint) || codePoint < 0 || codePoint > 0x10ffff) return match
+      return String.fromCodePoint(codePoint)
+    },
+  )
+}
+
+export function plainHeadingText(value: string): string {
+  return decodeHtmlEntities(value.replace(/<[^>]*>/g, ''))
 }
 
 export function normalizeHeadingText(value: string): string {
-  return stripHeadingMarkup(value)
+  return plainHeadingText(value)
     .replace(/\s+/gu, ' ')
     .trim()
     .toLowerCase()
 }
 
 export function slugifyHeadingText(value: string): string {
-  const plain = stripHeadingMarkup(value)
+  const plain = plainHeadingText(value)
   const slug = plain
     .replace(/\s+/gu, '-')
     .replace(/[^\w\u4e00-\u9fff-]/gu, '')

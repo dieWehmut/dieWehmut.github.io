@@ -54,7 +54,12 @@ import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetIma
 import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
 import { ensureGiscusLogin, getGiscusAuthState } from './giscusAuth'
 import type { MarkdownMonacoEditor } from './monacoMarkdownEditor'
-import { getUniqueHeadingId, slugifyHeadingText } from './headingNavigation'
+import {
+  decodeHtmlEntities,
+  getUniqueHeadingId,
+  plainHeadingText,
+  slugifyHeadingText,
+} from './headingNavigation'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -198,7 +203,7 @@ function stripUnsafeAttributes(rawAttrs: string, tagName: string): string {
       continue
     }
 
-    const normalized = value.trim().replace(/^['"]|['"]$/g, '')
+    const normalized = decodeHtmlEntities(value.trim().replace(/^['"]|['"]$/g, ''))
     if ((lowerName === 'href' || lowerName === 'src') && !isSafeUrl(normalized)) continue
     if (lowerName === 'style' && !isSafeStyle(normalized)) continue
 
@@ -1118,7 +1123,7 @@ const marked = new Marked({
     },
     heading({ tokens, depth }) {
       const text = this.parser.parseInline(tokens)
-      const title = text.replace(/<[^>]*>/g, '')
+      const title = plainHeadingText(text)
       const slug = getUniqueHeadingId(
         slugifyHeadingText(title),
         currentMarkdownRenderOptions.headingIds,

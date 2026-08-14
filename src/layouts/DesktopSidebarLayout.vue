@@ -6,7 +6,7 @@
       <main class="desktop-layout__main">
         <RouterView v-slot="{ Component, route }">
           <Transition name="page-fade" mode="out-in">
-            <component :is="Component" :key="route.fullPath" />
+            <component :is="Component" :key="routeViewKey(route)" />
           </Transition>
         </RouterView>
       </main>
@@ -22,6 +22,10 @@ import SiteSidebar from '../components/navigation/SiteSidebar.vue'
 import Footer from '../components/system/Footer.vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
 import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
+
+function routeViewKey(route) {
+  return String(route.fullPath || '').split('#')[0]
+}
 </script>
 
 <style scoped>
