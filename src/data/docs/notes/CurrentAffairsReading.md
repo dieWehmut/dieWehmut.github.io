@@ -14,7 +14,7 @@ tags: [English, Reading, Notes]
 
 ### 1.现状与就业冲击
 
-> Young people, **are you OK**? "It's the Worst Time to Be a College Graduate in Years," reads a Newsweek headline. The Federal Reserve warns, "Recent College Grads **Bear Brunt** of Labor Market Shifts." For 22- to 30-year-old computer-science graduates, employment has been falling.
+> Young people, **<u>are you OK</u>**? "It's the Worst Time to Be a College Graduate in Years," reads a Newsweek headline. The Federal Reserve warns, "Recent College Grads **<u>Bear Brunt</u>** of Labor Market Shifts." For 22- to 30-year-old computer-science graduates, employment has been falling.
 
 > 年轻人，你们还好吗？《新闻周刊》（Newsweek）的标题写道，“现在是多年以来大学毕业生求职最艰难的时期。”美联储也警示称，“应届大学毕业生正在承受劳动力市场变化的主要冲击。”对22至30岁的计算机科学毕业生而言，就业率一直在下滑。
 
@@ -33,7 +33,7 @@ tags: [English, Reading, Notes]
 
 ## 2.旧模式的崩塌
 
-> Why? Is it ChatGPT? Tariffs? **Late in the economic cycle**? No matter, the **unwritten social contract** for success that's been **drilled** into your **conscience**—good grades, decent college, job loyalty, home mortgage, retirement account—feels completely broken. It may be time to create your own job.
+> Why? Is it ChatGPT? Tariffs? **<u>Late in the economic cycle</u>**? No matter, the **<u>unwritten social contract</u>** for success that's been **<u>drilled</u>** into your **<u>conscience</u>**—good grades, decent college, job loyalty, home mortgage, retirement account—feels completely broken. It may be time to create your own job.
 
 > 为什么会这样？是ChatGPT吗？是关税？还是经济周期走到尾期？不管怎样，那套早已钻进你心智的“人生成功脚本”——考个好成绩、上个好大学、工作好好干、努力还房贷、存好退休金——这些社会默认的路径，似乎全都崩塌了。也许，是时候自己创造一份工作了。
 
@@ -54,7 +54,7 @@ tags: [English, Reading, Notes]
 
 ## 3.被分类的人群与安全的悖论
 
-> The world puts you in **silos**. Author Kyla Scanlon divides Generation Z into "**safety seekers**" and "**digital gamblers**." **Plausible, except that** careers that were once safe are now risky: graphic designers, marketers, some programmers, maybe even lawyers.
+> The world puts you in **<u>silos</u>**. Author Kyla Scanlon divides Generation Z into "**<u>safety seekers</u>**" and "**<u>digital gamblers</u>**." **<u>Plausible, except that</u>** careers that were once safe are now risky: graphic designers, marketers, some programmers, maybe even lawyers.
 
 > 这个世界喜欢把人分类。作者凯拉·斯坎伦（Kyla Scanlon）把Z世代分为“求稳派”和“数字赌徒”。这听上去有些道理——可问题是，那些曾经稳定可靠的职业，如今反而最不稳了，比如平面设计、市场营销、部分程序员，甚至包括律师。
 
@@ -74,7 +74,7 @@ tags: [English, Reading, Notes]
 
 ### 4.打破规则与创新的本质
 
-> **Progress comes via surprises, not rules, with inventions no one thought possible.** The telescope opened the skies. The microscope **illuminated** the unseeable. Quantum theory was **heretical**, until it wasn't. And it's been less than three years since ChatGPT shocked the world with what it could do. None of these were invented by following the rules, but by **colouring outside the lines**.
+> **<u>Progress comes via surprises, not rules, with inventions no one thought possible.</u>** The telescope opened the skies. The microscope **<u>illuminated</u>** the unseeable. Quantum theory was **<u>heretical</u>**, until it wasn't. And it's been less than three years since ChatGPT shocked the world with what it could do. None of these were invented by following the rules, but by **<u>colouring outside the lines</u>**.
 
 > 进步从来不诞生于规则之中，而是源于惊喜，它总是和那些被视为不可能的发明创造相伴而生。望远镜打开了探索天空的大门，显微镜照亮了肉眼不可见的世界，量子理论曾被视为异端邪说，后来却被世人接受。而现在距离ChatGPT以其超强能力震惊全球，也不过三年。这些突破，都不是循规蹈矩得来的，而是打破常规的产物。
 
@@ -99,7 +99,7 @@ tags: [English, Reading, Notes]
 
 ## 5.告别平庸，亲手创造未来
 
-> Please, don't embrace **mediocrity**. No one knows what's next. You've got the **best shot** to create the surprise. As Apple Fellow Alan Kay said, "the best way to predict the future is to invent it." If your brain still functions, you can keep going until you find success that surprises the world. There are no rules. Do your thing. Accomplish **somep'n**.
+> Please, don't embrace **<u>mediocrity</u>**. No one knows what's next. You've got the **<u>best shot</u>** to create the surprise. As Apple Fellow Alan Kay said, "the best way to predict the future is to invent it." If your brain still functions, you can keep going until you find success that surprises the world. There are no rules. Do your thing. Accomplish **<u>somep'n</u>**.
 
 > 请务必不要甘于平庸。没有人知道未来是什么样，而你们是最有机会创造惊喜的人。正如苹果公司的艾伦·凯（Alan Kay）所说，“预测未来的最好方式，就是亲手把它创造出来。”只要你的大脑还在运转，就不断尝试下去，直到有一天你做成那件让世界为之惊讶的事。世上本无所谓规则，做你该做的事，去做成点儿什么！
 
@@ -126,7 +126,7 @@ tags: [English, Reading, Notes]
 
 ### 1.节假日背后的隐藏压力
 
-> Let's face it: The holidays aren't always the happiest time of the year. We're busier than usual, **scurrying around** buying presents, mailing cards and attending events. And we're often **navigating** complicated family **dynamics** while **feeling pressured to** create perfect memories.
+> Let's face it: The holidays aren't always the happiest time of the year. We're busier than usual, **<u>scurrying around</u>** buying presents, mailing cards and attending events. And we're often **<u>navigating</u>** complicated family **<u>dynamics</u>** while **<u>feeling pressured to</u>** create perfect memories.
 
 > 咱们面对现实吧：节假日未必是一年中最欢乐的时光。我们会比往常更忙碌，四处奔走采购礼物、寄送贺卡、参加各类活动。我们还常常需要费心应对复杂的家庭氛围，同时承担着创造完美回忆的压力。
 
@@ -155,7 +155,7 @@ tags: [English, Reading, Notes]
 
 ### 2.“功能性冻结”的定义
 
-> The result: **overwhelming** stress that can **sap** our energy or focus. On social media, that feeling is sometimes referred to as "functional freeze."
+> The result: **<u>overwhelming</u>** stress that can **<u>sap</u>** our energy or focus. On social media, that feeling is sometimes referred to as "functional freeze."
 
 > 最终的结果是：巨大的压力会榨干我们的精力或注意力。在社交媒体上，这种感觉有时候被称为“功能性冻结”。
 
@@ -171,7 +171,7 @@ tags: [English, Reading, Notes]
 
 ### 3.“冻结模式”的具体体感
 
-> People have **equated** functional freeze **with** being "tired and **wired**"—anxiety mixed with fatigue. Others have said that "freeze mode" is similar to "**dissociating**, escaping" or feeling like you're "**in a fog**," even though you're able to get things done when you need to. Others explain that, though they might be participating in social activities, they aren't enjoying themselves and feel "emotionally **numb**."
+> People have **<u>equated</u>** functional freeze **<u>with</u>** being "tired and **<u>wired</u>**"—anxiety mixed with fatigue. Others have said that "freeze mode" is similar to "**<u>dissociating</u>**, escaping" or feeling like you're "**<u>in a fog</u>**," even though you're able to get things done when you need to. Others explain that, though they might be participating in social activities, they aren't enjoying themselves and feel "emotionally **<u>numb</u>**."
 
 > 人们将这种功能性冻结等同于“疲惫不堪又焦虑不安”——一种焦虑与倦怠交织的状态。还有人表示，“冻结模式”类似于“意识抽离、想要逃避”的状态，或是“身处迷雾”的恍惚感，尽管该做的事依然能完成。也有人解释说，自己虽然在参与社交活动，却无法乐在其中，反而有种“情感麻木”的感觉。
 
@@ -196,7 +196,7 @@ tags: [English, Reading, Notes]
 
 ### 4.深层成因：过度负荷与信息过载
 
-> These feelings may **arise from** being overwhelmed by the demands of everyday life, said George A. Bonanno, the author of "The End of Trauma." They could also be **a product of** **information overload**, he added.
+> These feelings may **<u>arise from</u>** being overwhelmed by the demands of everyday life, said George A. Bonanno, the author of "The End of Trauma." They could also be **<u>a product of</u>** **<u>information overload</u>**, he added.
 
 > 《创伤的终结》一书的作者乔治·A·博南诺（George A. Bonanno）表示，这类感受可能源于日常生活中汹涌而来的各种需求。他补充道，这也有可能是信息过载的产物。
 
@@ -214,7 +214,7 @@ tags: [English, Reading, Notes]
 
 ### 5.应对策略：聚焦核心与寻求专业帮助
 
-> Dr. Bonanno recommended **zeroing in on** your main concerns and then addressing those one by one. For example, if you are feeling emotionally numb, is there something in particular that you want to be numb to? If so, can you think about how to address that? You might also consider speaking with a **therapist** if your symptoms are especially troublesome or persistent.
+> Dr. Bonanno recommended **<u>zeroing in on</u>** your main concerns and then addressing those one by one. For example, if you are feeling emotionally numb, is there something in particular that you want to be numb to? If so, can you think about how to address that? You might also consider speaking with a **<u>therapist</u>** if your symptoms are especially troublesome or persistent.
 
 > 博南诺博士建议，先聚焦对自己最核心的困扰，再逐一着手解决。比如，如果你感到情感麻木，是否有某件具体的事让你刻意想要麻木以对？如果有，你能否思考一下该如何应对？倘若这种状态实在令人困扰，或是持续不见好转，你也可以考虑咨询心理治疗师。
 
@@ -230,7 +230,7 @@ tags: [English, Reading, Notes]
 
 ### 6.核心解法：唤醒“能动性”
 
-> **Above all**, remember that you have **agency**. Humans have "enormous capacity" to adapt and **move beyond** adversity.
+> **<u>Above all</u>**, remember that you have **<u>agency</u>**. Humans have "enormous capacity" to adapt and **<u>move beyond</u>** adversity.
 
 > 最重要的是，请记住你拥有能动性。人类拥有“强大的能力”去适应并超越逆境。
 
@@ -253,7 +253,7 @@ tags: [English, Reading, Notes]
 
 ### 1.Z世代的态度转变
 
-> **After years of resisting the preppy brand worn by their parents (and their grandparents before that), many of young people have decided that** Ralph Lauren is actually pretty **cool**.
+> **<u>After years of resisting the preppy brand worn by their parents (and their grandparents before that), many of young people have decided that</u>** Ralph Lauren is actually pretty **<u>cool</u>**.
 
 > 在多年抗拒这个“父母那一辈、甚至祖父母那一辈才会穿的”学院派品牌之后，越来越多的年轻人开始发现：拉夫·劳伦，其实挺酷的。
 
@@ -278,7 +278,7 @@ tags: [English, Reading, Notes]
 
 ### 2.曾困在过去的品牌
 
-> In many ways Ralph Lauren was **stuck in the past**. Its main form of communicating with customers was through **glossy print ads**. Many of its **iconic** products hadn't been updated for new generations. "We looked at that younger generation and it was pretty clear that we were **not talking to him or her**," President and Chief Executive Patrice Louvet said.
+> In many ways Ralph Lauren was **<u>stuck in the past</u>**. Its main form of communicating with customers was through **<u>glossy print ads</u>**. Many of its **<u>iconic</u>** products hadn't been updated for new generations. "We looked at that younger generation and it was pretty clear that we were **<u>not talking to him or her</u>**," President and Chief Executive Patrice Louvet said.
 
 > 从多个方面来看，拉夫·劳伦都显得有些停留在了过去。它与消费者沟通的主要方式，还是依靠制作精美的平面广告；旗下众多标志性产品，也始终没有针对新一代进行更新。“我们审视过年轻一代的需求，很明显，当时我们和他们完全没有建立有效的沟通。”品牌总裁兼首席执行官帕特里斯·卢韦（Patrice Louvet）表示。
 
@@ -299,7 +299,7 @@ tags: [English, Reading, Notes]
 
 ### 3.全面年轻化的新战略
 
-> His strategy **called for** collaborating with other **relevant** brands, communities and artists; developing new products that would **appeal to** younger shoppers; while also **tweaking** and **styling** its **icons** to **suit** different generations. It **boosted** its digital and social-media **presence** and **poured** money into marketing.
+> His strategy **<u>called for</u>** collaborating with other **<u>relevant</u>** brands, communities and artists; developing new products that would **<u>appeal to</u>** younger shoppers; while also **<u>tweaking</u>** and **<u>styling</u>** its **<u>icons</u>** to **<u>suit</u>** different generations. It **<u>boosted</u>** its digital and social-media **<u>presence</u>** and **<u>poured</u>** money into marketing.
 
 > 他提出的战略包括：与其他相关的品牌、社群及艺术家开展合作；开发能够吸引年轻消费者的新产品；同时对经典标志性产品进行改良与重新设计，以适配不同世代群体。此外，品牌还加强了在数字平台和社交媒体的布局，并加大了营销投入力度。
 
@@ -334,7 +334,7 @@ tags: [English, Reading, Notes]
 
 ### 4.契合Z世代与顺风趋势
 
-> Elements of the strategy **dovetailed** with the authenticity, inclusion and self-expression themes that **resonate with** Gen Z. But Ralph Lauren also benefited from the **tailwinds** of other trends popular with this age group, such as nostalgia, quiet luxury and a **resurgence** of preppy dressing.
+> Elements of the strategy **<u>dovetailed</u>** with the authenticity, inclusion and self-expression themes that **<u>resonate with</u>** Gen Z. But Ralph Lauren also benefited from the **<u>tailwinds</u>** of other trends popular with this age group, such as nostalgia, quiet luxury and a **<u>resurgence</u>** of preppy dressing.
 
 > 这一战略的诸条理念，恰好与当下Z世代推崇的“真实、包容、个性表达”等潮流不谋而合。与此同时，拉夫·劳伦也乘上了其他在年轻人中流行的趋势东风——比如复古怀旧风、低调奢华风，以及学院风穿搭的回潮。
 
@@ -353,7 +353,7 @@ tags: [English, Reading, Notes]
 
 ### 5.打造爆款与经典焕新
 
-> One **home run**: The Polo ID bag. When fans started posting "what fits inside" videos on social media, it **went viral**. For iconic products such as its cable-knit sweater, it added different **silhouettes** and styled a white polo shirt differently for different generations.
+> One **<u>home run</u>**: The Polo ID bag. When fans started posting "what fits inside" videos on social media, it **<u>went viral</u>**. For iconic products such as its cable-knit sweater, it added different **<u>silhouettes</u>** and styled a white polo shirt differently for different generations.
 
 > 其中全垒打级爆款：当属Polo ID系列手袋。当粉丝们开始在社交媒体上发布“这只包能装下什么”的视频后，它迅速走红。而对于绞花针织毛衣这类标志性单品，品牌则创新推出了多种版型；经典白色Polo衫也针对不同世代消费者，设计出了多样化的穿搭风格。
 
@@ -369,7 +369,7 @@ tags: [English, Reading, Notes]
 
 ### 6.有机传播与客群年轻化
 
-> These moves helped the brand **show up** **organically** on social media. Iris Langlois-Meurinne, Ralph Lauren's global chief marketing officer said that Ralph Lauren's customers are getting younger each **quarter** and that the fastest-growing **segment** is Gen Z.
+> These moves helped the brand **<u>show up</u>** **<u>organically</u>** on social media. Iris Langlois-Meurinne, Ralph Lauren's global chief marketing officer said that Ralph Lauren's customers are getting younger each **<u>quarter</u>** and that the fastest-growing **<u>segment</u>** is Gen Z.
 
 > 这些举措，助力品牌自然而然地在社交媒体上获得了大量曝光。拉夫·劳伦全球首席营销官艾瑞斯·朗卢瓦-默兰（Iris Langlois-Meurinne）称，品牌的客户群体正在逐年年轻化，其中增长最快的正是Z世代。
 
@@ -394,7 +394,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 难逃寒霜的生命规律
 
-> I was sure our window spider was long gone. This year the first hard freeze came nearly three weeks earlier than last year's, and most orbweavers aren't built to survive winter. They hatch in spring, grow up in summer, lay eggs in fall and die with the first freeze. Year after year, the pattern persists, and there is no use hoping it were otherwise.
+> I was sure our window spider was long gone. This year the first hard **<u>freeze</u>** came nearly three weeks earlier than last year's, and most **<u>orbweavers</u>** **<u>aren't built to survive</u>** winter. They hatch in spring, grow up in summer, lay eggs in fall and die with the first **<u>freeze</u>**. Year after year, the **<u>pattern</u>** persists, and **<u>there is no use hoping</u>** it were otherwise.
 
 > 我曾笃定，窗边的那只蜘蛛早已离去。今年的第一场霜冻比去年提早了近三周，而大多数圆蛛生来就活不过冬天。它们在春日孵化，在夏日成长，在秋日产卵，而当冬日的第一场寒潮来临，便是它们生命的终点。年复一年，这个模式周而复始，盼望它能有所不同终究只是徒劳。
 
@@ -425,7 +425,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 无法坦然的离别心绪
 
-> "What's a life, anyway?" Charlotte asks Wilbur in E.B. White's classic children's book about a friendship between a spider and a barnyard piglet. "We're born, we live a little while, we die." I cannot be so sanguine about the death of the spider who shares my own small ecosystem.
+> "What's a life, anyway?" Charlotte asks Wilbur in E.B. White's classic children's book about a friendship between a spider and a barnyard piglet. "We're born, we live a little while, we die." I cannot be so **<u>sanguine</u>** about the death of the spider who shares my own small ecosystem.
 
 > “说到底，生命究竟是什么？”在E.B.怀特那本讲述一只蜘蛛与一只农家小猪友谊的经典童书里，蜘蛛夏洛这样问小猪威尔伯。夏洛还说道，“我们出生，活上一阵子，然后死去。”可这只蜘蛛与我共处一室，共享一个小小的生态系统，想到它的离去，我无法看得那么开。
 
@@ -438,7 +438,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 窗边安家的小小伙伴
 
-> Last summer, she pitched her deadly little camp in the space between the glass and the screen of the window next to my husband's side of the bed. I worried about her from the moment I spied her there back in July. November temperatures were still in the 70s while I packed for a trip a few weeks ago, but a hard freeze was predicted for the following night. I knew my canny companion in the window, who had been doing fine all summer and fall in her unlikely lair, would be gone by the time I got home again.
+> Last summer, she **<u>pitched her deadly little camp</u>** in the space between the glass and the screen of the window next to my husband's side of the bed. I worried about her from the moment I **<u>spied</u>** her there back in July. November temperatures were still in the 70s while I packed for a trip a few weeks ago, but a hard freeze was predicted for the following night. I knew my **<u>canny</u>** **<u>companion</u>** in the window, who had been doing fine all summer and fall in her unlikely **<u>lair</u>**, would be gone by the time I got home again.
 
 > 刚过去的那个夏天，她在我丈夫床头那侧的窗户玻璃与纱窗之间，筑起了一个对小虫来说堪称致命的小小营地。自从在七月发现她的那一刻起，我一直都在为她担心。几周前我收拾行李准备出行时，十一月的气温仍徘徊在七十华氏度（译者注：约21摄氏度）左右，但天气预报说次日夜间就会有一场霜冻。我心想，我这位机灵的伙伴，在窗边那个不可思议的巢穴里，整个夏天和秋天都安然无恙，但等我回来时，她应该就不在了。
 
@@ -461,7 +461,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 跨越霜冻的意外幸存
 
-> Two weeks after my trip, when I could finally bring myself to check the window again, I was astonished anew: The spider had survived the first hard freeze of the year after all. She has kept up her merciless work ever since. I don't know how.
+> Two weeks after my trip, when I could finally **<u>bring myself to check</u>** the window again, I was astonished **<u>anew</u>**: The spider had survived the first hard freeze of the year after all. She has kept up her **<u>merciless</u>** work ever since. I don't know how.
 
 > 旅行归来两周后，我终于鼓起勇气再去窗边查看，又吃了一大惊：这只蜘蛛竟挺过了今年的首轮严寒。从那以后，她一直继续着自己无情的捕食工作。我始终不解她是如何做到的。
 
@@ -480,7 +480,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 注定的告别与独一无二的生命
 
-> Winter won't hold off forever, and when it comes, she will be gone. This is how a rightly functioning ecosystem works. I'll miss her terribly anyway. She set up camp last summer, and we have lived together since, her with her tiny collection of insect legs and me with my peering eyes and puzzled mind. She is like no other spider I have ever known. E.B. White's Charlotte was famously unique, but so is she, and so was last year's spider, too. I'm beginning to think that, maybe we all are.
+> Winter won't hold off forever, and when it comes, she will be gone. This is how a rightly **<u>functioning</u>** ecosystem works. I'll miss her terribly anyway. She set up camp last summer, and we have lived together since, her with her tiny **<u>collection</u>** of insect legs and me with my **<u>peering eyes</u>** and **<u>puzzled mind</u>**. **<u>She is like no other spider I have ever known.</u>** E.B. White's Charlotte was famously unique, but so is she, and so was last year's spider, too. I'm beginning to think that, maybe we all are.
 
 > 今年的寒冬虽迟，但一定会到。到那时，她终将离去。一个正常运转的生态系统，本就该如此。可我还是会非常想念她。夏天时她在我家安营扎寨，此后我们便生活在一起，她守着自己收集的那一小堆昆虫腿，我则一边仔细观察她，一边生出了满脑子的疑问。她和我见过的任何蜘蛛都不一样。E.B.怀特笔下的夏洛是出了名的与众不同，但我窗边的这只蜘蛛同样特别，我去年观察过的那只也是。我渐渐开始觉得，或许我们每个生命，都是独一无二的。
 
@@ -513,7 +513,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 新年前夜的特别庆祝
 
-> Gathered on New Year's Eve in the banquet hall of a beachside hotel in southern China, tipsy revelers jumped to their feet to toast the arrival of 2026 — two hours early.
+> Gathered on New Year's Eve in the **<u>banquet</u>** hall of a beachside hotel in southern China, **<u>tipsy</u>** **<u>revelers</u>** **<u>jumped to their feet</u>** to toast the arrival of 2026 — two hours early.
 
 > 新年前夜，在中国南部一家海滨酒店的宴会厅里，人们聚在一起，醉意朦胧地起身举杯，欢呼着迎接2026年的到来——不过提前了2个小时。
 
@@ -538,7 +538,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 家乡时区的新年仪式
 
-> They were not befuddled by too much drink but wanted to celebrate the start of the New Year according to the time in Vladivostok, a Russian city two hours ahead of China. Slurred cries went up, in Russian: "Happy New Year, Vladivostok!"
+> They were **<u>not befuddled by too much drink</u>** **<u>but wanted to celebrate the start of the New Year according to the time in Vladivostok</u>**, a Russian city two hours ahead of China. **<u>Slurred</u>** cries went up, in Russian: "Happy New Year, Vladivostok!"
 
 > 他们并非喝昏了头，而是想按符拉迪沃斯托克（Vladivostok）的时间庆祝新年，这座俄罗斯城市要比北京时间快两小时。人群中响起含混不清的俄语，大家高喊着，“符拉迪沃斯托克！新年快乐！”
 
@@ -559,7 +559,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 不必低调的自在空间
 
-> Unlike in many places in Europe, where Russians have learned to keep their voices down because of the war in Ukraine, the beaches of southern China offer a safe and sunny space for Russians to behave as they would at home without fear of sideways looks.
+> Unlike in many places in Europe, where Russians have learned to **<u>keep their voices down</u>** because of the war in Ukraine, the beaches of southern China offer a safe and sunny space for Russians to behave as they would at home without fear of **<u>sideways</u>** looks.
 
 > 由于俄乌战争，俄罗斯人在欧洲许多地方已经学会低调行事，但在中国不一样，中国南方的海滩对俄罗斯人来说阳光灿烂、十分安全，他们就像待在家乡一样自在，无需担心异样目光。
 
@@ -574,7 +574,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 爆发式增长的游客规模
 
-> The number of Russian visitors to Hainan increased 11 times between 2023 and 2024, making them by far the biggest group, buoyed by a visa-free policy. During the winter high season, the island receives eight or more flights each day from cities across Russia.
+> The number of Russian visitors to Hainan increased 11 times between 2023 and 2024, making them by far the biggest group, **<u>buoyed</u>** by a visa-free policy. During the winter **<u>high season</u>**, the island **<u>receives</u>** eight or more flights each day from cities across Russia.
 
 > 得益于中国免签政策，2023至2024年间赴海南省的俄罗斯游客激增11倍，成为当地最大客源群体。冬季旺季期间，每天有八架甚至更多航班从俄罗斯各地飞抵这座岛屿。
 
@@ -592,7 +592,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 跨越温差的冬日向往
 
-> Most Russian visitors enjoy their time in Hainan for a simple reason: the weather. "It is now minus 30 degrees and snowing at home and here it plus 30 and sunny," said a cafe owner from the Siberian city of Khabarovsk, Nataliya.
+> Most Russian visitors enjoy their time in Hainan for a simple reason: the weather. "It is now **<u>minus 30 degrees</u>** and snowing at home and **<u>here it plus 30 and sunny</u>**," said a cafe owner from the Siberian city of Khabarovsk, Nataliya.
 
 > 俄罗斯游客钟情海南的理由很简单——天气。来自西伯利亚哈巴罗夫斯克（Khabarovsk）的咖啡馆老板娜塔莉娅（Nataliya）说：“我老家现在零下30度，大雪纷飞，这里却是零上30度，阳光明媚。”
 
@@ -608,7 +608,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 友好包容的旅居环境
 
-> In China, she added, hotels are cheaper, and people don't care about geopolitics, the war in Ukraine or other topics that rile many Europeans. "Chinese don't spit at Russians like Europeans do," she said.
+> In China, she added, hotels are cheaper, and people don't care about **<u>geopolitics</u>**, the war in Ukraine or other topics that **<u>rile</u>** many Europeans. "Chinese don't **<u>spit</u>** at Russians like Europeans do," she said.
 
 > 她补充说，在中国住酒店更便宜，人们也不关心地缘政治、俄乌战争等等容易激怒许多欧洲人的话题。“中国人不像欧洲人那样，觉得俄罗斯人是过街老鼠。”她说道。
 
@@ -636,7 +636,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 深陷情绪内耗的日常
 
-> Corinne Byerley, a stay-at-home mom, recalled days when she felt lonely, overwhelmed and, at times, paralyzed with anxiety and self-doubt.
+> Corinne Byerley, a **<u>stay-at-home mom</u>**, recalled days when she felt lonely, **<u>overwhelmed</u>** and, at times, **<u>paralyzed</u>** with anxiety and self-doubt.
 
 > 全职妈妈科琳·拜利（Corinne Byerley）回忆说，有一段时间，她常常感到孤独、心力交瘁，甚至不时因焦虑和自我怀疑而寸步难行。
 
@@ -662,7 +662,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 远程问诊与社交平台种草
 
-> She posted a video asking for help, and someone recommended Hers, a telehealth company. Byerley answered a questionnaire, and an online nurse practitioner prescribed a generic version of Lexapro. A bottle arrived days later. In the months that followed, she gushed over the pills to her thousands of followers.
+> She posted a video asking for help, and someone recommended Hers, a **<u>telehealth company</u>**. Byerley answered a questionnaire, and an online **<u>nurse practitioner</u>** prescribed a generic version of Lexapro. A bottle arrived days later. In the months that followed, she **<u>gushed over the pills</u>** to her thousands of followers.
 
 > 她发布了一条求助视频，有人向她推荐了远程医疗公司赫尔斯（Hers）。拜利填写了一份调查问卷后，一名在线执业护士为她开具了来士普（Lexapro）仿制药的处方。几天后，一瓶药便寄到了她手中。在之后的数月里，她向自己的数千名粉丝热情夸赞这款药物的奇效。
 
@@ -678,7 +678,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 一场重塑形象的社交运动
 
-> For a time, Byerley belonged to a social-media movement that has given antidepressants a makeover—from a stigmatized medicine to a healthy lifestyle accessory for enlightened and empowered young women.
+> For a time, Byerley belonged to a social-media movement that has given antidepressants a **<u>makeover</u>**—from a **<u>stigmatized</u>** medicine to a healthy lifestyle accessory for **<u>enlightened</u>** and **<u>empowered</u>** young women.
 
 > 拜利一度加入了一场社交媒体运动。这场运动彻底重塑了抗抑郁药的公众形象——让它从一种背负污名的药品，转变为思想开明、追求自主的年轻女性人手一件的健康生活时尚单品。
 
@@ -696,7 +696,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 专家视角：被包装的“生活方式药”
 
-> Antidepressants are portrayed by influencers and in online ads as lifestyle medications, said Dr. Josef Witt-Doerring, a psychiatrist and former FDA official who runs an online clinic to help patients taper off psychiatric medications and minimize withdrawal symptoms. "People know their favorite celebrity who's taking them."
+> Antidepressants are **<u>portrayed</u>** by **<u>influencers</u>** and in online ads as lifestyle medications, said Dr. Josef Witt-Doerring, a psychiatrist and former FDA official who **<u>runs</u>** an online clinic to help patients **<u>taper off</u>** psychiatric medications and minimize **<u>withdrawal symptoms</u>**. "People know their favorite celebrity who's taking them."
 
 > 精神病学家、前美国食品药品监督管理局（FDA）官员约瑟夫·维特-德林博士（Dr. Josef Witt-Doerring）指出，网红博主和线上广告将抗抑郁药包装成了“生活方式类药物”。“大家都知道自己喜欢的名人也在服用这类药。”德林博士如今经营着一家线上诊所，专门帮助患者逐步停用精神类药物并减轻戒断反应。
 
@@ -719,7 +719,7 @@ tags: [English, Reading, Notes]
 
 > Yet mental health, he said, is about more than taking a pill.
 >
-> Only 15% of people with major depression experienced a substantial benefit from taking antidepressants beyond the placebo effect of pills that look like real medication, a 2022 study found.
+> Only 15% of people with **<u>major depression</u>** experienced a **<u>substantial benefit</u>** from taking antidepressants **<u>beyond</u>** the **<u>placebo effect</u>** of pills that look like real medication, a 2022 study found.
 
 > 但他强调，心理健康远不止“吃一片药”那么简单。
 >
@@ -741,7 +741,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 风险权衡与专业原则
 
-> The potential benefit of antidepressants has to be weighed against such risks as sexual dysfunction and withdrawal effects, including anxiety and restlessness, said Dr. Marc Stone, a former FDA official and the study's lead author. "My biggest concern is having the discipline to say, 'Let's stop the drug if you're not having a major improvement,'" he said.
+> The potential benefit of antidepressants has to be **<u>weighed against</u>** such risks as **<u>sexual dysfunction</u>** and **<u>withdrawal effects</u>**, including anxiety and restlessness, said Dr. Marc Stone, a former FDA official and the study's lead author. "My biggest concern is having the **<u>discipline</u>** to say, 'Let's stop the drug if you're not having a major improvement,'" he said.
 
 > 该研究的主要作者、同样曾任职于FDA的马克·斯通博士（Dr. Marc Stone）表示，在考虑使用抗抑郁药时，必须权衡其潜在益处与风险，例如性功能障碍，以及焦虑、坐立不安等戒断反应。他说：“我最担心的是，人们缺乏这样的专业自律：‘在没有明显改善时，敢于说：我们停药吧。’”
 
@@ -769,7 +769,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 大脑衰老的五个阶段
 
-> The brain goes through five distinct stages between birth and death, a new study shows.
+> The brain goes through five **<u>distinct</u>** stages between birth and death, a new study shows.
 
 > 一项新研究显示，人类从出生到死亡，大脑会经历5个截然不同的发展阶段。
 
@@ -783,7 +783,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 关键年龄节点与阶段划分
 
-> Scientists identified the average ages—9, 32, 66 and 83—when the patterns of connections inside our brains shift. The brain's adolescence phase, they discovered, lasts until age 32, and then it enters a period of stability until early aging begins at 66.
+> Scientists identified the average ages—9, 32, 66 and 83—when the patterns of connections inside our brains shift. The brain's **<u>adolescence</u>** **<u>phase</u>**, they discovered, lasts until age 32, and then it enters a period of **<u>stability</u>** until early aging begins at 66.
 
 > 科学家们确定了大脑内部神经连接模式发生转变的平均年龄节点，分别是9岁、32岁、66岁和83岁。研究发现，大脑的青春期阶段会持续至32岁，此后进入稳定期，直至66岁步入早期衰老阶段。
 
@@ -809,7 +809,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 晚期衰老的连接退化机制
 
-> Beyond 83, in the late-aging phase, the connections between regions deteriorate and our brains increasingly rely on individual regions with a small number of highly used interregional pathways, said Alexa Mousley, a University of Cambridge neuroscientist and lead author of the research.
+> Beyond 83, in the late-aging phase, the connections between regions **<u>deteriorate</u>** and our brains **<u>increasingly</u>** rely on individual regions with a small number of highly used **<u>interregional pathways</u>**, said Alexa Mousley, a University of Cambridge neuroscientist and lead author of the research.
 
 > 该研究的第一作者、剑桥大学神经科学家艾丽克莎·莫斯利（Alexa Mousley）表示，在83岁以后的晚期衰老阶段，大脑各区域间的连接会逐步退化，大脑会越来越依赖单个功能区域，以及少数频繁使用的跨区域神经通路。
 
@@ -826,7 +826,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 神经重组与疾病的关联猜想
 
-> She is intrigued by whether the brain is more susceptible to certain mental-health or neurological issues because of this rewiring, since there is a pattern between the five stages and common conditions.
+> She **<u>is intrigued by</u>** whether the brain is more **<u>susceptible</u>** to certain mental-health or neurological issues because of this **<u>rewiring</u>**, since there is a pattern between the five stages and common conditions.
 
 > 她还对一个问题深感好奇：鉴于大脑的这5个发展阶段与一些常见疾病的发病时间存在对应关系，那么大脑是否会因为这种脑区之间神经连接模式的重组，而更容易患上某些心理健康或神经系统疾病？
 
@@ -845,7 +845,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 疾病发病与大脑阶段的对应规律
 
-> Most autism diagnoses, for instance, are made in young children, according to the Centers for Disease Control and Prevention. Up to 75% of mental-health conditions begin by a person's early 20s, per the Substance Abuse and Mental Health Services Administration. Alzheimer's disease typically manifests during what the researchers call the early aging phase.
+> Most autism diagnoses, for instance, are made in young children, according to the **<u>Centers for Disease Control and Prevention</u>**. Up to 75% of mental-health conditions begin by a person's early 20s, **<u>per</u>** the Substance Abuse and Mental Health Services Administration. Alzheimer's disease typically **<u>manifests</u>** during what the researchers call the early aging phase.
 
 > 例如，根据美国疾病控制与预防中心的统计，大多数自闭症病例确诊于幼儿时期。美国药物滥用与心理健康服务管理局的数据则显示，高达75%的心理健康疾病在一个人20岁出头时初现端倪。而阿尔茨海默病的典型发病期，正处于研究人员定义的大脑早期衰老阶段。
 
@@ -862,7 +862,7 @@ tags: [English, Reading, Notes]
 
 ### 7. 影响认知衰老的生活因素
 
-> Cardiovascular health, social connectedness and exercise are all associated with positive cognitive health outcomes—and it's possible they also play a role in the rewiring that happens later in life, too.
+> **<u>Cardiovascular health</u>**, social connectedness and exercise are all associated with positive cognitive health outcomes—and it's possible they also play a role in the rewiring that happens later in life, too.
 
 > 心血管健康、社会交往和体育锻炼，都与良好的认知功能有关联——并且它们也可能影响着人在晚年时大脑神经连接的重新构建。
 
@@ -883,7 +883,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 神话与现实的迥异结局
 
-> In ancient Greek mythology, a man who falls in love with his own reflection withers away and dies. In modern America, he gets promoted to the corner office — and sometimes even elected to the Oval Office.
+> In ancient Greek mythology, a man who **<u>falls in love with</u>** his own reflection **<u>withers away</u>** and dies. In modern America, he gets promoted to **<u>the corner office</u>** — and sometimes even elected to **<u>the Oval Office</u>**.
 
 > 在古希腊神话中，一个爱上自己倒影的男人最终会憔悴而死。在现代美国，这样的人却能步步高升坐进高管办公室——有时甚至能入主白宫的椭圆办公室。
 
@@ -906,7 +906,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 伟大领袖与自恋者的分野
 
-> We should know better. Great leaders put their missions above their egos. Narcissists do the opposite; they see themselves as special and superior and put their egos above all else. So why do we keep falling for them?
+> We should know better. Great leaders **<u>put their missions above their egos</u>**. Narcissists do the opposite; they see themselves as special and **<u>superior</u>** and **<u>put their egos above all else</u>**. So why do we keep falling for them?
 
 > 对此我们应该更清醒一点。伟大的领导者将使命置于自我之上；而自恋者恰恰相反，他们自命不凡、优越感爆棚，将自我看得高于一切。既然如此，为什么我们还会不断地迷上这类人呢？
 
@@ -922,7 +922,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 本文的核心：现象而非个人
 
-> Readers of a certain stripe will assume this is an article about President Trump. But my point is not about Mr. Trump per se; it's about why people are attracted to him and so many others like him as leaders in politics and business right now.
+> Readers of a certain **<u>stripe</u>** will assume this is an article about President Trump. But my point is not about Mr. Trump **<u>per se</u>**; it's about why people **<u>are attracted to</u>** him and so many others like him as leaders in politics and business right now.
 
 > 某一类读者可能会认为这是一篇关于特朗普总统的文章。但我的重点并非探讨特朗普本人，而是为什么人们在当下会被他以及许多像他一样的人吸引，并将其推为政界和商界的领导者。
 
@@ -941,7 +941,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 流行观点：被表象蛊惑的大众
 
-> A popular take is that we're being bamboozled by these people. We're seduced by superficial charm and fail to see the hubris that's powering it.
+> A popular **<u>take</u>** is that we're **<u>being bamboozled</u>** by these people. We're **<u>seduced</u>** by superficial charm and fail to see the **<u>hubris</u>** that's powering it.
 
 > 一种流行的观点认为，我们是被这类人忽悠了。人们被其肤浅的魅力所诱惑，却未能洞察到驱动这种魅力的狂妄本质。
 
@@ -965,7 +965,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 心理根源：低自尊与早年的权力萌芽
 
-> Psychologists find that narcissistic leaders are more appealing to people with low self-esteem. The lower our opinions of ourselves, the more insecure we're feeling, the higher our opinions of narcissists. Supporting them makes us feel special. It begins early: One study of elementary and middle schoolers found that in 96 percent of classrooms, kids who displayed narcissistic qualities were more likely to be nominated for leadership roles.
+> Psychologists find that narcissistic leaders are more appealing to people with **<u>low self-esteem</u>**. The lower our **<u>opinions</u>** of ourselves, the more **<u>insecure</u>** we're feeling, the higher our **<u>opinions</u>** of narcissists. Supporting them makes us feel special. It begins early: One study of elementary and middle schoolers found that in 96 percent of classrooms, kids who displayed narcissistic qualities were more likely to be nominated for leadership roles.
 
 > 心理学家发现，自恋型领导者对低自尊人群更具吸引力。我们对自己的评价越低、内心越缺乏安全感，对自恋者的评价反而越高，而支持他们让我们觉得自己“与众不同”。这种倾向发生得很早：一项针对中小学生的研究发现，在96%的班级里，表现出自恋特质的孩子更有可能被推选为班干部。
 
@@ -983,7 +983,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 领导力的本质：谦逊成就强大
 
-> The responsibility of leadership is too important to entrust to arrogant people. Narcissistic leaders deny their weaknesses and make themselves weaker. Humble leaders admit their weaknesses and make themselves stronger. Great leaders overcome their weaknesses and make us all better.
+> The responsibility of leadership is too important to **<u>entrust</u>** to arrogant people. Narcissistic leaders deny their weaknesses and make themselves weaker. Humble leaders admit their weaknesses and make themselves stronger. Great leaders overcome their weaknesses and make us all better.
 
 > 领导者的责任重于泰山，绝不应托付给傲慢之徒。自恋型领导者否认弱点，最终反受其累；谦逊的领导者正视弱点，从而愈发强大；而伟大的领导者则会克服弱点，并成就我们所有人。
 
@@ -1004,7 +1004,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 海面相遇：与抹香鲸的静默对视
 
-> One afternoon in January 2024, off the island of Dominica in the Atlantic Ocean, a sperm whale named Pinchy and I drifted calmly at the surface of the water, examining each other.
+> One afternoon in January 2024, **<u>off</u>** the island of Dominica in the Atlantic Ocean, a **<u>sperm whale</u>** named Pinchy and I drifted calmly at the surface of the water, examining each other.
 
 > 2024年1月的某天下午，在大西洋多米尼加岛（Dominica）附近的海域，一只名叫平奇（Pinchy）的抹香鲸和我平静地漂浮在海面上，彼此注视着。
 
@@ -1019,7 +1019,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 深海与都市的两个世界
 
-> After several minutes, Pinchy took a long breath, pointed her head downward and slowly began her descent into the ocean. Pinchy had a life that existed a mile underwater, while I lived in a metropolis where buildings stretched toward the sky. I wondered what Pinchy might tell me if I could understand what she was saying.
+> After several minutes, Pinchy **<u>took a long breath</u>**, pointed her head downward and slowly began her **<u>descent</u>** into the ocean. Pinchy had a life that existed a mile underwater, while I lived in a **<u>metropolis</u>** where buildings **<u>stretched</u>** toward the sky. I wondered what Pinchy might tell me if I could understand what she was saying.
 
 > 几分钟后，平奇深吸了一口气，头朝下，缓缓向深海游去。平奇的生活在海面下一英里，而我则生活在摩天大楼直插云霄的大都市。我不禁好奇，如果我能听懂平奇的语言，它会告诉我些什么？
 
@@ -1039,7 +1039,7 @@ tags: [English, Reading, Notes]
 
 ### 3. AI解码鲸语的突破性进展
 
-> As a marine biologist studying how whales communicate, my dream is to one day answer that question. Several years ago, A.I. technologies began to demonstrate an ability to predict word patterns and formulate new sentences on their own. The whale biologist Shane Gero had an annotated sperm whale data set featuring thousands of codas. In a pilot study we ran, A.I. that was fed the data was able to accurately predict the type of coda, the whale's vocal clan and the individual whale with over 90 percent accuracy.
+> **<u>As a marine biologist studying how whales communicate, my dream is to one day answer that question.</u>** Several years ago, A.I. technologies began to demonstrate an ability to predict **<u>word patterns</u>** and formulate new sentences on their own. The whale biologist Shane Gero had an **<u>annotated</u>** sperm whale **<u>data set</u>** featuring thousands of **<u>codas</u>**. In a **<u>pilot study</u>** we ran, A.I. that was fed the data was able to accurately predict the type of **<u>coda</u>**, the whale's **<u>vocal clan</u>** and the individual whale with over 90 percent accuracy.
 
 > 作为一名研究鲸鱼如何沟通交流的海洋生物学家，我的梦想是有朝一日能解答这个问题。几年前，人工智能技术开始展现出自主预测词语模式和生成新句子的能力。而鲸类生物学家谢恩·杰罗（Shane Gero）有一个标注过数千条抹香鲸咔哒声的数据集。在我们开展的试点研究中，喂入这些数据的人工智能，在预测咔哒声类型、鲸鱼所属的声音氏族，以及个体鲸鱼的身份中，准确率都超过了90%。
 
@@ -1064,7 +1064,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 鲸类翻译计划的里程碑
 
-> This gave rise to Project CETI (Cetacean Translation Initiative). Later this year we will release Whale Acoustics Model, a novel A.I. system that translates any audio into sperm whale vocalizations — allowing humans to potentially experience, for the first time, what it might be like to interact with a whale in its own language.
+> This **<u>gave rise to</u>** Project CETI (**<u>Cetacean</u>** Translation Initiative). Later this year we will release Whale **<u>Acoustics</u>** Model, a novel A.I. system that translates any audio into sperm whale **<u>vocalizations</u>** — **<u>allowing humans to potentially experience, for the first time, what it might be like to interact with a whale in its own language</u>**.
 
 > 而这让“鲸类翻译计划”（Project CETI）成为了可能。今年晚些时候，我们会发布一款叫“鲸鱼声学模型”（Whale Acoustics Model）的全新人工智能系统，它能把所有音频都翻译成抹香鲸的叫声——而这将使人类首次有机会体验到用鲸鱼的语言跟它互动会是一种什么样的感觉。
 
@@ -1086,7 +1086,7 @@ tags: [English, Reading, Notes]
 
 ### 5. AI的真正价值：连接自然与智慧
 
-> Used carelessly, A.I. could reinforce old hierarchies. It could accelerate ecological harm under the guise of progress. But if used with humility and care, A.I. can become a bridge that reconnects us to the natural world. To me, this is the real potential promise of A.I.: not to make us faster or more efficient, but to make us wiser.
+> **<u>Used carelessly, A.I. could reinforce old hierarchies.</u>** It could accelerate ecological harm **<u>under the guise of</u>** progress. **<u>But if used with humility and care, A.I. can become a bridge that reconnects us to the natural world.</u>** To me, this is the real potential promise of A.I.: not to make us faster or more efficient, but to make us wiser.
 
 > 如果使用不当，人工智能很可能会加剧旧有的等级观念，它可能会打着进步的幌子加速对生态环境的破坏。但若能以谦逊审慎之心加以运用，人工智能便能成为一座桥梁，让我们重新和自然相连。在我看来，这才是人工智能真正的潜能所在——不是让我们更快、更高效，而是能让我们离真正的智慧更近一步。
 
@@ -1110,7 +1110,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 照护者的普遍困境
 
-> Most of us know, or will know, that being a caregiver is exhausting, demanding and often heartbreaking. The question is how can we take care of others when we are worn out?
+> Most of us know, or will know, that being a **<u>caregiver</u>** is **<u>exhausting</u>**, **<u>demanding</u>** and often heartbreaking. The question is how can we take care of others when we are **<u>worn out</u>**?
 
 > 几乎所有人都清楚，或者说必将意识到这一点：照护他人这件事，让人苦不堪言、无比操心，而且还往往让人伤透了心。关键问题是：当我们已经精疲力竭时，如何还能照顾好别人？
 
@@ -1140,7 +1140,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 照护者身心健康的反直觉答案
 
-> It turns out that maintaining wellness as a caregiver, especially for older adults, doesn't follow the usual prescriptions of good diet, exercise and sleep, although all are important. Nor is it the absence of stress and sadness.
+> **<u>It turns out that</u>** **<u>maintaining wellness</u>** as a caregiver, especially for older adults, doesn't follow the usual **<u>prescriptions</u>** of good diet, exercise and sleep, although all are important. Nor is it the absence of stress and sadness.
 
 > 事实证明，作为照护者（尤其是老年人群的照护者），保持自己的身心健康并不意味着遵循那些熟悉的专家建议，例如健康饮食、保持运动、保证睡眠，尽管上述这些都很重要。它也不意味着你完全没有压力，或者不会感到悲伤。
 
@@ -1158,7 +1158,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 幸福的本质：接纳与陪伴
 
-> Instead, well-being often boils down to accepting that a loved one can't do things they once did, that their personalities can change and that anger, guilt and fear are normal. Rather than trying to do everything, we find that being present is often the most we can do.
+> Instead, well-being often **<u>boils down to</u>** accepting that a loved one can't do things they once did, that their personalities can change and that anger, guilt and fear are normal. Rather than trying to do everything, we find that **<u>being present</u>** is often the most we can do.
 
 > 相反，身心健康的关键可以归结为接受现实——接纳你所爱的人无法再做到他们曾经能做的事，接纳他们的性格可能会改变，也接纳愤怒、内疚和恐惧的常态化。我们会明白，与其努力做好一切，当下的陪伴往往才是我们能尽的最大努力。
 
@@ -1173,7 +1173,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 最难的修行：放下改变不可逆之事的执念
 
-> One of the hardest things for caregivers to do is stop trying to change the immutable.
+> One of the hardest things for caregivers to do is stop trying to change **<u>the immutable</u>**.
 
 > 对照护者而言，最难的事情之一，就是不再尝试去改变那些无力回天的事。
 
@@ -1186,7 +1186,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 真实照护故事：早发性阿尔茨海默病的重担
 
-> Tom Piech knows. His wife, Cheri, showed signs of early onset Alzheimer's in her 50s. At first, Piech, a retired pharmacist, cared for Cheri at home. She slept two hours a day, and followed him from room to room, worried, he believes, that she would lose him. When he began fearing for both their safety, he reluctantly moved her to a dementia-care facility.
+> Tom Piech knows. His wife, Cheri, showed signs of **<u>early onset Alzheimer's</u>** in her 50s. At first, Piech, a retired pharmacist, cared for Cheri at home. She slept two hours a day, and followed him from room to room, worried, he believes, that she would lose him. When he began **<u>fearing for</u>** both their safety, he reluctantly moved her to a **<u>dementia-care</u>** facility.
 
 > 汤姆·皮奇（Tom Piech）对此深有体会。他的妻子谢莉（Cheri）在50多岁时出现了早发性阿尔茨海默病的迹象。起初，这位退休了的药剂师在家照顾妻子。那时谢莉每天只睡两个小时，无论皮奇去到哪个房间，她就会跟到那个房间。皮奇认为这是由于谢莉很怕自己会失去他。后来，他开始为两人的安全忧心忡忡。尽管内心很不情愿，皮奇还是把谢莉送进了失智症护理机构。
 
@@ -1206,7 +1206,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 身份转变的阵痛与支撑人心的微光
 
-> "The transition from spouse to caregiver to caretaker is exquisitely difficult," he says. "At the point of caretaker, you realize the person you loved for 50 years is gone." What sustained him was knowing he had done all he could with available resources and fleeting moments of clarity, including the time Cheri, who was then largely nonverbal, looked at him and said, "You're a good man."
+> "The **<u>transition</u>** from spouse to caregiver to caretaker is exquisitely difficult," he says. "At the point of caretaker, you realize the person you loved for 50 years is gone." What **<u>sustained</u>** him was knowing he had done all he could with available resources and fleeting moments of **<u>clarity</u>**, including the time Cheri, who was then largely nonverbal, looked at him and said, "You're a good man."
 >
 > "Those are the words that you hold on to for a lifetime," says Piech, 74.
 
@@ -1237,9 +1237,9 @@ tags: [English, Reading, Notes]
 
 ### 1. 火热招聘背后的隐藏条件
 
-> One of the Bay Area's hottest startups is hiring like crazy.
+> One of the **<u>Bay Area</u>**'s **<u>hottest</u>** startups is hiring **<u>like crazy</u>**.
 >
-> The catch? You have to be willing to train artificial intelligence to one day do your job as well as you can.
+> **<u>The catch</u>**? You have to be willing to train **<u>artificial intelligence</u>** to one day do your job as well as you can.
 
 > 湾区最火的初创公司之一正在疯狂招人。
 >
@@ -1264,7 +1264,7 @@ tags: [English, Reading, Notes]
 
 ### 2. 零工经济的全新形态
 
-> Welcome to the next gig economy. Instead of driving for Uber or delivering Postmates, a new wave of workers is signing up to school AI. These white-collar contractors review and critique the output of the large language models that power chatbots and other AI tools.
+> Welcome to the next **<u>gig</u>** economy. Instead of driving for Uber or delivering Postmates, a new wave of workers is **<u>signing up</u>** to **<u>school</u>** AI. These **<u>white-collar contractors</u>** review and **<u>critique</u>** the **<u>output</u>** of the large language models that **<u>power</u>** chatbots and other AI tools.
 
 > 欢迎来到下一代“零工经济”。新一波打工人不再是开优步（Uber）或送外卖（Postmates），而是排队报名给AI当“老师”。这些白领型合同工负责审核并评估大语言模型的输出结果——正是这些模型驱动着聊天机器人和其他AI工具的运行。
 
@@ -1289,7 +1289,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 覆盖全领域的专家招聘门槛
 
-> Not just anyone can work for Mercor, an AI startup valued at $10 billion. Applicants have to demonstrate their abilities in the interview process. The vast list of subject-area experts Mercor seeks includes astronomers, psychologists, industrial engineers, filmmakers, creative writers, comedians, legal experts, investment bankers and venture capitalists.
+> Not just anyone can work for Mercor, an AI startup valued at $10 billion. Applicants have to demonstrate their abilities in the interview process. The vast list of **<u>subject-area experts</u>** Mercor seeks includes astronomers, psychologists, industrial engineers, filmmakers, creative writers, comedians, legal experts, investment bankers and venture capitalists.
 
 > 想要进入这家估值达100亿美元的AI初创公司Mercor工作，门槛并不低。申请人必须在面试中证明自己的专业能力。Mercor想招聘的专家名单涵盖极其广泛，包括天文学家、心理学家、工业工程师、电影制作人、创意作家、喜剧演员、法律专家、投资银行家以及风险投资人。
 
@@ -1301,7 +1301,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 就业寒冬下的求职困境
 
-> Economic uncertainty, tariffs and a wait-and-see approach regarding the extent to which AI can handle tasks have all contributed to a growing unemployment rate, which in November hit its highest level in four years. White-collar workers are finding themselves applying to hundreds of jobs. For many, that now includes gigs with Mercor.
+> Economic uncertainty, **<u>tariffs</u>** and **<u>a wait-and-see approach</u>** **<u>regarding</u>** the extent to which AI can handle tasks have all contributed to a **<u>growing unemployment rate</u>**, which in November **<u>hit</u>** its highest level in four years. White-collar workers are **<u>finding themselves applying</u>** to hundreds of jobs. For many, that now includes gigs with Mercor.
 
 > 经济的不确定性、关税压力，以及各界对AI任务处理能力的观望态度，共同推高了失业率，而在去年11月，失业率创下四年来的新高。如今，白领们往往需要投递出数百份简历，对许多人来说，这现在也包括Mercor的零工岗位。
 
@@ -1325,7 +1325,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 亲手培养替代者的黑色讽刺
 
-> But training AI to take over human tasks could be considered a dark irony in today's anemic job market.
+> But training AI to **<u>take over</u>** human tasks could be considered a **<u>dark irony</u>** in today's **<u>anemic</u>** job market.
 
 > 但在如今疲软的就业环境下，亲手训练AI来接管人类的工作，多少带有一种黑色幽默的讽刺意味。
 
@@ -1342,7 +1342,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 企业视角：不可避免的技术趋势
 
-> "Many of the people we work with already see AI as inevitable in their field, but that doesn't mean humans will run out of meaningful work," a Mercor spokeswoman said in a written statement. "Many of our experts see it as their responsibility to infuse their knowledge and expertise into the models to ensure accurate and thoughtful outcomes."
+> "Many of the people we work with already see AI as inevitable in their field, but that doesn't mean humans will run out of meaningful work," a Mercor spokeswoman said in a written statement. "Many of our experts see it as their responsibility to **<u>infuse</u>** their knowledge and expertise into the models to ensure accurate and thoughtful outcomes."
 
 > “与我们合作的许多人都已经意识到，AI在其领域的发展是不可避免的，但这并不意味着人类将失去有意义的工作，”Mercor的一位发言人在书面声明中表示，“我们的许多专家认为，自己有义务将知识和专长注入模型，以确保产出的结果准确、缜密。”
 
@@ -1362,11 +1362,11 @@ tags: [English, Reading, Notes]
 
 ### 1. 金牌时刻：短暂的巅峰喜悦
 
-> Four years ago, on a mountainside in Beijing, Mathilde Gremaud, a freestyle skier from Switzerland, did something that should have made her happy. Competing in just her second Olympics, at the age of 22, she won a gold medal.
+> Four years ago, on a mountainside in Beijing, Mathilde Gremaud, a freestyle skier from Switzerland, did something that **<u>should have made</u>** her happy. Competing in just her second Olympics, at the age of 22, she won a gold medal.
 
 四年前，在北京的一处山坡上，来自瑞士的自由式滑雪运动员玛蒂尔德·格雷莫德（Mathilde Gremaud）做了一件按理说足以让她感到幸福的事。那是她第二次参加奥运会，年仅22岁的格雷莫德便夺得了一枚金牌。
 
-> It was the kind of watershed moment many athletes dream about. Gremaud edged rival Eileen Gu in the slopestyle final by a fraction of a point. She stood atop the podium, clutched her medal and lifted a bouquet of flowers in the air. A month later, the joy was gone.
+> It was the kind of **<u>watershed</u>** moment many athletes dream about. Gremaud **<u>edged</u>** rival Eileen Gu in the slopestyle final **<u>by a fraction of a point</u>**. She stood atop the podium, **<u>clutched</u>** her medal and lifted a bouquet of flowers in the air. A month later, the joy was gone.
 
 那是许多运动员梦寐以求的决定性时刻。在坡面障碍技巧决赛中，格雷莫德以微弱优势击败对手谷爱凌（Eileen Gu）。她站在最高领奖台上，紧握奖牌，高高举起鲜花。而一个月后，喜悦消失了。
 
@@ -1387,11 +1387,11 @@ tags: [English, Reading, Notes]
 
 ### 2. 普遍现象：奥运选手的赛后情绪低谷
 
-> Every two years, the Olympics offer a fascinating petri dish in which to explore happiness. And yet in the past 40 years, researchers have found that a large swath of Olympians suffer from a phenomenon called the post-Olympic blues — an emotional crash following the event.
+> Every two years, the Olympics offer a fascinating **<u>petri dish</u>** in which to explore happiness. And yet in the past 40 years, researchers have found that **<u>a large swath of</u>** Olympians suffer from a phenomenon called the **<u>post-Olympic blues</u>** — an emotional crash following the event.
 
 每隔两年，奥运会都为我们提供一个迷人的“培养皿”，让我们得以探索幸福这回事。而在过去40年里，研究发现相当一部分奥运选手都会经历一种被称为“奥运后抑郁”的现象——即赛事结束后的情绪崩塌。
 
-> For decades, social psychologists and scientists have tried to figure out the why. It starts with one idea. People are really bad at predicting what will make them happy.
+> For decades, social psychologists and scientists have tried to **<u>figure out the why</u>**. It starts with one idea. People are really bad at predicting what will make them happy.
 
 数十年来，社会心理学家和科学家一直试图找出其中的原因。发现一切都始于这一点：人们实在不擅长预测什么会让自己快乐。
 
@@ -1409,7 +1409,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 认知根源：焦点效应的偏差
 
-> One of the primary reasons people are bad at forecasting their emotions is something called "focalism," a cognitive bias in which people tend to narrowly focus their attention on big events while ignoring all the smaller aspects of their lives.
+> One of the primary reasons people are bad at forecasting their emotions is something called "**<u>focalism</u>**," a cognitive bias in which people **<u>tend to</u>** narrowly focus their attention on big events while ignoring all the smaller aspects of their lives.
 
 人们之所以不善于情绪预测，主要原因之一是所谓的“焦点效应”（focalism），这是一种认知偏差，人们倾向于把注意力局限地集中在重大事件上，而忽略生活中所有细微的部分。
 
@@ -1422,7 +1422,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 幸福的真相：无数微小瞬间的总和
 
-> When we think about what would make us happy, we tend to think of intense events. But how good your experiences are doesn't matter nearly as much as how many good experiences you have. The secrets to happiness are really not so secret: Volunteer, focus on social connections, express gratitude, embrace the journey. Then keep doing those things a lot. Happiness is the sum of hundreds of small things.
+> When we think about what would make us happy, we tend to think of **<u>intense</u>** events. But **<u>how good your experiences are doesn't matter nearly as much as how many good experiences you have</u>**. The secrets to happiness are really not so secret: Volunteer, focus on social connections, express gratitude, embrace the journey. Then keep doing those things a lot. Happiness is the sum of hundreds of small things.
 
 当设想什么会让自己幸福时，我们往往想到的是那些强烈的大事件。但决定幸福感的，与其说是某段经历有多美好，不如说是你拥有多少美好的经历。幸福的秘诀其实并不神秘：去帮助别人，珍视社会联结，表达感恩，拥抱旅程。然后，把这些事一直做下去。幸福，是无数个微小瞬间的总和。
 
@@ -1443,7 +1443,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 从非裔到“精神中国人”：一个普通人的生活转变
 
-> Noë Bryant spent 41 years identifying as African American. This year, she became Chinese. These days, she starts her mornings with warm herbal tea. Congee is her go-to meal. She wears slippers around the house, and wants to try acupuncture next.
+> Noë Bryant **<u>spent 41 years identifying as African American</u>**. This year, she became Chinese. These days, she starts her mornings with warm **<u>herbal</u>** tea. **<u>Congee</u>** is her **<u>go-to</u>** meal. She wears slippers around the house, and wants to try **<u>acupuncture</u>** next.
 
 诺埃·布莱恩特（Noë Bryant）做了41年的非裔美国人。而今年，她“成了中国人”。现在的她，每天早晨先要来上一杯温热的草本茶。中式米粥也成了她的家常便饭。她在家里穿起了拖鞋，下一步还打算尝试针灸。
 
@@ -1473,7 +1473,7 @@ tags: [English, Reading, Notes]
 
 ### 2. “极致中国化”：西方年轻人的生活新潮流
 
-> Across the U.S. and Western world, non-Chinese people are embracing Chinese lifestyles. In Gen Z parlance, they're "Chinamaxxing"—becoming the most Chinese they can be.
+> Across the U.S. and Western world, non-Chinese people are **<u>embracing</u>** Chinese lifestyles. In Gen Z **<u>parlance</u>**, they're "**<u>Chinamaxxing</u>**"—becoming the most Chinese they can be.
 
 在美国乃至整个西方世界，非华裔人士正欣然接纳中式生活方式。用Z世代的话来说，他们正在“极致中国化（Chinamaxxing）”——尽可能让自己变得更有“中国味”。
 
@@ -1492,7 +1492,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 刻进日常的习惯：从喝热水到不赤脚
 
-> Drink hot water, never cold beverages. Don't walk around the house barefoot. Do longevity exercises. The newly converted Chinamaxxers are obsessing over daily habits that are as second-nature to many Chinese people as brushing their teeth.
+> Drink hot water, never cold beverages. Don't walk around the house barefoot. Do **<u>longevity</u>** exercises. The newly **<u>converted</u>** Chinamaxxers are **<u>obsessing</u>** over daily habits that are as **<u>second-nature</u>** to many Chinese people as brushing their teeth.
 
 喝热水，绝不碰冷饮。不在家里光脚走动。做养生操。这些新晋的“极致中国化爱好者们”，正痴迷于那些对许多中国人来说像刷牙一样自然的日常习惯。
 
@@ -1514,7 +1514,7 @@ tags: [English, Reading, Notes]
 
 ### 4. 风潮的起源：从TikTok禁令到文化出海
 
-> The seeds were planted a year ago, when an impending TikTok ban in the U.S. pushed a flood of Americans onto the Chinese social-media platform Xiaohongshu, also known as RedNote. Popular American streamers Darren Watkins Jr., known as IShowSpeed, and Hasan Piker both toured China last year, bringing visions of the country's futuristic skylines to millions of viewers. Labubu dolls made by Chinese toy maker Pop Mart became a global craze.
+> The seeds were planted a year ago, when an **<u>impending</u>** TikTok ban in the U.S. **<u>pushed a flood of Americans onto the Chinese social-media platform Xiaohongshu</u>**, also known as RedNote. Popular American **<u>streamers</u>** Darren Watkins Jr., known as IShowSpeed, and Hasan Piker both toured China last year, bringing **<u>visions</u>** of the country's **<u>futuristic</u>** skylines to millions of viewers. Labubu dolls made by Chinese toy maker Pop Mart became a global **<u>craze</u>**.
 
 这种风潮的种子一年前就已埋下，当时美国正准备封禁TikTok，这促使大批美国人涌入中国社交媒体平台小红书（Xiaohongshu，也被叫作RedNote）。去年，美国知名网络主播小达伦·沃特金斯（Darren Watkins Jr.，网名IShowSpeed）和哈桑·皮克（Hasan Piker）都曾游历中国，向数百万观众展示了中国充满未来感的天际线景象。中国玩具制造商泡泡玛特（Pop Mart）出品的拉布布（Labubu）玩偶也风靡全球。
 
@@ -1541,7 +1541,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 亚裔的复杂感受：熟悉的习惯突然走红
 
-> Chinamaxxing has been a hot topic in Armond Dai's group chats with Asian American friends. "Everyone was like, 'What is happening?'" said the 28-year-old in California. He grew up drinking hot water and boiling fruit for soups to combat colds. To see these practices now going viral feels surreal.
+> Chinamaxxing has been a hot topic in Armond Dai's group chats with Asian American friends. "Everyone **<u>was like</u>**, 'What is happening?'" said the 28-year-old in California. He **<u>grew up drinking hot water and boiling fruit for soups</u>** to **<u>combat</u>** colds. To see these practices now **<u>going viral</u>** feels **<u>surreal</u>**.
 
 “极致中国化”已成为阿蒙德·戴（Armond Dai）与亚裔美国朋友群聊中的热门话题。“大家都在问：这是怎么回事？”这位居住在加利福尼亚州的28岁青年说道。他从小喝热水长大，感冒时会煮水果汤喝。如今看到这些做法突然走红，他感到不可思议。
 
@@ -1565,7 +1565,7 @@ tags: [English, Reading, Notes]
 
 ### 6. 生活方式之外，更期待尊重
 
-> Dai's hope is that people embracing Chinese lifestyle habits will also respect Chinese people. "You are at a Chinese time in your life," said Dai. "I will be Chinese forever."
+> Dai's hope is that people embracing Chinese lifestyle habits will also respect Chinese people. "You are **<u>at a Chinese time in your life</u>**," said Dai. "I will be Chinese forever."
 
 戴希望，那些拥抱中式生活习惯的人，也能尊重华人。“你正处在人生中的一个‘中式阶段’，”戴说，“而我将永远是华人。”
 
@@ -1586,7 +1586,7 @@ tags: [English, Reading, Notes]
 
 ### 1. 世界上最被误解的“生物”
 
-> A list of the world’s most misunderstood creatures includes sharks, bats and us—at least when we talk about our careers.
+> A list of the world’s most **<u>misunderstood</u>** creatures includes sharks, bats and us—at least when we talk about our careers.
 
 如果要列一份“世界上最被误解的生物”名单，榜上有名的，包括鲨鱼、蝙蝠，还有我们人类自己——至少在聊到自己的职业时是这样的。
 
@@ -1601,7 +1601,7 @@ tags: [English, Reading, Notes]
 
 > Knowledge architects don’t draw blueprints, conversation designers don’t foster dialogue between people, and orchestration engineers don’t work with musical instruments.
 >
-> What do these people do? Their jobs all involve work with artificial-intelligence models. But mostly, they feel exasperated trying to explain their work, especially when sitting around the holiday dinner table with family.
+> What do these people do? Their jobs all involve work with artificial-intelligence models. But mostly, they **<u>feel exasperated trying to explain</u>** their work, especially when sitting around the holiday dinner table with family.
 
 知识架构师不画图纸，对话设计师不推进人与人之间的交谈，编排工程师也不和乐器打交道。
 
@@ -1616,7 +1616,7 @@ tags: [English, Reading, Notes]
 
 ### 3. 被技术重塑的职业认知
 
-> Some well-known fields have evolved to a point where certain roles within them are practically unrecognizable. Still other jobs are highly visible, but many of us remain fuzzy on how they qualify as well, jobs.
+> **<u>Some well-known fields have evolved to a point where certain roles within them are practically unrecognizable.</u>** Still other jobs are highly **<u>visible</u>**, but many of us remain **<u>fuzzy</u>** on how they **<u>qualify as</u>** well, jobs.
 
 随着行业的进化，一些人们熟知领域里的岗位，基本上已经面目全非了。还有一些职业虽然曝光度很高，但我们很多人仍然搞不清它们凭什么能算是一份“职业”。
 
@@ -1638,9 +1638,9 @@ tags: [English, Reading, Notes]
 
 ### 4. 咖啡测评博主：从物理治疗到社交媒体咨询
 
-> Jaeda Skye graduated from college last year and paused her plan to go on to physical-therapy school. She’d built an online following, initially by filming herself trying various coffee drinks, and had a budding business advising people and companies on social-media strategy.
+> Jaeda Skye graduated from college last year and paused her plan to go on to **<u>physical-therapy</u>** school. She’d **<u>built an online following</u>**, initially by filming herself trying various coffee drinks, and had a **<u>budding</u>** business **<u>advising people and companies on social-media strategy</u>**.
 >
-> Her family is supportive, though not always sure how sampling espresso martini lattes enables her to make rent in New York.
+> Her family is supportive, though not always sure how **<u>sampling</u>** espresso martini lattes enables her to **<u>make rent</u>** in New York.
 
 杰达·斯凯（Jaeda Skye）去年大学毕业，暂时搁置了攻读物理治疗专业的计划。她一开始靠拍摄自己品尝各类咖啡饮品的视频积累了线上粉丝，如今逐渐做起了为个人和公司提供社交媒体策略的咨询事业。
 
@@ -1666,7 +1666,7 @@ tags: [English, Reading, Notes]
 
 ### 5. 越解释越困惑的“广告牌式”工作
 
-> She has compared herself to a billboard, explaining that companies promote products in her reel much as they advertise along the highway. To illustrate the point, Skye brings freebies to family gatherings: drinks and snacks for her cousins, lotion and hair products for her grandmothers.
+> She has **<u>compared herself to a billboard</u>**, explaining that companies promote products in her **<u>reel</u>** **<u>much as they advertise along the highway</u>**. **<u>To illustrate the point</u>**, Skye brings **<u>freebies</u>** to family gatherings: drinks and snacks for her **<u>cousins</u>**, lotion and hair products for her grandmothers.
 >
 > "Then they’re like, ‘Someone just sent this to you for free? Why would anyone do that?’" she says. Sometimes the explanation of your job raises more questions than it answers.
 
