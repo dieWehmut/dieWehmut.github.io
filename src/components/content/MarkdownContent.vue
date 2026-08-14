@@ -162,6 +162,7 @@ function renderRemainingChunks(
   index: number,
   token: number,
   renderMarkdown: typeof import('../../utils/markdown').renderMarkdown,
+  headingIds: Map<string, number>,
   onDone?: () => void
 ) {
   if (token !== renderToken) return
@@ -181,10 +182,11 @@ function renderRemainingChunks(
     appendRenderedHtml(renderMarkdown(chunks[index], {
       codeRunner: props.codeRunner,
       docId: props.docId,
+      headingIds,
     }))
     if (token !== renderToken) return
     bumpHmrSettle()
-    renderRemainingChunks(chunks, index + 1, token, renderMarkdown, onDone)
+    renderRemainingChunks(chunks, index + 1, token, renderMarkdown, headingIds, onDone)
   })
 }
 
@@ -212,10 +214,12 @@ watch(
       const { renderMarkdown, splitMarkdownForProgressiveRender } = await loadMarkdownModule()
       if (token !== renderToken) return
       const chunks = splitMarkdownForProgressiveRender(source)
+      const headingIds = new Map<string, number>()
       if (chunks.length <= 1) {
         const renderedHtml = renderMarkdown(source, {
           codeRunner: props.codeRunner,
           docId: props.docId,
+          headingIds,
         })
         if (token !== renderToken) return
         setRenderedHtml(renderedHtml)
@@ -232,7 +236,7 @@ watch(
       // paints right away and the remaining chunks drain without blocking the
       // main thread, so big articles appear much sooner.
       setRenderedHtml('')
-      renderRemainingChunks(chunks, 0, token, renderMarkdown, () => {
+      renderRemainingChunks(chunks, 0, token, renderMarkdown, headingIds, () => {
         bindInteractions(token)
       })
     })()

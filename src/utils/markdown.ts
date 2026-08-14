@@ -54,6 +54,7 @@ import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetIma
 import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
 import { ensureGiscusLogin, getGiscusAuthState } from './giscusAuth'
 import type { MarkdownMonacoEditor } from './monacoMarkdownEditor'
+import { getUniqueHeadingId, slugifyHeadingText } from './headingNavigation'
 
 const ALLOWED_TAGS = new Set([
   'a', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em', 'figcaption',
@@ -504,6 +505,7 @@ type SetSourceOptions = {
 export type RenderMarkdownOptions = {
   codeRunner?: boolean
   docId?: string
+  headingIds?: Map<string, number>
 }
 
 type CodeFenceInfo = {
@@ -1116,12 +1118,12 @@ const marked = new Marked({
     },
     heading({ tokens, depth }) {
       const text = this.parser.parseInline(tokens)
-      const slug = text
-        .replace(/<[^>]*>/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\u4e00-\u9fff-]/g, '')
-        .toLowerCase()
-      return `<h${depth} id="${slug}">${text}</h${depth}>\n`
+      const title = text.replace(/<[^>]*>/g, '')
+      const slug = getUniqueHeadingId(
+        slugifyHeadingText(title),
+        currentMarkdownRenderOptions.headingIds,
+      )
+      return `<h${depth} id="${escapeHtml(slug)}" data-md-heading-title="${escapeHtml(title)}">${text}</h${depth}>\n`
     },
     list({ items, ordered, start }) {
       const tag = ordered ? 'ol' : 'ul'
@@ -1154,6 +1156,7 @@ marked.use(markedKatex({
 let currentMarkdownRenderOptions: Required<RenderMarkdownOptions> = {
   codeRunner: false,
   docId: '',
+  headingIds: new Map(),
 }
 let markdownMonacoEditorModulePromise: Promise<typeof import('./monacoMarkdownEditor')> | null = null
 const markdownMonacoWarmups = new Map<string, Promise<void>>()
@@ -1180,6 +1183,7 @@ function withMarkdownRenderOptions<T>(options: RenderMarkdownOptions, render: ()
   currentMarkdownRenderOptions = {
     codeRunner: Boolean(options.codeRunner),
     docId: options.docId || '',
+    headingIds: options.headingIds || new Map(),
   }
   try {
     return render()
@@ -1190,16 +1194,19 @@ function withMarkdownRenderOptions<T>(options: RenderMarkdownOptions, render: ()
 
 export function renderMarkdown(source: string, options: RenderMarkdownOptions = {}): string {
   if (!source) return ''
+  const hasHeadingRegistry = Boolean(options.headingIds)
   const cacheKey = `${options.codeRunner ? '1' : '0'}:${options.docId || ''}:${source}`
-  const cached = renderedMarkdownCache.get(cacheKey)
-  if (cached !== undefined) return cached
+  if (!hasHeadingRegistry) {
+    const cached = renderedMarkdownCache.get(cacheKey)
+    if (cached !== undefined) return cached
+  }
 
   const rendered = withMarkdownRenderOptions(options, () => (
     deferClosedSourcePageImages(
       sanitizeHtml(marked.parse(preprocessMarkdownMath(normalizeMarkdownMetadataBreaks(source))) as string)
     )
   ))
-  renderedMarkdownCache.set(cacheKey, rendered)
+  if (!hasHeadingRegistry) renderedMarkdownCache.set(cacheKey, rendered)
 
   if (renderedMarkdownCache.size > MARKDOWN_CACHE_LIMIT) {
     const oldestKey = renderedMarkdownCache.keys().next().value
