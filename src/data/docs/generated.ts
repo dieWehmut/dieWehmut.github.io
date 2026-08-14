@@ -23,9 +23,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Reading",
       "Notes"
     ],
-    "summary": "时代变了，但问题没变：如何找到自己人生的解法？\n**文章来源**：The Wall Street Journal（《华尔街日报》专栏）\n**原文标题**：There Are No Rules for Success（成功，没有铁律）...",
-    "wordCount": 2332,
-    "readingMinutes": 6,
+    "summary": "一、时代变了，但问题没变：如何找到自己人生的解法？\n**原文标题**：There Are No Rules for Success（成功，没有铁律）\n**作者**：Andy Kessler\n**发布日期**：2026.01.06...",
+    "wordCount": 23577,
+    "readingMinutes": 59,
     "updated": "",
     "path": "./notes/CurrentAffairsReading.md"
   },

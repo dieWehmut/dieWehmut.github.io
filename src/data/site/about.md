@@ -3,7 +3,6 @@
 本站基于以下仓库：
 
 - template：<a href="https://github.com/dieWehmut/diesuwa-starter" target="_blank" rel="noopener noreferrer">https://github.com/dieWehmut/diesuwa-starter</a>
-noreferrer">https://diewehmut.github.io/diesuwa-starter</a>
 - Sandkasten：<a href="https://github.com/dieWehmut/sandkasten" target="_blank" rel="noopener noreferrer">https://github.com/dieWehmut/sandkasten</a>
 
 ## Copyright

@@ -69,6 +69,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -89,6 +95,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -109,6 +121,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -129,6 +147,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -149,6 +173,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -169,6 +199,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -189,6 +225,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -209,6 +251,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -229,6 +277,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -249,6 +303,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -269,6 +329,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -289,6 +355,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -309,6 +381,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -329,6 +407,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -349,6 +433,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -369,6 +459,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -389,6 +485,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -409,6 +511,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -429,6 +537,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -449,6 +563,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -469,6 +589,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -489,6 +615,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -509,6 +641,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -529,6 +667,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -549,6 +693,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -569,6 +719,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -589,6 +745,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -609,6 +771,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -629,6 +797,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -649,6 +823,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -669,6 +849,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -689,6 +875,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -709,6 +901,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -729,6 +927,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -749,6 +953,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -769,6 +979,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -789,6 +1005,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -809,6 +1031,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -829,6 +1057,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -849,6 +1083,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -869,6 +1109,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -889,6 +1135,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -909,6 +1161,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -929,6 +1187,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -949,6 +1213,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -969,6 +1239,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -989,6 +1265,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1009,6 +1291,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1029,6 +1317,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1049,6 +1343,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1069,6 +1369,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1089,6 +1395,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1109,6 +1421,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1129,6 +1447,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1149,6 +1473,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1169,6 +1499,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1189,6 +1525,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1209,6 +1551,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1229,6 +1577,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1249,6 +1603,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1269,6 +1629,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1289,6 +1655,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1309,6 +1681,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1329,6 +1707,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1349,6 +1733,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1369,6 +1759,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1389,6 +1785,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1409,6 +1811,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1429,6 +1837,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1449,6 +1863,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1469,6 +1889,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1489,6 +1915,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1509,6 +1941,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1529,6 +1967,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1549,6 +1993,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1569,6 +2019,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1589,6 +2045,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1609,6 +2071,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1629,6 +2097,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1649,6 +2123,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1669,6 +2149,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1689,6 +2175,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1709,6 +2201,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1729,6 +2227,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1749,6 +2253,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1769,6 +2279,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1789,6 +2305,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1809,6 +2331,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1829,6 +2357,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1849,6 +2383,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1869,6 +2409,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1889,6 +2435,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1909,6 +2461,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1929,6 +2487,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1949,6 +2513,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1969,6 +2539,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -1989,6 +2565,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2009,6 +2591,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2029,6 +2617,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2049,6 +2643,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2069,6 +2669,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2089,6 +2695,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2109,6 +2721,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2129,6 +2747,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2149,6 +2773,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2169,6 +2799,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2189,6 +2825,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2209,6 +2851,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2229,6 +2877,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2249,6 +2903,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2269,6 +2929,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2289,6 +2955,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2309,6 +2981,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2329,6 +3007,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2349,6 +3033,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2369,6 +3059,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2389,6 +3085,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2409,6 +3111,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2429,6 +3137,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2449,6 +3163,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2469,6 +3189,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2489,6 +3215,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2509,6 +3241,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2529,6 +3267,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2549,6 +3293,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2569,6 +3319,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2589,6 +3345,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2609,6 +3371,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2629,6 +3397,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2649,6 +3423,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2669,6 +3449,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2689,6 +3475,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2709,6 +3501,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2729,6 +3527,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2749,6 +3553,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2769,6 +3579,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2789,6 +3605,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2809,6 +3631,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2829,6 +3657,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2849,6 +3683,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2869,6 +3709,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2889,6 +3735,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2909,6 +3761,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2929,6 +3787,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2949,6 +3813,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2969,6 +3839,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -2989,6 +3865,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -3009,6 +3891,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -3029,6 +3917,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "gpt-image2",
         "title": "gpt-image2笔记生图",
         "url": "/note/gpt-image2"
+      },
+      {
+        "type": "note",
+        "id": "GPT-Image2",
+        "title": "gpt-image2笔记生图",
+        "url": "/note/GPT-Image2"
       }
     ],
     "standalone": false
@@ -5129,6 +6023,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5149,6 +6049,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5169,6 +6075,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5189,6 +6101,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5209,6 +6127,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5229,6 +6153,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5249,6 +6179,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5269,6 +6205,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5289,6 +6231,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5309,6 +6257,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5329,6 +6283,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5349,6 +6309,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5369,6 +6335,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5389,6 +6361,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5409,6 +6387,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5429,6 +6413,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5449,6 +6439,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5469,6 +6465,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5489,6 +6491,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
@@ -5509,6 +6517,12 @@ export const generatedCaptureAssets: CaptureAsset[] = [
         "id": "cognitiveScience",
         "title": "Cognitive Science Notes",
         "url": "/note/cognitiveScience"
+      },
+      {
+        "type": "note",
+        "id": "CognitiveScience",
+        "title": "Cognitive Science Notes",
+        "url": "/note/CognitiveScience"
       }
     ],
     "standalone": false
