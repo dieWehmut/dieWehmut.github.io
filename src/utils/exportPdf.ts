@@ -207,10 +207,76 @@ function inlineContent(node: Node, palette: PdfPalette): Content {
   return { text: [base], ...style } as Content
 }
 
+function vocabularyListItemToContent(item: Element, palette: PdfPalette): Content {
+  const word = Array.from(item.children).find((child) =>
+    child.classList.contains('md-vocabulary-entry__word')
+  )
+  const rows = Array.from(item.children).filter((child) =>
+    child.classList.contains('md-vocabulary-entry__row')
+  )
+  const nestedLists = Array.from(item.children).filter((child) =>
+    ['ul', 'ol'].includes(child.tagName.toLowerCase())
+  )
+  const stack: Content[] = []
+
+  if (word?.textContent?.trim()) {
+    stack.push({
+      text: cleanText(word.textContent),
+      bold: true,
+      color: palette.secondary,
+      margin: [0, 0, 0, 2],
+    })
+  }
+
+  rows.forEach((row) => {
+    const locale = row.getAttribute('data-md-vocabulary-locale') || ''
+    const label = row.querySelector('.md-vocabulary-entry__label')?.textContent?.trim() || ''
+    const phonetic = row.querySelector('.md-vocabulary-entry__phonetic')?.textContent?.trim() || ''
+    const suffix = row.querySelector('.md-vocabulary-entry__suffix')?.textContent?.trim() || ''
+    const rowColor = locale === 'british'
+      ? palette.tertiary
+      : locale === 'american'
+        ? palette.accent
+        : palette.secondary
+
+    stack.push({
+      columns: [
+        { text: label, width: 22, bold: true, color: rowColor },
+        {
+          text: [
+            { text: phonetic, color: rowColor },
+            ...(suffix ? [{ text: ` ${suffix}`, color: palette.tertiary }] : []),
+          ],
+        },
+      ],
+      columnGap: 4,
+      margin: [0, 1, 0, 0],
+    } as Content)
+  })
+
+  nestedLists.forEach((nestedList) => {
+    const nestedItems = listItems(nestedList, palette)
+    stack.push(
+      nestedList.tagName.toLowerCase() === 'ol'
+        ? { ol: nestedItems, style: 'list', margin: [8, 3, 0, 0] }
+        : { ul: nestedItems, style: 'list', margin: [8, 3, 0, 0] },
+    )
+  })
+
+  return {
+    stack,
+    margin: [0, 2, 0, 4],
+  } as Content
+}
+
 function listItems(list: Element, palette: PdfPalette): Content[] {
   return Array.from(list.children)
     .filter((child) => child.tagName.toLowerCase() === 'li')
     .map((item) => {
+      if (item.classList.contains('md-vocabulary-entry')) {
+        return vocabularyListItemToContent(item, palette)
+      }
+
       const nestedLists = Array.from(item.children).filter((child) =>
         ['ul', 'ol'].includes(child.tagName.toLowerCase())
       )
