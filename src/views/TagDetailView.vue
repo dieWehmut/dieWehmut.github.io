@@ -1,7 +1,68 @@
 <template>
   <section class="page-surface tag-detail-view">
     <div class="tag-detail__main">
-      <div v-if="timelineYearGroups.length" class="tag-detail__list content-timeline">
+      <ConsoleMonthNavigator v-if="isConsole" :months="consoleMonths">
+        <template #default="{ item }">
+          <article
+            v-if="isPostTimelineItem(item)"
+            :key="asPostTimelineItem(item).id"
+            class="console-tag-detail__entry"
+          >
+            <div class="console-tag-detail__entry-main">
+              <RouterLink :to="postUrl(asPostTimelineItem(item).post)">
+                {{ asPostTimelineItem(item).post.title }}
+              </RouterLink>
+              <MarkdownPreview
+                v-if="asPostTimelineItem(item).post.summary"
+                class="console-tag-detail__summary"
+                :source="asPostTimelineItem(item).post.summary"
+              />
+            </div>
+            <div class="console-tag-detail__meta">
+              <time v-if="asPostTimelineItem(item).post.date" :datetime="asPostTimelineItem(item).post.date">
+                {{ formattedDate(asPostTimelineItem(item).post.date) }}
+              </time>
+              <code>{{ postUrl(asPostTimelineItem(item).post) }}</code>
+            </div>
+          </article>
+
+          <article
+            v-else
+            :key="asCaptureTimelineItem(item).id"
+            class="console-tag-detail__entry console-tag-detail__entry--capture"
+          >
+            <div class="console-tag-detail__capture-assets">
+              <button
+                v-for="capture in asCaptureTimelineItem(item).group.assets"
+                :key="capture.id"
+                type="button"
+                :aria-label="`Open ${capture.title || capture.id}`"
+                :title="capture.title || capture.id"
+                @click="openCapture(capture)"
+              >
+                <img
+                  :src="capture.image"
+                  :alt="capture.title || capture.id"
+                  loading="lazy"
+                  decoding="async"
+                  @error="retryPublicAssetImage($event, capture.image)"
+                />
+              </button>
+            </div>
+            <div class="console-tag-detail__entry-main">
+              <span>{{ asCaptureTimelineItem(item).group.sources[0]?.title || 'Capture group' }}</span>
+              <div class="console-tag-detail__meta">
+                <time v-if="asCaptureTimelineItem(item).group.date" :datetime="asCaptureTimelineItem(item).group.date">
+                  {{ formattedDate(asCaptureTimelineItem(item).group.date) }}
+                </time>
+                <code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.assets[0]?.id || '') }}</code>
+              </div>
+            </div>
+          </article>
+        </template>
+      </ConsoleMonthNavigator>
+
+      <div v-else-if="timelineYearGroups.length" class="tag-detail__list content-timeline">
         <section v-for="year in timelineYearGroups" :key="year.id" class="content-timeline__year">
           <h2 :id="year.id" class="content-time-heading content-time-heading--year">
             {{ year.label }}
@@ -101,7 +162,7 @@
     </div>
 
     <ScrollSpySidebar
-      v-if="timelineYearGroups.length"
+      v-if="!isConsole && timelineYearGroups.length"
       :key="scrollSpyKey"
       root-selector=".tag-detail__main"
       heading-selector=".content-time-heading"
@@ -117,6 +178,7 @@ import { PriceTag, Calendar } from '@element-plus/icons-vue'
 import ContentStats from '../components/content/ContentStats.vue'
 import MarkdownPreview from '../components/content/MarkdownPreview.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
+import ConsoleMonthNavigator, { type ConsoleMonthGroup } from '../components/console/ConsoleMonthNavigator.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, CaptureSourceRef, TagContentEntry } from '../types/content'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
@@ -124,9 +186,11 @@ import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
+import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const route = useRoute()
 const { locale } = useI18n()
+const { isConsole } = useDisplayModePreference()
 const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
@@ -161,6 +225,17 @@ const timelineYearGroups = computed(() =>
     locale: locale.value,
     getDate: (item) => item.kind === 'post' ? item.post.date : item.group.date,
   })
+)
+const consoleMonths = computed<ConsoleMonthGroup[]>(() =>
+  timelineYearGroups.value.flatMap((year) =>
+    year.months.map((month) => ({
+      id: month.id,
+      label: month.label,
+      yearLabel: year.label,
+      timestamp: month.timestamp,
+      items: month.items,
+    })),
+  ),
 )
 const scrollSpyKey = computed(() =>
   timelineYearGroups.value
@@ -254,6 +329,18 @@ function groupCapturesByDate(assets: CaptureAsset[]): CaptureGroup[] {
   return Array.from(groups.values()).sort((a, b) => b.timestamp - a.timestamp)
 }
 
+function isPostTimelineItem(item: unknown): item is Extract<TagTimelineItem, { kind: 'post' }> {
+  return Boolean(item && typeof item === 'object' && (item as { kind?: string }).kind === 'post')
+}
+
+function asPostTimelineItem(item: unknown): Extract<TagTimelineItem, { kind: 'post' }> {
+  return item as Extract<TagTimelineItem, { kind: 'post' }>
+}
+
+function asCaptureTimelineItem(item: unknown): Extract<TagTimelineItem, { kind: 'capture' }> {
+  return item as Extract<TagTimelineItem, { kind: 'capture' }>
+}
+
 function mergeUnique(existing: string[], incoming: string[]): string[] {
   return Array.from(new Set([...existing, ...incoming]))
 }
@@ -289,6 +376,101 @@ watch(tag, loadCaptures)
 </script>
 
 <style scoped>
+.console-tag-detail__entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, auto);
+  align-items: start;
+  gap: 18px;
+  min-height: 58px;
+  padding: 8px 9px;
+  border: 1px solid var(--console-border, var(--site-border));
+  color: var(--console-text, var(--site-text));
+  background: var(--console-surface, transparent);
+}
+
+.console-tag-detail__entry-main {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.console-tag-detail__entry-main > a {
+  color: var(--console-accent, var(--site-accent));
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.console-tag-detail__entry-main > a:hover,
+.console-tag-detail__entry-main > a:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.console-tag-detail__summary {
+  color: var(--console-muted, var(--site-muted));
+  --markdown-preview-lines: 2;
+}
+
+.console-tag-detail__meta {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  min-width: 0;
+  color: var(--console-muted, var(--site-muted));
+  font-size: 0.76rem;
+}
+
+.console-tag-detail__meta code {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--console-accent, var(--site-accent));
+  font: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-tag-detail__entry--capture {
+  grid-template-columns: minmax(120px, 280px) minmax(0, 1fr);
+}
+
+.console-tag-detail__capture-assets {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.console-tag-detail__capture-assets button {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--console-border, var(--site-border));
+  border-radius: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.console-tag-detail__capture-assets button:hover,
+.console-tag-detail__capture-assets button:focus-visible {
+  border-color: var(--console-accent, var(--site-accent));
+  outline: none;
+}
+
+.console-tag-detail__capture-assets img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .console-tag-detail__entry {
+    display: none;
+  }
+}
+
 .tag-detail-view {
   display: flex;
   align-items: flex-start;
