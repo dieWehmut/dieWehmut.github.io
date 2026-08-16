@@ -128,7 +128,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { nextTick, ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Brush, MagicStick, Monitor, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
@@ -147,18 +147,28 @@ const languageOpen = ref(false)
 const colorSchemeOpen = ref(false)
 const atTop = ref(true)
 
+function activeScrollContainer() {
+  if (!isConsole.value || typeof document === 'undefined') return null
+  return document.querySelector('.desktop-layout--console .desktop-layout__main')
+}
+
 function onScroll() {
-  atTop.value = window.scrollY < 60
+  const container = activeScrollContainer()
+  atTop.value = (container?.scrollTop ?? window.scrollY) < 60
 }
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.addEventListener('scroll', onScroll, { passive: true, capture: true })
   onScroll()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)
+  document.removeEventListener('scroll', onScroll, true)
 })
+
+watch([isConsole, isDesktop], () => void nextTick(onScroll))
 
 const languages = [
   { code: 'zh', label: 'CN', name: 'Simplified Chinese' },
@@ -199,6 +209,11 @@ function selectColorScheme(scheme) {
 }
 
 function scrollToTop() {
+  const container = activeScrollContainer()
+  if (container) {
+    container.scrollTo({ top: 0, behavior: 'auto' })
+    return
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 

@@ -8,7 +8,7 @@
     <div class="desktop-layout__content">
       <ConsoleShell v-if="isConsole" />
       <RouteBreadcrumb v-else />
-      <main class="desktop-layout__main">
+      <main ref="mainRef" class="desktop-layout__main">
         <RouterView v-slot="{ Component, route }">
           <Transition name="page-fade" mode="out-in">
             <component :is="Component" :key="routeViewKey(route)" />
@@ -22,7 +22,8 @@
 </template>
 
 <script setup>
-import { RouterView } from 'vue-router'
+import { nextTick, ref, watch } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 import SiteSidebar from '../components/navigation/SiteSidebar.vue'
 import Footer from '../components/system/Footer.vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
@@ -31,6 +32,18 @@ import ConsoleShell from '../components/console/ConsoleShell.vue'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const { isConsole } = useDisplayModePreference()
+const route = useRoute()
+const mainRef = ref(null)
+
+function resetConsoleScroll() {
+  if (!isConsole.value) return
+  void nextTick(() => mainRef.value?.scrollTo({ top: 0, behavior: 'auto' }))
+}
+
+watch(() => route.path, resetConsoleScroll)
+watch(isConsole, (enabled) => {
+  if (enabled) resetConsoleScroll()
+})
 
 function routeViewKey(route) {
   return String(route.fullPath || '').split('#')[0]
@@ -131,6 +144,12 @@ function routeViewKey(route) {
     transparent;
   background-attachment: fixed;
   background-size: var(--site-mesh-background-size);
+}
+
+:root.dynamic-background-enabled .desktop-layout--console .desktop-layout__content {
+  background: var(--console-bg);
+  background-attachment: initial;
+  background-image: none;
 }
 
 .desktop-layout__main {

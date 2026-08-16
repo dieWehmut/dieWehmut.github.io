@@ -40,7 +40,7 @@
         placeholder="/help"
         aria-label="Console command"
         @input="setInput(($event.target as HTMLInputElement).value)"
-        @keydown="handleInputKeydown"
+        @keydown="handleShellKeydown"
       />
       <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
     </form>
@@ -54,7 +54,7 @@
         type="button"
         role="option"
         :aria-selected="suggestionCursor === index"
-        @mousedown.prevent="executeCommand(suggestion.input)"
+        @click="executeCommand(suggestion.input)"
       >
         <code>{{ suggestion.input }}</code>
         <span>{{ suggestion.description }}</span>
@@ -62,6 +62,7 @@
     </div>
 
     <ConsolePanelView
+      ref="panelRef"
       :panel="activePanel?.panel || null"
       :value="activePanel?.value"
       :current-path="route.fullPath"
@@ -82,6 +83,7 @@ import { useConsoleSession } from '../../composables/useConsoleSession'
 
 const route = useRoute()
 const inputRef = ref<HTMLInputElement | null>(null)
+const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
 const avatarUrl = getGitHubAvatarUrl(siteConfig.githubUser)
 
 const {
@@ -92,11 +94,35 @@ const {
   activePanel,
   feedback,
   setInput,
-  selectSuggestion,
-  executeCommand,
-  handleInputKeydown,
+  executeCommand: executeSessionCommand,
+  handleInputKeydown: handleSessionInputKeydown,
   setPanel,
 } = useConsoleSession()
+
+async function executeCommand(value?: string) {
+  const handled = await executeSessionCommand(value)
+  if (handled) void nextTick(() => inputRef.value?.focus())
+  return handled
+}
+
+function handleShellKeydown(event: KeyboardEvent) {
+  if (activePanel.value && !commandInput.value.trim()) {
+    const delta = event.key === 'ArrowUp' || event.key === 'ArrowLeft'
+      ? -1
+      : event.key === 'ArrowDown' || event.key === 'ArrowRight'
+        ? 1
+        : 0
+    if (delta && panelRef.value?.moveSelection(delta)) {
+      event.preventDefault()
+      return
+    }
+    if (event.key === 'Enter' && panelRef.value?.activateSelection()) {
+      event.preventDefault()
+      return
+    }
+  }
+  handleSessionInputKeydown(event)
+}
 
 onMounted(() => {
   setPanel(null)

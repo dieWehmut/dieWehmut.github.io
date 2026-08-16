@@ -58,10 +58,13 @@ const PANELS: Record<string, ConsolePanel> = {
   doctor: 'doctor',
   model: 'model',
   workspace: 'workspace',
-  theme: 'theme',
-  color: 'color',
-  background: 'background',
-  language: 'language',
+}
+
+const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }> = {
+  theme: { panel: 'theme', values: new Set(['light', 'dark']) },
+  color: { panel: 'color', values: new Set(['green', 'purple', 'pink']) },
+  background: { panel: 'background', values: new Set(['on', 'off']) },
+  language: { panel: 'language', values: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']) },
 }
 
 function suffix(command: ConsoleCommandShape): string {
@@ -84,7 +87,9 @@ export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleReso
   const secondKey = second?.toLowerCase()
 
   if (!head) return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'home' }
-  if (key === 'home') return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'home' }
+  if (key === 'home' && second === undefined) {
+    return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'home' }
+  }
 
   if (key === 'mode') {
     if (!secondKey && !rest.length) return { kind: 'panel', panel: 'mode' }
@@ -114,15 +119,21 @@ export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleReso
   }
 
   const panel = PANELS[key]
-  if (panel) return { kind: 'panel', panel, value: second }
+  if (panel) {
+    return second === undefined && !rest.length
+      ? { kind: 'panel', panel }
+      : { kind: 'silent' }
+  }
+
+  const panelValue = PANEL_VALUES[key]
+  if (panelValue) {
+    if (rest.length || (secondKey && !panelValue.values.has(secondKey))) return { kind: 'silent' }
+    return { kind: 'panel', panel: panelValue.panel, value: secondKey }
+  }
 
   const route = ROUTES[key]
   if (route && second === undefined) {
     return { kind: 'route', path: routeWithSuffix(route.path, command), routeName: route.routeName }
-  }
-
-  if (key === 'theme' || key === 'color' || key === 'background' || key === 'language') {
-    return { kind: 'panel', panel: key, value: second }
   }
 
   return { kind: 'silent' }

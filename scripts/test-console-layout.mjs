@@ -27,6 +27,10 @@ check('language selector exposes expanded state', floatButton.includes(':aria-ex
 check('colour selector exposes expanded state', floatButton.includes(':aria-expanded="colorSchemeOpen"'))
 check('console capture preserves authorized editor controls', captureView.includes('console-capture-editor'))
 check('capture confirmation remains available in console mode', captureView.includes('<Teleport to="body">'))
+check('console overrides dynamic mesh with matching specificity', desktopLayout.includes(':root.dynamic-background-enabled .desktop-layout--console .desktop-layout__content'))
+check('console route changes reset the result viewport', desktopLayout.includes('resetConsoleScroll'))
+check('back to top targets the active scroll viewport', floatButton.includes('activeScrollContainer'))
+check('nested panels expose keyboard selection', read('src/components/console/ConsolePanelView.vue').includes('activateSelection'))
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)

@@ -37,6 +37,11 @@ check('classic mode switches to standard', registry.resolveConsoleCommand(comman
 check('console mode switches to console', registry.resolveConsoleCommand(command(['mode', 'console'])).mode === 'console')
 check('bare mode opens a nested selector', registry.resolveConsoleCommand(command(['mode'])).kind === 'panel' && registry.resolveConsoleCommand(command(['mode'])).panel === 'mode')
 check('unknown command stays silent', registry.resolveConsoleCommand(command(['does-not-exist'])).kind === 'silent')
+check('home rejects extra segments', registry.resolveConsoleCommand(command(['home', 'extra'])).kind === 'silent')
+check('informational panels reject values', registry.resolveConsoleCommand(command(['status', 'extra'])).kind === 'silent')
+check('theme rejects unknown values', registry.resolveConsoleCommand(command(['theme', 'nope'])).kind === 'silent')
+check('theme rejects extra segments', registry.resolveConsoleCommand(command(['theme', 'dark', 'extra'])).kind === 'silent')
+check('language accepts a supported value', registry.resolveConsoleCommand(command(['language', 'zh_tw'])).kind === 'panel')
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)

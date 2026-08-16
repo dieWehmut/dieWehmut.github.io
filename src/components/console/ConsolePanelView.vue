@@ -1,5 +1,5 @@
 <template>
-  <section v-if="panel" class="console-panel" aria-live="polite">
+  <section v-if="panel" class="console-panel" aria-live="polite" @keydown="handlePanelKeydown">
     <div class="console-panel__heading">
       <span class="console-panel__marker" aria-hidden="true">›</span>
       <h2>{{ heading }}</h2>
@@ -8,73 +8,30 @@
 
     <p v-if="feedback" class="console-panel__feedback">{{ feedback }}</p>
 
-    <div v-if="isCommandList" class="console-panel__rows" role="listbox" aria-label="Console commands">
+    <div
+      v-if="panelOptions !== null"
+      ref="rowsRef"
+      class="console-panel__rows"
+      role="listbox"
+      :aria-label="listLabel"
+    >
       <button
-        v-for="item in commands"
-        :key="item.input"
+        v-for="(option, index) in panelOptions"
+        :key="option.command"
         class="console-panel__row"
+        :class="{ 'is-selected': selectedIndex === index }"
         type="button"
         role="option"
-        @click="$emit('execute', item.input)"
+        :aria-selected="selectedIndex === index"
+        :data-option-index="index"
+        @focus="selectIndex(index)"
+        @pointerenter="selectIndex(index)"
+        @click="$emit('execute', option.command)"
       >
-        <code>{{ item.input }}</code>
-        <span>{{ item.description }}</span>
-      </button>
-    </div>
-
-    <div v-else-if="panel === 'mode'" class="console-panel__rows" role="listbox" aria-label="Display mode options">
-      <button class="console-panel__row" type="button" @click="$emit('execute', '/mode/console')">
-        <code class="is-current">console</code>
-        <span>Nexus Console desktop workspace</span>
-      </button>
-      <button class="console-panel__row" type="button" @click="$emit('execute', '/mode/classic')">
-        <code>classic</code>
-        <span>Standard sidebar layout</span>
-      </button>
-    </div>
-
-    <div v-else-if="panel === 'theme'" class="console-panel__rows" role="listbox" aria-label="Theme options">
-      <button v-for="option in themeOptions" :key="option.value" class="console-panel__row" type="button" @click="$emit('execute', `/theme/${option.value}`)">
-        <code :class="{ 'is-current': theme === option.value }">{{ option.value }}</code>
+        <code :class="{ 'is-current': option.current }">{{ option.code }}</code>
         <span>{{ option.label }}</span>
       </button>
-    </div>
-
-    <div v-else-if="panel === 'color'" class="console-panel__rows" role="listbox" aria-label="Color scheme options">
-      <button v-for="option in colorSchemeOptions" :key="option.id" class="console-panel__row" type="button" @click="$emit('execute', `/color/${option.id}`)">
-        <code :class="{ 'is-current': colorScheme === option.id }">{{ option.id }}</code>
-        <span>{{ option.label }}</span>
-      </button>
-    </div>
-
-    <div v-else-if="panel === 'background'" class="console-panel__rows" role="listbox" aria-label="Background options">
-      <button v-for="option in backgroundOptions" :key="option.value" class="console-panel__row" type="button" @click="$emit('execute', `/background/${option.value}`)">
-        <code :class="{ 'is-current': backgroundEnabled === option.value }">{{ option.value }}</code>
-        <span>{{ option.label }}</span>
-      </button>
-    </div>
-
-    <div v-else-if="panel === 'language'" class="console-panel__rows" role="listbox" aria-label="Language options">
-      <button v-for="option in languages" :key="option.value" class="console-panel__row" type="button" @click="$emit('execute', `/language/${option.value}`)">
-        <code>{{ option.value }}</code>
-        <span>{{ option.label }}</span>
-      </button>
-    </div>
-
-    <div v-else-if="panel === 'note-picker'" class="console-panel__rows" role="listbox" aria-label="Notes">
-      <button v-for="note in notes" :key="note.id" class="console-panel__row" type="button" @click="$emit('execute', `/note/${note.id}`)">
-        <code>/note/{{ note.id }}</code>
-        <span>{{ note.title || note.id }}</span>
-      </button>
-      <p v-if="!notes.length" class="console-panel__empty">No notes available.</p>
-    </div>
-
-    <div v-else-if="panel === 'post-picker'" class="console-panel__rows" role="listbox" aria-label="Posts">
-      <button v-for="post in posts" :key="post.id" class="console-panel__row" type="button" @click="$emit('execute', `/post/${post.id}`)">
-        <code>/post/{{ post.id }}</code>
-        <span>{{ post.title || post.id }}</span>
-      </button>
-      <p v-if="!posts.length" class="console-panel__empty">No posts available.</p>
+      <p v-if="!panelOptions.length" class="console-panel__empty">No options available.</p>
     </div>
 
     <div v-else class="console-panel__details">
@@ -87,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { getNotes, getPosts } from '../../data'
 import { siteConfig } from '../../data/site/config'
 import { listConsoleCommands, type ConsolePanel } from '../../console/commandRegistry'
@@ -102,7 +59,7 @@ const props = defineProps<{
   feedback?: string
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   execute: [command: string]
   close: []
 }>()
@@ -131,6 +88,16 @@ const languages = [
   { value: 'la', label: 'Latina' },
 ]
 
+type PanelOption = {
+  command: string
+  code: string
+  label: string
+  current?: boolean
+}
+
+const selectedIndex = ref(0)
+const rowsRef = ref<HTMLElement | null>(null)
+
 const heading = computed(() => {
   const labels: Record<string, string> = {
     agent: 'Agent workspace',
@@ -153,8 +120,133 @@ const heading = computed(() => {
   return labels[props.panel || ''] || 'Console'
 })
 
-const isCommandList = computed(() => props.panel === 'help' || props.panel === 'list')
 const backgroundEnabled = computed(() => dynamicBackgroundEnabled.value ? 'on' : 'off')
+
+const listLabel = computed(() => {
+  const labels: Partial<Record<ConsolePanel, string>> = {
+    help: 'Console commands',
+    list: 'Console commands',
+    mode: 'Display mode options',
+    theme: 'Theme options',
+    color: 'Color scheme options',
+    background: 'Background options',
+    language: 'Language options',
+    'note-picker': 'Notes',
+    'post-picker': 'Posts',
+  }
+  return props.panel ? labels[props.panel] || 'Console options' : 'Console options'
+})
+
+const panelOptions = computed<PanelOption[] | null>(() => {
+  switch (props.panel) {
+    case 'help':
+    case 'list':
+      return commands.map((item) => ({
+        command: item.input,
+        code: item.input,
+        label: item.description,
+      }))
+    case 'mode':
+      return [
+        { command: '/mode/console', code: 'console', label: 'Nexus Console desktop workspace', current: true },
+        { command: '/mode/classic', code: 'classic', label: 'Standard sidebar layout' },
+      ]
+    case 'theme':
+      return themeOptions.map((option) => ({
+        command: `/theme/${option.value}`,
+        code: option.value,
+        label: option.label,
+        current: theme.value === option.value,
+      }))
+    case 'color':
+      return colorSchemeOptions.value.map((option) => ({
+        command: `/color/${option.id}`,
+        code: option.id,
+        label: option.label,
+        current: colorScheme.value === option.id,
+      }))
+    case 'background':
+      return backgroundOptions.map((option) => ({
+        command: `/background/${option.value}`,
+        code: option.value,
+        label: option.label,
+        current: backgroundEnabled.value === option.value,
+      }))
+    case 'language':
+      return languages.map((option) => ({
+        command: `/language/${option.value}`,
+        code: option.value,
+        label: option.label,
+      }))
+    case 'note-picker':
+      return notes.map((note) => ({
+        command: `/note/${encodeURIComponent(note.id)}`,
+        code: `/note/${note.id}`,
+        label: note.title || note.id,
+      }))
+    case 'post-picker':
+      return posts.map((post) => ({
+        command: `/post/${encodeURIComponent(post.id)}`,
+        code: `/post/${post.id}`,
+        label: post.title || post.id,
+      }))
+    default:
+      return null
+  }
+})
+
+function selectIndex(index: number) {
+  if (!panelOptions.value?.length) return
+  selectedIndex.value = Math.min(Math.max(index, 0), panelOptions.value.length - 1)
+}
+
+function scrollSelectionIntoView() {
+  void nextTick(() => {
+    rowsRef.value
+      ?.querySelector<HTMLElement>(`[data-option-index="${selectedIndex.value}"]`)
+      ?.scrollIntoView({ block: 'nearest' })
+  })
+}
+
+function moveSelection(delta: number): boolean {
+  const count = panelOptions.value?.length || 0
+  if (!count) return false
+  selectedIndex.value = (selectedIndex.value + delta + count) % count
+  scrollSelectionIntoView()
+  return true
+}
+
+function activateSelection(): boolean {
+  const option = panelOptions.value?.[selectedIndex.value]
+  if (!option) return false
+  emit('execute', option.command)
+  return true
+}
+
+function handlePanelKeydown(event: KeyboardEvent) {
+  const delta = event.key === 'ArrowUp' || event.key === 'ArrowLeft'
+    ? -1
+    : event.key === 'ArrowDown' || event.key === 'ArrowRight'
+      ? 1
+      : 0
+  if (!delta || !moveSelection(delta)) return
+  event.preventDefault()
+  void nextTick(() => {
+    rowsRef.value
+      ?.querySelector<HTMLButtonElement>(`[data-option-index="${selectedIndex.value}"]`)
+      ?.focus()
+  })
+}
+
+watch(
+  [() => props.panel, () => panelOptions.value?.length || 0],
+  () => {
+    selectedIndex.value = 0
+    scrollSelectionIntoView()
+  },
+)
+
+defineExpose({ moveSelection, activateSelection })
 
 const detailLines = computed(() => {
   switch (props.panel) {
@@ -286,7 +378,8 @@ const detailLines = computed(() => {
 }
 
 .console-panel__row:hover,
-.console-panel__row:focus-visible {
+.console-panel__row:focus-visible,
+.console-panel__row.is-selected {
   border-color: var(--console-border-strong);
   color: var(--console-text);
   background: var(--console-selection);
