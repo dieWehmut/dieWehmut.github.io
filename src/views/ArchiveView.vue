@@ -1,7 +1,17 @@
 <template>
   <section class="archive-view page-surface">
     <div class="archive-view__main">
-      <section class="archive-view__feed content-timeline">
+      <ConsoleMonthNavigator v-if="isConsole" :months="consoleMonths">
+        <template #default="{ item }">
+          <FeedEntryCard
+            :key="asPost(item).id"
+            :entry="postEntry(asPost(item))"
+            :overflow-count="postOverflowCount(asPost(item))"
+          />
+        </template>
+      </ConsoleMonthNavigator>
+
+      <section v-else class="archive-view__feed content-timeline">
         <section v-for="year in yearGroups" :key="year.id" class="content-timeline__year">
           <h2 :id="year.id" class="content-time-heading content-time-heading--year">
             {{ year.label }}
@@ -25,7 +35,7 @@
       </section>
     </div>
 
-    <ScrollSpySidebar root-selector=".archive-view__main" heading-selector=".content-time-heading" />
+    <ScrollSpySidebar v-if="!isConsole" root-selector=".archive-view__main" heading-selector=".content-time-heading" />
   </section>
 </template>
 
@@ -34,12 +44,15 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FeedEntryCard from '../components/content/FeedEntryCard.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
+import ConsoleMonthNavigator, { type ConsoleMonthGroup } from '../components/console/ConsoleMonthNavigator.vue'
 import { getPosts } from '../data'
 import type { ArchivePost } from '../types/content'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { groupItemsByYearAndMonth } from '../utils/timelineGroups'
+import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const { locale } = useI18n()
+const { isConsole } = useDisplayModePreference()
 const allPosts = computed(() => getPosts())
 const posts = computed(() => limitCardGroup(allPosts.value))
 const postsHiddenCount = computed(() => hiddenCardCount(allPosts.value))
@@ -50,6 +63,21 @@ const yearGroups = computed(() =>
     getDate: (post) => post.date,
   })
 )
+const consoleMonths = computed<ConsoleMonthGroup[]>(() =>
+  yearGroups.value.flatMap((year) =>
+    year.months.map((month) => ({
+      id: month.id,
+      label: month.label,
+      yearLabel: year.label,
+      timestamp: month.timestamp,
+      items: month.items,
+    })),
+  ),
+)
+
+function asPost(item: unknown) {
+  return item as ArchivePost
+}
 
 function postOverflowCount(post: ArchivePost) {
   return overflowCountForItem(post, posts.value, postsHiddenCount.value)
