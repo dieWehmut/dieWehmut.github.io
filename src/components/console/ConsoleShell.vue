@@ -45,7 +45,13 @@
       <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
     </form>
 
-    <div v-if="suggestions.length" class="console-shell__suggestions" role="listbox" aria-label="Command suggestions">
+    <div
+      v-if="suggestions.length"
+      ref="suggestionsRef"
+      class="console-shell__suggestions"
+      role="listbox"
+      aria-label="Command suggestions"
+    >
       <button
         v-for="(suggestion, index) in suggestions"
         :key="suggestion.input"
@@ -54,6 +60,7 @@
         type="button"
         role="option"
         :aria-selected="suggestionCursor === index"
+        :data-suggestion-index="index"
         @click="executeCommand(suggestion.input)"
       >
         <code>{{ suggestion.input }}</code>
@@ -68,13 +75,13 @@
       :current-path="route.fullPath"
       :feedback="feedback"
       @execute="executeCommand"
-      @close="setPanel(null)"
+      @close="closePanel"
     />
   </section>
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { siteConfig } from '../../data/site/config'
@@ -84,6 +91,7 @@ import { useConsoleSession } from '../../composables/useConsoleSession'
 const route = useRoute()
 const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
+const suggestionsRef = ref<HTMLElement | null>(null)
 const avatarUrl = getGitHubAvatarUrl(siteConfig.githubUser)
 
 const {
@@ -105,6 +113,11 @@ async function executeCommand(value?: string) {
   return handled
 }
 
+function closePanel() {
+  setPanel(null)
+  void nextTick(() => inputRef.value?.focus())
+}
+
 function handleShellKeydown(event: KeyboardEvent) {
   if (activePanel.value && !commandInput.value.trim()) {
     const delta = event.key === 'ArrowUp' || event.key === 'ArrowLeft'
@@ -123,6 +136,15 @@ function handleShellKeydown(event: KeyboardEvent) {
   }
   handleSessionInputKeydown(event)
 }
+
+watch(suggestionCursor, (index) => {
+  if (index < 0) return
+  void nextTick(() => {
+    suggestionsRef.value
+      ?.querySelector<HTMLElement>(`[data-suggestion-index="${index}"]`)
+      ?.scrollIntoView({ block: 'nearest' })
+  })
+})
 
 onMounted(() => {
   setPanel(null)

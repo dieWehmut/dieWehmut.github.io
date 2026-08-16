@@ -1,4 +1,18 @@
 /* Deterministic, low-decoration presentation for the desktop Console shell. */
+html.console-mode-active,
+html.console-mode-active body,
+html.console-mode-active body *,
+html.console-mode-active .float-controls,
+html.console-mode-active .float-controls * {
+  cursor: text !important;
+}
+
+html.console-mode-active .heart-bounce-cursor,
+html.console-mode-active .heart-dots-canvas,
+html.console-mode-active .sakura-burst-overlay {
+  display: none !important;
+}
+
 .desktop-layout--console,
 .desktop-layout--console * {
   font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);

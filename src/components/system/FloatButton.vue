@@ -153,7 +153,7 @@ const atTop = ref(true)
 
 function activeScrollContainer() {
   if (!isConsole.value || typeof document === 'undefined') return null
-  return document.querySelector('.desktop-layout--console .desktop-layout__main')
+  return document.querySelector('.desktop-layout--console .desktop-layout__result')
 }
 
 function onScroll() {

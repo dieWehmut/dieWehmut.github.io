@@ -8,15 +8,17 @@
     <div class="desktop-layout__content">
       <ConsoleShell v-if="isConsole" />
       <RouteBreadcrumb v-else />
-      <main ref="mainRef" class="desktop-layout__main">
-        <RouterView v-slot="{ Component, route }">
-          <Transition name="page-fade" mode="out-in">
-            <component :is="Component" :key="routeViewKey(route)" />
-          </Transition>
-        </RouterView>
-      </main>
-      <GiscusComments layout="desktop" />
-      <Footer />
+      <div ref="resultRef" class="desktop-layout__result">
+        <main class="desktop-layout__main">
+          <RouterView v-slot="{ Component, route }">
+            <Transition name="page-fade" mode="out-in">
+              <component :is="Component" :key="routeViewKey(route)" />
+            </Transition>
+          </RouterView>
+        </main>
+        <GiscusComments layout="desktop" />
+        <Footer />
+      </div>
     </div>
   </div>
 </template>
@@ -33,11 +35,11 @@ import { useDisplayModePreference } from '../composables/useDisplayModePreferenc
 
 const { isConsole } = useDisplayModePreference()
 const route = useRoute()
-const mainRef = ref(null)
+const resultRef = ref(null)
 
 function resetConsoleScroll() {
   if (!isConsole.value) return
-  void nextTick(() => mainRef.value?.scrollTo({ top: 0, behavior: 'auto' }))
+  void nextTick(() => resultRef.value?.scrollTo({ top: 0, behavior: 'auto' }))
 }
 
 watch(() => route.path, resetConsoleScroll)
@@ -55,6 +57,10 @@ function routeViewKey(route) {
   position: relative;
   z-index: 2;
   min-height: 100vh;
+}
+
+.desktop-layout__result {
+  display: contents;
 }
 
 .desktop-layout__sidebar {
@@ -91,37 +97,53 @@ function routeViewKey(route) {
   --console-border: color-mix(in srgb, var(--site-text) 18%, transparent);
   --console-border-strong: color-mix(in srgb, var(--site-accent) 48%, var(--site-text));
   --console-selection: color-mix(in srgb, var(--site-accent) 12%, transparent);
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .desktop-layout--console .desktop-layout__content {
+  height: 100%;
+  min-height: 0;
   margin-left: 0;
+  overflow: hidden;
   background: var(--console-bg);
   background-attachment: initial;
   background-image: none;
 }
 
-.desktop-layout--console .desktop-layout__main {
+.desktop-layout--console .desktop-layout__result {
+  display: block;
+  flex: 1;
+  min-height: 0;
   width: min(
     1180px,
     calc(100vw - 2 * var(--site-desktop-content-gutter))
   );
-  max-height: calc(100vh - 236px);
   margin: 0 auto;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 12px 0 58px;
   scrollbar-color: var(--console-border-strong) transparent;
   scrollbar-width: thin;
 }
 
-.desktop-layout--console .desktop-layout__main::-webkit-scrollbar {
+.desktop-layout--console .desktop-layout__result::-webkit-scrollbar {
   width: 8px;
 }
 
-.desktop-layout--console .desktop-layout__main::-webkit-scrollbar-thumb {
+.desktop-layout--console .desktop-layout__result::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 0;
   background: var(--console-border-strong);
   background-clip: padding-box;
+}
+
+.desktop-layout--console .desktop-layout__main {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
 }
 
 .desktop-layout--console :deep(.giscus-comments),
@@ -208,6 +230,10 @@ function routeViewKey(route) {
   }
 
   .desktop-layout--console .desktop-layout__main {
+    width: 100%;
+  }
+
+  .desktop-layout--console .desktop-layout__result {
     width: calc(100vw - 2 * var(--site-desktop-content-gutter));
   }
 }

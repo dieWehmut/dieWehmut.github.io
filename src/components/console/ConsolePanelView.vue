@@ -224,6 +224,12 @@ function activateSelection(): boolean {
 }
 
 function handlePanelKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    emit('close')
+    return
+  }
+
   const delta = event.key === 'ArrowUp' || event.key === 'ArrowLeft'
     ? -1
     : event.key === 'ArrowDown' || event.key === 'ArrowRight'

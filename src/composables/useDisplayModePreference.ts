@@ -56,8 +56,24 @@ function detectDesktop(): boolean {
   return typeof window.innerWidth !== 'number' || window.innerWidth > 900
 }
 
+function applyDocumentDisplayMode() {
+  if (typeof document === 'undefined') return
+
+  const consoleActive = resolveActiveDisplayMode(displayMode.value, isDesktop.value) === 'console'
+  document.documentElement.classList.toggle('console-mode-active', consoleActive)
+
+  if (consoleActive) {
+    document.documentElement.classList.remove(
+      'heart-bounce-active',
+      'sakura-hover',
+      'sakura-grabbing',
+    )
+  }
+}
+
 function syncDesktopMediaQuery() {
   isDesktop.value = desktopMediaQuery?.matches ?? detectDesktop()
+  applyDocumentDisplayMode()
 }
 
 function bindDesktopMediaQuery() {
@@ -77,6 +93,7 @@ function bindDesktopMediaQuery() {
   } catch {
     desktopMediaQuery = null
     isDesktop.value = detectDesktop()
+    applyDocumentDisplayMode()
   }
 }
 
@@ -107,6 +124,7 @@ export function initDisplayModePreference(): DisplayMode {
 
   isDesktop.value = detectDesktop()
   displayMode.value = readInitialMode()
+  applyDocumentDisplayMode()
   initialized = true
   bindDesktopMediaQuery()
 
@@ -118,6 +136,7 @@ export function setDisplayModePreference(nextMode: DisplayMode): DisplayMode {
 
   displayMode.value = nextMode
   writeStorage(DISPLAY_MODE_STORAGE_KEY, nextMode)
+  applyDocumentDisplayMode()
   return nextMode
 }
 

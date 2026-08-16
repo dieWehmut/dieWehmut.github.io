@@ -423,7 +423,9 @@ function onContentMutation() {
 
 onMounted(async () => {
   await nextTick()
-  scrollContainer = document.querySelector('.desktop-layout__main')
+  // The wrapper exists in both desktop modes (`display: contents` in standard),
+  // so a live mode switch can reuse the same element without remounting the route.
+  scrollContainer = document.querySelector('.desktop-layout__result')
   mediaQuery = window.matchMedia('(max-width: 900px)')
   updateEnabledState()
   if (!isEnabled) return
