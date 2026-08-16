@@ -48,9 +48,22 @@ export function getCaptureAssets(): CaptureAsset[] {
 }
 
 export function getCaptureAssetById(id: string): CaptureAsset | null {
-  const normalizedId = decodeURIComponent(id).trim()
-  if (!normalizedId) return null
-  return getCaptureAssets().find((asset) => asset.id === normalizedId) || null
+  const rawId = String(id || '').trim()
+  if (!rawId) return null
+
+  const assets = getCaptureAssets()
+  // Route params are normally decoded by vue-router, while a few callers
+  // still pass an encoded search URL. Prefer the exact ID first so a literal
+  // "%20" in a capture ID is never mistaken for a space.
+  const directMatch = assets.find((asset) => asset.id === rawId)
+  if (directMatch) return directMatch
+
+  try {
+    const decodedId = decodeURIComponent(rawId)
+    return assets.find((asset) => asset.id === decodedId) || null
+  } catch {
+    return null
+  }
 }
 
 export function getCaptureSearchDocuments(): SearchDocument[] {
