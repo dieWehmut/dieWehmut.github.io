@@ -1,5 +1,28 @@
 <template>
   <section class="page-surface tag-view">
+    <section v-if="isConsole" class="console-tag-index" aria-label="Tag index">
+      <header class="console-tag-index__header">
+        <span class="console-tag-index__prompt">/tags</span>
+        <span class="console-tag-index__count">{{ tagGroups.length }} entries</span>
+      </header>
+      <nav v-if="tagGroups.length" class="console-tag-index__list" aria-label="Tags">
+        <RouterLink
+          v-for="group in tagGroups"
+          :key="group.tag"
+          class="console-tag-index__row"
+          :to="tagUrl(group.tag)"
+        >
+          <code>/tags/{{ group.tag }}</code>
+          <span class="console-tag-index__label">{{ group.tag }}</span>
+          <span class="console-tag-index__meta">
+            {{ group.count }} {{ group.count === 1 ? 'entry' : 'entries' }}
+          </span>
+        </RouterLink>
+      </nav>
+      <p v-else class="console-tag-index__empty">No tags available.</p>
+    </section>
+
+    <template v-else>
     <div class="tag-cloud" aria-label="Tag cloud">
       <RouterLink
         v-for="tag in cloudTags"
@@ -69,6 +92,7 @@
         </span>
       </article>
     </div>
+    </template>
   </section>
 </template>
 
@@ -79,10 +103,12 @@ import { PriceTag } from '@element-plus/icons-vue'
 import { getTagGroups } from '../data'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { retryPublicAssetImage } from '../utils/publicAssets'
+import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const captureTagCounts = ref(new Map())
 const captureTagPreviews = ref(new Map())
 const router = useRouter()
+const { isConsole } = useDisplayModePreference()
 
 const tagGroups = computed(() => mergeCaptureTags(getTagGroups()))
 const visibleTagGroups = computed(() => limitCardGroup(tagGroups.value))
@@ -234,6 +260,90 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.console-tag-index {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  color: var(--console-text, var(--site-text));
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.console-tag-index__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 38px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--console-border, var(--site-border));
+}
+
+.console-tag-index__prompt {
+  color: var(--console-accent, var(--site-accent));
+  font-weight: 700;
+}
+
+.console-tag-index__count {
+  color: var(--console-muted, var(--site-muted));
+  font-size: 0.78rem;
+}
+
+.console-tag-index__list {
+  display: grid;
+  gap: 2px;
+}
+
+.console-tag-index__row {
+  display: grid;
+  grid-template-columns: minmax(190px, 300px) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 14px;
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  color: var(--console-muted, var(--site-muted));
+  text-decoration: none;
+}
+
+.console-tag-index__row code {
+  overflow: hidden;
+  color: var(--console-accent, var(--site-accent));
+  font: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-tag-index__label {
+  overflow: hidden;
+  color: var(--console-text, var(--site-text));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-tag-index__meta {
+  color: var(--console-dim, var(--site-muted));
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.console-tag-index__row:hover,
+.console-tag-index__row:focus-visible {
+  border-color: var(--console-border-strong, var(--site-accent));
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
+}
+
+.console-tag-index__empty {
+  color: var(--console-muted, var(--site-muted));
+}
+
+@media (max-width: 900px) {
+  .console-tag-index {
+    display: none;
+  }
+}
+
 .tag-view {
   --tag-accent: var(--site-accent);
   --tag-accent-soft: rgb(var(--site-accent-rgb) / 0.18);
