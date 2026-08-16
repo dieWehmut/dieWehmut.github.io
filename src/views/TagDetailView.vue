@@ -191,7 +191,7 @@ import { useDisplayModePreference } from '../composables/useDisplayModePreferenc
 const route = useRoute()
 const { locale } = useI18n()
 const { isConsole } = useDisplayModePreference()
-const tag = computed(() => decodeURIComponent(String(route.params.tag || '')))
+const tag = computed(() => String(route.params.tag || ''))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
 const visibleCaptures = computed(() => limitCardGroup(captures.value))

@@ -330,7 +330,7 @@ const router = useRouter()
 const selectedGroupId = computed(() => String(route.params.id || ''))
 const isDetailRoute = computed(() => selectedGroupId.value.length > 0)
 const selectedGroup = computed(() =>
-  selectedGroupId.value ? findCaptureGroupByRouteId(decodeURIComponent(selectedGroupId.value)) : null
+  selectedGroupId.value ? findCaptureGroupByRouteId(selectedGroupId.value) : null
 )
 const selectedCommentTerm = computed(() => selectedGroup.value ? `capture-group:${selectedGroup.value.id}` : '')
 const scrollSpyKey = computed(() =>
