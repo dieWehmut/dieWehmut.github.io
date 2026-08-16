@@ -17,7 +17,7 @@
     </header>
 
     <div v-if="current" class="console-month-navigator__items">
-      <slot v-for="(item, index) in current.items" :item="item" :index="index" />
+      <slot v-for="(item, index) in current.items" :key="itemKey(item, index)" :item="item" :index="index" />
     </div>
     <p v-else class="console-month-navigator__empty">No entries.</p>
   </section>
@@ -53,6 +53,11 @@ watch(
 
 function move(delta: number) {
   currentIndex.value = moveConsoleMonth(currentIndex.value, delta, props.months.length)
+}
+
+function itemKey(item: unknown, index: number) {
+  if (item && typeof item === 'object' && 'id' in item) return String(item.id)
+  return index
 }
 </script>
 
