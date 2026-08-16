@@ -1,5 +1,6 @@
 import { computed, nextTick, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { addConsoleHistoryEntry } from '../console/history'
 import { parseConsoleInput } from '../console/commandParser'
 import {
@@ -29,6 +30,7 @@ function normalizePrefix(value: string) {
 
 export function useConsoleSession() {
   const router = useRouter()
+  const { locale } = useI18n()
   const displayMode = useDisplayModePreference()
   const theme = useThemePreference()
   const color = useColorSchemePreference()
@@ -78,6 +80,14 @@ export function useConsoleSession() {
     } else if (panel === 'background' && (value === 'on' || value === 'off')) {
       background.setDynamicBackgroundEnabled(value === 'on')
       feedback.value = `Dynamic background ${value}.`
+    } else if (panel === 'language' && ['zh', 'zh_tw', 'en', 'ja', 'de', 'la'].includes(value)) {
+      locale.value = value
+      try {
+        localStorage.setItem('locale', value)
+      } catch {
+        // Locale remains active in memory when storage is unavailable.
+      }
+      feedback.value = `Language set to ${value}.`
     }
   }
 
