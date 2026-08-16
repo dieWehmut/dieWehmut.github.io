@@ -1,8 +1,25 @@
 <template>
   <section class="about-view page-surface">
-    <div class="about-layout">
+    <div class="about-layout" :class="{ 'about-layout--console': isConsole }">
+      <ScrollSpySidebar
+        v-if="isConsole"
+        class="about-aside about-aside--console"
+        root-selector=".about-content"
+        heading-selector="h2"
+      />
       <div class="about-content">
-        <div class="about-contact">
+        <div v-if="isConsole" class="console-about-contact" aria-label="Contact links">
+          <a :href="`https://github.com/${siteConfig.githubUser}`" target="_blank" rel="noopener noreferrer">
+            <code>github</code>
+            <span>https://github.com/{{ siteConfig.githubUser }}</span>
+          </a>
+          <a :href="`mailto:${siteConfig.email}`">
+            <code>email</code>
+            <span>{{ siteConfig.email }}</span>
+          </a>
+        </div>
+
+        <div v-else class="about-contact">
           <h2 id="contact-me">Contact Me</h2>
           <div class="about-contact__list">
             <div class="about-contact__item">
@@ -32,7 +49,7 @@
         <MarkdownContent class="markdown-body" :source="aboutRaw" />
       </div>
 
-      <ScrollSpySidebar class="about-aside" root-selector=".about-content" heading-selector="h2" />
+      <ScrollSpySidebar v-if="!isConsole" class="about-aside" root-selector=".about-content" heading-selector="h2" />
     </div>
   </section>
 </template>
@@ -43,9 +60,68 @@ import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { siteConfig } from '../data/site/config'
 import aboutRaw from '../data/site/about.md?raw'
+import { useDisplayModePreference } from '../composables/useDisplayModePreference'
+
+const { isConsole } = useDisplayModePreference()
 </script>
 
 <style scoped>
+.about-layout--console {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-aside--console {
+  width: 100%;
+  order: -1;
+}
+
+.console-about-contact {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 24px;
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.console-about-contact a {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  color: var(--console-muted, var(--site-muted));
+  text-decoration: none;
+}
+
+.console-about-contact a:hover,
+.console-about-contact a:focus-visible {
+  border-color: var(--console-border-strong, var(--site-accent));
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
+}
+
+.console-about-contact code {
+  color: var(--console-accent, var(--site-accent));
+  font: inherit;
+}
+
+.console-about-contact span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .about-layout--console,
+  .console-about-contact {
+    display: none;
+  }
+}
+
 .about-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--site-scroll-spy-width);
