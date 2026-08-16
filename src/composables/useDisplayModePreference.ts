@@ -1,35 +1,27 @@
 import { computed, readonly, ref } from 'vue'
+import {
+  DEFAULT_DISPLAY_MODE,
+  isDisplayMode,
+  migrateLegacyDisplayMode,
+  resolveActiveDisplayMode,
+  resolveStoredDisplayMode,
+  type DisplayMode,
+} from '../console/displayMode'
+
+export type { DisplayMode } from '../console/displayMode'
 
 /**
  * The two site shells. `console` is the desktop-first shell, while `standard`
  * is the existing sidebar/drawer experience.
  */
-export type DisplayMode = 'console' | 'standard'
-
 export const DISPLAY_MODE_STORAGE_KEY = 'displayMode'
 export const LEGACY_DISPLAY_MODE_STORAGE_KEY = 'viewMode'
 export const DESKTOP_MEDIA_QUERY = '(min-width: 901px)'
 
-const DEFAULT_DESKTOP_MODE: DisplayMode = 'console'
-const DEFAULT_MOBILE_MODE: DisplayMode = 'standard'
-
-const displayMode = ref<DisplayMode>(DEFAULT_DESKTOP_MODE)
+const displayMode = ref<DisplayMode>(DEFAULT_DISPLAY_MODE)
 const isDesktop = ref(true)
 let initialized = false
 let desktopMediaQuery: MediaQueryList | null = null
-
-function isDisplayMode(value: unknown): value is DisplayMode {
-  return value === 'console' || value === 'standard'
-}
-
-/** Convert values written by the removed Focus/view-mode preference. */
-export function migrateLegacyDisplayMode(value: unknown): DisplayMode | null {
-  if (value === '1' || value === 'true' || value === 'console') return 'console'
-  if (value === '0' || value === 'false' || value === 'standard' || value === 'classic') {
-    return 'standard'
-  }
-  return null
-}
 
 function readStorage(key: string): string | null {
   if (typeof localStorage === 'undefined') return null
@@ -92,7 +84,8 @@ function readInitialMode(): DisplayMode {
   const stored = readStorage(DISPLAY_MODE_STORAGE_KEY)
   if (isDisplayMode(stored)) return stored
 
-  const migrated = migrateLegacyDisplayMode(readStorage(LEGACY_DISPLAY_MODE_STORAGE_KEY))
+  const legacy = readStorage(LEGACY_DISPLAY_MODE_STORAGE_KEY)
+  const migrated = migrateLegacyDisplayMode(legacy)
   if (migrated) {
     // Write the new key once so future sessions do not depend on the removed
     // preference module. Keep the legacy key untouched for backwards safety.
@@ -103,8 +96,10 @@ function readInitialMode(): DisplayMode {
   // The raw value remains the desktop-first default even on a mobile
   // first visit. `activeMode` below gates it to standard while mobile, so a
   // later resize to desktop can still reveal the intended first-visit shell.
-  return DEFAULT_DESKTOP_MODE
+  return resolveStoredDisplayMode(stored, legacy, isDesktop.value)
 }
+
+export { migrateLegacyDisplayMode }
 
 /** Initialise the singleton and return the raw persisted mode. */
 export function initDisplayModePreference(): DisplayMode {
@@ -135,9 +130,7 @@ export function useDisplayModePreference() {
 
   // Keep the raw preference available for the settings UI, but make all shell
   // decisions use `activeMode` so a saved desktop choice never changes mobile.
-  const activeMode = computed<DisplayMode>(() =>
-    isDesktop.value ? displayMode.value : DEFAULT_MOBILE_MODE,
-  )
+  const activeMode = computed<DisplayMode>(() => resolveActiveDisplayMode(displayMode.value, isDesktop.value))
   const isConsole = computed(() => activeMode.value === 'console')
   const isStandard = computed(() => activeMode.value === 'standard')
 
