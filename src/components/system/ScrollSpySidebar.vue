@@ -1,5 +1,13 @@
 <template>
-  <aside v-if="items.length" class="scroll-spy" :class="`scroll-spy--${mode}`">
+  <aside v-if="items.length" class="scroll-spy" :class="`scroll-spy--${effectiveMode}`">
+    <button
+      v-if="effectiveMode === 'console'"
+      class="scroll-spy__arrow"
+      type="button"
+      aria-label="Previous section"
+      title="Previous section"
+      @click="scrollNav(-1)"
+    >&lt;</button>
     <div class="scroll-spy__status">
       <div class="scroll-spy__progress">
         <div class="scroll-spy__bar">
@@ -20,11 +28,19 @@
         {{ item.title }}
       </button>
     </nav>
+    <button
+      v-if="effectiveMode === 'console'"
+      class="scroll-spy__arrow"
+      type="button"
+      aria-label="Next section"
+      title="Next section"
+      @click="scrollNav(1)"
+    >&gt;</button>
   </aside>
 </template>
 
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setReadingPath, useScrollRequests } from '../../composables/useReadingPath'
 import {
@@ -33,6 +49,7 @@ import {
   scrollHeadingIntoView,
   waitForHeading,
 } from '../../utils/headingNavigation'
+import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
@@ -79,7 +96,7 @@ function findRoot() {
 }
 
 function shouldEnable() {
-  return props.mode === 'mobile' || !mediaQuery || !mediaQuery.matches
+  return effectiveMode.value === 'mobile' || effectiveMode.value === 'console' || !mediaQuery || !mediaQuery.matches
 }
 
 function clearHeadings() {
@@ -262,6 +279,17 @@ function scrollToHeading(id) {
 }
 
 function followActive() {
+  if (effectiveMode.value === 'console') {
+    const button = buttonEls.get(activeId.value)
+    const nav = navRef.value
+    if (button && nav) {
+      const navRect = nav.getBoundingClientRect()
+      const buttonRect = button.getBoundingClientRect()
+      if (buttonRect.left < navRect.left) nav.scrollLeft -= navRect.left - buttonRect.left + 12
+      else if (buttonRect.right > navRect.right) nav.scrollLeft += buttonRect.right - navRect.right + 12
+    }
+    return
+  }
   if (props.mode !== 'desktop') return
   const button = buttonEls.get(activeId.value)
   const nav = navRef.value
@@ -280,8 +308,19 @@ function followActive() {
 }
 
 function onSidebarWheel(event) {
+  if (effectiveMode.value === 'console' && navRef.value) {
+    event.preventDefault()
+    navRef.value.scrollLeft += event.deltaY
+    return
+  }
   event.preventDefault()
   window.scrollBy({ top: event.deltaY, behavior: 'auto' })
+}
+
+function scrollNav(delta) {
+  const nav = navRef.value
+  if (!nav) return
+  nav.scrollBy({ left: delta * Math.max(nav.clientWidth * 0.72, 120), behavior: 'smooth' })
 }
 
 function onScroll() {
@@ -314,6 +353,9 @@ function updateNow() {
 watch(activeId, () => {
   nextTick(followActive)
 })
+
+const { isConsole } = useDisplayModePreference()
+const effectiveMode = computed(() => isConsole.value ? 'console' : props.mode)
 
 watch(scrollRequests, (request) => {
   if (request?.id) scrollToHeading(request.id)
@@ -538,6 +580,45 @@ onBeforeUnmount(() => {
 .scroll-spy__nav button:focus-visible::before,
 .scroll-spy__nav button.is-active::before {
   opacity: 1;
+}
+
+.scroll-spy--console {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  max-height: none;
+  overflow: visible;
+  padding: 0 0 10px;
+}
+
+.scroll-spy--console .scroll-spy__status {
+  display: none;
+}
+
+.scroll-spy--console .scroll-spy__nav {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.scroll-spy__arrow {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--console-border-strong, var(--site-border));
+  border-radius: 0;
+  color: var(--console-accent, var(--site-accent));
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.scroll-spy__arrow:hover,
+.scroll-spy__arrow:focus-visible {
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
 }
 
 .scroll-spy--mobile {
