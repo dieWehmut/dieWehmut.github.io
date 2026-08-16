@@ -54,7 +54,7 @@
         type="button"
         role="option"
         :aria-selected="suggestionCursor === index"
-        @mousedown.prevent="selectSuggestion(suggestion.input)"
+        @mousedown.prevent="executeCommand(suggestion.input)"
       >
         <code>{{ suggestion.input }}</code>
         <span>{{ suggestion.description }}</span>

@@ -143,7 +143,7 @@ export function useConsoleSession() {
     if (event.key === 'Enter') {
       event.preventDefault()
       const selected = suggestions.value[suggestionCursor.value]
-      if (selected) selectSuggestion(selected.input)
+      if (selected) void executeCommand(selected.input)
       else void executeCommand()
       return
     }
