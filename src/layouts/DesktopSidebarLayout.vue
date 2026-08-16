@@ -111,10 +111,17 @@ function routeViewKey(route) {
   background-clip: padding-box;
 }
 
+.desktop-layout--console :deep(.giscus-comments),
 .desktop-layout--console :deep(.footer) {
   width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
   margin-right: auto;
   margin-left: auto;
+}
+
+.desktop-layout--console :deep(.giscus-comments) {
+  padding-top: 16px;
+  border-top: 1px solid var(--console-border);
+  font-family: var(--console-font);
 }
 
 :root.dynamic-background-enabled .desktop-layout__content {
