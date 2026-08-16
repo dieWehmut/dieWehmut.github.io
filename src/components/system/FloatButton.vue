@@ -32,6 +32,19 @@
     </div>
 
     <button
+      v-if="isDesktop"
+      class="float-controls__button float-controls__opt-mode"
+      :class="{ 'is-visible': settingsOpen, 'is-active': isConsole }"
+      type="button"
+      :title="isConsole ? 'Switch to standard layout' : 'Switch to Nexus Console'"
+      :aria-label="isConsole ? 'Switch to standard layout' : 'Switch to Nexus Console'"
+      :aria-pressed="isConsole"
+      @click="toggleDisplayMode"
+    >
+      <el-icon><Monitor /></el-icon>
+    </button>
+
+    <button
       class="float-controls__button float-controls__opt-dynamic"
       :class="{ 'is-visible': settingsOpen, 'is-active': dynamicBackgroundEnabled }"
       type="button"
@@ -100,15 +113,17 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Brush, MagicStick, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
+import { Brush, MagicStick, Monitor, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useThemePreference } from '../../composables/useThemePreference'
+import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 
 const { locale } = useI18n()
 const { dynamicBackgroundEnabled, toggleDynamicBackground } = useBackgroundPreference()
 const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { theme, toggleTheme: toggleThemePreference } = useThemePreference()
+const { isDesktop, isConsole, toggleDisplayMode: toggleDisplayModePreference } = useDisplayModePreference()
 
 const settingsOpen = ref(false)
 const languageOpen = ref(false)
@@ -172,6 +187,10 @@ function scrollToTop() {
 
 function toggleTheme() {
   toggleThemePreference()
+}
+
+function toggleDisplayMode() {
+  toggleDisplayModePreference()
 }
 </script>
 
@@ -293,6 +312,7 @@ function toggleTheme() {
 }
 
 .float-controls__opt-dynamic,
+.float-controls__opt-mode,
 .float-controls__opt-language,
 .float-controls__opt-color,
 .float-controls__opt-theme {
@@ -333,11 +353,20 @@ function toggleTheme() {
   bottom: 250px;
 }
 
+.float-controls__opt-mode {
+  bottom: 300px;
+}
+
+.float-controls.is-top-hidden .float-controls__opt-mode {
+  bottom: 250px;
+}
+
 .float-controls.is-top-hidden .float-controls__opt-dynamic {
   bottom: 200px;
 }
 
 .float-controls__opt-dynamic.is-visible,
+.float-controls__opt-mode.is-visible,
 .float-controls__opt-language.is-visible,
 .float-controls__opt-color.is-visible,
 .float-controls__opt-theme.is-visible {
@@ -514,6 +543,10 @@ function toggleTheme() {
 
   .float-controls__opt-dynamic {
     bottom: 230px;
+  }
+
+  .float-controls__opt-mode {
+    display: none !important;
   }
 
   .float-controls.is-top-hidden .float-controls__opt-dynamic {
