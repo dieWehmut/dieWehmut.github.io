@@ -69,6 +69,7 @@
       type="button"
       title="Language"
       aria-label="Language"
+      :aria-expanded="languageOpen"
       :aria-hidden="!settingsOpen"
       :tabindex="settingsOpen ? 0 : -1"
       @click="toggleLanguagePanel"
@@ -82,6 +83,7 @@
       type="button"
       title="Color scheme"
       aria-label="Color scheme"
+      :aria-expanded="colorSchemeOpen"
       :aria-hidden="!settingsOpen"
       :tabindex="settingsOpen ? 0 : -1"
       @click="toggleColorSchemePanel"
@@ -107,6 +109,7 @@
       type="button"
       title="Settings"
       aria-label="Settings"
+      :aria-expanded="settingsOpen"
       @click="toggleSettings"
     >
       <el-icon><Setting /></el-icon>

@@ -1,7 +1,25 @@
 <template>
   <section class="capture-view page-surface" :class="{ 'capture-view--detail': isDetailRoute }">
+    <input
+      v-if="canEdit"
+      ref="uploadInput"
+      class="capture-editor__file"
+      type="file"
+      accept="image/*"
+      @change="onUploadFileChange"
+    />
     <div class="capture-view__main">
       <template v-if="isConsole">
+        <div v-if="canEdit" class="console-capture-editor" :aria-busy="editorBusy">
+          <span><strong>{{ t('capture.editor') }}</strong> {{ editorStatusText }}</span>
+          <button
+            type="button"
+            :disabled="editorBusy"
+            :aria-label="t('capture.uploadImage')"
+            :title="t('capture.uploadImage')"
+            @click="selectEmptyUploadGroup"
+          >+ upload</button>
+        </div>
         <template v-if="selectedGroup">
           <div class="console-capture-detail">
             <header class="console-capture-detail__header">
@@ -10,22 +28,35 @@
               <span>{{ selectedGroup.assets.length }} assets</span>
             </header>
             <div class="console-capture-detail__assets">
-              <button
+              <div
                 v-for="asset in selectedGroup.assets"
                 :key="asset.id"
-                type="button"
-                :aria-label="`Open ${asset.title || asset.id}`"
-                :title="asset.title || asset.id"
-                @click="openAsset(asset)"
+                class="console-capture-asset"
               >
-                <img
-                  :src="asset.image"
-                  :alt="asset.title || asset.id"
-                  loading="eager"
-                  decoding="async"
-                  @error="retryPublicAssetImage($event, asset.image)"
-                />
-              </button>
+                <button
+                  type="button"
+                  :aria-label="`Open ${asset.title || asset.id}`"
+                  :title="asset.title || asset.id"
+                  @click="openAsset(asset)"
+                >
+                  <img
+                    :src="asset.image"
+                    :alt="asset.title || asset.id"
+                    loading="eager"
+                    decoding="async"
+                    @error="retryPublicAssetImage($event, asset.image)"
+                  />
+                </button>
+                <button
+                  v-if="canEdit"
+                  class="console-capture-action"
+                  type="button"
+                  :disabled="editorBusy"
+                  :aria-label="`${t('capture.deleteImage')}: ${asset.title || asset.id}`"
+                  :title="t('capture.deleteImage')"
+                  @click="deleteCapture(asset)"
+                >-</button>
+              </div>
             </div>
             <div class="console-capture-detail__meta">
               <time v-if="selectedGroup.date" :datetime="selectedGroup.date">{{ formatDateOnly(selectedGroup.date) }}</time>
@@ -52,22 +83,35 @@
           <template #default="{ item }">
             <article class="console-capture-group">
               <div class="console-capture-group__media">
-                <button
+                <div
                   v-for="asset in asCaptureGroup(item).assets"
                   :key="asset.id"
-                  type="button"
-                  :aria-label="`Open ${asset.title || asset.id}`"
-                  :title="asset.title || asset.id"
-                  @click="openAsset(asset)"
+                  class="console-capture-asset"
                 >
-                  <img
-                    :src="asset.image"
-                    :alt="asset.title || asset.id"
-                    loading="lazy"
-                    decoding="async"
-                    @error="retryPublicAssetImage($event, asset.image)"
-                  />
-                </button>
+                  <button
+                    type="button"
+                    :aria-label="`Open ${asset.title || asset.id}`"
+                    :title="asset.title || asset.id"
+                    @click="openAsset(asset)"
+                  >
+                    <img
+                      :src="asset.image"
+                      :alt="asset.title || asset.id"
+                      loading="lazy"
+                      decoding="async"
+                      @error="retryPublicAssetImage($event, asset.image)"
+                    />
+                  </button>
+                  <button
+                    v-if="canEdit"
+                    class="console-capture-action"
+                    type="button"
+                    :disabled="editorBusy"
+                    :aria-label="`${t('capture.deleteImage')}: ${asset.title || asset.id}`"
+                    :title="t('capture.deleteImage')"
+                    @click="deleteCapture(asset)"
+                  >-</button>
+                </div>
               </div>
               <div class="console-capture-group__body">
                 <RouterLink :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`">
@@ -81,6 +125,15 @@
                     :to="source.url"
                   >{{ source.title }}</RouterLink>
                 </div>
+                <button
+                  v-if="canEdit && asCaptureGroup(item).assets.length < capturePreviewLimit"
+                  class="console-capture-group__upload"
+                  type="button"
+                  :disabled="editorBusy"
+                  :aria-label="t('capture.uploadImage')"
+                  :title="t('capture.uploadImage')"
+                  @click="selectUploadGroup(asCaptureGroup(item))"
+                >+ append</button>
               </div>
             </article>
           </template>
@@ -186,13 +239,6 @@
             <span>{{ t('capture.editor') }}</span>
             <strong>{{ editorStatusText }}</strong>
           </div>
-          <input
-            ref="uploadInput"
-            class="capture-editor__file"
-            type="file"
-            accept="image/*"
-            @change="onUploadFileChange"
-          />
         </div>
 
         <div v-if="yearGroups.length" class="capture-timeline">
@@ -351,15 +397,18 @@
       heading-selector=".capture-time-heading"
     />
 
-    <Teleport v-if="!isConsole" to="body">
+    <Teleport to="body">
       <Transition name="capture-delete-dialog">
         <div
           v-if="deleteTarget"
           class="capture-delete-dialog"
+          :class="{ 'capture-delete-dialog--console': isConsole }"
           role="dialog"
           aria-modal="true"
           :aria-label="t('capture.deleteDialogTitle')"
+          tabindex="-1"
           @click.self="cancelDeleteCapture"
+          @keydown.esc.prevent="cancelDeleteCapture"
         >
           <div class="capture-delete-dialog__panel">
             <h2>{{ t('capture.deleteDialogTitle') }}</h2>
@@ -885,11 +934,17 @@ watch(isDetailRoute, (detail) => {
   overflow-x: auto;
 }
 
-.console-capture-group__media button,
-.console-capture-detail__assets button {
+.console-capture-asset {
+  position: relative;
   flex: 0 0 58px;
   width: 58px;
   height: 58px;
+}
+
+.console-capture-asset > button:first-child {
+  display: block;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   padding: 0;
   border: 1px solid var(--console-border, var(--site-border));
@@ -898,11 +953,33 @@ watch(isDetailRoute, (detail) => {
   cursor: zoom-in;
 }
 
-.console-capture-group__media button:hover,
-.console-capture-group__media button:focus-visible,
-.console-capture-detail__assets button:hover,
-.console-capture-detail__assets button:focus-visible {
+.console-capture-asset > button:first-child:hover,
+.console-capture-asset > button:first-child:focus-visible {
   border-color: var(--console-accent, var(--site-accent));
+  outline: none;
+}
+
+.console-capture-action {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  color: #ef6a6a;
+  background: var(--console-bg, var(--site-bg));
+  cursor: pointer;
+  font: inherit;
+  line-height: 14px;
+}
+
+.console-capture-action:hover,
+.console-capture-action:focus-visible {
+  color: var(--console-bg, var(--site-bg));
+  background: #ef6a6a;
   outline: none;
 }
 
@@ -963,6 +1040,54 @@ watch(isDetailRoute, (detail) => {
   display: flex;
   flex-wrap: wrap;
   gap: 5px 12px;
+}
+
+.console-capture-editor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+  margin-bottom: 10px;
+  padding: 5px 8px;
+  border: 1px solid var(--console-border, var(--site-border));
+  color: var(--console-muted, var(--site-muted));
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: 0.76rem;
+}
+
+.console-capture-editor strong {
+  margin-right: 8px;
+  color: var(--console-accent, var(--site-accent));
+}
+
+.console-capture-editor button,
+.console-capture-group__upload {
+  width: fit-content;
+  min-height: 28px;
+  padding: 3px 8px;
+  border: 1px solid var(--console-border-strong, var(--site-accent));
+  border-radius: 0;
+  color: var(--console-accent, var(--site-accent));
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.console-capture-editor button:hover,
+.console-capture-editor button:focus-visible,
+.console-capture-group__upload:hover,
+.console-capture-group__upload:focus-visible {
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
+}
+
+.console-capture-editor button:disabled,
+.console-capture-group__upload:disabled,
+.console-capture-action:disabled {
+  cursor: progress;
+  opacity: 0.55;
 }
 
 .console-capture-detail__header {
@@ -1038,7 +1163,8 @@ watch(isDetailRoute, (detail) => {
 @media (max-width: 900px) {
   .console-capture-group,
   .console-capture-detail,
-  .console-capture-empty {
+  .console-capture-empty,
+  .console-capture-editor {
     display: none;
   }
 }
@@ -1508,6 +1634,19 @@ watch(isDetailRoute, (detail) => {
   border-radius: 8px;
   background: var(--site-bg);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
+}
+
+.capture-delete-dialog--console .capture-delete-dialog__panel {
+  border-color: var(--console-border-strong, var(--site-accent));
+  border-radius: 0;
+  background: var(--console-bg, var(--site-bg));
+  box-shadow: none;
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.capture-delete-dialog--console .capture-delete-dialog__button {
+  border-radius: 0;
+  box-shadow: none;
 }
 
 :root[data-theme="light"] .capture-delete-dialog__panel {
