@@ -2013,7 +2013,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
   const onClick = async (event: Event) => {
     const target = event.target
-    if (!(target instanceof HTMLElement)) return
+    if (!(target instanceof Element)) return
 
     const image = target.closest<HTMLImageElement>('img')
     if (image?.src) {
