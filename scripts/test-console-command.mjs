@@ -33,6 +33,10 @@ check('fixed command segments are case insensitive', noteCommand?.segments?.[0] 
 check('dynamic document ids preserve case', noteCommand?.segments?.[1] === 'CurrentAffairsReading')
 check('canonical document path is encoded once', noteCommand?.canonicalInput === '/note/CurrentAffairsReading')
 
+const fixedLookingId = parser.parseConsoleInput('/note/Theme')
+check('dynamic ids matching command words preserve case', fixedLookingId?.segments?.[1] === 'Theme')
+check('fixed-looking id remains unchanged in canonical path', fixedLookingId?.canonicalInput === '/note/Theme')
+
 const spacedCapture = parser.parseConsoleInput('/capture/My Image (1).png')
 check('dynamic path segments preserve spaces', spacedCapture?.segments?.[1] === 'My Image (1).png')
 check('route path encodes dynamic values once', parser.toConsoleRoutePath(spacedCapture) === '/capture/My%20Image%20(1).png')

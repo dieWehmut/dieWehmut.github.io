@@ -27,6 +27,8 @@ const FIXED_SEGMENTS = new Set([
   'note',
 ])
 
+const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])
+
 function silent(rawInput: string): SilentConsoleInput {
   return { kind: 'silent', rawInput }
 }
@@ -50,15 +52,6 @@ function splitSuffix(value: string) {
   return { path, query, hash }
 }
 
-function normalizeSegment(segment: string, index: number) {
-  const decoded = decodeURIComponent(segment)
-  const lower = decoded.toLowerCase()
-
-  // Only command vocabulary is normalized. Route IDs and tag labels retain case.
-  if (FIXED_SEGMENTS.has(lower) && (index === 0 || lower !== decoded)) return lower
-  return decoded
-}
-
 export function parseConsoleInput(input: string): ParsedConsoleInput {
   const rawInput = typeof input === 'string' ? input : String(input ?? '')
   const trimmed = rawInput.trim()
@@ -66,10 +59,21 @@ export function parseConsoleInput(input: string): ParsedConsoleInput {
 
   try {
     const { path, query, hash } = splitSuffix(trimmed)
-    const segments = path
+    const decodedSegments = path
       .split('/')
       .filter(Boolean)
-      .map((segment, index) => normalizeSegment(segment, index))
+      .map((segment) => decodeURIComponent(segment))
+
+    const head = decodedSegments[0]?.toLowerCase() || ''
+    const segments = decodedSegments.map((segment, index) => {
+      const lower = segment.toLowerCase()
+
+      // Fixed command vocabulary is case-insensitive. Dynamic IDs and tags
+      // are intentionally untouched, even when they resemble a command.
+      if (index === 0 && FIXED_SEGMENTS.has(lower)) return lower
+      if (index === 1 && head === 'mode' && MODE_VALUES.has(lower)) return lower
+      return segment
+    })
 
     const command: ConsoleCommand = {
       kind: 'command',
@@ -93,4 +97,3 @@ export function toConsoleRoutePath(input: ConsoleCommand | ParsedConsoleInput): 
     : '/'
   return `${path}${input.query ? `?${input.query}` : ''}${input.hash || ''}`
 }
-
