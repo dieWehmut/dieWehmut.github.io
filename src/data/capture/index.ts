@@ -47,6 +47,23 @@ export function getCaptureAssets(): CaptureAsset[] {
     .sort((a, b) => getDateSortTimestamp(b.date) - getDateSortTimestamp(a.date))
 }
 
+export function getCaptureGroupId(date: string): string {
+  const slug = String(date || 'undated')
+    .toLowerCase()
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'undated'
+  return `capture-${slug}`
+}
+
+export function getCaptureRouteIds(): Set<string> {
+  const routeIds = new Set<string>()
+  for (const asset of getCaptureAssets()) {
+    routeIds.add(asset.id)
+    routeIds.add(getCaptureGroupId(asset.date || 'undated'))
+  }
+  return routeIds
+}
+
 export function getCaptureAssetById(id: string): CaptureAsset | null {
   const rawId = String(id || '').trim()
   if (!rawId) return null

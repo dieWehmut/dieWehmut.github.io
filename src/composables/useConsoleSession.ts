@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { addConsoleHistoryEntry } from '../console/history'
 import { parseConsoleInput } from '../console/commandParser'
+import { isKnownConsoleCommandTarget, type ConsoleCommandTargetCatalog } from '../console/commandTarget'
 import {
   listConsoleCommands,
   resolveConsoleCommand,
@@ -110,6 +111,23 @@ export function useConsoleSession() {
 
     const resolution = resolveConsoleCommand(parsed)
     if (resolution.kind === 'silent') return false
+
+    if (resolution.kind === 'route') {
+      const catalog: ConsoleCommandTargetCatalog = {
+        postIds: getPosts().map((post) => post.id),
+        noteIds: getNotes().map((note) => note.id),
+        tags: getTagGroups().map((group) => group.tag),
+      }
+      if (
+        (parsed.segments[0] === 'capture' || parsed.segments[0] === 'tags')
+        && parsed.segments[1] !== undefined
+      ) {
+        const { getCaptureRouteIds, getCaptureTagCounts } = await import('../data/capture')
+        if (parsed.segments[0] === 'capture') catalog.captureIds = getCaptureRouteIds()
+        else catalog.tags = [...(catalog.tags || []), ...getCaptureTagCounts().keys()]
+      }
+      if (!isKnownConsoleCommandTarget(parsed, catalog)) return false
+    }
 
     executing.value = true
     lastResolution.value = resolution

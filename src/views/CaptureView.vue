@@ -460,7 +460,7 @@ import { ArrowLeft, Calendar, ChatRound, Delete, Plus, PriceTag } from '@element
 import GiscusComments from '../components/system/GiscusComments.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import ConsoleMonthNavigator, { type ConsoleMonthGroup } from '../components/console/ConsoleMonthNavigator.vue'
-import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'
+import { getCaptureAssets, getCaptureGroupId, normalizeCaptureAssets } from '../data/capture'
 import type { CaptureAsset, CaptureSourceRef } from '../types/content'
 import { CARD_GROUP_LIMIT, hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { formatTimelineDate, parseTimelineDate } from '../utils/date'
@@ -586,7 +586,7 @@ function groupCaptureAssets(assets: CaptureAsset[]): CaptureGroup[] {
   for (const asset of assets) {
     const key = asset.date || 'undated'
     const group = groups.get(key) || {
-      id: `capture-${slugFromDate(key)}`,
+      id: getCaptureGroupId(key),
       date: asset.date,
       heading: formatDate(asset.date) || 'Undated',
       timestamp: getStartSortTimestamp(asset.date),
@@ -686,8 +686,14 @@ function backToCapture() {
   router.push('/capture')
 }
 
+function activeCaptureScrollContainer(): HTMLElement | null {
+  if (!isConsole.value || typeof document === 'undefined') return null
+  return document.querySelector('.desktop-layout--console .desktop-layout__result')
+}
+
 function saveCaptureScrollPosition() {
-  window.sessionStorage.setItem(captureScrollStorageKey, String(window.scrollY))
+  const top = activeCaptureScrollContainer()?.scrollTop ?? window.scrollY
+  window.sessionStorage.setItem(captureScrollStorageKey, String(top))
 }
 
 function restoreCaptureScrollPosition() {
@@ -700,7 +706,9 @@ function restoreCaptureScrollPosition() {
   if (!Number.isFinite(top)) return
 
   window.requestAnimationFrame(() => {
-    window.scrollTo({ top, behavior: 'auto' })
+    const container = activeCaptureScrollContainer()
+    if (container) container.scrollTo({ top, behavior: 'auto' })
+    else window.scrollTo({ top, behavior: 'auto' })
   })
 }
 
@@ -774,7 +782,7 @@ function selectUploadGroup(group: CaptureGroup) {
 function selectEmptyUploadGroup() {
   const today = new Date().toISOString().slice(0, 10)
   selectUploadGroup({
-    id: `capture-${slugFromDate(today)}`,
+    id: getCaptureGroupId(today),
     date: today,
     heading: formatDate(today),
     timestamp: getStartSortTimestamp(today),
@@ -895,13 +903,6 @@ function formatYearLabel(date: Date) {
 
 function formatMonthLabel(date: Date) {
   return formatTimelineMonthLabel(date, locale.value)
-}
-
-function slugFromDate(date: string) {
-  return date
-    .toLowerCase()
-    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'undated'
 }
 
 onMounted(() => {
