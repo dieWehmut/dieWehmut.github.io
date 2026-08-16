@@ -27,6 +27,38 @@
   background: transparent !important;
 }
 
+.desktop-layout--console :is(
+  .home-view,
+  .archive-view,
+  .notes-view,
+  .post-view,
+  .note-view,
+  .capture-view,
+  .infra-view,
+  .project-view,
+  .search-view,
+  .tag-detail-view,
+  .about-layout
+) {
+  display: block !important;
+}
+
+.desktop-layout--console :is(
+  .home-view__main,
+  .archive-view__main,
+  .notes-view__main,
+  .post-view__main,
+  .note-view__main,
+  .capture-view__main,
+  .project-view__main,
+  .search-view__main,
+  .tag-detail__main,
+  .about-content
+) {
+  width: 100% !important;
+  max-width: none !important;
+}
+
 .desktop-layout--console .page-surface::before,
 .desktop-layout--console .page-surface::after,
 .desktop-layout--console .infra-orbit,
