@@ -68,7 +68,10 @@ const { theme } = useThemePreference()
 const { colorScheme, colorSchemeOptions } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 
-const commands = listConsoleCommands()
+const commands = listConsoleCommands({
+  infra: siteConfig.enableInfra,
+  project: siteConfig.enableProject,
+})
 const notes = getNotes()
 const posts = getPosts()
 const themeOptions = [

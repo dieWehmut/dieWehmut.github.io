@@ -45,6 +45,22 @@ check('language accepts a supported value', registry.resolveConsoleCommand(comma
 check('command reference includes About', registry.listConsoleCommands().some((item) => item.input === '/about'))
 check('command reference includes Friends', registry.listConsoleCommands().some((item) => item.input === '/friends'))
 check('command reference includes List', registry.listConsoleCommands().some((item) => item.input === '/list'))
+const disabledFeatureCommands = registry.listConsoleCommands({ infra: false, project: false })
+check('disabled infra is omitted from the command reference', !disabledFeatureCommands.some((item) => item.input === '/infra'))
+check('disabled project is omitted from the command reference', !disabledFeatureCommands.some((item) => item.input === '/project'))
+check(
+  'disabled infra command stays silent',
+  registry.resolveConsoleCommand(command(['infra']), { infra: false, project: true }).kind === 'silent',
+)
+check(
+  'disabled project command stays silent',
+  registry.resolveConsoleCommand(command(['project']), { infra: true, project: false }).kind === 'silent',
+)
+check(
+  'enabled feature commands still resolve normally',
+  registry.resolveConsoleCommand(command(['infra']), { infra: true, project: true }).path === '/infra'
+    && registry.resolveConsoleCommand(command(['project']), { infra: true, project: true }).path === '/project',
+)
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)

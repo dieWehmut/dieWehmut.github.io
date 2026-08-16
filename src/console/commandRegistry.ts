@@ -30,6 +30,11 @@ export interface ConsoleCommandShape {
   canonicalInput?: string
 }
 
+export interface ConsoleCommandAvailability {
+  infra?: boolean
+  project?: boolean
+}
+
 export type ConsoleResolution =
   | { kind: 'route'; path: string; routeName: string }
   | { kind: 'panel'; panel: ConsolePanel; value?: string }
@@ -79,7 +84,16 @@ function routeWithSuffix(path: string, command: ConsoleCommandShape): string {
   return `${path}${suffix(command)}`
 }
 
-export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleResolution {
+function isRouteAvailable(key: string, availability: ConsoleCommandAvailability): boolean {
+  if (key === 'infra') return availability.infra !== false
+  if (key === 'project') return availability.project !== false
+  return true
+}
+
+export function resolveConsoleCommand(
+  command: ConsoleCommandShape,
+  availability: ConsoleCommandAvailability = {},
+): ConsoleResolution {
   if (command.kind !== 'command') return { kind: 'silent' }
 
   const [head = '', second, ...rest] = command.segments
@@ -132,15 +146,15 @@ export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleReso
   }
 
   const route = ROUTES[key]
-  if (route && second === undefined) {
+  if (route && second === undefined && isRouteAvailable(key, availability)) {
     return { kind: 'route', path: routeWithSuffix(route.path, command), routeName: route.routeName }
   }
 
   return { kind: 'silent' }
 }
 
-export function listConsoleCommands() {
-  return [
+export function listConsoleCommands(availability: ConsoleCommandAvailability = {}) {
+  const commands = [
     { input: '/', description: 'Home overview' },
     { input: '/agent', description: 'Show agent workspace' },
     { input: '/list', description: 'List available commands' },
@@ -170,4 +184,9 @@ export function listConsoleCommands() {
     { input: '/mode/console', description: 'Use Nexus Console' },
     { input: '/help', description: 'Show command reference' },
   ] as const
+
+  return commands.filter((command) => {
+    const key = command.input.slice(1)
+    return isRouteAvailable(key, availability)
+  })
 }

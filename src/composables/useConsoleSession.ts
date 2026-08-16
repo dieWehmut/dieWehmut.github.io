@@ -16,6 +16,7 @@ import { useThemePreference } from './useThemePreference'
 import { useBackgroundPreference } from './useBackgroundPreference'
 import type { SiteColorScheme } from '../types/content'
 import { getNotes, getPosts, getTagGroups } from '../data'
+import { siteConfig } from '../data/site/config'
 
 const commandInput = ref('')
 const history = ref<string[]>([])
@@ -37,12 +38,16 @@ export function useConsoleSession() {
   const theme = useThemePreference()
   const color = useColorSchemePreference()
   const background = useBackgroundPreference()
+  const commandAvailability = {
+    infra: siteConfig.enableInfra,
+    project: siteConfig.enableProject,
+  }
 
   const suggestions = computed(() => {
     const prefix = normalizePrefix(commandInput.value)
     if (!prefix.startsWith('/')) return []
 
-    const options = listConsoleCommands()
+    const options = listConsoleCommands(commandAvailability)
     if (prefix === '/') return options.slice(0, 12)
 
     const dynamicOptions = prefix.startsWith('/note/')
@@ -109,7 +114,7 @@ export function useConsoleSession() {
     const parsed = parseConsoleInput(rawValue)
     if (parsed.kind === 'silent') return false
 
-    const resolution = resolveConsoleCommand(parsed)
+    const resolution = resolveConsoleCommand(parsed, commandAvailability)
     if (resolution.kind === 'silent') return false
 
     if (resolution.kind === 'route') {
