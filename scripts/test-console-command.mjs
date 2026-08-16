@@ -43,6 +43,8 @@ check('route path encodes dynamic values once', parser.toConsoleRoutePath(spaced
 
 const settings = parser.parseConsoleInput('///MODE//CLASSIC/')
 check('extra slashes normalize for fixed commands', settings?.canonicalInput === '/mode/classic')
+const colorCommand = parser.parseConsoleInput('/COLOR/PURPLE')
+check('settings command words normalize case', colorCommand?.canonicalInput === '/color/purple')
 
 const withHash = parser.parseConsoleInput('/note/CurrentAffairsReading?view=full#section-one')
 check('query is retained', withHash?.query === 'view=full')

@@ -3,14 +3,18 @@ import type { ConsoleCommand, ParsedConsoleInput, SilentConsoleInput } from './t
 const FIXED_SEGMENTS = new Set([
   'about',
   'archive',
+  'agent',
+  'background',
   'capture',
   'classic',
+  'color',
   'config',
   'doctor',
   'friends',
   'help',
   'home',
   'infra',
+  'language',
   'list',
   'mode',
   'model',
@@ -28,6 +32,13 @@ const FIXED_SEGMENTS = new Set([
 ])
 
 const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])
+const FIXED_CHILD_VALUES: Record<string, Set<string>> = {
+  mode: MODE_VALUES,
+  theme: new Set(['light', 'dark']),
+  color: new Set(['green', 'purple', 'pink']),
+  background: new Set(['on', 'off']),
+  language: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']),
+}
 
 function silent(rawInput: string): SilentConsoleInput {
   return { kind: 'silent', rawInput }
@@ -71,7 +82,7 @@ export function parseConsoleInput(input: string): ParsedConsoleInput {
       // Fixed command vocabulary is case-insensitive. Dynamic IDs and tags
       // are intentionally untouched, even when they resemble a command.
       if (index === 0 && FIXED_SEGMENTS.has(lower)) return lower
-      if (index === 1 && head === 'mode' && MODE_VALUES.has(lower)) return lower
+      if (index === 1 && FIXED_CHILD_VALUES[head]?.has(lower)) return lower
       return segment
     })
 
