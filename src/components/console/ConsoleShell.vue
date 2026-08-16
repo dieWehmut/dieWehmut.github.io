@@ -176,14 +176,14 @@ onMounted(() => {
   color: var(--console-accent);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
 }
 
 .console-shell h1 {
   margin: 0;
   color: var(--console-text);
   font: inherit;
-  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  font-size: 1.55rem;
   font-weight: 700;
 }
 
@@ -228,7 +228,7 @@ onMounted(() => {
   color: var(--console-accent);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
 }
 
 .console-shell__state-dot {
@@ -250,7 +250,7 @@ onMounted(() => {
 .console-shell__history-label {
   color: var(--console-dim);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0;
 }
 
 .console-shell__history button {

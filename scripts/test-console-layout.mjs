@@ -12,6 +12,7 @@ const mobileLayout = read('src/layouts/MobileDrawerLayout.vue')
 const siteShell = read('src/layouts/SiteShell.vue')
 const floatButton = read('src/components/system/FloatButton.vue')
 const captureView = read('src/views/CaptureView.vue')
+const consoleShell = read('src/components/console/ConsoleShell.vue')
 
 const checks = []
 function check(label, condition) {
@@ -31,6 +32,11 @@ check('console overrides dynamic mesh with matching specificity', desktopLayout.
 check('console route changes reset the result viewport', desktopLayout.includes('resetConsoleScroll'))
 check('back to top targets the active scroll viewport', floatButton.includes('activeScrollContainer'))
 check('nested panels expose keyboard selection', read('src/components/console/ConsolePanelView.vue').includes('activateSelection'))
+check('console typography does not scale with viewport width', !/font-size:\s*clamp\(/.test(consoleShell))
+check(
+  'console typography uses neutral letter spacing',
+  [...consoleShell.matchAll(/letter-spacing:\s*([^;]+);/g)].every((match) => match[1].trim() === '0'),
+)
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
