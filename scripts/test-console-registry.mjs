@@ -35,9 +35,9 @@ check('tag matching is case-insensitive at command level', registry.resolveConso
 check('theme opens a panel', registry.resolveConsoleCommand(command(['theme'])).kind === 'panel' && registry.resolveConsoleCommand(command(['theme'])).panel === 'theme')
 check('classic mode switches to standard', registry.resolveConsoleCommand(command(['mode', 'classic'])).kind === 'mode' && registry.resolveConsoleCommand(command(['mode', 'classic'])).mode === 'standard')
 check('console mode switches to console', registry.resolveConsoleCommand(command(['mode', 'console'])).mode === 'console')
+check('bare mode opens a nested selector', registry.resolveConsoleCommand(command(['mode'])).kind === 'panel' && registry.resolveConsoleCommand(command(['mode'])).panel === 'mode')
 check('unknown command stays silent', registry.resolveConsoleCommand(command(['does-not-exist'])).kind === 'silent')
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
 if (failures.length) process.exitCode = 1
-

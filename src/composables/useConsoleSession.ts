@@ -14,6 +14,7 @@ import { useDisplayModePreference } from './useDisplayModePreference'
 import { useThemePreference } from './useThemePreference'
 import { useBackgroundPreference } from './useBackgroundPreference'
 import type { SiteColorScheme } from '../types/content'
+import { getNotes, getPosts, getTagGroups } from '../data'
 
 const commandInput = ref('')
 const history = ref<string[]>([])
@@ -41,8 +42,19 @@ export function useConsoleSession() {
     if (!prefix.startsWith('/')) return []
 
     const options = listConsoleCommands()
-    if (prefix === '/') return options.slice(0, 8)
-    return options.filter((option) => option.input.startsWith(prefix)).slice(0, 8)
+    if (prefix === '/') return options.slice(0, 12)
+
+    const dynamicOptions = prefix.startsWith('/note/')
+      ? getNotes().map((note) => ({ input: `/note/${note.id}`, description: note.title || note.id }))
+      : prefix.startsWith('/post/')
+        ? getPosts().map((post) => ({ input: `/post/${post.id}`, description: post.title || post.id }))
+        : prefix.startsWith('/tags/')
+          ? getTagGroups().map((group) => ({ input: `/tags/${group.tag}`, description: `${group.count} entries` }))
+          : []
+
+    return [...dynamicOptions, ...options]
+      .filter((option) => option.input.toLowerCase().startsWith(prefix))
+      .slice(0, 12)
   })
 
   function resetNavigation() {

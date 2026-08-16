@@ -18,7 +18,9 @@ export type ConsolePanel =
   | 'color'
   | 'background'
   | 'language'
+  | 'mode'
   | 'note-picker'
+  | 'post-picker'
 
 export interface ConsoleCommandShape {
   kind: 'command'
@@ -85,7 +87,8 @@ export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleReso
   if (key === 'home') return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'home' }
 
   if (key === 'mode') {
-    if (!secondKey || rest.length) return { kind: 'panel', panel: 'help', value: '/mode/classic or /mode/console' }
+    if (!secondKey && !rest.length) return { kind: 'panel', panel: 'mode' }
+    if (rest.length) return { kind: 'silent' }
     if (secondKey === 'classic' || secondKey === 'standard') return { kind: 'mode', mode: 'standard' }
     if (secondKey === 'console' || secondKey === 'terminal') return { kind: 'mode', mode: 'console' }
     return { kind: 'silent' }
@@ -105,6 +108,7 @@ export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleReso
   }
 
   if (key === 'note' && second === undefined) return { kind: 'panel', panel: 'note-picker' }
+  if (key === 'post' && second === undefined) return { kind: 'panel', panel: 'post-picker' }
   if (key === 'capture' && (second === undefined || !second)) {
     return { kind: 'route', path: routeWithSuffix('/capture', command), routeName: 'capture' }
   }
@@ -127,17 +131,29 @@ export function resolveConsoleCommand(command: ConsoleCommandShape): ConsoleReso
 export function listConsoleCommands() {
   return [
     { input: '/', description: 'Home overview' },
+    { input: '/agent', description: 'Show agent workspace' },
+    { input: '/status', description: 'Show workspace status' },
+    { input: '/config', description: 'Show resolved configuration' },
+    { input: '/permissions', description: 'Show effective permissions' },
+    { input: '/doctor', description: 'Run availability checks' },
+    { input: '/workspace', description: 'Show workspace details' },
+    { input: '/model', description: 'Show configured model' },
     { input: '/archive', description: 'Browse posts by date' },
+    { input: '/post', description: 'Select a post' },
     { input: '/notes', description: 'Browse notes by date' },
+    { input: '/note', description: 'Select a note' },
     { input: '/capture', description: 'Browse captured assets' },
     { input: '/infra', description: 'Inspect service status' },
     { input: '/project', description: 'Browse projects' },
     { input: '/tags', description: 'Browse tags' },
     { input: '/search', description: 'Search the workspace' },
     { input: '/theme', description: 'Choose light or dark theme' },
+    { input: '/color', description: 'Choose green, purple, or pink' },
+    { input: '/background', description: 'Configure the dynamic background' },
+    { input: '/language', description: 'Choose interface language' },
+    { input: '/mode', description: 'Choose Console or standard layout' },
     { input: '/mode/classic', description: 'Return to the standard layout' },
     { input: '/mode/console', description: 'Use Nexus Console' },
     { input: '/help', description: 'Show command reference' },
   ] as const
 }
-

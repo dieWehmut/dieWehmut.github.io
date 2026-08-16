@@ -22,6 +22,17 @@
       </button>
     </div>
 
+    <div v-else-if="panel === 'mode'" class="console-panel__rows" role="listbox" aria-label="Display mode options">
+      <button class="console-panel__row" type="button" @click="$emit('execute', '/mode/console')">
+        <code class="is-current">console</code>
+        <span>Nexus Console desktop workspace</span>
+      </button>
+      <button class="console-panel__row" type="button" @click="$emit('execute', '/mode/classic')">
+        <code>classic</code>
+        <span>Standard sidebar layout</span>
+      </button>
+    </div>
+
     <div v-else-if="panel === 'theme'" class="console-panel__rows" role="listbox" aria-label="Theme options">
       <button v-for="option in themeOptions" :key="option.value" class="console-panel__row" type="button" @click="$emit('execute', `/theme/${option.value}`)">
         <code :class="{ 'is-current': theme === option.value }">{{ option.value }}</code>
@@ -58,6 +69,14 @@
       <p v-if="!notes.length" class="console-panel__empty">No notes available.</p>
     </div>
 
+    <div v-else-if="panel === 'post-picker'" class="console-panel__rows" role="listbox" aria-label="Posts">
+      <button v-for="post in posts" :key="post.id" class="console-panel__row" type="button" @click="$emit('execute', `/post/${post.id}`)">
+        <code>/post/{{ post.id }}</code>
+        <span>{{ post.title || post.id }}</span>
+      </button>
+      <p v-if="!posts.length" class="console-panel__empty">No posts available.</p>
+    </div>
+
     <div v-else class="console-panel__details">
       <p v-for="line in detailLines" :key="line.label">
         <span>{{ line.label }}</span>
@@ -69,7 +88,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { getNotes } from '../../data'
+import { getNotes, getPosts } from '../../data'
 import { siteConfig } from '../../data/site/config'
 import { listConsoleCommands, type ConsolePanel } from '../../console/commandRegistry'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
@@ -93,7 +112,8 @@ const { colorScheme, colorSchemeOptions } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 
 const commands = listConsoleCommands()
-const notes = getNotes().slice(0, 18)
+const notes = getNotes()
+const posts = getPosts()
 const themeOptions = [
   { value: 'dark', label: 'Low-light terminal palette' },
   { value: 'light', label: 'High-contrast light palette' },
@@ -126,7 +146,9 @@ const heading = computed(() => {
     color: 'Select color scheme',
     background: 'Dynamic background',
     language: 'Select language',
+    mode: 'Select display mode',
     'note-picker': 'Select a note',
+    'post-picker': 'Select a post',
   }
   return labels[props.panel || ''] || 'Console'
 })
@@ -244,6 +266,8 @@ const detailLines = computed(() => {
   display: grid;
   gap: 2px;
   margin-top: 8px;
+  max-height: 360px;
+  overflow-y: auto;
 }
 
 .console-panel__row {
