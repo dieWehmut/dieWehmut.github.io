@@ -85,6 +85,7 @@ let handledHash = ''
 let handledRequestHash = ''
 let ignoredRouteHash = ''
 let spyEl = null
+let scrollContainer = null
 
 function registerButton(id, el) {
   if (el) buttonEls.set(id, el)
@@ -93,6 +94,10 @@ function registerButton(id, el) {
 
 function findRoot() {
   return document.querySelector(props.rootSelector) || document.body
+}
+
+function activeScrollContainer() {
+  return effectiveMode.value === 'console' ? scrollContainer : null
 }
 
 function shouldEnable() {
@@ -117,6 +122,11 @@ function updateEnabledState() {
 }
 
 function measureTop(el) {
+  const container = activeScrollContainer()
+  if (container) {
+    const containerRect = container.getBoundingClientRect()
+    return el.getBoundingClientRect().top - containerRect.top + container.scrollTop
+  }
   return el.getBoundingClientRect().top + window.scrollY
 }
 
@@ -163,12 +173,16 @@ function collectHeadings() {
 
 function updateProgress() {
   if (!isEnabled) return
-  const max = document.documentElement.scrollHeight - window.innerHeight
+  const container = activeScrollContainer()
+  const max = container
+    ? container.scrollHeight - container.clientHeight
+    : document.documentElement.scrollHeight - window.innerHeight
   if (max <= 0) {
     if (progress.value !== 0) progress.value = 0
     return
   }
-  const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+  const current = container ? container.scrollTop : window.scrollY
+  const ratio = Math.min(1, Math.max(0, current / max))
   const nextProgress = Math.round(ratio * 100)
   if (nextProgress !== progress.value) progress.value = nextProgress
 }
@@ -176,7 +190,7 @@ function updateProgress() {
 function updateActive() {
   if (!isEnabled) return
   if (!headings.length) return
-  const threshold = window.scrollY + props.offset
+  const threshold = (activeScrollContainer()?.scrollTop ?? window.scrollY) + props.offset
   let current = headings[0]
 
   for (const item of headings) {
@@ -243,7 +257,12 @@ async function scrollToHash(hash, shouldEmit = false) {
     })
   }
 
-  scrollHeadingIntoView(target, props.offset)
+  const container = activeScrollContainer()
+  if (container) {
+    container.scrollTo({ top: Math.max(0, measureTop(target) - props.offset), behavior: 'smooth' })
+  } else {
+    scrollHeadingIntoView(target, props.offset)
+  }
   if (shouldEmit) emit('navigate', target.id)
 }
 
@@ -357,6 +376,13 @@ watch(activeId, () => {
 const { isConsole } = useDisplayModePreference()
 const effectiveMode = computed(() => isConsole.value ? 'console' : props.mode)
 
+watch(effectiveMode, () => {
+  void nextTick(() => {
+    scheduleCollectHeadings()
+    updateNow()
+  })
+})
+
 watch(scrollRequests, (request) => {
   if (request?.id) scrollToHeading(request.id)
 })
@@ -387,6 +413,7 @@ function onContentMutation() {
 
 onMounted(async () => {
   await nextTick()
+  scrollContainer = document.querySelector('.desktop-layout__main')
   mediaQuery = window.matchMedia('(max-width: 900px)')
   updateEnabledState()
   if (!isEnabled) return
@@ -410,6 +437,7 @@ onMounted(async () => {
   }
 
   window.addEventListener('scroll', onScroll, { passive: true })
+  scrollContainer?.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', onResize)
 
   const root = findRoot()
@@ -446,7 +474,9 @@ onBeforeUnmount(() => {
     mediaQuery?.removeListener?.(updateEnabledState)
   }
   window.removeEventListener('scroll', onScroll)
+  scrollContainer?.removeEventListener('scroll', onScroll)
   window.removeEventListener('resize', onResize)
+  scrollContainer = null
 })
 </script>
 
