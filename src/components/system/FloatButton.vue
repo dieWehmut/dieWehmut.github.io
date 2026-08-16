@@ -9,6 +9,8 @@
         type="button"
         :title="lang.name"
         :aria-label="lang.name"
+        :aria-hidden="!languageOpen"
+        :tabindex="languageOpen ? 0 : -1"
         @click="selectLanguage(lang.code)"
       >
         {{ lang.label }}
@@ -24,6 +26,8 @@
         type="button"
         :title="scheme.label"
         :aria-label="scheme.label"
+        :aria-hidden="!colorSchemeOpen"
+        :tabindex="colorSchemeOpen ? 0 : -1"
         :style="{ '--scheme-color': scheme.preview }"
         @click="selectColorScheme(scheme.id)"
       >
@@ -39,6 +43,8 @@
       :title="isConsole ? 'Switch to standard layout' : 'Switch to Nexus Console'"
       :aria-label="isConsole ? 'Switch to standard layout' : 'Switch to Nexus Console'"
       :aria-pressed="isConsole"
+      :aria-hidden="!settingsOpen"
+      :tabindex="settingsOpen ? 0 : -1"
       @click="toggleDisplayMode"
     >
       <el-icon><Monitor /></el-icon>
@@ -50,6 +56,8 @@
       type="button"
       title="Toggle dynamic background"
       aria-label="Toggle dynamic background"
+      :aria-hidden="!settingsOpen"
+      :tabindex="settingsOpen ? 0 : -1"
       @click="toggleDynamicBackground"
     >
       <el-icon><MagicStick /></el-icon>
@@ -61,6 +69,8 @@
       type="button"
       title="Language"
       aria-label="Language"
+      :aria-hidden="!settingsOpen"
+      :tabindex="settingsOpen ? 0 : -1"
       @click="toggleLanguagePanel"
     >
       <span class="float-controls__globe">Aa</span>
@@ -72,6 +82,8 @@
       type="button"
       title="Color scheme"
       aria-label="Color scheme"
+      :aria-hidden="!settingsOpen"
+      :tabindex="settingsOpen ? 0 : -1"
       @click="toggleColorSchemePanel"
     >
       <el-icon><Brush /></el-icon>
@@ -83,6 +95,8 @@
       type="button"
       title="Toggle theme"
       aria-label="Toggle theme"
+      :aria-hidden="!settingsOpen"
+      :tabindex="settingsOpen ? 0 : -1"
       @click="toggleTheme"
     >
       <el-icon><Sunny v-if="theme === 'dark'" /><Moon v-else /></el-icon>
