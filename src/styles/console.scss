@@ -1,0 +1,139 @@
+/* Deterministic, low-decoration presentation for the desktop Console shell. */
+.desktop-layout--console,
+.desktop-layout--console * {
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);
+}
+
+.desktop-layout--console .page-surface,
+.desktop-layout--console .page-surface::before,
+.desktop-layout--console .page-surface::after,
+.desktop-layout--console [class*="__card"],
+.desktop-layout--console [class*="__panel"],
+.desktop-layout--console [class*="__group"],
+.desktop-layout--console [class*="__figure"],
+.desktop-layout--console .project-group,
+.desktop-layout--console .tag-card,
+.desktop-layout--console .capture-group,
+.desktop-layout--console .capture-card,
+.desktop-layout--console .friends-card {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+}
+
+.desktop-layout--console .page-surface {
+  color: var(--console-text);
+  background: transparent !important;
+}
+
+.desktop-layout--console .page-surface::before,
+.desktop-layout--console .page-surface::after,
+.desktop-layout--console .infra-orbit,
+.desktop-layout--console .infra-core__orbit,
+.desktop-layout--console .infra-core__sphere,
+.desktop-layout--console .home-view__decoration {
+  display: none !important;
+}
+
+.desktop-layout--console [class*="__main"],
+.desktop-layout--console [class*="__body"],
+.desktop-layout--console [class*="__content"] {
+  min-width: 0;
+}
+
+.desktop-layout--console .home-view__grid,
+.desktop-layout--console .friends-grid,
+.desktop-layout--console .tag-grid,
+.desktop-layout--console .capture-grid,
+.desktop-layout--console .capture-detail__grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.desktop-layout--console .home-view__panel,
+.desktop-layout--console .friends-card,
+.desktop-layout--console .tag-card,
+.desktop-layout--console .project-group,
+.desktop-layout--console .capture-group,
+.desktop-layout--console .capture-card,
+.desktop-layout--console .post-card,
+.desktop-layout--console .note-card,
+.desktop-layout--console .search-result,
+.desktop-layout--console .infra-service,
+.desktop-layout--console .infra-mobile-item {
+  border: 1px solid var(--console-border) !important;
+  color: var(--console-text) !important;
+  background: var(--console-surface) !important;
+}
+
+.desktop-layout--console .home-view__panel:hover,
+.desktop-layout--console .friends-card:hover,
+.desktop-layout--console .tag-card:hover,
+.desktop-layout--console .capture-card:hover,
+.desktop-layout--console .search-result:hover {
+  border-color: var(--console-border-strong) !important;
+  transform: none !important;
+}
+
+.desktop-layout--console .scroll-spy {
+  position: static !important;
+  width: 100% !important;
+  margin: 0 0 14px !important;
+  padding: 0 0 8px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--console-border) !important;
+  background: transparent !important;
+}
+
+.desktop-layout--console .scroll-spy__status {
+  display: none !important;
+}
+
+.desktop-layout--console .scroll-spy__nav {
+  display: flex !important;
+  gap: 4px !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin;
+}
+
+.desktop-layout--console .scroll-spy__nav button {
+  flex: 0 0 auto !important;
+  min-height: 28px !important;
+  padding: 3px 8px !important;
+  border: 1px solid transparent !important;
+  color: var(--console-muted) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.desktop-layout--console .scroll-spy__nav button:hover,
+.desktop-layout--console .scroll-spy__nav button:focus-visible,
+.desktop-layout--console .scroll-spy__nav button.is-active {
+  border-color: var(--console-border-strong) !important;
+  color: var(--console-accent) !important;
+  background: var(--console-selection) !important;
+  outline: none !important;
+}
+
+.desktop-layout--console :is(a, button) {
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease !important;
+}
+
+.desktop-layout--console :is(.page-fade-enter-active, .page-fade-leave-active) {
+  transition-duration: 1ms !important;
+}
+
+.desktop-layout--console :is([class*="glow"], [class*="shine"], [class*="pulse"]) {
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+@media (max-width: 900px) {
+  .desktop-layout--console {
+    display: none !important;
+  }
+}
+
