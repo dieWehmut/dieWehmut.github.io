@@ -13,6 +13,7 @@ import i18n from "./i18n";
 import router, { installHoverPrefetch } from "./router";
 import { initColorSchemePreference } from "./composables/useColorSchemePreference";
 import { initThemePreference } from "./composables/useThemePreference";
+import { initDisplayModePreference } from "./composables/useDisplayModePreference";
 import { siteConfig } from "./data/site/config";
 import { getGitHubAvatarUrl } from "./utils/githubAvatar";
 
@@ -20,6 +21,7 @@ import { getGitHubAvatarUrl } from "./utils/githubAvatar";
 // 顺序很重要：主题初始化会套用当前配色，若颠倒则配色会被默认值覆盖，随机失效。
 initColorSchemePreference();
 initThemePreference();
+initDisplayModePreference();
 
 document.title = siteConfig.title;
 const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
