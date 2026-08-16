@@ -27,20 +27,7 @@
         {{ crumb.label }}
       </span>
     </template>
-    <button
-      v-if="isArticleDetail"
-      class="route-breadcrumb__export"
-      type="button"
-      :disabled="exporting"
-      :title="exporting ? 'Generating PDF…' : 'Export article as PDF'"
-      @click="exportArticlePdf"
-    >
-      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true">
-        <path d="M12 3v10m0 0 3.5-3.5M12 13 8.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-      </svg>
-      <span>{{ exporting ? 'PDF…' : 'PDF' }}</span>
-    </button>
+    <ArticleExportButton v-if="isArticleDetail" />
   </nav>
 </template>
 
@@ -50,6 +37,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import { getNotes, getPosts, siteProfile } from '../../data'
 import { getCaptureAssetById } from '../../data/capture'
 import { requestScrollToSection, useReadingPath } from '../../composables/useReadingPath'
+import ArticleExportButton from '../content/ArticleExportButton.vue'
 
 type Crumb = {
   label: string
@@ -59,7 +47,6 @@ type Crumb = {
 
 const route = useRoute()
 const readingPath = useReadingPath()
-const exporting = ref(false)
 const isMobile = ref(false)
 let mobileQuery: MediaQueryList | null = null
 
@@ -89,50 +76,6 @@ const isArticleDetail = computed(() => {
   const name = String(route.name || '')
   return name === 'post-detail' || name === 'note-detail'
 })
-
-function buildPdfSource() {
-  const body = document.querySelector<HTMLElement>(
-    '.post-view__body.markdown-body, .note-view__body.markdown-body, .markdown-body'
-  )
-  if (!body || !body.textContent?.trim()) return null
-
-  const title = document.querySelector<HTMLElement>('.post-view__title, .note-view__title')
-  const meta = document.querySelector<HTMLElement>('.article-meta')
-  const bodyClone = body.cloneNode(true) as HTMLElement
-  const titleClone = title?.cloneNode(true) as HTMLElement | null
-  const metaClone = meta?.cloneNode(true) as HTMLElement | null
-
-  bodyClone
-    .querySelectorAll('.md-editable-toolbar, .md-editable-source, .md-code-preview__fold')
-    .forEach((element) => element.remove())
-
-  const article = document.createElement('article')
-  article.className = 'pdf-doc'
-  if (titleClone) article.append(titleClone)
-  if (metaClone) article.append(metaClone)
-  article.append(bodyClone)
-
-  return {
-    title: titleClone?.textContent?.trim() || route.path,
-    element: article,
-  }
-}
-
-async function exportArticlePdf() {
-  if (exporting.value) return
-  const source = buildPdfSource()
-  if (!source) return
-
-  exporting.value = true
-  try {
-    const { generateArticlePdf } = await import('../../utils/exportPdf')
-    await generateArticlePdf(source, siteProfile.title || 'Nexus')
-  } catch (error) {
-    console.error('PDF export failed:', error)
-  } finally {
-    exporting.value = false
-  }
-}
 
 defineProps({
   variant: { type: String, default: 'bar' },
@@ -277,43 +220,6 @@ const crumbs = computed<Crumb[]>(() => {
   flex: 0 0 auto;
   color: var(--site-accent);
   font-weight: 900;
-}
-
-.route-breadcrumb__export {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 10px;
-  padding: 4px 10px;
-  border: 1px solid color-mix(in srgb, var(--site-accent) 38%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--site-accent) 8%, transparent);
-  color: var(--site-accent);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1;
-  cursor: pointer;
-  pointer-events: auto;
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
-}
-
-.route-breadcrumb__export:hover:not(:disabled),
-.route-breadcrumb__export:focus-visible {
-  background: color-mix(in srgb, var(--site-accent) 16%, transparent);
-  border-color: var(--site-accent);
-  color: var(--site-text);
-  outline: none;
-  transform: translateY(-1px);
-}
-
-.route-breadcrumb__export:disabled {
-  opacity: 0.55;
-  cursor: wait;
 }
 
 @media (min-width: 901px) and (max-width: 1080px) {

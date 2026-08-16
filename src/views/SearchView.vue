@@ -8,26 +8,11 @@
       <SearchInput v-model="query" />
 
       <div class="console-search__results">
-        <template v-for="result in results" :key="result.id">
-          <a
-            v-if="isExternalResult(result.url)"
-            class="console-search__row"
-            :href="result.url"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <code>{{ result.type }}</code>
-            <strong>{{ result.title }}</strong>
-            <time v-if="result.date" :datetime="result.date">{{ result.date }}</time>
-            <span>{{ result.url }}</span>
-          </a>
-          <RouterLink v-else class="console-search__row" :to="result.url">
-            <code>{{ result.type }}</code>
-            <strong>{{ result.title }}</strong>
-            <time v-if="result.date" :datetime="result.date">{{ result.date }}</time>
-            <span>{{ result.url }}</span>
-          </RouterLink>
-        </template>
+        <SearchResultItem
+          v-for="result in results"
+          :key="result.id"
+          :result="result"
+        />
         <p v-if="query && filteredResults.length === 0" class="console-search__empty">No results found.</p>
       </div>
     </div>
@@ -51,7 +36,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
 import SearchInput from '../components/search/SearchInput.vue'
 import SearchResultItem from '../components/search/SearchResultItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
@@ -63,10 +47,6 @@ import { useDisplayModePreference } from '../composables/useDisplayModePreferenc
 
 const { isConsole } = useDisplayModePreference()
 const query = ref('')
-
-function isExternalResult(url: string) {
-  return /^(?:https?:|mailto:)/i.test(url)
-}
 
 function sortDocuments(docs: SearchDocument[]): SearchDocument[] {
   return docs.slice().sort((a, b) => {
@@ -177,63 +157,12 @@ const results = computed(() => filteredResults.value)
 
 .console-search__results {
   display: grid;
-  gap: 2px;
+  gap: 6px;
   margin-top: 4px;
-}
-
-.console-search__row {
-  display: grid;
-  grid-template-columns: 92px minmax(180px, 0.9fr) 110px minmax(220px, 1.2fr);
-  align-items: baseline;
-  gap: 14px;
-  min-height: 38px;
-  padding: 6px 8px;
-  border: 1px solid transparent;
-  color: var(--console-muted, var(--site-muted));
-  text-decoration: none;
-}
-
-.console-search__row:hover,
-.console-search__row:focus-visible {
-  border-color: var(--console-border-strong, var(--site-accent));
-  color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
-  outline: none;
-}
-
-.console-search__row code {
-  color: var(--console-accent, var(--site-accent));
-  font: inherit;
-  font-size: 0.76rem;
-}
-
-.console-search__row strong,
-.console-search__row span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.console-search__row strong {
-  color: var(--console-text, var(--site-text));
-  font-weight: 600;
-}
-
-.console-search__row time,
-.console-search__row span {
-  color: var(--console-muted, var(--site-muted));
-  font-size: 0.76rem;
 }
 
 .console-search__empty {
   color: var(--console-muted, var(--site-muted));
-}
-
-@media (max-width: 1100px) {
-  .console-search__row {
-    grid-template-columns: 74px minmax(140px, 0.9fr) 92px minmax(150px, 1fr);
-    gap: 9px;
-  }
 }
 
 @media (max-width: 900px) {

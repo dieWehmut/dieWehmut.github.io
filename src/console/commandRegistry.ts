@@ -143,6 +143,7 @@ export function listConsoleCommands() {
   return [
     { input: '/', description: 'Home overview' },
     { input: '/agent', description: 'Show agent workspace' },
+    { input: '/list', description: 'List available commands' },
     { input: '/status', description: 'Show workspace status' },
     { input: '/config', description: 'Show resolved configuration' },
     { input: '/permissions', description: 'Show effective permissions' },
@@ -157,6 +158,8 @@ export function listConsoleCommands() {
     { input: '/infra', description: 'Inspect service status' },
     { input: '/project', description: 'Browse projects' },
     { input: '/tags', description: 'Browse tags' },
+    { input: '/about', description: 'Read site information' },
+    { input: '/friends', description: 'Browse friend links' },
     { input: '/search', description: 'Search the workspace' },
     { input: '/theme', description: 'Choose light or dark theme' },
     { input: '/color', description: 'Choose green, purple, or pink' },

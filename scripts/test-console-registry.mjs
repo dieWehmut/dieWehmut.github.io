@@ -42,6 +42,9 @@ check('informational panels reject values', registry.resolveConsoleCommand(comma
 check('theme rejects unknown values', registry.resolveConsoleCommand(command(['theme', 'nope'])).kind === 'silent')
 check('theme rejects extra segments', registry.resolveConsoleCommand(command(['theme', 'dark', 'extra'])).kind === 'silent')
 check('language accepts a supported value', registry.resolveConsoleCommand(command(['language', 'zh_tw'])).kind === 'panel')
+check('command reference includes About', registry.listConsoleCommands().some((item) => item.input === '/about'))
+check('command reference includes Friends', registry.listConsoleCommands().some((item) => item.input === '/friends'))
+check('command reference includes List', registry.listConsoleCommands().some((item) => item.input === '/list'))
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
