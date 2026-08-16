@@ -281,13 +281,28 @@ onMounted(() => {
     refreshStatuses(serviceItems.value, true)
     kuma.refresh()
   }, STATUS_REFRESH_INTERVAL_MS)
-  sideTicker = window.setInterval(syncLabelSides, 250)
+  syncSideTicker(isConsole.value)
 })
 
 onBeforeUnmount(() => {
   if (refreshTimer) window.clearInterval(refreshTimer)
-  if (sideTicker) window.clearInterval(sideTicker)
+  stopSideTicker()
 })
+
+watch(isConsole, syncSideTicker)
+
+function stopSideTicker() {
+  if (!sideTicker) return
+  window.clearInterval(sideTicker)
+  sideTicker = undefined
+}
+
+function syncSideTicker(consoleMode) {
+  stopSideTicker()
+  if (consoleMode) return
+  syncLabelSides()
+  sideTicker = window.setInterval(syncLabelSides, 250)
+}
 
 const onlineCount = computed(() => {
   return serviceItems.value.filter((item) => normalizedStatus(item.url) === 'online').length

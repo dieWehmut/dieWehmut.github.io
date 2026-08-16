@@ -1,5 +1,9 @@
 <template>
-  <div class="float-controls" :class="{ 'is-top-hidden': atTop }" aria-label="Quick controls">
+  <div
+    class="float-controls"
+    :class="{ 'is-top-hidden': atTop, 'is-console': isConsole }"
+    aria-label="Quick controls"
+  >
     <div class="float-controls__langs" :class="{ 'is-open': languageOpen }">
       <button
         v-for="lang in languages"
@@ -526,6 +530,34 @@ function toggleDisplayMode() {
 @keyframes settings-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.float-controls.is-console .float-controls__button {
+  border-radius: 0;
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+.float-controls.is-console .float-controls__settings {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.float-controls.is-console .float-controls__settings :deep(.el-icon) {
+  animation: none;
+}
+
+.float-controls.is-console .float-controls__button:hover,
+.float-controls.is-console .float-controls__button:focus-visible {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.float-controls.is-console .float-controls__langs,
+.float-controls.is-console .float-controls__schemes,
+.float-controls.is-console .float-controls__lang,
+.float-controls.is-console .float-controls__scheme {
+  transition: none !important;
 }
 
 @media (max-width: 900px) {

@@ -12,20 +12,32 @@
             <span>{{ group.totalCount }}</span>
           </header>
           <div class="console-project__rows">
-            <component
-              :is="projectPrimaryUrl(item) ? 'a' : 'div'"
+            <div
               v-for="item in group.allItems"
               :key="item.id"
               class="console-project__row"
-              :href="projectPrimaryUrl(item) || undefined"
-              :target="projectPrimaryUrl(item) ? '_blank' : undefined"
-              :rel="projectPrimaryUrl(item) ? 'noopener noreferrer' : undefined"
             >
               <code>{{ group.key }}</code>
               <strong>{{ item.name }}</strong>
               <time v-if="item.date" :datetime="item.date">{{ item.date }}</time>
-              <span>{{ item.repoUrl || item.url || 'local entry' }}</span>
-            </component>
+              <div class="console-project__links">
+                <a
+                  v-if="item.url"
+                  class="console-project__link console-project__link--site"
+                  :href="item.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >site</a>
+                <a
+                  v-if="item.repoUrl"
+                  class="console-project__link console-project__link--repo"
+                  :href="item.repoUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >repo</a>
+                <span v-if="!item.url && !item.repoUrl">local entry</span>
+              </div>
+            </div>
           </div>
         </section>
       </section>
@@ -104,10 +116,6 @@ const consoleProjectCount = computed(() =>
   projectGroups.value.reduce((total, group) => total + group.totalCount, 0),
 )
 
-function projectPrimaryUrl(item: ProjectEntry) {
-  return item.url || item.repoUrl || ''
-}
-
 function projectOverflowCount(
   group: { items: ProjectEntry[]; hiddenCount: number },
   item: ProjectEntry
@@ -165,8 +173,8 @@ function projectOverflowCount(
   text-decoration: none;
 }
 
-a.console-project__row:hover,
-a.console-project__row:focus-visible {
+.console-project__row:hover,
+.console-project__row:focus-within {
   border-color: var(--console-border-strong, var(--site-accent));
   color: var(--console-text, var(--site-text));
   background: var(--console-selection, transparent);
@@ -180,7 +188,7 @@ a.console-project__row:focus-visible {
 }
 
 .console-project__row strong,
-.console-project__row span {
+.console-project__links {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -192,9 +200,29 @@ a.console-project__row:focus-visible {
 }
 
 .console-project__row time,
-.console-project__row span {
+.console-project__links {
   color: var(--console-muted, var(--site-muted));
   font-size: 0.76rem;
+}
+
+.console-project__links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.console-project__link {
+  padding: 1px 5px;
+  border: 1px solid var(--console-border, var(--site-border));
+  color: var(--console-muted, var(--site-muted));
+  text-decoration: none;
+}
+
+.console-project__link:hover,
+.console-project__link:focus-visible {
+  border-color: var(--console-border-strong, var(--site-accent));
+  color: var(--console-accent, var(--site-accent));
+  outline: none;
 }
 
 @media (max-width: 1100px) {

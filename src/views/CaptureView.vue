@@ -60,6 +60,13 @@
             </div>
             <div class="console-capture-detail__meta">
               <time v-if="selectedGroup.date" :datetime="selectedGroup.date">{{ formatDateOnly(selectedGroup.date) }}</time>
+              <div v-if="selectedGroup.tags.length" class="console-capture-detail__tags">
+                <RouterLink
+                  v-for="tag in selectedGroup.tags"
+                  :key="tag"
+                  :to="`/tags/${encodeURIComponent(tag)}`"
+                >#{{ tag }}</RouterLink>
+              </div>
               <div v-if="selectedGroup.sources.length" class="console-capture-detail__sources">
                 <RouterLink
                   v-for="source in selectedGroup.sources"
@@ -118,6 +125,13 @@
                   <code>/capture/{{ encodeURIComponent(asCaptureGroup(item).id) }}</code>
                 </RouterLink>
                 <time v-if="asCaptureGroup(item).date" :datetime="asCaptureGroup(item).date">{{ formatDateOnly(asCaptureGroup(item).date) }}</time>
+                <div v-if="asCaptureGroup(item).tags.length" class="console-capture-group__tags">
+                  <RouterLink
+                    v-for="tag in asCaptureGroup(item).tags"
+                    :key="tag"
+                    :to="`/tags/${encodeURIComponent(tag)}`"
+                  >#{{ tag }}</RouterLink>
+                </div>
                 <div v-if="asCaptureGroup(item).sources.length" class="console-capture-group__sources">
                   <RouterLink
                     v-for="source in asCaptureGroup(item).sources"
@@ -1022,7 +1036,8 @@ watch(isDetailRoute, (detail) => {
 .console-capture-group__body time,
 .console-capture-detail__meta time,
 .console-capture-group__body a,
-.console-capture-detail__sources a {
+.console-capture-detail__sources a,
+.console-capture-detail__tags a {
   color: var(--console-muted, var(--site-muted));
   font-size: 0.78rem;
 }
@@ -1030,13 +1045,17 @@ watch(isDetailRoute, (detail) => {
 .console-capture-group__body a:hover,
 .console-capture-group__body a:focus-visible,
 .console-capture-detail__sources a:hover,
-.console-capture-detail__sources a:focus-visible {
+.console-capture-detail__sources a:focus-visible,
+.console-capture-detail__tags a:hover,
+.console-capture-detail__tags a:focus-visible {
   color: var(--console-accent, var(--site-accent));
   outline: none;
 }
 
 .console-capture-group__sources,
-.console-capture-detail__sources {
+.console-capture-detail__sources,
+.console-capture-group__tags,
+.console-capture-detail__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 5px 12px;
