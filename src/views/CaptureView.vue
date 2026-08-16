@@ -1,6 +1,93 @@
 <template>
   <section class="capture-view page-surface" :class="{ 'capture-view--detail': isDetailRoute }">
     <div class="capture-view__main">
+      <template v-if="isConsole">
+        <template v-if="selectedGroup">
+          <div class="console-capture-detail">
+            <header class="console-capture-detail__header">
+              <button type="button" aria-label="Back to captures" title="Back to captures" @click="backToCapture">&lt;</button>
+              <code>/capture/{{ selectedGroup.id }}</code>
+              <span>{{ selectedGroup.assets.length }} assets</span>
+            </header>
+            <div class="console-capture-detail__assets">
+              <button
+                v-for="asset in selectedGroup.assets"
+                :key="asset.id"
+                type="button"
+                :aria-label="`Open ${asset.title || asset.id}`"
+                :title="asset.title || asset.id"
+                @click="openAsset(asset)"
+              >
+                <img
+                  :src="asset.image"
+                  :alt="asset.title || asset.id"
+                  loading="eager"
+                  decoding="async"
+                  @error="retryPublicAssetImage($event, asset.image)"
+                />
+              </button>
+            </div>
+            <div class="console-capture-detail__meta">
+              <time v-if="selectedGroup.date" :datetime="selectedGroup.date">{{ formatDateOnly(selectedGroup.date) }}</time>
+              <div v-if="selectedGroup.sources.length" class="console-capture-detail__sources">
+                <RouterLink
+                  v-for="source in selectedGroup.sources"
+                  :key="`${source.type}:${source.id}`"
+                  :to="source.url"
+                >{{ source.title }}</RouterLink>
+              </div>
+            </div>
+            <GiscusComments layout="inline" source="capture" :term="selectedCommentTerm" />
+          </div>
+        </template>
+
+        <template v-else-if="isDetailRoute">
+          <div class="console-capture-empty">
+            <code>capture not found</code>
+            <button type="button" @click="backToCapture">/&nbsp;capture</button>
+          </div>
+        </template>
+
+        <ConsoleMonthNavigator v-else :months="consoleMonths">
+          <template #default="{ item }">
+            <article class="console-capture-group">
+              <div class="console-capture-group__media">
+                <button
+                  v-for="asset in asCaptureGroup(item).assets"
+                  :key="asset.id"
+                  type="button"
+                  :aria-label="`Open ${asset.title || asset.id}`"
+                  :title="asset.title || asset.id"
+                  @click="openAsset(asset)"
+                >
+                  <img
+                    :src="asset.image"
+                    :alt="asset.title || asset.id"
+                    loading="lazy"
+                    decoding="async"
+                    @error="retryPublicAssetImage($event, asset.image)"
+                  />
+                </button>
+              </div>
+              <div class="console-capture-group__body">
+                <RouterLink :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`">
+                  <code>/capture/{{ encodeURIComponent(asCaptureGroup(item).id) }}</code>
+                </RouterLink>
+                <time v-if="asCaptureGroup(item).date" :datetime="asCaptureGroup(item).date">{{ formatDateOnly(asCaptureGroup(item).date) }}</time>
+                <div v-if="asCaptureGroup(item).sources.length" class="console-capture-group__sources">
+                  <RouterLink
+                    v-for="source in asCaptureGroup(item).sources"
+                    :key="`${source.type}:${source.id}`"
+                    :to="source.url"
+                  >{{ source.title }}</RouterLink>
+                </div>
+              </div>
+            </article>
+          </template>
+        </ConsoleMonthNavigator>
+      </template>
+
+      <template v-else>
       <template v-if="selectedGroup">
         <div class="capture-detail__topbar">
           <button
@@ -254,16 +341,17 @@
           </button>
         </div>
       </template>
+      </template>
     </div>
 
     <ScrollSpySidebar
-      v-if="!isDetailRoute"
+      v-if="!isConsole && !isDetailRoute"
       :key="scrollSpyKey"
       root-selector=".capture-view__main"
       heading-selector=".capture-time-heading"
     />
 
-    <Teleport to="body">
+    <Teleport v-if="!isConsole" to="body">
       <Transition name="capture-delete-dialog">
         <div
           v-if="deleteTarget"
@@ -308,6 +396,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, Calendar, ChatRound, Delete, Plus, PriceTag } from '@element-plus/icons-vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
+import ConsoleMonthNavigator, { type ConsoleMonthGroup } from '../components/console/ConsoleMonthNavigator.vue'
 import { getCaptureAssets, normalizeCaptureAssets } from '../data/capture'
 import type { CaptureAsset, CaptureSourceRef } from '../types/content'
 import { CARD_GROUP_LIMIT, hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
@@ -315,6 +404,7 @@ import { formatTimelineDate, parseTimelineDate } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 import { formatTimelineMonthLabel, formatTimelineYearLabel } from '../utils/timelineGroups'
+import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const isDev = import.meta.env.DEV
 const captureScrollStorageKey = 'nexus:capture-scroll-y'
@@ -325,8 +415,10 @@ const captureGroups = computed(() => groupCaptureAssets(allAssets.value))
 const visibleCaptureGroups = computed(() => limitCardGroup(captureGroups.value))
 const captureGroupHiddenCount = computed(() => hiddenCardCount(captureGroups.value))
 const yearGroups = computed(() => groupByYearAndMonth(visibleCaptureGroups.value))
+const consoleYearGroups = computed(() => groupByYearAndMonth(captureGroups.value))
 const route = useRoute()
 const router = useRouter()
+const { isConsole } = useDisplayModePreference()
 const selectedGroupId = computed(() => String(route.params.id || ''))
 const isDetailRoute = computed(() => selectedGroupId.value.length > 0)
 const selectedGroup = computed(() =>
@@ -337,6 +429,17 @@ const scrollSpyKey = computed(() =>
   yearGroups.value
     .map((year) => `${year.id}:${year.months.map((month) => `${month.id}:${month.groups.length}`).join(',')}`)
     .join('|')
+)
+const consoleMonths = computed<ConsoleMonthGroup[]>(() =>
+  consoleYearGroups.value.flatMap((year) =>
+    year.months.map((month) => ({
+      id: month.id,
+      label: month.label,
+      yearLabel: year.label,
+      timestamp: month.timestamp,
+      items: month.groups,
+    })),
+  ),
 )
 const { locale, t } = useI18n()
 const editorAuth = ref<CaptureEditorAuth | null>(null)
@@ -393,6 +496,10 @@ type YearGroup = {
   label: string
   timestamp: number
   months: MonthGroup[]
+}
+
+function asCaptureGroup(item: unknown): CaptureGroup {
+  return item as CaptureGroup
 }
 
 function formatDate(date?: string) {
@@ -753,6 +860,189 @@ watch(isDetailRoute, (detail) => {
 </script>
 
 <style scoped>
+.console-capture-group,
+.console-capture-detail {
+  display: grid;
+  gap: 10px;
+  color: var(--console-text, var(--site-text));
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.console-capture-group {
+  grid-template-columns: minmax(120px, 280px) minmax(0, 1fr);
+  align-items: start;
+  min-height: 78px;
+  padding: 8px;
+  border: 1px solid var(--console-border, var(--site-border));
+  background: var(--console-surface, transparent);
+}
+
+.console-capture-group__media,
+.console-capture-detail__assets {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.console-capture-group__media button,
+.console-capture-detail__assets button {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--console-border, var(--site-border));
+  border-radius: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.console-capture-group__media button:hover,
+.console-capture-group__media button:focus-visible,
+.console-capture-detail__assets button:hover,
+.console-capture-detail__assets button:focus-visible {
+  border-color: var(--console-accent, var(--site-accent));
+  outline: none;
+}
+
+.console-capture-group__media img,
+.console-capture-detail__assets img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.console-capture-group__body,
+.console-capture-detail__meta {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.console-capture-group__body > a code,
+.console-capture-detail__header code {
+  overflow: hidden;
+  color: var(--console-accent, var(--site-accent));
+  font: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-capture-group__body > a {
+  width: fit-content;
+  max-width: 100%;
+  text-decoration: none;
+}
+
+.console-capture-group__body > a:hover,
+.console-capture-group__body > a:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.console-capture-group__body time,
+.console-capture-detail__meta time,
+.console-capture-group__body a,
+.console-capture-detail__sources a {
+  color: var(--console-muted, var(--site-muted));
+  font-size: 0.78rem;
+}
+
+.console-capture-group__body a:hover,
+.console-capture-group__body a:focus-visible,
+.console-capture-detail__sources a:hover,
+.console-capture-detail__sources a:focus-visible {
+  color: var(--console-accent, var(--site-accent));
+  outline: none;
+}
+
+.console-capture-group__sources,
+.console-capture-detail__sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+}
+
+.console-capture-detail__header {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border-top: 1px solid var(--console-border, var(--site-border));
+  border-bottom: 1px solid var(--console-border, var(--site-border));
+}
+
+.console-capture-detail__header button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--console-border-strong, var(--site-accent));
+  color: var(--console-accent, var(--site-accent));
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.console-capture-empty button {
+  min-width: 112px;
+  min-height: 34px;
+  padding: 5px 9px;
+  border: 1px solid var(--console-border-strong, var(--site-accent));
+  color: var(--console-accent, var(--site-accent));
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.console-capture-detail__header button:hover,
+.console-capture-detail__header button:focus-visible,
+.console-capture-empty button:hover,
+.console-capture-empty button:focus-visible {
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
+}
+
+.console-capture-detail__header > span {
+  color: var(--console-muted, var(--site-muted));
+  font-size: 0.78rem;
+}
+
+.console-capture-detail__assets {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.console-capture-empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  color: var(--console-muted, var(--site-muted));
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.console-capture-empty code {
+  color: #ef6a6a;
+  font: inherit;
+}
+
+@media (max-width: 1100px) {
+  .console-capture-group {
+    grid-template-columns: minmax(100px, 220px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .console-capture-group,
+  .console-capture-detail,
+  .console-capture-empty {
+    display: none;
+  }
+}
+
 .capture-view {
   display: flex;
   align-items: flex-start;
