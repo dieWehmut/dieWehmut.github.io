@@ -22,6 +22,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useMotionPreferences } from '../../composables/useMotionPreferences'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
+import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 
 const cursorRef = ref(null)
 const dotsCanvasRef = ref(null)
@@ -29,10 +30,13 @@ const visible = ref(false)
 const { canUsePointerEffects } = useMotionPreferences()
 const { colorScheme } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
+const { isConsole } = useDisplayModePreference()
+
+const pointerEffectsEnabled = computed(() => canUsePointerEffects.value && !isConsole.value)
 
 // 点环与流线只属于「动态背景」这一档效果，关掉后只剩爱心本体
 const ringVisible = computed(
-  () => visible.value && canUsePointerEffects.value && dynamicBackgroundEnabled.value,
+  () => visible.value && canUsePointerEffects.value && dynamicBackgroundEnabled.value && !isConsole.value,
 )
 
 // ── 弹性点环（仿 cnblogs type:12 / mouseType3）─────────────────────────────
@@ -322,7 +326,7 @@ function onMouseLeave() {
 }
 
 function bindEvents() {
-  if (eventsBound || !canUsePointerEffects.value) return
+  if (eventsBound || !pointerEffectsEnabled.value) return
   window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('mouseleave', onMouseLeave, { passive: true })
   eventsBound = true
@@ -336,7 +340,7 @@ function unbindEvents() {
 }
 
 function syncPointerEffects() {
-  if (!canUsePointerEffects.value) {
+  if (!pointerEffectsEnabled.value) {
     visible.value = false
     _lastTarget = null
     document.documentElement.classList.remove('heart-bounce-active')
@@ -347,7 +351,7 @@ function syncPointerEffects() {
   bindEvents()
 }
 
-watch(canUsePointerEffects, syncPointerEffects, { immediate: true })
+watch(pointerEffectsEnabled, syncPointerEffects, { immediate: true })
 
 // 点环随「爱心可见 + 动态背景开启」启停
 watch(ringVisible, (v) => {

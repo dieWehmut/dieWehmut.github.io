@@ -13,11 +13,13 @@ import ParticleCanvas from './ParticleCanvas.vue'
 import SakuraCanvas from './SakuraCanvas.vue'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { useMotionPreferences } from '../../composables/useMotionPreferences'
+import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 const { canAnimate } = useMotionPreferences()
+const { isConsole } = useDisplayModePreference()
 
-const shouldRender = computed(() => dynamicBackgroundEnabled.value && canAnimate.value)
+const shouldRender = computed(() => dynamicBackgroundEnabled.value && canAnimate.value && !isConsole.value)
 </script>
 
 <style scoped>
