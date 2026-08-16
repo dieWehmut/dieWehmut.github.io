@@ -11,12 +11,14 @@
     <div
       v-if="panelOptions !== null"
       ref="rowsRef"
+      :id="listboxId"
       class="console-panel__rows"
       role="listbox"
       :aria-label="listLabel"
     >
       <button
         v-for="(option, index) in panelOptions"
+        :id="optionId(index)"
         :key="option.command"
         class="console-panel__row"
         :class="{ 'is-selected': selectedIndex === index }"
@@ -57,11 +59,13 @@ const props = defineProps<{
   value?: string
   currentPath?: string
   feedback?: string
+  listboxId: string
 }>()
 
 const emit = defineEmits<{
   execute: [command: string]
   close: []
+  'selection-change': [optionId: string]
 }>()
 
 const { theme } = useThemePreference()
@@ -199,8 +203,16 @@ const panelOptions = computed<PanelOption[] | null>(() => {
 })
 
 function selectIndex(index: number) {
-  if (!panelOptions.value?.length) return
+  if (!panelOptions.value?.length) {
+    emit('selection-change', '')
+    return
+  }
   selectedIndex.value = Math.min(Math.max(index, 0), panelOptions.value.length - 1)
+  emit('selection-change', optionId(selectedIndex.value))
+}
+
+function optionId(index: number) {
+  return `${props.listboxId}-option-${index}`
 }
 
 function scrollSelectionIntoView() {
@@ -215,6 +227,7 @@ function moveSelection(delta: number): boolean {
   const count = panelOptions.value?.length || 0
   if (!count) return false
   selectedIndex.value = (selectedIndex.value + delta + count) % count
+  emit('selection-change', optionId(selectedIndex.value))
   scrollSelectionIntoView()
   return true
 }
@@ -251,8 +264,10 @@ watch(
   [() => props.panel, () => panelOptions.value?.length || 0],
   () => {
     selectedIndex.value = 0
+    emit('selection-change', panelOptions.value?.length ? optionId(0) : '')
     scrollSelectionIntoView()
   },
+  { immediate: true },
 )
 
 defineExpose({ moveSelection, activateSelection })
@@ -367,8 +382,6 @@ const detailLines = computed(() => {
   display: grid;
   gap: 2px;
   margin-top: 8px;
-  max-height: 360px;
-  overflow-y: auto;
 }
 
 .console-panel__row {

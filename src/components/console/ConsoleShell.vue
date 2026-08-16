@@ -32,7 +32,12 @@
         ref="inputRef"
         data-console-input
         class="console-shell__input"
+        role="combobox"
         :value="commandInput"
+        :aria-expanded="Boolean(activeListboxId)"
+        :aria-controls="activeListboxId || undefined"
+        :aria-activedescendant="activeOptionId || undefined"
+        aria-autocomplete="list"
         autocomplete="off"
         autocapitalize="off"
         spellcheck="false"
@@ -46,53 +51,86 @@
     </form>
 
     <div
-      v-if="suggestions.length"
-      ref="suggestionsRef"
-      class="console-shell__suggestions"
-      role="listbox"
-      aria-label="Command suggestions"
+      v-if="suggestions.length || activePanel || (feedback && !activePanel)"
+      class="console-shell__transient"
     >
-      <button
-        v-for="(suggestion, index) in suggestions"
-        :key="suggestion.input"
-        class="console-shell__suggestion"
-        :class="{ 'is-selected': suggestionCursor === index }"
-        type="button"
-        role="option"
-        :aria-selected="suggestionCursor === index"
-        :data-suggestion-index="index"
-        @click="executeCommand(suggestion.input)"
+      <div
+        v-if="suggestions.length"
+        :id="suggestionListboxId"
+        ref="suggestionsRef"
+        class="console-shell__suggestions"
+        role="listbox"
+        aria-label="Command suggestions"
       >
-        <code>{{ suggestion.input }}</code>
-        <span>{{ suggestion.description }}</span>
-      </button>
-    </div>
+        <button
+          v-for="(suggestion, index) in suggestions"
+          :id="suggestionOptionId(index)"
+          :key="suggestion.input"
+          class="console-shell__suggestion"
+          :class="{ 'is-selected': suggestionCursor === index }"
+          type="button"
+          role="option"
+          :aria-selected="suggestionCursor === index"
+          :data-suggestion-index="index"
+          @click="executeCommand(suggestion.input)"
+        >
+          <code>{{ suggestion.input }}</code>
+          <span>{{ suggestion.description }}</span>
+        </button>
+      </div>
 
-    <ConsolePanelView
-      ref="panelRef"
-      :panel="activePanel?.panel || null"
-      :value="activePanel?.value"
-      :current-path="route.fullPath"
-      :feedback="feedback"
-      @execute="executeCommand"
-      @close="closePanel"
-    />
+      <p
+        v-if="feedback && !activePanel"
+        class="console-shell__feedback"
+        role="status"
+        aria-live="polite"
+      >
+        {{ feedback }}
+      </p>
+
+      <ConsolePanelView
+        ref="panelRef"
+        :panel="activePanel?.panel || null"
+        :value="activePanel?.value"
+        :current-path="route.fullPath"
+        :feedback="feedback"
+        :listbox-id="panelListboxId"
+        @execute="executeCommand"
+        @close="closePanel"
+        @selection-change="handlePanelSelectionChange"
+      />
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { siteConfig } from '../../data/site/config'
 import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 import { useConsoleSession } from '../../composables/useConsoleSession'
+import type { ConsolePanel } from '../../console/commandRegistry'
 
 const route = useRoute()
 const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
 const suggestionsRef = ref<HTMLElement | null>(null)
+const panelActiveOptionId = ref('')
 const avatarUrl = getGitHubAvatarUrl(siteConfig.githubUser)
+const suggestionListboxId = 'console-command-suggestions'
+const panelListboxId = 'console-panel-options'
+const optionPanels = new Set<ConsolePanel>([
+  'help',
+  'list',
+  'mode',
+  'theme',
+  'color',
+  'background',
+  'language',
+  'note-picker',
+  'post-picker',
+])
 
 const {
   commandInput,
@@ -107,6 +145,28 @@ const {
   setPanel,
 } = useConsoleSession()
 
+const hasPanelListbox = computed(() => Boolean(
+  activePanel.value && optionPanels.has(activePanel.value.panel),
+))
+const activeListboxId = computed(() => {
+  if (suggestions.value.length) return suggestionListboxId
+  return hasPanelListbox.value ? panelListboxId : ''
+})
+const activeOptionId = computed(() => {
+  if (suggestions.value.length && suggestionCursor.value >= 0) {
+    return suggestionOptionId(suggestionCursor.value)
+  }
+  return hasPanelListbox.value ? panelActiveOptionId.value : ''
+})
+
+function suggestionOptionId(index: number) {
+  return `${suggestionListboxId}-option-${index}`
+}
+
+function handlePanelSelectionChange(optionId: string) {
+  panelActiveOptionId.value = optionId
+}
+
 async function executeCommand(value?: string) {
   const handled = await executeSessionCommand(value)
   if (handled) void nextTick(() => inputRef.value?.focus())
@@ -114,6 +174,7 @@ async function executeCommand(value?: string) {
 }
 
 function closePanel() {
+  panelActiveOptionId.value = ''
   setPanel(null)
   void nextTick(() => inputRef.value?.focus())
 }
@@ -146,6 +207,10 @@ watch(suggestionCursor, (index) => {
   })
 })
 
+watch(activePanel, (panel) => {
+  if (!panel) panelActiveOptionId.value = ''
+})
+
 onMounted(() => {
   setPanel(null)
   void nextTick(() => inputRef.value?.focus())
@@ -155,9 +220,15 @@ onMounted(() => {
 <style scoped>
 .console-shell {
   position: relative;
-  display: grid;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
   gap: 12px;
+  box-sizing: border-box;
   width: 100%;
+  max-height: calc(100vh - 150px);
+  min-height: 0;
+  overflow: hidden;
   padding: 24px 0 14px;
   color: var(--console-text);
   font-family: var(--console-font);
@@ -292,12 +363,38 @@ onMounted(() => {
 }
 
 .console-shell__prompt {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   min-height: 46px;
   border-top: 1px solid var(--console-border-strong);
   border-bottom: 1px solid var(--console-border-strong);
   background: var(--console-surface);
+}
+
+.console-shell__transient {
+  min-height: 0;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--console-border);
+  scrollbar-color: var(--console-border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.console-shell__transient::-webkit-scrollbar {
+  width: 8px;
+}
+
+.console-shell__transient::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 0;
+  background: var(--console-border-strong);
+  background-clip: padding-box;
+}
+
+.console-shell__feedback {
+  margin: 0;
+  padding: 9px 8px;
+  color: var(--console-muted);
 }
 
 .console-shell__prompt-symbol {
@@ -347,10 +444,7 @@ onMounted(() => {
 .console-shell__suggestions {
   display: grid;
   gap: 2px;
-  max-height: 246px;
-  overflow-y: auto;
   padding: 3px 0;
-  border-bottom: 1px solid var(--console-border);
 }
 
 .console-shell__suggestion {

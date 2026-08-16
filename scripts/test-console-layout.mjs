@@ -51,6 +51,31 @@ check('console uses the terminal text cursor everywhere', consoleStyles.includes
 check('console suggestions keep the selected row visible', consoleShell.includes('suggestionsRef') && consoleShell.includes('scrollIntoView'))
 check('nested panels close with Escape', consolePanel.includes("event.key === 'Escape'"))
 check('console result viewport keeps the upper shell fixed', desktopLayout.includes('desktop-layout__result') && desktopLayout.includes('height: 100vh'))
+check(
+  'short desktop viewports constrain transient console content',
+  consoleShell.includes('console-shell__transient')
+    && consoleShell.includes('max-height: calc(100vh')
+    && consoleShell.includes('overflow-y: auto'),
+)
+check(
+  'console input exposes its active listbox to assistive technology',
+  consoleShell.includes('role="combobox"')
+    && consoleShell.includes(':aria-expanded="Boolean(activeListboxId)"')
+    && consoleShell.includes(':aria-controls="activeListboxId || undefined"')
+    && consoleShell.includes(':aria-activedescendant="activeOptionId || undefined"'),
+)
+check(
+  'suggestion and panel options expose stable active-descendant ids',
+  consoleShell.includes(':id="suggestionOptionId(index)"')
+    && consolePanel.includes(':id="optionId(index)"')
+    && consolePanel.includes('selection-change'),
+)
+check(
+  'panel-free console feedback remains visible and announced',
+  consoleShell.includes('feedback && !activePanel')
+    && consoleShell.includes('role="status"')
+    && consoleShell.includes('aria-live="polite"'),
+)
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
