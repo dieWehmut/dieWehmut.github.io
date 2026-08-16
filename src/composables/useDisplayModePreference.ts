@@ -88,7 +88,7 @@ function bindDesktopMediaQuery() {
   }
 }
 
-function readInitialMode(desktop: boolean): DisplayMode {
+function readInitialMode(): DisplayMode {
   const stored = readStorage(DISPLAY_MODE_STORAGE_KEY)
   if (isDisplayMode(stored)) return stored
 
@@ -100,7 +100,10 @@ function readInitialMode(desktop: boolean): DisplayMode {
     return migrated
   }
 
-  return desktop ? DEFAULT_DESKTOP_MODE : DEFAULT_MOBILE_MODE
+  // The raw value remains the desktop-first default even on a mobile
+  // first visit. `activeMode` below gates it to standard while mobile, so a
+  // later resize to desktop can still reveal the intended first-visit shell.
+  return DEFAULT_DESKTOP_MODE
 }
 
 /** Initialise the singleton and return the raw persisted mode. */
@@ -108,7 +111,7 @@ export function initDisplayModePreference(): DisplayMode {
   if (initialized) return displayMode.value
 
   isDesktop.value = detectDesktop()
-  displayMode.value = readInitialMode(isDesktop.value)
+  displayMode.value = readInitialMode()
   initialized = true
   bindDesktopMediaQuery()
 
