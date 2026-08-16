@@ -1,7 +1,33 @@
 <template>
   <section class="infra-view page-surface" :class="{ 'has-outer-ring': hasOuterRing }">
     <PageHeading class="infra-heading" title="Infra" :icon="Cpu" />
+      <div v-if="isConsole" class="console-infra" aria-label="Infrastructure status">
+        <header class="console-infra__summary">
+          <span>/infra</span>
+          <strong>{{ onlineCount }} online</strong>
+          <strong :class="{ 'has-errors': offlineCount > 0 }">{{ offlineCount }} offline</strong>
+          <span>{{ totalCount }} endpoints</span>
+        </header>
+        <div class="console-infra__list" role="list">
+          <component
+            :is="item.url ? 'a' : 'div'"
+            v-for="item in serviceItems"
+            :key="item.key || item.name"
+            class="console-infra__row"
+            :href="item.url || undefined"
+            :target="item.url ? '_blank' : undefined"
+            :rel="item.url ? 'noopener noreferrer' : undefined"
+            role="listitem"
+          >
+            <span class="console-infra__state" :class="statusClass(item.url)">{{ statusLabel(item.url) || 'unknown' }}</span>
+            <strong>{{ item.name }}</strong>
+            <time v-if="item.date" :datetime="item.date">{{ formatDate(item.date) }}</time>
+            <code>{{ item.url || 'local / unavailable' }}</code>
+          </component>
+        </div>
+      </div>
       <div
+        v-else
         class="infra-orbit"
         :class="{ 'has-outer-ring': hasOuterRing }"
         :style="{
@@ -77,7 +103,7 @@
         </div>
       </div>
 
-      <div class="infra-mobile-list" aria-label="Infra endpoint list">
+      <div v-if="!isConsole" class="infra-mobile-list" aria-label="Infra endpoint list">
         <article
           v-for="item in visibleServiceItems"
           :key="item.key || item.name"
@@ -130,7 +156,9 @@ import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
 import { useKumaStatus } from '../composables/useKumaStatus'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
+import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 const { t } = useI18n()
+const { isConsole } = useDisplayModePreference()
 const infraAsset = (name) => `/capture-assets/infra/${name}`
 const sphereImg = infraAsset('qiu.png')
 const orbitImg = infraAsset('y-bg.png')
@@ -363,6 +391,111 @@ function serviceOverflowCount(item) {
 </script>
 
 <style scoped>
+.console-infra {
+  display: grid;
+  gap: 10px;
+  color: var(--console-text, var(--site-text));
+  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.console-infra__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 22px;
+  min-height: 42px;
+  padding: 8px 0;
+  border-top: 1px solid var(--console-border, var(--site-border));
+  border-bottom: 1px solid var(--console-border, var(--site-border));
+  color: var(--console-muted, var(--site-muted));
+}
+
+.console-infra__summary > span:first-child {
+  color: var(--console-accent, var(--site-accent));
+}
+
+.console-infra__summary strong {
+  color: var(--console-text, var(--site-text));
+  font-weight: 600;
+}
+
+.console-infra__summary strong.has-errors {
+  color: #ef6a6a;
+}
+
+.console-infra__list {
+  display: grid;
+  gap: 2px;
+}
+
+.console-infra__row {
+  display: grid;
+  grid-template-columns: 86px minmax(150px, 0.8fr) 110px minmax(220px, 1.4fr);
+  align-items: baseline;
+  gap: 14px;
+  min-height: 35px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  color: var(--console-muted, var(--site-muted));
+  text-decoration: none;
+}
+
+a.console-infra__row:hover,
+a.console-infra__row:focus-visible {
+  border-color: var(--console-border-strong, var(--site-accent));
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
+}
+
+.console-infra__row strong {
+  overflow: hidden;
+  color: var(--console-text, var(--site-text));
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-infra__row time {
+  color: var(--console-dim, var(--site-muted));
+  font-size: 0.76rem;
+}
+
+.console-infra__row code {
+  overflow: hidden;
+  color: var(--console-muted, var(--site-muted));
+  font: inherit;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-infra__state {
+  color: var(--console-muted, var(--site-muted));
+  font-size: 0.75rem;
+}
+
+.console-infra__state.is-online {
+  color: #50b878;
+}
+
+.console-infra__state.is-offline {
+  color: #ef6a6a;
+}
+
+@media (max-width: 1100px) {
+  .console-infra__row {
+    grid-template-columns: 76px minmax(120px, 0.8fr) 96px minmax(150px, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .console-infra {
+    display: none;
+  }
+}
+
 .infra-view {
   min-height: auto;
   padding: 0 0 8px;
