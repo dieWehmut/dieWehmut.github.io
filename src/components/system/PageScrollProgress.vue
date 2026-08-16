@@ -1,22 +1,26 @@
 <template>
-  <div class="page-scroll-progress" aria-hidden="true">
+  <div v-if="!isConsole" class="page-scroll-progress" aria-hidden="true">
     <span :style="{ width: `${progress}%` }" />
   </div>
 </template>
 
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 
 const progress = ref(0)
+const { isConsole } = useDisplayModePreference()
 let frame = 0
 
 function updateProgress() {
+  if (isConsole.value) return
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight
   const ratio = maxScroll > 0 ? window.scrollY / maxScroll : 0
   progress.value = Math.min(100, Math.max(0, ratio * 100))
 }
 
 function onScroll() {
+  if (isConsole.value) return
   if (frame) return
   frame = window.requestAnimationFrame(() => {
     frame = 0
