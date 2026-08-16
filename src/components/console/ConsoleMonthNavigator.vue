@@ -1,24 +1,25 @@
 <template>
   <section
-    v-if="months.length"
     class="console-month-navigator"
     tabindex="0"
     aria-label="Monthly results"
     @keydown.left.prevent="move(-1)"
     @keydown.right.prevent="move(1)"
   >
-    <header class="console-month-navigator__header">
-      <button type="button" aria-label="Previous month" title="Previous month" :disabled="!canMovePrevious" @click="move(-1)">&lt;</button>
-      <div>
-        <span>{{ current?.yearLabel || '' }} / {{ current?.label || '' }}</span>
-        <strong>{{ currentIndex + 1 }} / {{ months.length }}</strong>
-      </div>
-      <button type="button" aria-label="Next month" title="Next month" :disabled="!canMoveNext" @click="move(1)">&gt;</button>
-    </header>
+    <template v-if="months.length">
+      <header class="console-month-navigator__header">
+        <button type="button" aria-label="Previous month" title="Previous month" :disabled="!canMovePrevious" @click="move(-1)">&lt;</button>
+        <div>
+          <span>{{ current?.yearLabel || '' }} / {{ current?.label || '' }}</span>
+          <strong>{{ currentIndex + 1 }} / {{ months.length }}</strong>
+        </div>
+        <button type="button" aria-label="Next month" title="Next month" :disabled="!canMoveNext" @click="move(1)">&gt;</button>
+      </header>
 
-    <div v-if="current" class="console-month-navigator__items">
-      <slot v-for="(item, index) in current.items" :key="itemKey(item, index)" :item="item" :index="index" />
-    </div>
+      <div v-if="current" class="console-month-navigator__items">
+        <slot v-for="(item, index) in current.items" :key="itemKey(item, index)" :item="item" :index="index" />
+      </div>
+    </template>
     <p v-else class="console-month-navigator__empty">No entries.</p>
   </section>
 </template>

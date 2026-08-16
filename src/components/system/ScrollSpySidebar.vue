@@ -339,7 +339,17 @@ function onSidebarWheel(event) {
 function scrollNav(delta) {
   const nav = navRef.value
   if (!nav) return
-  nav.scrollBy({ left: delta * Math.max(nav.clientWidth * 0.72, 120), behavior: 'smooth' })
+  const currentIndex = headings.findIndex((item) => item.id === activeId.value)
+  const nextIndex = Math.min(
+    Math.max((currentIndex < 0 ? 0 : currentIndex) + delta, 0),
+    headings.length - 1,
+  )
+  const target = headings[nextIndex]
+  if (target) {
+    scrollToHeading(target.id)
+    return
+  }
+  nav.scrollBy({ left: delta * Math.max(nav.clientWidth * 0.72, 120), behavior: 'auto' })
 }
 
 function onScroll() {
