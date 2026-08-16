@@ -99,6 +99,7 @@ const {
 } = useConsoleSession()
 
 onMounted(() => {
+  setPanel(null)
   void nextTick(() => inputRef.value?.focus())
 })
 </script>
