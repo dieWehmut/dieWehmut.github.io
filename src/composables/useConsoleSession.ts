@@ -62,8 +62,8 @@ export function useConsoleSession() {
     })
   }
 
-  function setPanel(panel: ConsolePanel, value?: string) {
-    activePanel.value = { panel, value }
+  function setPanel(panel: ConsolePanel | null, value?: string) {
+    activePanel.value = panel ? { panel, value } : null
   }
 
   async function applyPanelValue(panel: ConsolePanel, value?: string) {
