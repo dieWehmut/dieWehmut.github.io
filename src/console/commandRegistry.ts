@@ -56,7 +56,9 @@ const PANELS: Record<string, ConsolePanel> = {
 
 const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }> = {
   theme: { panel: 'theme', values: new Set(['light', 'dark']) },
-  color: { panel: 'color', values: new Set(['green', 'purple', 'pink']) },
+  // 与 src/data/site/theme.ts 的 siteColorSchemeIds 手工同步。本模块顶部声明的「无 import」
+  // 边界是硬约束：scripts/test-console-registry.mjs 以 data: URL 加载它，相对 import 无法解析。
+  color: { panel: 'color', values: new Set(['green', 'purple', 'pink', 'white', 'black']) },
   background: { panel: 'background', values: new Set(['on', 'off']) },
   language: { panel: 'language', values: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']) },
 }
@@ -165,7 +167,7 @@ export function listConsoleCommands(availability: ConsoleCommandAvailability = {
     { input: '/friends', description: 'Browse friend links' },
     { input: '/search', description: 'Search the workspace' },
     { input: '/theme', description: 'Choose light or dark theme' },
-    { input: '/color', description: 'Choose green, purple, or pink' },
+    { input: '/color', description: 'Choose a color scheme' },
     { input: '/background', description: 'Configure the dynamic background' },
     { input: '/language', description: 'Choose interface language' },
     { input: '/mode', description: 'Choose Console or standard layout' },

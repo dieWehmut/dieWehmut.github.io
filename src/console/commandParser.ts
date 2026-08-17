@@ -40,7 +40,10 @@ const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])
 const FIXED_CHILD_VALUES: Record<string, Set<string>> = {
   mode: MODE_VALUES,
   theme: new Set(['light', 'dark']),
-  color: new Set(['green', 'purple', 'pink']),
+  // 与 src/data/site/theme.ts 的 siteColorSchemeIds 手工同步。不能 import：本模块会被
+  // scripts/test-console-command.mjs 转译后以 data: URL 动态加载，data URL 没有 base URL，
+  // 任何相对 import 都会以 ERR_UNSUPPORTED_ESM_URL_SCHEME 失败。漂移由测试断言看住。
+  color: new Set(['green', 'purple', 'pink', 'white', 'black']),
   background: new Set(['on', 'off']),
   language: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']),
 }

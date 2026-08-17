@@ -6,6 +6,7 @@ import {
   isSiteColorScheme,
   resolveSiteColorScheme,
   siteColorSchemeOptions,
+  siteRandomColorSchemeOptions,
   type SiteThemeMode,
 } from '../data/site/theme'
 import type { SiteColorScheme } from '../types/content'
@@ -45,9 +46,9 @@ export function applyCurrentColorScheme(themeMode?: SiteThemeMode) {
   applySiteColorScheme(colorScheme.value, themeMode || readDocumentTheme())
 }
 
-/** 从所有配色方案里随机选一个（green / purple / pink…） */
+/** 从彩色方案里随机选一个（green / purple / pink）；单色方案只能手动选 */
 function pickRandomColorScheme(): SiteColorScheme {
-  const options = siteColorSchemeOptions
+  const options = siteRandomColorSchemeOptions
   if (!options.length) return DEFAULT_COLOR_SCHEME
   const index = Math.floor(Math.random() * options.length)
   return options[index]?.id ?? DEFAULT_COLOR_SCHEME
