@@ -8,6 +8,7 @@ const FIXED_SEGMENTS = new Set([
   'capture',
   'classic',
   'color',
+  'comment',
   'config',
   'doctor',
   'friends',

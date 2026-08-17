@@ -1,6 +1,6 @@
 <template>
   <aside class="site-sidebar" aria-label="Site sidebar">
-    <RouterLink class="site-sidebar__avatar-link" to="/" aria-label="Back to home" @click="$emit('navigate')">
+    <RouterLink class="site-sidebar__avatar-link" to="/home" aria-label="Back to home" @click="$emit('navigate')">
       <img class="site-sidebar__avatar" :src="avatarUrl" alt="Avatar" />
     </RouterLink>
 

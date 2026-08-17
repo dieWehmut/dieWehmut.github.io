@@ -82,7 +82,8 @@ defineProps({
 })
 
 const staticPages: Record<string, Crumb> = {
-  home: { label: 'Home', to: '/' },
+  root: { label: 'Home', to: '/home' },
+  home: { label: 'Home', to: '/home' },
   archive: { label: 'Archive', to: '/archive' },
   notes: { label: 'Notes', to: '/notes' },
   capture: { label: 'Capture', to: '/capture' },
@@ -126,7 +127,7 @@ function detailTitle() {
 }
 
 const crumbs = computed<Crumb[]>(() => {
-  const siteCrumb = { label: siteProfile.title || 'Nexus', to: '/' }
+  const siteCrumb = { label: siteProfile.title || 'Nexus', to: '/home' }
   const name = String(route.name || '')
   const section = readingPath.value
   const sectionCrumb = !isMobile.value && section?.title

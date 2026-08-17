@@ -37,6 +37,7 @@ export interface ConsoleCommandAvailability {
 
 export type ConsoleResolution =
   | { kind: 'route'; path: string; routeName: string }
+  | { kind: 'comment' }
   | { kind: 'panel'; panel: ConsolePanel; value?: string }
   | { kind: 'mode'; mode: ConsoleMode }
   | { kind: 'silent' }
@@ -100,9 +101,14 @@ export function resolveConsoleCommand(
   const key = head.toLowerCase()
   const secondKey = second?.toLowerCase()
 
-  if (!head) return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'home' }
+  if (!head) return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'root' }
   if (key === 'home' && second === undefined) {
-    return { kind: 'route', path: routeWithSuffix('/', command), routeName: 'home' }
+    return { kind: 'route', path: routeWithSuffix('/home', command), routeName: 'home' }
+  }
+  if (key === 'comment') {
+    return second === undefined && !rest.length && !command.query && !command.hash
+      ? { kind: 'comment' }
+      : { kind: 'silent' }
   }
 
   if (key === 'mode') {
@@ -155,7 +161,9 @@ export function resolveConsoleCommand(
 
 export function listConsoleCommands(availability: ConsoleCommandAvailability = {}) {
   const commands = [
-    { input: '/', description: 'Home overview' },
+    { input: '/', description: 'Return to the Console landing' },
+    { input: '/home', description: 'Browse the Home timeline' },
+    { input: '/comment', description: 'Toggle comments for the current page' },
     { input: '/agent', description: 'Show agent workspace' },
     { input: '/list', description: 'List available commands' },
     { input: '/status', description: 'Show workspace status' },

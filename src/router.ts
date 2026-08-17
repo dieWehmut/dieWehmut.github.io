@@ -4,6 +4,7 @@ import { siteConfig } from './data/site/config'
 const viewLoaders = {
   postDetail: () => import('./views/PostView.vue'),
   noteDetail: () => import('./views/NoteView.vue'),
+  root: () => import('./views/RootView.vue'),
   home: () => import('./views/HomeView.vue'),
   archive: () => import('./views/ArchiveView.vue'),
   notes: () => import('./views/NotesView.vue'),
@@ -19,7 +20,8 @@ const viewLoaders = {
 }
 
 const primaryRoutePreloaders = new Map<string, () => Promise<unknown>>([
-  ['/', viewLoaders.home],
+  ['/', viewLoaders.root],
+  ['/home', viewLoaders.home],
   ['/archive', viewLoaders.archive],
   ['/notes', viewLoaders.notes],
   ['/capture', viewLoaders.capture],
@@ -42,7 +44,8 @@ const preloadedRoutePaths = new Set<string>()
 const routes = [
   { path: '/post/:id', name: 'post-detail', component: viewLoaders.postDetail },
   { path: '/note/:id', name: 'note-detail', component: viewLoaders.noteDetail },
-  { path: '/', name: 'home', component: viewLoaders.home },
+  { path: '/', name: 'root', component: viewLoaders.root },
+  { path: '/home', name: 'home', component: viewLoaders.home },
   { path: '/archive', name: 'archive', component: viewLoaders.archive },
   { path: '/notes', name: 'notes', component: viewLoaders.notes },
   { path: '/capture', name: 'capture', component: viewLoaders.capture },
@@ -72,8 +75,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  if (to.meta.requiresInfra && !siteConfig.enableInfra) return '/'
-  if (to.meta.requiresProject && !siteConfig.enableProject) return '/'
+  if (to.meta.requiresInfra && !siteConfig.enableInfra) return '/home'
+  if (to.meta.requiresProject && !siteConfig.enableProject) return '/home'
 })
 
 function normalizePreloadPath(path: string) {

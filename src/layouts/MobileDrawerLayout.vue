@@ -56,7 +56,7 @@ const tocDrawerOpen = ref(false)
 const tocKey = ref(0)
 const tocHeadingSelector = computed(() => {
   if (route.name === 'capture') return '.capture-time-heading'
-  if (['home', 'archive', 'notes', 'tag-detail'].includes(String(route.name || ''))) {
+  if (['root', 'home', 'archive', 'notes', 'tag-detail'].includes(String(route.name || ''))) {
     return '.content-time-heading'
   }
   return 'h1, h2, h3'

@@ -6,11 +6,11 @@
         <strong>route not found</strong>
       </div>
       <p>The requested path is not registered in this workspace.</p>
-      <RouterLink class="console-not-found__link" to="/">/&nbsp;home</RouterLink>
+      <RouterLink class="console-not-found__link" to="/home">/home</RouterLink>
     </div>
     <template v-else>
       <PageHeading title="Not Found" :icon="Warning" />
-      <RouterLink class="not-found__link" to="/">Return home</RouterLink>
+      <RouterLink class="not-found__link" to="/home">Return home</RouterLink>
     </template>
   </section>
 </template>
