@@ -12,10 +12,17 @@ export type SiteColorSchemeTokens = {
   tagColor: string
 }
 
+/**
+ * `chromatic` 方案带色相，进首屏随机池；`monochrome` 是纯灰阶单色方案，
+ * 只能手动选中，随机池不碰它们。
+ */
+export type SiteColorSchemeTone = 'chromatic' | 'monochrome'
+
 export type SiteColorSchemeOption = {
   id: SiteColorScheme
   label: string
   preview: string
+  tone: SiteColorSchemeTone
   light: SiteColorSchemeTokens
   dark: SiteColorSchemeTokens
 }
@@ -27,6 +34,7 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
     id: 'green',
     label: 'Green',
     preview: '#1fc41f',
+    tone: 'chromatic',
     light: {
       accent: '#1a9e1a',
       accentRgb: '26 158 26',
@@ -50,6 +58,7 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
     id: 'purple',
     label: 'Purple',
     preview: '#9b3dff',
+    tone: 'chromatic',
     light: {
       accent: '#8f35ff',
       accentRgb: '143 53 255',
@@ -73,6 +82,7 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
     id: 'pink',
     label: 'Pink',
     preview: '#ff69b4',
+    tone: 'chromatic',
     light: {
       accent: '#e64a97',
       accentRgb: '230 74 151',
@@ -92,11 +102,67 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
       tagColor: 'rgba(255, 194, 224, 0.9)',
     },
   },
+  // 单色方案在两种模式下取不同灰阶：语义统一为 accent 对比最强、secondary 次之、
+  // tertiary 最弱——light 下越暗越强，dark 下越亮越强。所以 white 在 light 模式里
+  // 反而是深灰，black 在 dark 模式里反而是浅灰，四种组合才都可读。
+  white: {
+    id: 'white',
+    label: 'White',
+    preview: '#ffffff',
+    tone: 'monochrome',
+    light: {
+      accent: '#4a4a4a',
+      accentRgb: '74 74 74',
+      secondary: '#6b6b6b',
+      secondaryRgb: '107 107 107',
+      tertiary: '#8f8f8f',
+      tertiaryRgb: '143 143 143',
+      tagColor: 'rgba(74, 74, 74, 0.92)',
+    },
+    dark: {
+      accent: '#ffffff',
+      accentRgb: '255 255 255',
+      secondary: '#b8b8b8',
+      secondaryRgb: '184 184 184',
+      tertiary: '#7a7a7a',
+      tertiaryRgb: '122 122 122',
+      tagColor: 'rgba(240, 240, 240, 0.9)',
+    },
+  },
+  black: {
+    id: 'black',
+    label: 'Black',
+    preview: '#111111',
+    tone: 'monochrome',
+    light: {
+      accent: '#000000',
+      accentRgb: '0 0 0',
+      secondary: '#4a4a4a',
+      secondaryRgb: '74 74 74',
+      tertiary: '#808080',
+      tertiaryRgb: '128 128 128',
+      tagColor: 'rgba(20, 20, 20, 0.92)',
+    },
+    dark: {
+      accent: '#b4b4b4',
+      accentRgb: '180 180 180',
+      secondary: '#8f8f8f',
+      secondaryRgb: '143 143 143',
+      tertiary: '#6a6a6a',
+      tertiaryRgb: '106 106 106',
+      tagColor: 'rgba(176, 176, 176, 0.85)',
+    },
+  },
 }
 
 export const siteColorSchemeOptions = Object.values(siteColorSchemes)
 
 export const siteColorSchemeIds = Object.keys(siteColorSchemes) as SiteColorScheme[]
+
+/** 首屏无偏好时的随机池。单色方案刻意排除在外，只能手动选中。 */
+export const siteRandomColorSchemeOptions = siteColorSchemeOptions.filter(
+  (option) => option.tone === 'chromatic',
+)
 
 export function isSiteColorScheme(value: unknown): value is SiteColorScheme {
   if (typeof value !== 'string') return false
