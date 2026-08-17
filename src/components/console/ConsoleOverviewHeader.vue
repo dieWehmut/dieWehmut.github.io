@@ -10,6 +10,20 @@
     </div>
 
     <div class="console-overview__dashboard">
+      <div class="console-overview__chrome">
+        <div class="console-overview__brand">
+          <span aria-hidden="true">&gt;_</span>
+          <strong>{{ config.title }}</strong>
+        </div>
+        <button
+          class="console-overview__classic"
+          type="button"
+          aria-label="Switch to classic mode"
+          title="Switch to classic mode"
+          @click="setDisplayMode('standard')"
+        >classic</button>
+      </div>
+
       <section class="console-overview__section">
         <div class="console-overview__section-title">CONTENT</div>
         <div class="console-overview__stats">
@@ -36,6 +50,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { useSiteOverview } from '../../composables/useSiteOverview'
+import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 
 const {
@@ -44,6 +59,7 @@ const {
   footerMeta,
   uptime,
 } = useSiteOverview()
+const { setDisplayMode } = useDisplayModePreference()
 const avatarUrl = `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
 </script>
 
@@ -96,12 +112,71 @@ const avatarUrl = `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
   box-sizing: border-box;
   min-width: 0;
   height: 100%;
-  padding: 18px 20px 20px;
+  padding: 0;
   overflow-y: auto;
+}
+
+.console-overview__chrome {
+  display: flex;
+  flex: 0 0 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--console-border);
+}
+
+.console-overview__brand {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.console-overview__brand span {
+  color: var(--console-accent);
+  font-weight: 800;
+}
+
+.console-overview__brand strong {
+  overflow: hidden;
+  color: var(--console-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-overview__classic {
+  min-height: 26px;
+  padding: 3px 8px;
+  border: 1px solid var(--console-border-strong);
+  border-radius: 0;
+  color: var(--console-muted);
+  background: transparent;
+  font: inherit;
+}
+
+.console-overview__classic:hover,
+.console-overview__classic:focus-visible {
+  color: var(--console-accent);
+  background: var(--console-selection);
+  outline: none;
+}
+
+.console-overview__section {
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.console-overview__chrome + .console-overview__section {
+  margin-top: 12px;
 }
 
 .console-overview__section + .console-overview__section {
   margin-top: 15px;
+  margin-bottom: 16px;
   padding-top: 12px;
   border-top: 1px solid var(--console-border);
 }
@@ -187,11 +262,26 @@ const avatarUrl = `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
 
 @media (min-width: 901px) and (max-width: 1100px) {
   .console-overview__dashboard {
-    padding: 10px 12px;
+    padding: 0;
+  }
+
+  .console-overview__chrome {
+    flex-basis: 34px;
+    padding: 0 12px;
+  }
+
+  .console-overview__section {
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+
+  .console-overview__chrome + .console-overview__section {
+    margin-top: 6px;
   }
 
   .console-overview__section + .console-overview__section {
     margin-top: 6px;
+    margin-bottom: 6px;
     padding-top: 6px;
   }
 

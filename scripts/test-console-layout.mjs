@@ -152,6 +152,19 @@ check(
 )
 check('Console overview cards omit route labels', !consoleOverview.includes('<code>{{ stat.path }}</code>'))
 check(
+  'Console overview starts with a terminal site title',
+  consoleOverview.indexOf('console-overview__chrome') > -1
+    && consoleOverview.indexOf('console-overview__chrome') < consoleOverview.indexOf('>CONTENT<')
+    && consoleOverview.includes('&gt;_')
+    && consoleOverview.includes('{{ config.title }}'),
+)
+check(
+  'Console overview exposes a direct classic mode switch',
+  consoleOverview.includes('console-overview__classic')
+    && consoleOverview.includes("setDisplayMode('standard')")
+    && consoleOverview.includes('aria-label="Switch to classic mode"'),
+)
+check(
   'Console overview columns share a fixed one-third-height row',
   /aspect-ratio:\s*3\s*\/\s*1/.test(consoleOverview)
     && /\.console-overview__avatar[\s\S]*?height:\s*100%/.test(consoleOverview)
