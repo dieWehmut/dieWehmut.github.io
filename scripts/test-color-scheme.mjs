@@ -29,15 +29,19 @@ const EXPECTED_IDS = ['green', 'purple', 'pink', 'white', 'black']
 
 check(
   'every color scheme id is registered',
-  EXPECTED_IDS.every((id) => Boolean(theme.siteColorSchemes?.[id])),
+  EXPECTED_IDS.every((id) => Boolean(theme.siteColorSchemes[id])),
 )
 check(
   'no unexpected color scheme is registered',
-  Object.keys(theme.siteColorSchemes || {}).length === EXPECTED_IDS.length,
+  Object.keys(theme.siteColorSchemes).length === EXPECTED_IDS.length,
+)
+check(
+  'every registered option carries its own key as id',
+  Object.entries(theme.siteColorSchemes).every(([key, option]) => option.id === key),
 )
 check(
   'siteColorSchemeIds mirrors the registry keys',
-  JSON.stringify(theme.siteColorSchemeIds) === JSON.stringify(Object.keys(theme.siteColorSchemes || {})),
+  JSON.stringify(theme.siteColorSchemeIds) === JSON.stringify(EXPECTED_IDS),
 )
 check(
   'isSiteColorScheme accepts every registered id',
@@ -52,6 +56,10 @@ check(
   ['toString', 'constructor', 'hasOwnProperty'].every((key) => theme.isSiteColorScheme(key) === false),
 )
 check(
+  'the default color scheme is itself registered',
+  theme.isSiteColorScheme(theme.DEFAULT_SITE_COLOR_SCHEME) === true,
+)
+check(
   'resolveSiteColorScheme falls back to the default for unknown values',
   theme.resolveSiteColorScheme('blue') === theme.DEFAULT_SITE_COLOR_SCHEME,
 )
@@ -61,9 +69,5 @@ check(
 )
 
 const failures = checks.filter(([, ok]) => !ok)
-for (const [label, ok] of checks) console.log(`${ok ? 'ok' : 'FAIL'} - ${label}`)
-if (failures.length) {
-  console.error(`\n${failures.length} color scheme check(s) failed.`)
-  process.exit(1)
-}
-console.log(`\nAll ${checks.length} color scheme checks passed.`)
+for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
+if (failures.length) process.exitCode = 1
