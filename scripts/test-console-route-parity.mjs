@@ -25,6 +25,17 @@ const checks = [
   ['project console keeps repository links', projectView.includes('console-project__link--repo')],
   ['capture detail keeps tag navigation', captureView.includes('selectedGroup.tags') && captureView.includes('console-capture-detail__tags')],
   ['capture timeline keeps tag navigation', captureView.includes('asCaptureGroup(item).tags') && captureView.includes('console-capture-group__tags')],
+  [
+    'capture timeline bounds each image preview group',
+    captureView.includes('v-for="asset in previewAssets(asCaptureGroup(item))"')
+      && !captureView.includes('v-for="asset in asCaptureGroup(item).assets"'),
+  ],
+  [
+    'capture timeline exposes the hidden image count as a group link',
+    captureView.includes('console-capture-group__overflow')
+      && captureView.includes('hiddenAssetCount(asCaptureGroup(item))'),
+  ],
+  ['capture detail still renders the complete selected group', captureView.includes('v-for="asset in selectedGroup.assets"')],
   ['capture back navigation restores the console result viewport', captureView.includes('activeCaptureScrollContainer')],
   ['console feed cards cannot overflow their viewport', consoleStyles.includes('.desktop-layout--console .feed-entry-card') && consoleStyles.includes('margin-inline: 0 !important')],
   ['console infra stops the orbit side ticker', infraView.includes('syncSideTicker') && infraView.includes('watch(isConsole')],
