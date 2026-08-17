@@ -233,13 +233,9 @@ onMounted(() => {
 <style scoped>
 .console-shell {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: block;
   box-sizing: border-box;
   width: 100%;
-  max-height: calc(100vh - 72px);
-  min-height: 0;
-  overflow: hidden;
   color: var(--console-text);
   border-top: 1px solid var(--console-border-strong);
   background: var(--console-bg);
@@ -248,7 +244,6 @@ onMounted(() => {
 
 .console-shell__history {
   display: flex;
-  flex: 0 0 auto;
   flex-wrap: nowrap;
   align-items: center;
   gap: 4px 10px;
@@ -284,7 +279,6 @@ onMounted(() => {
 }
 
 .console-shell__prompt {
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
   min-height: 46px;
@@ -294,24 +288,7 @@ onMounted(() => {
 }
 
 .console-shell__transient {
-  flex: 0 1 auto;
-  min-height: 0;
-  max-height: min(38vh, calc(100vh - 190px));
-  overflow-y: auto;
   border-bottom: 1px solid var(--console-border);
-  scrollbar-color: var(--console-border-strong) transparent;
-  scrollbar-width: thin;
-}
-
-.console-shell__transient::-webkit-scrollbar {
-  width: 8px;
-}
-
-.console-shell__transient::-webkit-scrollbar-thumb {
-  border: 2px solid transparent;
-  border-radius: 0;
-  background: var(--console-border-strong);
-  background-clip: padding-box;
 }
 
 .console-shell__feedback {

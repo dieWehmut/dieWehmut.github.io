@@ -8,7 +8,7 @@
     <div class="desktop-layout__content">
       <RouteBreadcrumb v-if="!isConsole" />
       <ConsoleOverviewHeader v-if="isConsole" />
-      <div ref="resultRef" class="desktop-layout__result">
+      <div class="desktop-layout__result">
         <main
           ref="outputRef"
           class="desktop-layout__main"
@@ -62,7 +62,6 @@ const { isConsole } = useDisplayModePreference()
 const { isOpen: commentsOpen, target: commentTarget, close: closeComments } = useConsoleCommentSession()
 const { revealRequest } = useConsoleOutputReveal()
 const route = useRoute()
-const resultRef = ref<HTMLElement | null>(null)
 const outputRef = ref<HTMLElement | null>(null)
 const commentRef = ref<HTMLElement | null>(null)
 let pendingRouteReveal = false
@@ -77,16 +76,14 @@ function motionBehavior(): ScrollBehavior {
 }
 
 function scrollToTop() {
-  resultRef.value?.scrollTo({ top: 0, behavior: motionBehavior() })
+  if (typeof window === 'undefined') return
+  window.scrollTo({ top: 0, behavior: motionBehavior() })
 }
 
 function scrollToAnchor(anchor: HTMLElement | null) {
-  const container = resultRef.value
-  if (!container || !anchor) return
-  const containerRect = container.getBoundingClientRect()
-  const anchorRect = anchor.getBoundingClientRect()
-  const top = Math.max(0, container.scrollTop + anchorRect.top - containerRect.top - 12)
-  container.scrollTo({ top, behavior: motionBehavior() })
+  if (typeof window === 'undefined' || !anchor) return
+  const top = Math.max(0, window.scrollY + anchor.getBoundingClientRect().top)
+  window.scrollTo({ top, behavior: motionBehavior() })
 }
 
 function afterLayout(callback: () => void) {
@@ -190,19 +187,13 @@ watch(isConsole, (enabled) => {
   --console-border: color-mix(in srgb, var(--site-text) 18%, transparent);
   --console-border-strong: color-mix(in srgb, var(--site-accent) 48%, var(--site-text));
   --console-selection: color-mix(in srgb, var(--site-accent) 12%, transparent);
-  height: 100vh;
-  height: 100dvh;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .desktop-layout--console .desktop-layout__content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
+  display: block;
+  min-height: 100vh;
   margin-left: 0;
-  overflow: hidden;
   background: var(--console-bg);
   background-attachment: initial;
   background-image: none;
@@ -211,27 +202,10 @@ watch(isConsole, (enabled) => {
 .desktop-layout--console .desktop-layout__result {
   position: relative;
   display: block;
-  flex: 0 1 auto;
   min-width: 0;
-  min-height: 0;
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-color: var(--console-border-strong) transparent;
-  scrollbar-width: thin;
-}
-
-.desktop-layout--console .desktop-layout__result::-webkit-scrollbar {
-  width: 8px;
-}
-
-.desktop-layout--console .desktop-layout__result::-webkit-scrollbar-thumb {
-  border: 2px solid transparent;
-  border-radius: 0;
-  background: var(--console-border-strong);
-  background-clip: padding-box;
 }
 
 .desktop-layout--console .desktop-layout__main {
@@ -256,13 +230,8 @@ watch(isConsole, (enabled) => {
 .desktop-layout__command-dock {
   position: relative;
   z-index: 3;
-  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
-}
-
-.desktop-layout--console :deep(.console-overview) {
-  flex: 0 0 auto;
 }
 
 .desktop-layout--console :deep(.desktop-layout__comment .giscus-comments) {

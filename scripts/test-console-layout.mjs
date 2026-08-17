@@ -33,6 +33,9 @@ const homeView = read('src/views/HomeView.vue')
 const displayPreference = read('src/composables/useDisplayModePreference.ts')
 const consoleStyles = read('src/styles/console.scss')
 const desktopTemplate = desktopLayout.split('<script setup')[0]
+const consoleLayoutBlock = desktopLayout.match(/\.desktop-layout--console \{[\s\S]*?\n\}/)?.[0] || ''
+const consoleContentBlock = desktopLayout.match(/\.desktop-layout--console \.desktop-layout__content \{[\s\S]*?\n\}/)?.[0] || ''
+const consoleResultBlock = desktopLayout.match(/\.desktop-layout--console \.desktop-layout__result \{[\s\S]*?\n\}/)?.[0] || ''
 const consoleShellTemplate = consoleShell.split('<script setup')[0]
 const footerTags = componentTags(desktopTemplate, 'Footer')
 const desktopCommentTags = componentTags(desktopTemplate, 'GiscusComments')
@@ -56,9 +59,17 @@ check(
     && desktopTemplate.indexOf('desktop-layout__result') < desktopTemplate.indexOf('desktop-layout__command-dock'),
 )
 check(
-  'Console overview remains outside the scrolling route result',
-  desktopTemplate.indexOf('<ConsoleOverviewHeader') < desktopTemplate.indexOf('ref="resultRef"')
-    && desktopTemplate.indexOf('ref="resultRef"') < desktopTemplate.indexOf('desktop-layout__command-dock'),
+  'Console mode scrolls the whole document instead of an inner viewport',
+  /min-height:\s*100vh\s*;/.test(consoleLayoutBlock)
+    && !/overflow/.test(consoleLayoutBlock)
+    && !/overflow/.test(consoleContentBlock)
+    && !/overflow/.test(consoleResultBlock)
+    && !desktopLayout.includes('resultRef'),
+)
+check(
+  'Console reveal helpers drive the window scroller',
+  desktopLayout.includes('window.scrollTo({ top: 0')
+    && desktopLayout.includes('window.scrollY + anchor.getBoundingClientRect().top'),
 )
 check('mobile layout does not mount the console shell', !mobileLayout.includes('ConsoleShell'))
 check('mobile layout does not mount the Console overview', !mobileLayout.includes('ConsoleOverviewHeader'))
@@ -107,9 +118,9 @@ for (const removedCommand of removedPanelCommands) {
   )
 }
 check(
-  'Console command dock follows content without a forced spacer',
-  /\.desktop-layout--console \.desktop-layout__content[\s\S]*?display:\s*flex\s*;[\s\S]*?flex-direction:\s*column\s*;/.test(desktopLayout)
-    && /\.desktop-layout--console \.desktop-layout__result[\s\S]*?flex:\s*0\s+1\s+auto\s*;/.test(desktopLayout)
+  'Console command dock sits at the end of the document flow',
+  /\.desktop-layout--console \.desktop-layout__content[\s\S]*?display:\s*block\s*;/.test(desktopLayout)
+    && !/\.desktop-layout--console \.desktop-layout__result[\s\S]*?flex:\s*0\s+1\s+auto\s*;/.test(desktopLayout)
     && !/grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
 )
 check(
@@ -118,10 +129,10 @@ check(
     && consoleShellTemplate.indexOf('class="console-shell__prompt"') < consoleShellTemplate.indexOf('class="console-shell__transient"'),
 )
 check(
-  'short desktop viewports constrain transient console content',
+  'Console dock no longer clamps itself to the viewport height',
   consoleShell.includes('console-shell__transient')
-    && consoleShell.includes('max-height: calc(100vh')
-    && consoleShell.includes('overflow-y: auto'),
+    && !/max-height:\s*calc\(100vh/.test(consoleShell)
+    && !/max-height:\s*min\(38vh/.test(consoleShell),
 )
 check(
   'console input exposes its active listbox to assistive technology',

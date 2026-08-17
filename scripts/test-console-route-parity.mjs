@@ -58,7 +58,12 @@ const checks = [
       && monthNavigator.includes('stateKey')
       && monthNavigator.includes('sessionStorage'),
   ],
-  ['capture back navigation restores the console result viewport', captureView.includes('activeCaptureScrollContainer')],
+  [
+    'capture back navigation restores the page scroll offset',
+    captureView.includes('saveCaptureScrollPosition')
+      && captureView.includes('window.scrollTo({ top, behavior: \'auto\' })')
+      && !captureView.includes('activeCaptureScrollContainer'),
+  ],
   ['console feed cards cannot overflow their viewport', consoleStyles.includes('.desktop-layout--console .feed-entry-card') && consoleStyles.includes('margin-inline: 0 !important')],
   ['console infra stops the orbit side ticker', infraView.includes('syncSideTicker') && infraView.includes('watch(isConsole')],
   ['console mode does not mount floating controls', /<FloatButton\s+v-if="!isConsole"\s*\/>/.test(app)],

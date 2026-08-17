@@ -698,14 +698,8 @@ function backToCapture() {
   router.push('/capture')
 }
 
-function activeCaptureScrollContainer(): HTMLElement | null {
-  if (!isConsole.value || typeof document === 'undefined') return null
-  return document.querySelector('.desktop-layout--console .desktop-layout__result')
-}
-
 function saveCaptureScrollPosition() {
-  const top = activeCaptureScrollContainer()?.scrollTop ?? window.scrollY
-  window.sessionStorage.setItem(captureScrollStorageKey, String(top))
+  window.sessionStorage.setItem(captureScrollStorageKey, String(window.scrollY))
 }
 
 function restoreCaptureScrollPosition() {
@@ -717,11 +711,7 @@ function restoreCaptureScrollPosition() {
   const top = Number(savedScrollY)
   if (!Number.isFinite(top)) return
 
-  window.requestAnimationFrame(() => {
-    const container = activeCaptureScrollContainer()
-    if (container) container.scrollTo({ top, behavior: 'auto' })
-    else window.scrollTo({ top, behavior: 'auto' })
-  })
+  window.requestAnimationFrame(() => window.scrollTo({ top, behavior: 'auto' }))
 }
 
 async function refreshEditorAuth() {

@@ -151,14 +151,8 @@ const languageOpen = ref(false)
 const colorSchemeOpen = ref(false)
 const atTop = ref(true)
 
-function activeScrollContainer() {
-  if (!isConsole.value || typeof document === 'undefined') return null
-  return document.querySelector('.desktop-layout--console .desktop-layout__result')
-}
-
 function onScroll() {
-  const container = activeScrollContainer()
-  atTop.value = (container?.scrollTop ?? window.scrollY) < 60
+  atTop.value = window.scrollY < 60
 }
 
 onMounted(() => {
