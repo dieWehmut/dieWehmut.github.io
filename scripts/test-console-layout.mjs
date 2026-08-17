@@ -22,6 +22,7 @@ const siteShell = read('src/layouts/SiteShell.vue')
 const floatButton = read('src/components/system/FloatButton.vue')
 const captureView = read('src/views/CaptureView.vue')
 const consoleShell = read('src/components/console/ConsoleShell.vue')
+const consoleSession = read('src/composables/useConsoleSession.ts')
 const consoleOverview = readOptional('src/components/console/ConsoleOverviewHeader.vue')
 const consolePanel = read('src/components/console/ConsolePanelView.vue')
 const commandRegistry = read('src/console/commandRegistry.ts')
@@ -75,7 +76,17 @@ check('shared article PDF export remains in console notes', noteView.includes('A
 check('console mode marks the document for native cursor overrides', displayPreference.includes('console-mode-active'))
 check('console uses the terminal text cursor everywhere', consoleStyles.includes('cursor: text !important'))
 check('console suggestions keep the selected row visible', consoleShell.includes('suggestionsRef') && consoleShell.includes('scrollIntoView'))
-check('nested panels close with Escape', consolePanel.includes("event.key === 'Escape'"))
+check(
+  'nested panels return to the previous menu with Escape',
+  consolePanel.includes("event.key === 'Escape'")
+    && consoleShell.includes('returnToPreviousMenu()')
+    && consoleSession.includes('panelStack.value.pop()'),
+)
+check(
+  'root slash suggestions expose every registered command',
+  /if \(prefix === ['"]\/['"]\) return options\s/.test(consoleSession)
+    && !consoleSession.includes('options.slice(0, 12)'),
+)
 const removedPanelCommands = ['agent', 'list', 'status', 'permissions', 'docker', 'workspace', 'model']
 for (const removedCommand of removedPanelCommands) {
   check(

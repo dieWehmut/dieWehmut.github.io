@@ -1,9 +1,9 @@
 <template>
-  <section v-if="panel" class="console-panel" aria-live="polite" @keydown="handlePanelKeydown">
+  <section v-if="panel" class="console-panel" @keydown="handlePanelKeydown">
     <div class="console-panel__heading">
       <span class="console-panel__marker" aria-hidden="true">›</span>
       <h2>{{ heading }}</h2>
-      <button class="console-panel__close" type="button" aria-label="Close panel" title="Close panel" @click="$emit('close')">×</button>
+      <button class="console-panel__close" type="button" aria-label="Back to previous menu" title="Back to previous menu" @click="$emit('close')">×</button>
     </div>
 
     <p v-if="feedback" class="console-panel__feedback">{{ feedback }}</p>

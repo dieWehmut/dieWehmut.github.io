@@ -19,6 +19,7 @@ import { requestConsoleOutputReveal } from './useConsoleOutputReveal'
 import type { SiteColorScheme } from '../types/content'
 import { getNotes, getPosts, getTagGroups } from '../data'
 import { siteConfig } from '../data/site/config'
+import { consoleEscapeTarget, moveConsoleSelection } from '../console/selection'
 
 const commandInput = ref('')
 const history = ref<string[]>([])
@@ -28,6 +29,8 @@ const activePanel = ref<{ panel: ConsolePanel; value?: string } | null>(null)
 const lastResolution = ref<ConsoleResolution | null>(null)
 const feedback = ref('')
 const executing = ref(false)
+const panelStack = ref<Array<{ panel: ConsolePanel; value?: string }>>([])
+const menuReturnState = ref<{ input: string; cursor: number } | null>(null)
 
 function normalizePrefix(value: string) {
   return value.trim().toLowerCase()
@@ -51,7 +54,7 @@ export function useConsoleSession() {
     if (!prefix.startsWith('/')) return []
 
     const options = listConsoleCommands(commandAvailability)
-    if (prefix === '/') return options.slice(0, 12)
+    if (prefix === '/') return options
 
     const dynamicOptions = prefix.startsWith('/note/')
       ? getNotes().map((note) => ({ input: `/note/${note.id}`, description: note.title || note.id }))
@@ -63,7 +66,6 @@ export function useConsoleSession() {
 
     return [...dynamicOptions, ...options]
       .filter((option) => option.input.toLowerCase().startsWith(prefix))
-      .slice(0, 12)
   })
 
   function resetNavigation() {
@@ -86,7 +88,46 @@ export function useConsoleSession() {
   }
 
   function setPanel(panel: ConsolePanel | null, value?: string) {
-    activePanel.value = panel ? { panel, value } : null
+    if (!panel) {
+      clearPanelNavigation()
+      return
+    }
+    activePanel.value = { panel, value }
+  }
+
+  function clearPanelNavigation() {
+    activePanel.value = null
+    panelStack.value = []
+    menuReturnState.value = null
+  }
+
+  function returnToPreviousMenu() {
+    if (activePanel.value) {
+      const previousPanel = panelStack.value.pop()
+      if (previousPanel) {
+        activePanel.value = previousPanel
+        feedback.value = ''
+        return true
+      }
+
+      const previousMenu = menuReturnState.value
+      const target = previousMenu?.input
+        ?? consoleEscapeTarget({ input: commandInput.value, hasPanel: true })
+      activePanel.value = null
+      menuReturnState.value = null
+      feedback.value = ''
+      historyCursor.value = null
+      commandInput.value = target || ''
+      suggestionCursor.value = previousMenu?.cursor ?? -1
+      return true
+    }
+
+    const target = consoleEscapeTarget({ input: commandInput.value, hasPanel: false })
+    if (target === null) return false
+    commandInput.value = target
+    feedback.value = ''
+    resetNavigation()
+    return true
   }
 
   async function applyPanelValue(panel: ConsolePanel, value?: string) {
@@ -139,6 +180,12 @@ export function useConsoleSession() {
 
     if (resolution.kind === 'comment' && !(await comments.canToggleCurrentPage())) return false
 
+    const sourceMenu = {
+      input: commandInput.value,
+      cursor: suggestionCursor.value,
+    }
+    const sourcePanel = activePanel.value ? { ...activePanel.value } : null
+
     executing.value = true
     lastResolution.value = resolution
     history.value = addConsoleHistoryEntry(history.value, parsed.canonicalInput)
@@ -148,7 +195,7 @@ export function useConsoleSession() {
 
     try {
       if (resolution.kind === 'route') {
-        activePanel.value = null
+        clearPanelNavigation()
         await router.push(resolution.path)
         requestConsoleOutputReveal(resolution.path.split(/[?#]/)[0] === '/' ? 'root' : 'route')
       } else if (resolution.kind === 'mode') {
@@ -156,13 +203,21 @@ export function useConsoleSession() {
         feedback.value = resolution.mode === 'console'
           ? 'Nexus Console enabled.'
           : 'Standard layout enabled.'
-        activePanel.value = null
+        clearPanelNavigation()
       } else if (resolution.kind === 'comment') {
         await comments.toggleCurrentPage()
         feedback.value = comments.isOpen.value ? 'Comments opened.' : 'Comments closed.'
-        activePanel.value = null
+        clearPanelNavigation()
         if (comments.isOpen.value) requestConsoleOutputReveal('comment')
       } else {
+        if (!resolution.value && sourcePanel && sourcePanel.panel !== resolution.panel) {
+          panelStack.value.push(sourcePanel)
+        } else if (!sourcePanel && !resolution.value) {
+          menuReturnState.value = {
+            input: sourceMenu.input.startsWith('/') ? sourceMenu.input : '/',
+            cursor: sourceMenu.cursor,
+          }
+        }
         setPanel(resolution.panel, resolution.value)
         await applyPanelValue(resolution.panel, resolution.value)
       }
@@ -188,10 +243,11 @@ export function useConsoleSession() {
 
   function moveSuggestion(delta: number) {
     if (!suggestions.value.length) return false
-    const next = suggestionCursor.value < 0
-      ? delta > 0 ? 0 : suggestions.value.length - 1
-      : Math.min(Math.max(suggestionCursor.value + delta, 0), suggestions.value.length - 1)
-    suggestionCursor.value = next
+    suggestionCursor.value = moveConsoleSelection(
+      suggestionCursor.value,
+      delta,
+      suggestions.value.length,
+    )
     return true
   }
 
@@ -223,8 +279,7 @@ export function useConsoleSession() {
     }
 
     if (event.key === 'Escape') {
-      activePanel.value = null
-      suggestionCursor.value = -1
+      if (returnToPreviousMenu()) event.preventDefault()
     }
   }
 
@@ -243,5 +298,6 @@ export function useConsoleSession() {
     handleInputKeydown,
     moveHistory,
     setPanel,
+    returnToPreviousMenu,
   }
 }

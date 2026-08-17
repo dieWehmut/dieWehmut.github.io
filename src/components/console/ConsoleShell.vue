@@ -50,6 +50,7 @@
           :class="{ 'is-selected': suggestionCursor === index }"
           type="button"
           role="option"
+          tabindex="-1"
           :aria-selected="suggestionCursor === index"
           :data-suggestion-index="index"
           @click="executeCommand(suggestion.input)"
@@ -117,6 +118,7 @@ const {
   executeCommand: executeSessionCommand,
   handleInputKeydown: handleSessionInputKeydown,
   setPanel,
+  returnToPreviousMenu,
 } = useConsoleSession()
 
 const hasPanelListbox = computed(() => Boolean(
@@ -149,7 +151,7 @@ async function executeCommand(value?: string) {
 
 function closePanel() {
   panelActiveOptionId.value = ''
-  setPanel(null)
+  returnToPreviousMenu()
   void nextTick(() => inputRef.value?.focus())
 }
 
