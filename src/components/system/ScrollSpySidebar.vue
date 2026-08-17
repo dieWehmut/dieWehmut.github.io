@@ -1,19 +1,11 @@
 <template>
   <aside v-if="items.length" class="scroll-spy" :class="`scroll-spy--${effectiveMode}`">
-    <button
-      v-if="effectiveMode === 'console'"
-      class="scroll-spy__arrow"
-      type="button"
-      aria-label="Previous section"
-      title="Previous section"
-      @click="scrollNav(-1)"
-    >&lt;</button>
     <div class="scroll-spy__status">
       <div class="scroll-spy__progress">
         <div class="scroll-spy__bar">
           <span :style="{ height: `${progress}%` }" />
         </div>
-        <span class="scroll-spy__percent">{{ progress }}%</span>
+        <span class="scroll-spy__percent">{{ displayProgress }}%</span>
       </div>
     </div>
     <nav ref="navRef" class="scroll-spy__nav" aria-label="目录">
@@ -28,14 +20,6 @@
         {{ item.title }}
       </button>
     </nav>
-    <button
-      v-if="effectiveMode === 'console'"
-      class="scroll-spy__arrow"
-      type="button"
-      aria-label="Next section"
-      title="Next section"
-      @click="scrollNav(1)"
-    >&gt;</button>
   </aside>
 </template>
 
@@ -317,22 +301,6 @@ function onSidebarWheel(event) {
   window.scrollBy({ top: event.deltaY, behavior: 'auto' })
 }
 
-function scrollNav(delta) {
-  const nav = navRef.value
-  if (!nav) return
-  const currentIndex = headings.findIndex((item) => item.id === activeId.value)
-  const nextIndex = Math.min(
-    Math.max((currentIndex < 0 ? 0 : currentIndex) + delta, 0),
-    headings.length - 1,
-  )
-  const target = headings[nextIndex]
-  if (target) {
-    scrollToHeading(target.id)
-    return
-  }
-  nav.scrollBy({ left: delta * Math.max(nav.clientWidth * 0.72, 120), behavior: 'auto' })
-}
-
 function onScroll() {
   if (!isEnabled) return
   if (scrollFrame) return
@@ -366,6 +334,18 @@ watch(activeId, () => {
 
 const { isConsole } = useDisplayModePreference()
 const effectiveMode = computed(() => isConsole.value ? 'console' : props.mode)
+
+/**
+ * Console draws one box per section, so its percentage reports which box is
+ * active. The sidebar keeps pixel scroll progress, which is what its vertical
+ * bar fills.
+ */
+const displayProgress = computed(() => {
+  if (effectiveMode.value !== 'console') return progress.value
+  if (!items.value.length) return 0
+  const index = items.value.findIndex((item) => item.id === activeId.value)
+  return Math.round(((index < 0 ? 0 : index) + 1) / items.value.length * 100)
+})
 
 watch(effectiveMode, () => {
   void nextTick(() => {
@@ -601,9 +581,9 @@ onBeforeUnmount(() => {
 
 .scroll-spy--console {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 7px;
+  gap: 0;
   width: 100%;
   max-height: none;
   overflow: visible;
@@ -611,31 +591,34 @@ onBeforeUnmount(() => {
 }
 
 .scroll-spy--console .scroll-spy__status {
+  position: static;
+  display: flex;
+  align-items: center;
+  padding: 0 12px 0 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.scroll-spy--console .scroll-spy__bar {
   display: none;
+}
+
+.scroll-spy--console .scroll-spy__percent {
+  color: var(--console-accent, var(--site-accent));
+  font-size: inherit;
+  font-weight: 700;
 }
 
 .scroll-spy--console .scroll-spy__nav {
   display: flex;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.scroll-spy__arrow {
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--console-border-strong, var(--site-border));
-  border-radius: 0;
-  color: var(--console-accent, var(--site-accent));
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-}
-
-.scroll-spy__arrow:hover,
-.scroll-spy__arrow:focus-visible {
-  color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
-  outline: none;
+.scroll-spy--console .scroll-spy__nav::-webkit-scrollbar {
+  display: none;
 }
 
 .scroll-spy--mobile {

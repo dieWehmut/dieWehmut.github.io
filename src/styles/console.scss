@@ -140,7 +140,22 @@ html.console-mode-active .sakura-burst-overlay {
 }
 
 .desktop-layout--console .scroll-spy__status {
+  position: static !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 12px 0 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
+.desktop-layout--console .scroll-spy__bar {
   display: none !important;
+}
+
+.desktop-layout--console .scroll-spy__percent {
+  color: var(--console-accent) !important;
+  font-size: inherit !important;
+  font-weight: 700 !important;
 }
 
 .desktop-layout--console .scroll-spy__nav {
@@ -148,7 +163,12 @@ html.console-mode-active .sakura-burst-overlay {
   gap: 4px !important;
   width: 100% !important;
   overflow-x: auto !important;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.desktop-layout--console .scroll-spy__nav::-webkit-scrollbar {
+  display: none;
 }
 
 .desktop-layout--console .scroll-spy__nav button {

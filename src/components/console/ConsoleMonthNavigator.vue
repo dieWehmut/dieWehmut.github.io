@@ -7,7 +7,7 @@
   >
     <template v-if="months.length">
       <header class="console-month-navigator__header" role="tablist" aria-label="Dates">
-        <span class="console-month-navigator__label" aria-hidden="true">Dates:</span>
+        <span class="console-month-navigator__label" aria-hidden="true">{{ percent }}%</span>
         <button
           v-for="(month, index) in months"
           :id="tabId(index)"
@@ -62,6 +62,11 @@ const tabRefs = ref<HTMLButtonElement[]>([])
 
 const current = computed(() => props.months[currentIndex.value])
 const stateStorageKey = computed(() => props.stateKey ? `nexus:console-month:${props.stateKey}` : '')
+
+/** Which box of the row is selected, in the same form the section bar reports. */
+const percent = computed(() => props.months.length
+  ? Math.round((currentIndex.value + 1) / props.months.length * 100)
+  : 0)
 
 watch(
   [
@@ -142,8 +147,12 @@ onBeforeUnmount(() => window.removeEventListener(CONSOLE_MONTH_NAVIGATION_EVENT,
   overflow-x: auto;
   border-top: 1px solid var(--console-border);
   border-bottom: 1px solid var(--console-border);
-  scrollbar-color: var(--console-border-strong) transparent;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.console-month-navigator__header::-webkit-scrollbar {
+  display: none;
 }
 
 .console-month-navigator__header button {

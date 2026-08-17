@@ -27,6 +27,7 @@ const tagsView = read('src/views/TagsView.vue')
 const tagDetailView = read('src/views/TagDetailView.vue')
 const consoleSelection = read('src/console/selection.ts')
 const friendsView = read('src/views/FriendsView.vue')
+const scrollSpySidebar = read('src/components/system/ScrollSpySidebar.vue')
 
 const checks = [
   ['project console keeps site links', projectView.includes('console-project__link--site')],
@@ -94,12 +95,33 @@ const checks = [
       && !monthNavigator.includes('Next month'),
   ],
   [
+    'monthly navigation leads with the same percentage as the section bar',
+    monthNavigator.includes('{{ percent }}%')
+      && !monthNavigator.includes('Dates:</span>')
+      && /const percent = computed\([\s\S]*?props\.months\.length \* 100/.test(monthNavigator)
+      && /\.console-month-navigator__header \{[\s\S]*?scrollbar-width: none/.test(monthNavigator)
+      && monthNavigator.includes('.console-month-navigator__header::-webkit-scrollbar'),
+  ],
+  [
     'empty console prompt forwards horizontal keys to the month tabs',
     consoleShell.includes('CONSOLE_MONTH_NAVIGATION_EVENT')
       && consoleShell.includes('ArrowLeft')
       && consoleShell.includes('ArrowRight'),
   ],
-  ['console section arrows select adjacent headings', read('src/components/system/ScrollSpySidebar.vue').includes('scrollToHeading(target.id)')],
+  [
+    'the console section bar is a percentage plus one row of section boxes',
+    !scrollSpySidebar.includes('scroll-spy__arrow')
+      && !scrollSpySidebar.includes('function scrollNav')
+      && scrollSpySidebar.includes('{{ displayProgress }}%')
+      && /const displayProgress = computed\([\s\S]*?items\.value\.length \* 100/.test(scrollSpySidebar)
+      && /\.scroll-spy--console \{[\s\S]*?grid-template-columns: auto minmax\(0, 1fr\);/.test(scrollSpySidebar),
+  ],
+  [
+    'the console section bar shows its percentage and hides its scrollbar',
+    !/\.desktop-layout--console \.scroll-spy__status \{[^}]*display: none/.test(consoleStyles)
+      && /\.desktop-layout--console \.scroll-spy__nav \{[^}]*overflow-x: auto[^}]*scrollbar-width: none/.test(consoleStyles)
+      && consoleStyles.includes('.desktop-layout--console .scroll-spy__nav::-webkit-scrollbar'),
+  ],
   ['console search reuses typed result behavior', (searchView.match(/<SearchResultItem\b/g) || []).length >= 2],
   [
     'console tag index supports cyclic arrow selection and Enter from the command prompt',
