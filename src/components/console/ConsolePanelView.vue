@@ -9,7 +9,6 @@
     <p v-if="feedback" class="console-panel__feedback">{{ feedback }}</p>
 
     <div
-      v-if="panelOptions !== null"
       ref="rowsRef"
       :id="listboxId"
       class="console-panel__rows"
@@ -35,13 +34,6 @@
       </button>
       <p v-if="!panelOptions.length" class="console-panel__empty">No options available.</p>
     </div>
-
-    <div v-else class="console-panel__details">
-      <p v-for="line in detailLines" :key="line.label">
-        <span>{{ line.label }}</span>
-        <strong>{{ line.value }}</strong>
-      </p>
-    </div>
   </section>
 </template>
 
@@ -57,7 +49,6 @@ import type { SiteColorScheme } from '../../types/content'
 
 const props = defineProps<{
   panel: ConsolePanel | null
-  value?: string
   feedback?: string
   listboxId: string
 }>()
@@ -117,8 +108,6 @@ const rowsRef = ref<HTMLElement | null>(null)
 const heading = computed(() => {
   const labels: Record<string, string> = {
     help: 'Command reference',
-    config: 'Resolved configuration',
-    doctor: 'Availability checks',
     theme: 'Select theme',
     color: 'Select color scheme',
     background: 'Dynamic background',
@@ -146,7 +135,7 @@ const listLabel = computed(() => {
   return props.panel ? labels[props.panel] || 'Console options' : 'Console options'
 })
 
-const panelOptions = computed<PanelOption[] | null>(() => {
+const panelOptions = computed<PanelOption[]>(() => {
   switch (props.panel) {
     case 'help':
       return commands.map((item) => ({
@@ -201,7 +190,7 @@ const panelOptions = computed<PanelOption[] | null>(() => {
         label: post.title || post.id,
       }))
     default:
-      return null
+      return []
   }
 })
 
@@ -324,27 +313,6 @@ watch(
 )
 
 defineExpose({ moveSelection, activateSelection })
-
-const detailLines = computed(() => {
-  switch (props.panel) {
-    case 'config':
-      return [
-        { label: 'site', value: siteConfig.title },
-        { label: 'repository', value: `${siteConfig.githubUser}/${siteConfig.githubRepo}` },
-        { label: 'locale', value: 'user preference' },
-        { label: 'scroll', value: 'document + terminal viewport' },
-      ]
-    case 'doctor':
-      return [
-        { label: 'router', value: 'ready' },
-        { label: 'markdown renderer', value: 'ready' },
-        { label: 'capture index', value: 'ready' },
-        { label: 'comments', value: 'deferred until route mount' },
-      ]
-    default:
-      return [{ label: 'info', value: props.value || 'No additional details.' }]
-  }
-})
 </script>
 
 <style scoped>
@@ -439,29 +407,8 @@ const detailLines = computed(() => {
   font-weight: 700;
 }
 
-.console-panel__details {
-  display: grid;
-  gap: 3px;
-  margin: 10px 0 2px;
-  padding-left: var(--console-prompt-indent, 34px);
-}
-
-.console-panel__details p {
-  display: grid;
-  grid-template-columns: minmax(140px, 220px) 1fr;
-  gap: 16px;
-  margin: 0;
-  color: var(--console-muted);
-}
-
-.console-panel__details strong {
-  color: var(--console-text);
-  font-weight: 500;
-}
-
 @media (max-width: 1100px) {
-  .console-panel__row,
-  .console-panel__details p {
+  .console-panel__row {
     grid-template-columns: minmax(130px, 1fr) 2fr;
   }
 }

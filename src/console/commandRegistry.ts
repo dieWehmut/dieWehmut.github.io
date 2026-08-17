@@ -6,8 +6,6 @@ export type ConsoleMode = 'console' | 'standard'
 
 export type ConsolePanel =
   | 'help'
-  | 'config'
-  | 'doctor'
   | 'theme'
   | 'color'
   | 'background'
@@ -36,9 +34,11 @@ export type ConsoleResolution =
   | { kind: 'mode'; mode: ConsoleMode }
   | { kind: 'silent' }
 
+/**
+ * Only routes that the command line can reach. `/archive` and `/notes` are
+ * deliberately absent: they stay reachable through the CONTENT stat cards.
+ */
 const ROUTES: Record<string, { path: string; routeName: string }> = {
-  archive: { path: '/archive', routeName: 'archive' },
-  notes: { path: '/notes', routeName: 'notes' },
   capture: { path: '/capture', routeName: 'capture' },
   infra: { path: '/infra', routeName: 'infra' },
   project: { path: '/project', routeName: 'project' },
@@ -50,8 +50,6 @@ const ROUTES: Record<string, { path: string; routeName: string }> = {
 
 const PANELS: Record<string, ConsolePanel> = {
   help: 'help',
-  config: 'config',
-  doctor: 'doctor',
 }
 
 const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }> = {
@@ -153,11 +151,7 @@ export function listConsoleCommands(availability: ConsoleCommandAvailability = {
   const commands = [
     { input: '/home', description: 'Browse the Home timeline' },
     { input: '/comment', description: 'Toggle comments for the current page' },
-    { input: '/config', description: 'Show resolved configuration' },
-    { input: '/doctor', description: 'Run availability checks' },
-    { input: '/archive', description: 'Browse posts by date' },
     { input: '/post', description: 'Select a post' },
-    { input: '/notes', description: 'Browse notes by date' },
     { input: '/note', description: 'Select a note' },
     { input: '/capture', description: 'Browse captured assets' },
     { input: '/infra', description: 'Inspect service status' },

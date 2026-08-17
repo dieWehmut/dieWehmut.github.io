@@ -2,21 +2,17 @@ import type { ConsoleCommand, ParsedConsoleInput, SilentConsoleInput } from './t
 
 const FIXED_SEGMENTS = new Set([
   'about',
-  'archive',
   'background',
   'capture',
   'classic',
   'color',
   'comment',
-  'config',
-  'doctor',
   'friends',
   'help',
   'home',
   'infra',
   'language',
   'mode',
-  'notes',
   'project',
   'search',
   'tags',
@@ -34,6 +30,12 @@ const REMOVED_COMMANDS = new Set([
   'docker',
   'workspace',
   'model',
+  // Retired from the command line. /archive and /notes remain routable pages,
+  // reached from the CONTENT stat cards rather than by typing.
+  'archive',
+  'notes',
+  'config',
+  'doctor',
 ])
 
 const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])

@@ -39,7 +39,7 @@ check(
   homeResolution.kind === 'route' && homeResolution.path === '/home' && homeResolution.routeName === 'home',
 )
 check('comment resolves a current-page action', registry.resolveConsoleCommand(command(['comment'])).kind === 'comment')
-check('archive resolves internal route', registry.resolveConsoleCommand(command(['archive'])).path === '/archive')
+check('capture resolves internal route', registry.resolveConsoleCommand(command(['capture'])).path === '/capture')
 check('post id is encoded exactly once', registry.resolveConsoleCommand(command(['post', 'A Study'])).path === '/post/A%20Study')
 check('tag matching is case-insensitive at command level', registry.resolveConsoleCommand(command(['tags', 'Vue'])).path === '/tags/Vue')
 check('theme opens a panel', registry.resolveConsoleCommand(command(['theme'])).kind === 'panel' && registry.resolveConsoleCommand(command(['theme'])).panel === 'theme')
@@ -62,7 +62,20 @@ check('command reference includes Friends', registry.listConsoleCommands().some(
 check('command reference includes the canonical Home route', registry.listConsoleCommands().some((item) => item.input === '/home'))
 check('command reference includes current-page comments', registry.listConsoleCommands().some((item) => item.input === '/comment'))
 check('command reference omits the standalone root slash', !registry.listConsoleCommands().some((item) => item.input === '/'))
-const removedCommands = ['agent', 'list', 'status', 'permissions', 'docker', 'workspace', 'model']
+const removedCommands = [
+  'agent',
+  'list',
+  'status',
+  'permissions',
+  'docker',
+  'workspace',
+  'model',
+  // Still routable pages, but only from the CONTENT stat cards.
+  'archive',
+  'notes',
+  'config',
+  'doctor',
+]
 for (const removedCommand of removedCommands) {
   check(
     `removed /${removedCommand} command resolves silently`,

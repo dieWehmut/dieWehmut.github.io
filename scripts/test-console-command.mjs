@@ -70,6 +70,11 @@ const removedCommands = [
   '/docker',
   '/workspace',
   '/model',
+  // Retired: /archive and /notes stay reachable from the CONTENT stat cards.
+  '/archive',
+  '/notes',
+  '/config',
+  '/doctor',
 ]
 for (const input of removedCommands) {
   check(`${input} stays silent after removal`, parser.parseConsoleInput(input)?.kind === 'silent')

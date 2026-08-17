@@ -14,7 +14,7 @@ const { outputText } = ts.transpileModule(source, {
 const history = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`)
 
 let entries = []
-for (const command of ['/', '/archive', '/notes', '/infra', '/about', '/friends']) {
+for (const command of ['/', '/capture', '/tags', '/infra', '/about', '/friends']) {
   entries = history.addConsoleHistoryEntry(entries, command)
 }
 

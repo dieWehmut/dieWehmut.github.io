@@ -127,7 +127,19 @@ check(
   /if \(prefix === ['"]\/['"]\) return options\s/.test(consoleSession)
     && !consoleSession.includes('options.slice(0, 12)'),
 )
-const removedPanelCommands = ['agent', 'list', 'status', 'permissions', 'docker', 'workspace', 'model']
+const removedPanelCommands = [
+  'agent',
+  'list',
+  'status',
+  'permissions',
+  'docker',
+  'workspace',
+  'model',
+  'archive',
+  'notes',
+  'config',
+  'doctor',
+]
 for (const removedCommand of removedPanelCommands) {
   check(
     `removed /${removedCommand} command has no dedicated panel entry`,
@@ -257,6 +269,12 @@ check(
     && /html\[data-theme='light'\] \.desktop-layout--console \{[\s\S]*?--console-canvas: var\(--console-bg\)/.test(desktopLayout)
     && /\.console-shell__prompt \{[\s\S]*?background: var\(--console-canvas/.test(consoleShell)
     && /\.console-overview__portrait \{[\s\S]*?background: var\(--console-canvas/.test(consoleOverview),
+)
+check(
+  'every console panel is a list of options, so the detail table is gone',
+  !consolePanel.includes('console-panel__details')
+    && !consolePanel.includes('detailLines')
+    && /const panelOptions = computed<PanelOption\[\]>/.test(consolePanel),
 )
 
 const failures = checks.filter(([, ok]) => !ok)

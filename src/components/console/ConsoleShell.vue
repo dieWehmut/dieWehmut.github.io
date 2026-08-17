@@ -72,7 +72,6 @@
       <ConsolePanelView
         ref="panelRef"
         :panel="activePanel?.panel || null"
-        :value="activePanel?.value"
         :feedback="feedback"
         :listbox-id="panelListboxId"
         @execute="executeCommand"
