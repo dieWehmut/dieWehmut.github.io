@@ -96,8 +96,11 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
 
 export const siteColorSchemeOptions = Object.values(siteColorSchemes)
 
+export const siteColorSchemeIds = Object.keys(siteColorSchemes) as SiteColorScheme[]
+
 export function isSiteColorScheme(value: unknown): value is SiteColorScheme {
-  return value === 'green' || value === 'purple' || value === 'pink'
+  if (typeof value !== 'string') return false
+  return Object.prototype.hasOwnProperty.call(siteColorSchemes, value)
 }
 
 export function resolveSiteColorScheme(value: unknown): SiteColorScheme {
