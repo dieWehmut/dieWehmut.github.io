@@ -1,5 +1,10 @@
 import type { SiteConfig } from '../../types/content'
-import consoleIcon from '../../assets/icon.png'
+
+// 用 `new URL(..., import.meta.url)` 而不是 `import icon from '...png'`：
+// vite.config.ts 也引这个模块拿 githubUser/owner，esbuild 预打包配置时没有
+// png loader，静态 import 会让整个 build 起不来。这种写法 Vite 构建时照样会
+// 重写成带 hash 的资源 URL，但对 esbuild 只是个普通运行时表达式。
+const consoleIcon = new URL('../../assets/icon.png', import.meta.url).href
 
 type CodeRunnerEnv = {
   VITE_CODE_RUNNER_API_URL?: string
