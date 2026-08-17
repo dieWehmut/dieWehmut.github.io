@@ -46,3 +46,4 @@ sample/
 backend
 .playwright-mcp
 docs
+.claude/worktrees
