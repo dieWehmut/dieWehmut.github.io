@@ -2,7 +2,6 @@
   <section class="page-surface">
     <section v-if="isConsole" class="console-friends" aria-label="Friend links">
       <header class="console-friends__summary">
-        <span>/friends</span>
         <strong>{{ friends.length }} links</strong>
       </header>
       <div class="console-friends__rows">
@@ -64,11 +63,6 @@ function friendOverflowCount(friend) {
   min-height: 38px;
   padding: 7px 0;
   border-bottom: 1px solid var(--console-border, var(--site-border));
-}
-
-.console-friends__summary span {
-  color: var(--console-accent, var(--site-accent));
-  font-weight: 700;
 }
 
 .console-friends__summary strong {

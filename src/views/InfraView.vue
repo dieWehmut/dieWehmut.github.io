@@ -3,7 +3,6 @@
     <PageHeading class="infra-heading" title="Infra" :icon="Cpu" />
       <div v-if="isConsole" class="console-infra" aria-label="Infrastructure status">
         <header class="console-infra__summary">
-          <span>/infra</span>
           <strong>{{ onlineCount }} online</strong>
           <strong :class="{ 'has-errors': offlineCount > 0 }">{{ offlineCount }} offline</strong>
           <span>{{ totalCount }} endpoints</span>
@@ -423,10 +422,6 @@ function serviceOverflowCount(item) {
   border-top: 1px solid var(--console-border, var(--site-border));
   border-bottom: 1px solid var(--console-border, var(--site-border));
   color: var(--console-muted, var(--site-muted));
-}
-
-.console-infra__summary > span:first-child {
-  color: var(--console-accent, var(--site-accent));
 }
 
 .console-infra__summary strong {

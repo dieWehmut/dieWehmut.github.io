@@ -3,7 +3,6 @@
     <div class="project-view__main">
       <section v-if="isConsole" class="console-project" aria-label="Project index">
         <header class="console-project__summary">
-          <span>/project</span>
           <strong>{{ consoleProjectCount }} entries</strong>
         </header>
         <section v-for="group in projectGroups" :key="group.key" class="console-project__group">
@@ -143,7 +142,6 @@ function projectOverflowCount(
   border-bottom: 1px solid var(--console-border, var(--site-border));
 }
 
-.console-project__summary > span:first-child,
 .console-project__group > header strong {
   color: var(--console-accent, var(--site-accent));
 }

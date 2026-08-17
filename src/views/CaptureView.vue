@@ -24,7 +24,6 @@
           <div class="console-capture-detail">
             <header class="console-capture-detail__header">
               <button type="button" aria-label="Back to captures" title="Back to captures" @click="backToCapture">&lt;</button>
-              <code>/capture/{{ selectedGroup.id }}</code>
               <span>{{ selectedGroup.assets.length }} assets</span>
             </header>
             <div class="console-capture-detail__assets">
@@ -1045,8 +1044,7 @@ watch(isDetailRoute, (detail) => {
   min-width: 0;
 }
 
-.console-capture-group__body > a code,
-.console-capture-detail__header code {
+.console-capture-group__body > a code {
   overflow: hidden;
   color: var(--console-accent, var(--site-accent));
   font: inherit;
@@ -1144,7 +1142,7 @@ watch(isDetailRoute, (detail) => {
 
 .console-capture-detail__header {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
+  grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
   min-height: 44px;

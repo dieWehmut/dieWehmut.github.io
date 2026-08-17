@@ -2,7 +2,6 @@
   <section class="page-surface tag-view">
     <section v-if="isConsole" class="console-tag-index" aria-label="Tag index">
       <header class="console-tag-index__header">
-        <span class="console-tag-index__prompt">/tags</span>
         <span class="console-tag-index__count">{{ tagGroups.length }} entries</span>
       </header>
       <nav
@@ -362,11 +361,6 @@ onBeforeUnmount(() => window.removeEventListener(CONSOLE_RESULT_NAVIGATION_EVENT
   min-height: 38px;
   padding-bottom: 9px;
   border-bottom: 1px solid var(--console-border, var(--site-border));
-}
-
-.console-tag-index__prompt {
-  color: var(--console-accent, var(--site-accent));
-  font-weight: 700;
 }
 
 .console-tag-index__count {

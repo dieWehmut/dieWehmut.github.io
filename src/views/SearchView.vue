@@ -2,7 +2,6 @@
   <section class="search-view page-surface">
     <div v-if="isConsole" class="console-search">
       <header class="console-search__summary">
-        <span>/search</span>
         <strong>{{ results.length }} results</strong>
       </header>
       <SearchInput v-model="query" />
@@ -127,11 +126,6 @@ const results = computed(() => filteredResults.value)
   min-height: 38px;
   padding: 7px 0;
   border-bottom: 1px solid var(--console-border, var(--site-border));
-}
-
-.console-search__summary span {
-  color: var(--console-accent, var(--site-accent));
-  font-weight: 700;
 }
 
 .console-search__summary strong {

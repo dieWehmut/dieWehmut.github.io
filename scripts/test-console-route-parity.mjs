@@ -26,6 +26,7 @@ const searchView = read('src/views/SearchView.vue')
 const tagsView = read('src/views/TagsView.vue')
 const tagDetailView = read('src/views/TagDetailView.vue')
 const consoleSelection = read('src/console/selection.ts')
+const friendsView = read('src/views/FriendsView.vue')
 
 const checks = [
   ['project console keeps site links', projectView.includes('console-project__link--site')],
@@ -119,6 +120,19 @@ const checks = [
     'console tag capture entries link to their stable group route',
     tagDetailView.includes('captureGroupUrl(asCaptureTimelineItem(item).group)')
       && !tagDetailView.includes("group.assets[0]?.id || ''"),
+  ],
+  [
+    'console views no longer echo their own route above the content',
+    ![friendsView, infraView, projectView, searchView, captureView, tagsView, tagDetailView]
+      .some((view) => /<(?:span|code)>\/[a-z]+<\/(?:span|code)>/.test(view))
+      && !captureView.includes('<code>/capture/{{ selectedGroup.id }}</code>')
+      && !tagsView.includes('console-tag-index__prompt'),
+  ],
+  [
+    'console rows keep the route they navigate to',
+    captureView.includes('<code>/capture/{{ encodeURIComponent(asCaptureGroup(item).id) }}</code>')
+      && tagDetailView.includes('<code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.id) }}</code>')
+      && tagsView.includes('<code>/tags/{{ group.tag }}</code>'),
   ],
 ]
 
