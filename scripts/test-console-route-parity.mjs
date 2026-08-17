@@ -17,6 +17,7 @@ const routeBreadcrumb = read('src/components/system/RouteBreadcrumb.vue')
 const notFoundView = read('src/views/NotFoundView.vue')
 const consoleStyles = read('src/styles/console.scss')
 const monthNavigator = read('src/components/console/ConsoleMonthNavigator.vue')
+const consoleShell = read('src/components/console/ConsoleShell.vue')
 const searchView = read('src/views/SearchView.vue')
 
 const checks = [
@@ -45,6 +46,20 @@ const checks = [
   ],
   ['not-found recovery links Home canonically', !/to="\/"/.test(notFoundView) && /to="\/home"/.test(notFoundView)],
   ['empty monthly views render an explicit empty state', !/<section\s+v-if="months\.length"/.test(monthNavigator) && /<template\s+v-if="months\.length">/.test(monthNavigator)],
+  [
+    'monthly navigation renders date tabs without visible edge arrows',
+    monthNavigator.includes('role="tablist"')
+      && monthNavigator.includes('role="tab"')
+      && monthNavigator.includes('selectMonth(index)')
+      && !monthNavigator.includes('Previous month')
+      && !monthNavigator.includes('Next month'),
+  ],
+  [
+    'empty console prompt forwards horizontal keys to the month tabs',
+    consoleShell.includes('CONSOLE_MONTH_NAVIGATION_EVENT')
+      && consoleShell.includes('ArrowLeft')
+      && consoleShell.includes('ArrowRight'),
+  ],
   ['console section arrows select adjacent headings', read('src/components/system/ScrollSpySidebar.vue').includes('scrollToHeading(target.id)')],
   ['console search reuses typed result behavior', (searchView.match(/<SearchResultItem\b/g) || []).length >= 2],
 ]

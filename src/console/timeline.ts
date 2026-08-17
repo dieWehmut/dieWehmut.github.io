@@ -1,5 +1,7 @@
 import type { ConsoleTimelineMonth } from './types'
 
+export const CONSOLE_MONTH_NAVIGATION_EVENT = 'nexus:console-month-navigate'
+
 function monthKey(value: unknown): string | null {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}`
@@ -31,10 +33,10 @@ export function groupConsoleTimelineMonths<T>(
 
 export function moveConsoleMonth(index: number, delta: number, count: number): number {
   if (count <= 0) return 0
-  return Math.min(Math.max(index + delta, 0), count - 1)
+  const normalizedIndex = ((index % count) + count) % count
+  return (normalizedIndex + delta + count) % count
 }
 
 export function consoleMonthHash(key: string): string {
   return `#month-${key}`
 }
-

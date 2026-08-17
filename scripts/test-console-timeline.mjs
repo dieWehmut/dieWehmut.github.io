@@ -23,8 +23,8 @@ const months = timeline.groupConsoleTimelineMonths(items, (item) => item.date)
 const checks = [
   ['months sort newest first', months.map((month) => month.key).join(',') === '2026-08,2026-01,2025-12'],
   ['same-month entries stay grouped', months[0]?.items.length === 2],
-  ['next month clamps at the end', timeline.moveConsoleMonth(2, 1, 3) === 2],
-  ['previous month clamps at the start', timeline.moveConsoleMonth(0, -1, 3) === 0],
+  ['next month wraps at the end', timeline.moveConsoleMonth(2, 1, 3) === 0],
+  ['previous month wraps at the start', timeline.moveConsoleMonth(0, -1, 3) === 2],
   ['middle month moves both directions', timeline.moveConsoleMonth(1, -1, 3) === 0 && timeline.moveConsoleMonth(1, 1, 3) === 2],
   ['month hash is stable', timeline.consoleMonthHash('2026-08') === '#month-2026-08'],
 ]

@@ -89,6 +89,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import type { ConsolePanel } from '../../console/commandRegistry'
+import { CONSOLE_MONTH_NAVIGATION_EVENT } from '../../console/timeline'
 
 const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
@@ -170,6 +171,18 @@ function handleShellKeydown(event: KeyboardEvent) {
       event.preventDefault()
       return
     }
+  }
+  if (
+    !activePanel.value
+    && !suggestions.value.length
+    && !commandInput.value.trim()
+    && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')
+  ) {
+    event.preventDefault()
+    window.dispatchEvent(new CustomEvent(CONSOLE_MONTH_NAVIGATION_EVENT, {
+      detail: event.key === 'ArrowLeft' ? -1 : 1,
+    }))
+    return
   }
   handleSessionInputKeydown(event)
 }
