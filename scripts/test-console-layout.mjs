@@ -66,6 +66,12 @@ check('desktop/mobile breakpoint remains 900px', siteShell.includes('(max-width:
 check('settings button exposes expanded state', floatButton.includes(':aria-expanded="settingsOpen"'))
 check('language selector exposes expanded state', floatButton.includes(':aria-expanded="languageOpen"'))
 check('colour selector exposes expanded state', floatButton.includes(':aria-expanded="colorSchemeOpen"'))
+check(
+  'classic controls use the terminal prompt mark for Console mode',
+  floatButton.includes('float-controls__terminal-mark')
+    && floatButton.includes('&gt;_')
+    && !floatButton.includes('<Monitor />'),
+)
 check('console capture preserves authorized editor controls', captureView.includes('console-capture-editor'))
 check('capture confirmation remains available in console mode', captureView.includes('<Teleport to="body">'))
 check('console overrides dynamic mesh with matching specificity', desktopLayout.includes(':root.dynamic-background-enabled .desktop-layout--console .desktop-layout__content'))

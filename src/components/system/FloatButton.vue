@@ -51,7 +51,7 @@
       :tabindex="settingsOpen ? 0 : -1"
       @click="toggleDisplayMode"
     >
-      <el-icon><Monitor /></el-icon>
+      <span class="float-controls__terminal-mark" aria-hidden="true">&gt;_</span>
     </button>
 
     <button
@@ -134,7 +134,7 @@
 <script setup>
 import { nextTick, ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Brush, MagicStick, Monitor, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
+import { Brush, MagicStick, Setting, Top, Moon, Sunny } from '@element-plus/icons-vue'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useThemePreference } from '../../composables/useThemePreference'
@@ -420,6 +420,14 @@ function toggleDisplayMode() {
 .float-controls__globe {
   font-size: 13px;
   font-weight: 900;
+}
+
+.float-controls__terminal-mark {
+  font-family: var(--site-font-mono);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .float-controls__langs {
