@@ -80,10 +80,9 @@ check(
   /grid-template-rows:\s*minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
 )
 check(
-  'Console prompt is the final command-shell row',
+  'Console command choices open below the prompt',
   consoleShellTemplate.indexOf('class="console-shell__transient"') > -1
-    && consoleShellTemplate.indexOf('class="console-shell__prompt"') > consoleShellTemplate.indexOf('class="console-shell__transient"')
-    && /<form\b[^>]*class="console-shell__prompt"[\s\S]*?<\/form>\s*<\/section>\s*<\/template>/.test(consoleShellTemplate),
+    && consoleShellTemplate.indexOf('class="console-shell__prompt"') < consoleShellTemplate.indexOf('class="console-shell__transient"'),
 )
 check(
   'short desktop viewports constrain transient console content',
@@ -111,10 +110,8 @@ check(
     && consoleShell.includes('aria-live="polite"'),
 )
 check('Console overview component exists', Boolean(consoleOverview))
-check(
-  'Console overview uses two exact equal-width columns',
-  /grid-template-columns:\s*(?:minmax\(0,\s*1fr\)\s+minmax\(0,\s*1fr\)|repeat\(2,\s*minmax\(0,\s*1fr\)\))\s*;/.test(consoleOverview),
-)
+check('Console avatar occupies the left third', /grid-template-columns:\s*minmax\(0,\s*1fr\)\s+minmax\(0,\s*2fr\)\s*;/.test(consoleOverview))
+check('Console overview is flush with both viewport edges', /width:\s*100%\s*;/.test(consoleOverview) && /margin:\s*0\s*;/.test(consoleOverview))
 check('Console overview avatar is grayscale only', /filter:\s*grayscale\(1\)\s*;/.test(consoleOverview))
 check('Console overview avatar stays fully visible', /object-fit:\s*contain\s*;/.test(consoleOverview))
 check(
