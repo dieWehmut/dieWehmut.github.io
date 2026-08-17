@@ -149,7 +149,6 @@ export function resolveConsoleCommand(
 
 export function listConsoleCommands(availability: ConsoleCommandAvailability = {}) {
   const commands = [
-    { input: '/', description: 'Return to the Console landing' },
     { input: '/home', description: 'Browse the Home timeline' },
     { input: '/comment', description: 'Toggle comments for the current page' },
     { input: '/config', description: 'Show resolved configuration' },

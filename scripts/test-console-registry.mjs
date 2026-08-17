@@ -61,6 +61,7 @@ check('command reference includes About', registry.listConsoleCommands().some((i
 check('command reference includes Friends', registry.listConsoleCommands().some((item) => item.input === '/friends'))
 check('command reference includes the canonical Home route', registry.listConsoleCommands().some((item) => item.input === '/home'))
 check('command reference includes current-page comments', registry.listConsoleCommands().some((item) => item.input === '/comment'))
+check('command reference omits the standalone root slash', !registry.listConsoleCommands().some((item) => item.input === '/'))
 const removedCommands = ['agent', 'list', 'status', 'permissions', 'docker', 'workspace', 'model']
 for (const removedCommand of removedCommands) {
   check(
