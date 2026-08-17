@@ -5,6 +5,31 @@
       <button v-for="entry in history" :key="entry" type="button" @click="executeCommand(entry)">{{ entry }}</button>
     </div>
 
+    <form class="console-shell__prompt" @submit.prevent="executeCommand()">
+      <label class="console-shell__prompt-symbol" for="console-command-input">&gt;_</label>
+      <input
+        id="console-command-input"
+        ref="inputRef"
+        data-console-input
+        class="console-shell__input"
+        role="combobox"
+        :value="commandInput"
+        :aria-expanded="Boolean(activeListboxId)"
+        :aria-controls="activeListboxId || undefined"
+        :aria-activedescendant="activeOptionId || undefined"
+        aria-autocomplete="list"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        inputmode="text"
+        placeholder="/help"
+        aria-label="Console command"
+        @input="setInput(($event.target as HTMLInputElement).value)"
+        @keydown="handleShellKeydown"
+      />
+      <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
+    </form>
+
     <div
       v-if="suggestions.length || activePanel || (feedback && !activePanel)"
       class="console-shell__transient"
@@ -56,30 +81,6 @@
       />
     </div>
 
-    <form class="console-shell__prompt" @submit.prevent="executeCommand()">
-      <label class="console-shell__prompt-symbol" for="console-command-input">&gt;_</label>
-      <input
-        id="console-command-input"
-        ref="inputRef"
-        data-console-input
-        class="console-shell__input"
-        role="combobox"
-        :value="commandInput"
-        :aria-expanded="Boolean(activeListboxId)"
-        :aria-controls="activeListboxId || undefined"
-        :aria-activedescendant="activeOptionId || undefined"
-        aria-autocomplete="list"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        inputmode="text"
-        placeholder="/help"
-        aria-label="Console command"
-        @input="setInput(($event.target as HTMLInputElement).value)"
-        @keydown="handleShellKeydown"
-      />
-      <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
-    </form>
   </section>
 </template>
 

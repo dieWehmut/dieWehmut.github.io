@@ -95,32 +95,36 @@ const formattedReadingMinutes = computed(() => numberFormatter.format(contentSum
 <style scoped>
 .console-overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   box-sizing: border-box;
-  width: calc(100% - 24px);
+  width: 100%;
   min-height: min(620px, calc(100vh - 94px));
-  margin: 12px;
-  border: 1px solid var(--console-border-strong);
+  margin: 0;
+  border-top: 1px solid var(--console-border-strong);
+  border-bottom: 1px solid var(--console-border-strong);
   color: var(--console-text);
   background: var(--console-bg);
   font-family: var(--console-font);
 }
 
 .console-overview__portrait {
-  display: grid;
+  position: relative;
+  display: block;
   min-width: 0;
   min-height: 360px;
-  place-items: center;
+  align-self: stretch;
   overflow: hidden;
   border-right: 1px solid var(--console-border-strong);
   background: var(--console-surface);
 }
 
 .console-overview__avatar {
+  position: sticky;
+  top: 0;
   display: block;
   width: 100%;
-  height: 100%;
-  max-height: 620px;
+  height: auto;
+  max-height: none;
   object-fit: contain;
   filter: grayscale(1);
   image-rendering: auto;
