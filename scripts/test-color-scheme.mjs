@@ -120,6 +120,26 @@ check(
   ) === JSON.stringify(['white', 'black']),
 )
 check(
+  'every scheme exposes a non-empty label and a hex preview swatch',
+  theme.siteColorSchemeIds.every((id) => {
+    const option = theme.siteColorSchemes[id]
+    return (
+      typeof option.label === 'string' &&
+      option.label.length > 0 &&
+      /^#[0-9a-f]{6}$/.test(option.preview)
+    )
+  }),
+)
+check(
+  'monochrome previews stay grayscale with white brighter than black',
+  ['white', 'black'].every((id) => {
+    const [r, g, b] = hexToRgb(theme.siteColorSchemes[id].preview)
+    return r === g && g === b
+  }) &&
+    grayLevel(theme.siteColorSchemes.white.preview) >
+      grayLevel(theme.siteColorSchemes.black.preview),
+)
+check(
   'every scheme carries a full token set for both modes',
   theme.siteColorSchemeIds.every((id) =>
     ['light', 'dark'].every((mode) => {

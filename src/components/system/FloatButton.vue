@@ -527,7 +527,7 @@ function toggleDisplayMode() {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.28);
 }
 
-/* light 主题下按钮底色是 rgba(255,255,255,0.58)，白色描边会让 white swatch 整块消失 */
+/* light 主题下按钮底色是 rgba(255,255,255,0.9)，白色描边会让 white swatch 整块消失 */
 :root[data-theme="light"] .float-controls__scheme-swatch {
   border-color: rgba(0, 0, 0, 0.36);
 }
