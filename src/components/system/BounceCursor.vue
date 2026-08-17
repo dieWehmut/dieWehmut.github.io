@@ -19,8 +19,10 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { siteColorSchemes } from '../../data/site/theme'
 import { useMotionPreferences } from '../../composables/useMotionPreferences'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
+import { useThemePreference } from '../../composables/useThemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 
@@ -29,6 +31,7 @@ const dotsCanvasRef = ref(null)
 const visible = ref(false)
 const { canUsePointerEffects } = useMotionPreferences()
 const { colorScheme } = useColorSchemePreference()
+const { theme } = useThemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 const { isConsole } = useDisplayModePreference()
 
@@ -41,7 +44,7 @@ const ringVisible = computed(
 
 // ── 弹性点环（仿 cnblogs type:12 / mouseType3）─────────────────────────────
 // 头点跟随爱心中心，多条链沿角度放射，每个点弹性追踪父点
-// 点的颜色跟随当前主题的 accent 色（绿/紫/粉随配色切换而变）
+// 点的颜色跟随当前配色 + 明暗的 accent 色
 const RING_SPEED   = 4     // 追踪阻尼（越大越滞后柔软）
 const RING_ANIM_R  = 2     // 弹簧系数
 const RING_ANGLE_STEP = 30 // 每条链的角度间隔（度）→ 12 条
@@ -53,17 +56,12 @@ const RING_SPIN_SPEED = 0.012 // 自旋角速度（rad/帧）→ 60fps 下约一
 const RING_TRAIL_LEN = 16     // 尾点流线长度 px（沿切向）
 const RING_TRAIL_WIDTH = 0.42 // 流线宽度 px
 const RING_TRAIL_CURVE = 4.5  // 流线弯曲量 px（沿半径方向偏移控制点，随长度等比放大保持弧度）
-const RING_FALLBACK_COLOR = '#ff69b4' // 读不到主题色时的兜底（爱心粉）
-let ringColor = RING_FALLBACK_COLOR   // 当前点环颜色，来自 --site-accent
 
-/** 从主题 CSS 变量读取当前 accent 色，主题切换时刷新 */
-function refreshRingColor() {
-  if (typeof document === 'undefined') return
-  const accent = getComputedStyle(document.documentElement)
-    .getPropertyValue('--site-accent')
-    .trim()
-  ringColor = accent || RING_FALLBACK_COLOR
-}
+// 点环颜色跟 accent 走。直接查配色表而不是 getComputedStyle 读 --site-accent：
+// 后者要等 applySiteColorScheme 把变量写完才准，watcher 顺序一变就会读到上一次的值。
+// 配色和明暗两个轴都会改变 accent，所以两者都要进依赖。
+const accentColor = computed(() => siteColorSchemes[colorScheme.value][theme.value].accent)
+let ringColor = accentColor.value
 
 let dotsCtx = null
 let dotsW = 0
@@ -241,7 +239,7 @@ function seedRingAtTarget() {
 function startRing() {
   if (ringAnimId != null) return
   resizeDots()
-  refreshRingColor()
+  ringColor = accentColor.value
   if (!ringNodes.length) buildRing()
   seedRingAtTarget()
   ringLoop()
@@ -359,9 +357,9 @@ watch(ringVisible, (v) => {
   else stopRing()
 })
 
-// 主题配色切换时，点环颜色同步刷新
-watch(colorScheme, () => {
-  refreshRingColor()
+// 配色或明暗切换时，点环颜色同步刷新
+watch(accentColor, (color) => {
+  ringColor = color
 })
 
 let ringResizeTimer = null
@@ -414,9 +412,19 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   height: 100%;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ff69b4'/%3E%3C/svg%3E");
+  /* 爱心本体走 mask + background-color，颜色直接由 --site-accent 驱动：
+     配色切换只改 CSS 变量，不用重新编码 data URL，也不需要 JS 参与。
+     mask 里用白色填充（alpha 与亮度都为 1），alpha / luminance 两种
+     mask-mode 解释下都能正确显形。 */
+  background-color: var(--site-accent);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ffffff'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ffffff'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
   animation: heartBounce 560ms ease-in-out infinite;
   will-change: transform;
 }
@@ -429,7 +437,7 @@ onBeforeUnmount(() => {
   height: 4px;
   transform: translate(-50%, -6px) scale(0);
   border-radius: 50%;
-  background: rgba(255,40,40,0.95);
+  background: rgb(var(--site-accent-rgb) / 0.95);
   opacity: 0;
   filter: blur(0.6px);
   pointer-events: none;

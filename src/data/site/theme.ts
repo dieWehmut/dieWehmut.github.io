@@ -105,19 +105,24 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
   // 单色方案在两种模式下取不同灰阶：语义统一为 accent 对比最强、secondary 次之、
   // tertiary 最弱——light 下越暗越强，dark 下越亮越强。所以 white 在 light 模式里
   // 反而是深灰，black 在 dark 模式里反而是浅灰，四种组合才都可读。
+  //
+  // 「不匹配」那一侧（white/light、black/dark）的 accent 定在 WCAG AA 的 4.5:1
+  // 而不是更保守的 8:1：匹配侧已经是 #ffffff / #000000 顶到墙，两个方案的区分度
+  // 全靠不匹配侧能走多远。4.5:1 把 accent 差距从 74/75 级灰度拉到 118/137 级，
+  // 代价是这一侧的三档梯度被压窄（步长约 19 级）。
   white: {
     id: 'white',
     label: 'White',
     preview: '#ffffff',
     tone: 'monochrome',
     light: {
-      accent: '#4a4a4a',
-      accentRgb: '74 74 74',
-      secondary: '#6b6b6b',
-      secondaryRgb: '107 107 107',
-      tertiary: '#8f8f8f',
-      tertiaryRgb: '143 143 143',
-      tagColor: 'rgba(74, 74, 74, 0.92)',
+      accent: '#767676',
+      accentRgb: '118 118 118',
+      secondary: '#898989',
+      secondaryRgb: '137 137 137',
+      tertiary: '#9c9c9c',
+      tertiaryRgb: '156 156 156',
+      tagColor: 'rgba(118, 118, 118, 0.92)',
     },
     dark: {
       accent: '#ffffff',
@@ -144,13 +149,13 @@ export const siteColorSchemes: Record<SiteColorScheme, SiteColorSchemeOption> = 
       tagColor: 'rgba(20, 20, 20, 0.92)',
     },
     dark: {
-      accent: '#b4b4b4',
-      accentRgb: '180 180 180',
-      secondary: '#8f8f8f',
-      secondaryRgb: '143 143 143',
-      tertiary: '#6a6a6a',
-      tertiaryRgb: '106 106 106',
-      tagColor: 'rgba(176, 176, 176, 0.85)',
+      accent: '#767676',
+      accentRgb: '118 118 118',
+      secondary: '#626262',
+      secondaryRgb: '98 98 98',
+      tertiary: '#4f4f4f',
+      tertiaryRgb: '79 79 79',
+      tagColor: 'rgba(118, 118, 118, 0.85)',
     },
   },
 }
@@ -180,6 +185,21 @@ export function getSiteColorSchemeTokens(
   return siteColorSchemes[scheme][mode]
 }
 
+/** 爱心光标的 SVG path，与 BounceCursor 的 mask 形状保持一致 */
+const HEART_CURSOR_PATH =
+  'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
+
+/**
+ * 原生光标只能写 `cursor: url(...)`，而 CSS 没法把自定义属性插进 data URL，
+ * 所以配色色值只能在 JS 里重新编码一次 SVG。热点固定在 (12,21)（爱心下尖）。
+ */
+function heartCursorValue(color: string, fallback: string) {
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">` +
+    `<path d="${HEART_CURSOR_PATH}" fill="${color}"/></svg>`
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") 12 21, ${fallback}`
+}
+
 export function applySiteColorScheme(scheme: SiteColorScheme, mode: SiteThemeMode) {
   if (typeof document === 'undefined') return
 
@@ -195,4 +215,10 @@ export function applySiteColorScheme(scheme: SiteColorScheme, mode: SiteThemeMod
   root.style.setProperty('--site-tertiary', tokens.tertiary)
   root.style.setProperty('--site-tertiary-rgb', tokens.tertiaryRgb)
   root.style.setProperty('--site-tag-color', tokens.tagColor)
+
+  // 三个原生爱心光标（默认 / 可点击 / 樱花悬停）跟着 accent 换色，
+  // 覆盖 SCSS 里写死的粉色默认值。樱花「抓取」光标是插画，不参与配色。
+  root.style.setProperty('--cursor-heart', heartCursorValue(tokens.accent, 'auto'))
+  root.style.setProperty('--cursor-pointer', heartCursorValue(tokens.accent, 'pointer'))
+  root.style.setProperty('--cursor-sakura-hover', heartCursorValue(tokens.accent, 'auto'))
 }

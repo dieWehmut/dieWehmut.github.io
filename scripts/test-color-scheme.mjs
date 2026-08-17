@@ -186,19 +186,29 @@ check(
   ),
 )
 check(
-  'monochrome accents clear 8:1 against their own background',
+  'white and black keep their accents at least 100 gray levels apart',
+  ['light', 'dark'].every(
+    (mode) =>
+      grayLevel(theme.siteColorSchemes.white[mode].accent) -
+        grayLevel(theme.siteColorSchemes.black[mode].accent) >=
+      100,
+  ),
+)
+check(
+  'monochrome accents clear 4.5:1 against their own background',
   ['white', 'black'].every((id) =>
     ['light', 'dark'].every(
-      (mode) => contrastRatio(theme.siteColorSchemes[id][mode].accent, MODE_BACKGROUND[mode]) >= 8,
+      (mode) =>
+        contrastRatio(theme.siteColorSchemes[id][mode].accent, MODE_BACKGROUND[mode]) >= 4.5,
     ),
   ),
 )
 check(
-  'monochrome supporting tokens clear 3:1 against their own background',
+  'monochrome supporting tokens clear 2.5:1 against their own background',
   ['white', 'black'].every((id) =>
     ['light', 'dark'].every((mode) =>
       ['secondary', 'tertiary'].every(
-        (key) => contrastRatio(theme.siteColorSchemes[id][mode][key], MODE_BACKGROUND[mode]) >= 3,
+        (key) => contrastRatio(theme.siteColorSchemes[id][mode][key], MODE_BACKGROUND[mode]) >= 2.5,
       ),
     ),
   ),
@@ -267,6 +277,88 @@ check(
   registry
     .listConsoleCommands()
     .some((entry) => entry.input === '/color' && !/green|purple|pink|white|black/i.test(entry.description)),
+)
+
+// applySiteColorScheme 还负责重编三个原生爱心光标的 data URL（CSS 没法把变量插进
+// url()），所以这里用一个假的 documentElement 记录它到底写了什么。
+function captureAppliedProperties(scheme, mode) {
+  const written = new Map()
+  const root = {
+    setAttribute() {},
+    style: {
+      setProperty(name, value) {
+        written.set(name, value)
+      },
+    },
+  }
+  globalThis.document = { documentElement: root }
+  try {
+    theme.applySiteColorScheme(scheme, mode)
+  } finally {
+    delete globalThis.document
+  }
+  return written
+}
+
+const CURSOR_KEYS = ['--cursor-heart', '--cursor-pointer', '--cursor-sakura-hover']
+
+// 断言一律走这个读取器：漏写一个变量时才会得到干净的 FAIL，而不是 TypeError
+// 把整条 test:console 链后面的输出一起带走。
+function cursorValue(written, key) {
+  const value = written.get(key)
+  return typeof value === 'string' ? value : ''
+}
+
+check(
+  'applying a scheme writes all three native heart cursors',
+  theme.siteColorSchemeIds.every((id) =>
+    ['light', 'dark'].every((mode) => {
+      const written = captureAppliedProperties(id, mode)
+      return CURSOR_KEYS.every((key) =>
+        cursorValue(written, key).startsWith('url("data:image/svg+xml,'),
+      )
+    }),
+  ),
+)
+check(
+  'every native heart cursor carries the active accent',
+  theme.siteColorSchemeIds.every((id) =>
+    ['light', 'dark'].every((mode) => {
+      const written = captureAppliedProperties(id, mode)
+      const encodedAccent = encodeURIComponent(theme.siteColorSchemes[id][mode].accent)
+      return CURSOR_KEYS.every((key) => cursorValue(written, key).includes(encodedAccent))
+    }),
+  ),
+)
+check(
+  // pink 方案的 accent 本来就是 #ff69b4，所以只能对单色方案断言「没有粉」——
+  // 那才是 SCSS 里写死的默认值漏出来的信号。
+  'monochrome schemes never leak the hardcoded pink fill',
+  ['white', 'black'].every((id) =>
+    ['light', 'dark'].every((mode) => {
+      const written = captureAppliedProperties(id, mode)
+      return CURSOR_KEYS.every((key) => !/ff69b4/i.test(cursorValue(written, key)))
+    }),
+  ),
+)
+check(
+  'native heart cursors keep the (12, 21) hotspot and a keyword fallback',
+  (() => {
+    const written = captureAppliedProperties('purple', 'dark')
+    return (
+      cursorValue(written, '--cursor-heart').endsWith(' 12 21, auto') &&
+      cursorValue(written, '--cursor-pointer').endsWith(' 12 21, pointer') &&
+      cursorValue(written, '--cursor-sakura-hover').endsWith(' 12 21, auto')
+    )
+  })(),
+)
+check(
+  'native heart cursor data URLs are fully percent-encoded',
+  CURSOR_KEYS.every((key) => {
+    const value = cursorValue(captureAppliedProperties('white', 'light'), key)
+    const inner = value.slice(value.indexOf('data:'), value.indexOf('") '))
+    return !/["#<>]/.test(inner) && decodeURIComponent(inner).includes('<svg')
+  }),
 )
 
 const failures = checks.filter(([, ok]) => !ok)
