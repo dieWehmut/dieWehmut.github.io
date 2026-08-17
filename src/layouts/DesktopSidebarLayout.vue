@@ -197,8 +197,8 @@ watch(isConsole, (enabled) => {
 }
 
 .desktop-layout--console .desktop-layout__content {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 0;
   margin-left: 0;
@@ -211,6 +211,7 @@ watch(isConsole, (enabled) => {
 .desktop-layout--console .desktop-layout__result {
   position: relative;
   display: block;
+  flex: 0 1 auto;
   min-width: 0;
   min-height: 0;
   width: 100%;
@@ -255,8 +256,13 @@ watch(isConsole, (enabled) => {
 .desktop-layout__command-dock {
   position: relative;
   z-index: 3;
+  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
+}
+
+.desktop-layout--console :deep(.console-overview) {
+  flex: 0 0 auto;
 }
 
 .desktop-layout--console :deep(.desktop-layout__comment .giscus-comments) {

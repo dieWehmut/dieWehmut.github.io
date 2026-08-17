@@ -58,7 +58,7 @@ check(
 check(
   'Console overview remains outside the scrolling route result',
   desktopTemplate.indexOf('<ConsoleOverviewHeader') < desktopTemplate.indexOf('ref="resultRef"')
-    && /grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
+    && desktopTemplate.indexOf('ref="resultRef"') < desktopTemplate.indexOf('desktop-layout__command-dock'),
 )
 check('mobile layout does not mount the console shell', !mobileLayout.includes('ConsoleShell'))
 check('mobile layout does not mount the Console overview', !mobileLayout.includes('ConsoleOverviewHeader'))
@@ -101,8 +101,10 @@ for (const removedCommand of removedPanelCommands) {
   )
 }
 check(
-  'Console viewport reserves its final row for the command dock',
-  /grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
+  'Console command dock follows content without a forced spacer',
+  /\.desktop-layout--console \.desktop-layout__content[\s\S]*?display:\s*flex\s*;[\s\S]*?flex-direction:\s*column\s*;/.test(desktopLayout)
+    && /\.desktop-layout--console \.desktop-layout__result[\s\S]*?flex:\s*0\s+1\s+auto\s*;/.test(desktopLayout)
+    && !/grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
 )
 check(
   'Console command choices open below the prompt',
