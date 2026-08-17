@@ -287,7 +287,7 @@ onMounted(() => {
   min-height: 46px;
   border-top: 0;
   border-bottom: 1px solid var(--console-border-strong);
-  background: var(--console-surface);
+  background: var(--console-canvas, var(--console-surface));
 }
 
 .console-shell__transient {

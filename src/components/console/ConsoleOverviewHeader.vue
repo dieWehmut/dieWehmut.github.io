@@ -38,9 +38,10 @@
       <section class="console-overview__section">
         <div class="console-overview__section-title">RUNTIME</div>
         <dl class="console-overview__rows">
-          <div><dt>started</dt><dd>{{ config.startedAt }}</dd></div>
           <div class="console-overview__uptime"><dt>uptime</dt><dd>{{ uptime.days }}d {{ uptime.hours }}h {{ uptime.minutes }}m {{ uptime.seconds }}s</dd></div>
-          <div class="console-overview__copyright"><dt>copyright</dt><dd>{{ footerMeta.copyrightText }}</dd></div>
+          <div><dt>theme</dt><dd>{{ theme }}</dd></div>
+          <div><dt>color</dt><dd>{{ colorScheme }}</dd></div>
+          <div class="console-overview__copyright"><dt>copyright</dt><dd>&copy; {{ footerMeta.copyrightYear }} <a class="console-overview__owner" :href="footerMeta.githubProfileUrl" target="_blank" rel="noopener noreferrer">{{ footerMeta.displayName }}</a></dd></div>
           <div class="console-overview__icp"><dt>icp</dt><dd><a v-if="footerMeta.icp" :href="footerMeta.icp.href" target="_blank" rel="noopener noreferrer">{{ footerMeta.icp.text }}</a><span v-else>not configured</span></dd></div>
         </dl>
       </section>
@@ -52,6 +53,8 @@
 import { RouterLink } from 'vue-router'
 import { useSiteOverview } from '../../composables/useSiteOverview'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
+import { useThemePreference } from '../../composables/useThemePreference'
+import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 
 const {
@@ -61,6 +64,8 @@ const {
   uptime,
 } = useSiteOverview()
 const { setDisplayMode } = useDisplayModePreference()
+const { theme } = useThemePreference()
+const { colorScheme } = useColorSchemePreference()
 const configuredIcon = String(config.console?.icon || '').trim()
 const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
 const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.console?.darkIconEffect || '')
@@ -96,7 +101,7 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
   align-self: stretch;
   overflow: clip;
   border-right: 1px solid var(--console-border-strong);
-  background: var(--console-surface);
+  background: var(--console-canvas, var(--console-surface));
 }
 
 .console-overview__avatar {
@@ -231,6 +236,18 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
   min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
+}
+
+.console-overview__owner {
+  color: inherit;
+  text-decoration: none;
+}
+
+.console-overview__owner:hover,
+.console-overview__owner:focus-visible {
+  color: var(--console-accent);
+  text-decoration: underline;
+  outline: none;
 }
 
 .console-overview__stats {

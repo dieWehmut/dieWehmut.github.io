@@ -13,6 +13,10 @@ const checks = [
   ['header falls back to GitHub avatar when no icon is configured', header.includes('config.console?.icon') && header.includes('getGitHubAvatarUrl(config.githubUser)')],
   ['light theme keeps the console icon original', /data-theme="light"[\s\S]*?filter:\s*none/.test(header)],
   ['dark theme supports grayscale, white, and original icon effects', header.includes('avatar--grayscale') && header.includes('avatar--whiten') && header.includes('avatar--original')],
+  ['the runtime panel drops the started timestamp', !header.includes('<dt>started</dt>') && !header.includes('config.startedAt')],
+  ['the runtime panel reports the live theme and color scheme', header.includes('<dt>theme</dt><dd>{{ theme }}</dd>') && header.includes('<dt>color</dt><dd>{{ colorScheme }}</dd>')],
+  ['the copyright owner links out to the GitHub profile', /class="console-overview__owner"[^>]*:href="footerMeta\.githubProfileUrl"[^>]*target="_blank"/.test(header)],
+  ['the copyright owner underlines on hover like the classic switch', /\.console-overview__owner:hover,[\s\S]*?text-decoration: underline/.test(header)],
 ]
 
 const failures = checks.filter(([, ok]) => !ok)
