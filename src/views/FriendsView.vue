@@ -13,7 +13,8 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <code>{{ friend.id }}</code>
+          <img v-if="friend.avatar" class="console-friends__avatar" :src="friend.avatar" alt="" loading="lazy" decoding="async" />
+          <span v-else class="console-friends__avatar console-friends__avatar--fallback">{{ initials(friend.name) }}</span>
           <strong>{{ friend.name }}</strong>
           <span>{{ friend.description }}</span>
           <span>{{ friend.url }}</span>
@@ -45,6 +46,10 @@ const friendsHiddenCount = computed(() => hiddenCardCount(friends))
 
 function friendOverflowCount(friend) {
   return overflowCountForItem(friend, visibleFriends.value, friendsHiddenCount.value)
+}
+
+function initials(name) {
+  return name.slice(0, 2).toUpperCase()
 }
 </script>
 
@@ -78,8 +83,8 @@ function friendOverflowCount(friend) {
 
 .console-friends__row {
   display: grid;
-  grid-template-columns: 130px minmax(130px, 0.7fr) minmax(160px, 1fr) minmax(220px, 1.2fr);
-  align-items: baseline;
+  grid-template-columns: 26px minmax(130px, 0.7fr) minmax(160px, 1fr) minmax(220px, 1.2fr);
+  align-items: center;
   gap: 14px;
   min-height: 36px;
   padding: 6px 8px;
@@ -96,17 +101,23 @@ function friendOverflowCount(friend) {
   outline: none;
 }
 
-.console-friends__row code {
-  overflow: hidden;
+.console-friends__avatar {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--console-border, var(--site-border));
+  object-fit: cover;
+}
+
+.console-friends__avatar--fallback {
+  display: grid;
+  place-items: center;
   color: var(--console-accent, var(--site-accent));
-  font: inherit;
-  font-size: 0.78rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 0.66rem;
+  letter-spacing: .04em;
 }
 
 .console-friends__row strong,
-.console-friends__row span {
+.console-friends__row > span:not(.console-friends__avatar) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -117,13 +128,13 @@ function friendOverflowCount(friend) {
   font-weight: 600;
 }
 
-.console-friends__row span {
+.console-friends__row > span:not(.console-friends__avatar) {
   font-size: 0.78rem;
 }
 
 @media (max-width: 1100px) {
   .console-friends__row {
-    grid-template-columns: 100px minmax(110px, 0.7fr) minmax(130px, 1fr) minmax(150px, 1fr);
+    grid-template-columns: 26px minmax(110px, 0.7fr) minmax(130px, 1fr) minmax(150px, 1fr);
     gap: 9px;
   }
 }

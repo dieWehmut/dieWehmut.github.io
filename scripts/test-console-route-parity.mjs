@@ -134,6 +134,13 @@ const checks = [
       && tagDetailView.includes('<code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.id) }}</code>')
       && tagsView.includes('<code>/tags/{{ group.tag }}</code>'),
   ],
+  [
+    'console friend rows lead with an avatar instead of a duplicate identifier',
+    friendsView.includes('class="console-friends__avatar"')
+      && friendsView.includes('console-friends__avatar--fallback')
+      && !friendsView.includes('<code>{{ friend.id }}</code>')
+      && /\.console-friends__row \{[\s\S]*?grid-template-columns: 26px/.test(friendsView),
+  ],
 ]
 
 const failures = checks.filter(([, ok]) => !ok)
