@@ -1,54 +1,9 @@
 <template>
   <section class="console-shell" aria-label="Nexus Console">
-    <header class="console-shell__header">
-      <div class="console-shell__avatar-wrap">
-        <img class="console-shell__avatar" :src="avatarUrl" :alt="`${siteConfig.owner} avatar`" />
-      </div>
-      <div class="console-shell__identity">
-        <div class="console-shell__eyebrow">NEXUS CONSOLE / 0.1.0</div>
-        <h1>{{ siteConfig.title }}</h1>
-        <p>{{ siteConfig.subtitle || siteConfig.description }}</p>
-        <dl class="console-shell__meta">
-          <div><dt>owner</dt><dd>{{ siteConfig.owner }}</dd></div>
-          <div><dt>repo</dt><dd>{{ siteConfig.githubUser }}/{{ siteConfig.githubRepo }}</dd></div>
-          <div><dt>path</dt><dd>{{ route.fullPath || '/' }}</dd></div>
-        </dl>
-      </div>
-      <div class="console-shell__state" aria-label="Console state">
-        <span class="console-shell__state-dot" aria-hidden="true"></span>
-        <span>READY</span>
-      </div>
-    </header>
-
     <div v-if="history.length" class="console-shell__history" aria-label="Recent commands">
       <span class="console-shell__history-label">recent</span>
       <button v-for="entry in history" :key="entry" type="button" @click="executeCommand(entry)">{{ entry }}</button>
     </div>
-
-    <form class="console-shell__prompt" @submit.prevent="executeCommand()">
-      <label class="console-shell__prompt-symbol" for="console-command-input">&gt;_</label>
-      <input
-        id="console-command-input"
-        ref="inputRef"
-        data-console-input
-        class="console-shell__input"
-        role="combobox"
-        :value="commandInput"
-        :aria-expanded="Boolean(activeListboxId)"
-        :aria-controls="activeListboxId || undefined"
-        :aria-activedescendant="activeOptionId || undefined"
-        aria-autocomplete="list"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        inputmode="text"
-        placeholder="/help"
-        aria-label="Console command"
-        @input="setInput(($event.target as HTMLInputElement).value)"
-        @keydown="handleShellKeydown"
-      />
-      <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
-    </form>
 
     <div
       v-if="suggestions.length || activePanel || (feedback && !activePanel)"
@@ -100,6 +55,31 @@
         @selection-change="handlePanelSelectionChange"
       />
     </div>
+
+    <form class="console-shell__prompt" @submit.prevent="executeCommand()">
+      <label class="console-shell__prompt-symbol" for="console-command-input">&gt;_</label>
+      <input
+        id="console-command-input"
+        ref="inputRef"
+        data-console-input
+        class="console-shell__input"
+        role="combobox"
+        :value="commandInput"
+        :aria-expanded="Boolean(activeListboxId)"
+        :aria-controls="activeListboxId || undefined"
+        :aria-activedescendant="activeOptionId || undefined"
+        aria-autocomplete="list"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        inputmode="text"
+        placeholder="/help"
+        aria-label="Console command"
+        @input="setInput(($event.target as HTMLInputElement).value)"
+        @keydown="handleShellKeydown"
+      />
+      <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
+    </form>
   </section>
 </template>
 
@@ -107,8 +87,6 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ConsolePanelView from './ConsolePanelView.vue'
-import { siteConfig } from '../../data/site/config'
-import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import type { ConsolePanel } from '../../console/commandRegistry'
 
@@ -117,7 +95,6 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
 const suggestionsRef = ref<HTMLElement | null>(null)
 const panelActiveOptionId = ref('')
-const avatarUrl = getGitHubAvatarUrl(siteConfig.githubUser)
 const suggestionListboxId = 'console-command-suggestions'
 const panelListboxId = 'console-panel-options'
 const optionPanels = new Set<ConsolePanel>([
@@ -221,121 +198,28 @@ onMounted(() => {
 .console-shell {
   position: relative;
   display: flex;
-  flex: 0 1 auto;
   flex-direction: column;
-  gap: 12px;
   box-sizing: border-box;
   width: 100%;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 72px);
   min-height: 0;
   overflow: hidden;
-  padding: 24px 0 14px;
   color: var(--console-text);
+  border-top: 1px solid var(--console-border-strong);
+  background: var(--console-bg);
   font-family: var(--console-font);
-}
-
-.console-shell__header {
-  display: grid;
-  grid-template-columns: 116px minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 24px;
-  min-height: 142px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--console-border);
-}
-
-.console-shell__avatar-wrap {
-  width: 116px;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 1px solid var(--console-border-strong);
-  background: var(--console-surface);
-}
-
-.console-shell__avatar {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(1);
-}
-
-.console-shell__identity {
-  min-width: 0;
-}
-
-.console-shell__eyebrow {
-  margin-bottom: 8px;
-  color: var(--console-accent);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.console-shell h1 {
-  margin: 0;
-  color: var(--console-text);
-  font: inherit;
-  font-size: 1.55rem;
-  font-weight: 700;
-}
-
-.console-shell__identity p {
-  margin: 5px 0 14px;
-  color: var(--console-muted);
-  font-size: 0.9rem;
-}
-
-.console-shell__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 22px;
-  margin: 0;
-  color: var(--console-muted);
-  font-size: 0.75rem;
-}
-
-.console-shell__meta div {
-  display: inline-flex;
-  gap: 7px;
-  min-width: 0;
-}
-
-.console-shell__meta dt {
-  color: var(--console-dim);
-}
-
-.console-shell__meta dd {
-  overflow: hidden;
-  margin: 0;
-  color: var(--console-text);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.console-shell__state {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding-top: 3px;
-  color: var(--console-accent);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.console-shell__state-dot {
-  width: 7px;
-  height: 7px;
-  background: currentColor;
 }
 
 .console-shell__history {
   display: flex;
-  flex-wrap: wrap;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 4px 10px;
-  min-height: 24px;
+  min-height: 28px;
+  padding: 2px 8px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--console-border);
   color: var(--console-muted);
   font-size: 0.76rem;
 }
@@ -347,6 +231,7 @@ onMounted(() => {
 }
 
 .console-shell__history button {
+  flex: 0 0 auto;
   padding: 2px 5px;
   border: 1px solid transparent;
   color: var(--console-muted);
@@ -367,13 +252,15 @@ onMounted(() => {
   display: flex;
   align-items: center;
   min-height: 46px;
-  border-top: 1px solid var(--console-border-strong);
+  border-top: 0;
   border-bottom: 1px solid var(--console-border-strong);
   background: var(--console-surface);
 }
 
 .console-shell__transient {
+  flex: 0 1 auto;
   min-height: 0;
+  max-height: min(38vh, calc(100vh - 190px));
   overflow-y: auto;
   border-bottom: 1px solid var(--console-border);
   scrollbar-color: var(--console-border-strong) transparent;
@@ -476,15 +363,6 @@ onMounted(() => {
 }
 
 @media (max-width: 1100px) {
-  .console-shell__header {
-    grid-template-columns: 88px minmax(0, 1fr) auto;
-    gap: 16px;
-  }
-
-  .console-shell__avatar-wrap {
-    width: 88px;
-  }
-
   .console-shell__suggestion {
     grid-template-columns: minmax(130px, 1fr) 2fr;
   }

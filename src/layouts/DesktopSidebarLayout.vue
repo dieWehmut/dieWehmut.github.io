@@ -6,50 +6,143 @@
   >
     <SiteSidebar v-if="!isConsole" class="desktop-layout__sidebar" />
     <div class="desktop-layout__content">
-      <ConsoleShell v-if="isConsole" />
-      <RouteBreadcrumb v-else />
+      <RouteBreadcrumb v-if="!isConsole" />
       <div ref="resultRef" class="desktop-layout__result">
-        <main class="desktop-layout__main">
-          <RouterView v-slot="{ Component, route }">
-            <Transition name="page-fade" mode="out-in">
-              <component :is="Component" :key="routeViewKey(route)" />
+        <ConsoleOverviewHeader v-if="isConsole" />
+        <main
+          ref="outputRef"
+          class="desktop-layout__main"
+          :class="{ 'desktop-layout__main--empty': isConsole && route.name === 'root' }"
+          data-console-output-start
+        >
+          <RouterView v-slot="{ Component, route: viewRoute }">
+            <Transition name="page-fade" mode="out-in" @after-enter="handleRouteAfterEnter">
+              <component :is="Component" :key="routeViewKey(viewRoute)" />
             </Transition>
           </RouterView>
         </main>
-        <GiscusComments layout="desktop" />
-        <Footer />
+
+        <section
+          v-if="isConsole && commentsOpen && commentTarget"
+          ref="commentRef"
+          class="desktop-layout__comment"
+          data-console-comment-start
+        >
+          <GiscusComments
+            explicit
+            layout="desktop"
+            :source="commentTarget.source"
+            :term="commentTarget.term || ''"
+          />
+        </section>
+
+        <GiscusComments v-if="!isConsole" layout="desktop" />
+        <Footer v-if="!isConsole" />
       </div>
+
+      <ConsoleShell v-if="isConsole" class="desktop-layout__command-dock" />
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { nextTick, ref, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
+import ConsoleOverviewHeader from '../components/console/ConsoleOverviewHeader.vue'
+import ConsoleShell from '../components/console/ConsoleShell.vue'
 import SiteSidebar from '../components/navigation/SiteSidebar.vue'
 import Footer from '../components/system/Footer.vue'
 import GiscusComments from '../components/system/GiscusComments.vue'
 import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
-import ConsoleShell from '../components/console/ConsoleShell.vue'
+import { useConsoleCommentSession } from '../composables/useConsoleCommentSession'
+import { useConsoleOutputReveal } from '../composables/useConsoleOutputReveal'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const { isConsole } = useDisplayModePreference()
+const { isOpen: commentsOpen, target: commentTarget, close: closeComments } = useConsoleCommentSession()
+const { revealRequest } = useConsoleOutputReveal()
 const route = useRoute()
-const resultRef = ref(null)
+const resultRef = ref<HTMLElement | null>(null)
+const outputRef = ref<HTMLElement | null>(null)
+const commentRef = ref<HTMLElement | null>(null)
+let pendingRouteReveal = false
 
-function resetConsoleScroll() {
-  if (!isConsole.value) return
-  void nextTick(() => resultRef.value?.scrollTo({ top: 0, behavior: 'auto' }))
+function routeViewKey(routeValue: { fullPath?: string }) {
+  return String(routeValue.fullPath || '').split('#')[0]
 }
 
-watch(() => route.path, resetConsoleScroll)
+function motionBehavior(): ScrollBehavior {
+  if (typeof window === 'undefined') return 'auto'
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+}
+
+function scrollToTop() {
+  resultRef.value?.scrollTo({ top: 0, behavior: motionBehavior() })
+}
+
+function scrollToAnchor(anchor: HTMLElement | null) {
+  const container = resultRef.value
+  if (!container || !anchor) return
+  const containerRect = container.getBoundingClientRect()
+  const anchorRect = anchor.getBoundingClientRect()
+  const top = Math.max(0, container.scrollTop + anchorRect.top - containerRect.top - 12)
+  container.scrollTo({ top, behavior: motionBehavior() })
+}
+
+function afterLayout(callback: () => void) {
+  void nextTick(() => {
+    if (typeof window === 'undefined') callback()
+    else window.requestAnimationFrame(callback)
+  })
+}
+
+function revealRouteOutput() {
+  pendingRouteReveal = false
+  if (route.name === 'root') scrollToTop()
+  else scrollToAnchor(outputRef.value)
+}
+
+function handleRouteAfterEnter() {
+  if (isConsole.value && pendingRouteReveal) revealRouteOutput()
+}
+
+watch(
+  revealRequest,
+  (request) => {
+    if (!isConsole.value || request.id === 0) return
+    if (request.kind === 'root') {
+      pendingRouteReveal = false
+      afterLayout(scrollToTop)
+      return
+    }
+    if (request.kind === 'comment') {
+      afterLayout(() => scrollToAnchor(commentRef.value))
+      return
+    }
+
+    pendingRouteReveal = true
+    afterLayout(revealRouteOutput)
+  },
+)
+
+watch(
+  () => route.path,
+  () => {
+    if (!isConsole.value) return
+    pendingRouteReveal = true
+    afterLayout(revealRouteOutput)
+  },
+)
+
 watch(isConsole, (enabled) => {
-  if (enabled) resetConsoleScroll()
+  if (!enabled) {
+    pendingRouteReveal = false
+    closeComments()
+    return
+  }
+  pendingRouteReveal = true
+  afterLayout(revealRouteOutput)
 })
-
-function routeViewKey(route) {
-  return String(route.fullPath || '').split('#')[0]
-}
 </script>
 
 <style scoped>
@@ -72,8 +165,8 @@ function routeViewKey(route) {
 .desktop-layout__content {
   position: relative;
   min-width: 0;
-  margin-left: var(--site-sidebar-width);
   min-height: 100vh;
+  margin-left: var(--site-sidebar-width);
   display: flex;
   flex-direction: column;
   isolation: isolate;
@@ -98,11 +191,14 @@ function routeViewKey(route) {
   --console-border-strong: color-mix(in srgb, var(--site-accent) 48%, var(--site-text));
   --console-selection: color-mix(in srgb, var(--site-accent) 12%, transparent);
   height: 100vh;
+  height: 100dvh;
   min-height: 0;
   overflow: hidden;
 }
 
 .desktop-layout--console .desktop-layout__content {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   height: 100%;
   min-height: 0;
   margin-left: 0;
@@ -113,17 +209,15 @@ function routeViewKey(route) {
 }
 
 .desktop-layout--console .desktop-layout__result {
+  position: relative;
   display: block;
-  flex: 1;
+  min-width: 0;
   min-height: 0;
-  width: min(
-    1180px,
-    calc(100vw - 2 * var(--site-desktop-content-gutter))
-  );
-  margin: 0 auto;
-  overflow-y: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
-  padding: 12px 0 58px;
+  overflow-y: auto;
   scrollbar-color: var(--console-border-strong) transparent;
   scrollbar-width: thin;
 }
@@ -140,23 +234,41 @@ function routeViewKey(route) {
 }
 
 .desktop-layout--console .desktop-layout__main {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
+  margin: 0 auto;
+  padding: 28px 0 58px;
   overflow: visible;
 }
 
-.desktop-layout--console :deep(.giscus-comments),
-.desktop-layout--console :deep(.footer) {
-  width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
-  margin-right: auto;
-  margin-left: auto;
+.desktop-layout--console .desktop-layout__main--empty {
+  min-height: 0;
+  padding: 0;
 }
 
-.desktop-layout--console :deep(.giscus-comments) {
-  padding-top: 16px;
-  border-top: 1px solid var(--console-border);
+.desktop-layout__comment {
+  width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
+  margin: 0 auto;
+  padding: 18px 0 42px;
+  border-top: 1px solid var(--console-border-strong);
+}
+
+.desktop-layout__command-dock {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+  width: 100%;
+}
+
+.desktop-layout--console :deep(.desktop-layout__comment .giscus-comments) {
+  width: 100%;
+  margin: 0;
+  padding: 0;
   font-family: var(--console-font);
+}
+
+.desktop-layout--console .page-fade-enter-active,
+.desktop-layout--console .page-fade-leave-active {
+  transition: none;
 }
 
 :root.dynamic-background-enabled .desktop-layout__content {
@@ -186,7 +298,6 @@ function routeViewKey(route) {
   padding: 46px 0 54px;
 }
 
-/* 快速淡出 + 平滑淡入，enter 用 ease-out 减速落位，leave 只淡出不位移，避免上滑跳动 */
 .page-fade-enter-active {
   transition: opacity 160ms ease-out, transform 160ms ease-out;
   will-change: opacity, transform;
@@ -211,6 +322,7 @@ function routeViewKey(route) {
   .page-fade-leave-active {
     transition-duration: 1ms;
   }
+
   .page-fade-enter-from {
     transform: none;
   }
@@ -229,11 +341,8 @@ function routeViewKey(route) {
     );
   }
 
-  .desktop-layout--console .desktop-layout__main {
-    width: 100%;
-  }
-
-  .desktop-layout--console .desktop-layout__result {
+  .desktop-layout--console .desktop-layout__main,
+  .desktop-layout__comment {
     width: calc(100vw - 2 * var(--site-desktop-content-gutter));
   }
 }
