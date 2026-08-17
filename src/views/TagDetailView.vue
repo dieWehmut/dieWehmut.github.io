@@ -33,7 +33,7 @@
           >
             <div class="console-tag-detail__capture-assets">
               <button
-                v-for="capture in asCaptureTimelineItem(item).group.assets"
+                v-for="capture in previewCaptureAssets(asCaptureTimelineItem(item).group)"
                 :key="capture.id"
                 type="button"
                 :aria-label="`Open ${capture.title || capture.id}`"
@@ -48,6 +48,15 @@
                   @error="retryPublicAssetImage($event, capture.image)"
                 />
               </button>
+              <RouterLink
+                v-if="hiddenCaptureAssetCount(asCaptureTimelineItem(item).group) > 0"
+                class="console-tag-detail__capture-overflow"
+                :to="captureGroupUrl(asCaptureTimelineItem(item).group)"
+                :aria-label="`Open ${hiddenCaptureAssetCount(asCaptureTimelineItem(item).group)} more captures`"
+              >
+                <strong>+{{ hiddenCaptureAssetCount(asCaptureTimelineItem(item).group) }}</strong>
+                <span>more</span>
+              </RouterLink>
             </div>
             <div class="console-tag-detail__entry-main">
               <span>{{ asCaptureTimelineItem(item).group.sources[0]?.title || 'Capture group' }}</span>
@@ -55,7 +64,12 @@
                 <time v-if="asCaptureTimelineItem(item).group.date" :datetime="asCaptureTimelineItem(item).group.date">
                   {{ formattedDate(asCaptureTimelineItem(item).group.date) }}
                 </time>
-                <code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.assets[0]?.id || '') }}</code>
+                <RouterLink
+                  class="console-tag-detail__capture-route"
+                  :to="captureGroupUrl(asCaptureTimelineItem(item).group)"
+                >
+                  <code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.id) }}</code>
+                </RouterLink>
               </div>
             </div>
           </article>
@@ -181,7 +195,7 @@ import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import ConsoleMonthNavigator, { type ConsoleMonthGroup } from '../components/console/ConsoleMonthNavigator.vue'
 import { getPosts, getNotes } from '../data'
 import type { CaptureAsset, CaptureSourceRef, TagContentEntry } from '../types/content'
-import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
+import { CARD_GROUP_LIMIT, hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { formatTimelineDate, getDateSortTimestamp } from '../utils/date'
 import { openImagePreviewGallery } from '../utils/imagePreview'
 import { retryPublicAssetImage } from '../utils/publicAssets'
@@ -191,6 +205,7 @@ import { useDisplayModePreference } from '../composables/useDisplayModePreferenc
 const route = useRoute()
 const { locale } = useI18n()
 const { isConsole } = useDisplayModePreference()
+const capturePreviewLimit = CARD_GROUP_LIMIT
 const tag = computed(() => String(route.params.tag || ''))
 const captures = ref<CaptureAsset[]>([])
 const totalCount = computed(() => posts.value.length + captures.value.length)
@@ -341,6 +356,18 @@ function asCaptureTimelineItem(item: unknown): Extract<TagTimelineItem, { kind: 
   return item as Extract<TagTimelineItem, { kind: 'capture' }>
 }
 
+function previewCaptureAssets(group: CaptureGroup): CaptureAsset[] {
+  return group.assets.slice(0, capturePreviewLimit)
+}
+
+function hiddenCaptureAssetCount(group: CaptureGroup): number {
+  return Math.max(0, group.assets.length - capturePreviewLimit)
+}
+
+function captureGroupUrl(group: CaptureGroup): string {
+  return `/capture/${encodeURIComponent(group.id)}`
+}
+
 function mergeUnique(existing: string[], incoming: string[]): string[] {
   return Array.from(new Set([...existing, ...incoming]))
 }
@@ -429,6 +456,19 @@ watch(tag, loadCaptures)
   white-space: nowrap;
 }
 
+.console-tag-detail__capture-route {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--console-accent, var(--site-accent));
+  text-decoration: none;
+}
+
+.console-tag-detail__capture-route:hover,
+.console-tag-detail__capture-route:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
 .console-tag-detail__entry--capture {
   grid-template-columns: minmax(120px, 280px) minmax(0, 1fr);
 }
@@ -450,6 +490,36 @@ watch(tag, loadCaptures)
   border-radius: 0;
   background: transparent;
   cursor: zoom-in;
+}
+
+.console-tag-detail__capture-overflow {
+  display: grid;
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  place-content: center;
+  gap: 1px;
+  border: 1px solid var(--console-border, var(--site-border));
+  color: var(--console-muted, var(--site-muted));
+  text-align: center;
+  text-decoration: none;
+}
+
+.console-tag-detail__capture-overflow strong {
+  color: var(--console-accent, var(--site-accent));
+  font-size: 0.8rem;
+}
+
+.console-tag-detail__capture-overflow span {
+  font-size: 0.64rem;
+}
+
+.console-tag-detail__capture-overflow:hover,
+.console-tag-detail__capture-overflow:focus-visible {
+  border-color: var(--console-accent, var(--site-accent));
+  color: var(--console-text, var(--site-text));
+  background: var(--console-selection, transparent);
+  outline: none;
 }
 
 .console-tag-detail__capture-assets button:hover,

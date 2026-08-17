@@ -23,6 +23,9 @@ const consoleStyles = read('src/styles/console.scss')
 const monthNavigator = read('src/components/console/ConsoleMonthNavigator.vue')
 const consoleShell = read('src/components/console/ConsoleShell.vue')
 const searchView = read('src/views/SearchView.vue')
+const tagsView = read('src/views/TagsView.vue')
+const tagDetailView = read('src/views/TagDetailView.vue')
+const consoleSelection = read('src/console/selection.ts')
 
 const checks = [
   ['project console keeps site links', projectView.includes('console-project__link--site')],
@@ -92,6 +95,26 @@ const checks = [
   ],
   ['console section arrows select adjacent headings', read('src/components/system/ScrollSpySidebar.vue').includes('scrollToHeading(target.id)')],
   ['console search reuses typed result behavior', (searchView.match(/<SearchResultItem\b/g) || []).length >= 2],
+  [
+    'console tag index supports cyclic arrow selection and Enter from the command prompt',
+    tagsView.includes('moveConsoleSelection')
+      && tagsView.includes('CONSOLE_RESULT_NAVIGATION_EVENT')
+      && tagsView.includes("action === 'activate'")
+      && tagsView.includes("'is-selected': consoleTagCursor === index")
+      && consoleShell.includes('CONSOLE_RESULT_NAVIGATION_EVENT')
+      && consoleSelection.includes('CONSOLE_RESULT_NAVIGATION_EVENT'),
+  ],
+  [
+    'console tag capture groups use bounded previews with a remaining count',
+    tagDetailView.includes('previewCaptureAssets(asCaptureTimelineItem(item).group)')
+      && tagDetailView.includes('hiddenCaptureAssetCount(asCaptureTimelineItem(item).group)')
+      && !tagDetailView.includes('v-for="capture in asCaptureTimelineItem(item).group.assets"'),
+  ],
+  [
+    'console tag capture entries link to their stable group route',
+    tagDetailView.includes('captureGroupUrl(asCaptureTimelineItem(item).group)')
+      && !tagDetailView.includes("group.assets[0]?.id || ''"),
+  ],
 ]
 
 const failures = checks.filter(([, ok]) => !ok)

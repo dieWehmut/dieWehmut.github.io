@@ -89,6 +89,10 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import type { ConsolePanel } from '../../console/commandRegistry'
+import {
+  CONSOLE_RESULT_NAVIGATION_EVENT,
+  type ConsoleResultNavigationAction,
+} from '../../console/selection'
 import { CONSOLE_MONTH_NAVIGATION_EVENT } from '../../console/timeline'
 
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -168,6 +172,26 @@ function handleShellKeydown(event: KeyboardEvent) {
       return
     }
     if (event.key === 'Enter' && panelRef.value?.activateSelection()) {
+      event.preventDefault()
+      return
+    }
+  }
+  if (
+    !activePanel.value
+    && !suggestions.value.length
+    && !commandInput.value.trim()
+    && (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'Enter')
+  ) {
+    const action: ConsoleResultNavigationAction = event.key === 'ArrowUp'
+      ? 'previous'
+      : event.key === 'ArrowDown'
+        ? 'next'
+        : 'activate'
+    const handled = !window.dispatchEvent(new CustomEvent(CONSOLE_RESULT_NAVIGATION_EVENT, {
+      detail: action,
+      cancelable: true,
+    }))
+    if (handled) {
       event.preventDefault()
       return
     }

@@ -5,12 +5,29 @@
         <span class="console-tag-index__prompt">/tags</span>
         <span class="console-tag-index__count">{{ tagGroups.length }} entries</span>
       </header>
-      <nav v-if="tagGroups.length" class="console-tag-index__list" aria-label="Tags">
+      <nav
+        v-if="tagGroups.length"
+        ref="consoleTagList"
+        class="console-tag-index__list"
+        role="listbox"
+        tabindex="0"
+        aria-label="Tags"
+        :aria-activedescendant="consoleTagCursor >= 0 ? consoleTagOptionId(consoleTagCursor) : undefined"
+        @focus="ensureConsoleTagSelection"
+        @keydown="handleConsoleTagKeydown"
+      >
         <RouterLink
-          v-for="group in tagGroups"
+          v-for="(group, index) in tagGroups"
+          :id="consoleTagOptionId(index)"
           :key="group.tag"
           class="console-tag-index__row"
+          :class="{ 'is-selected': consoleTagCursor === index }"
           :to="tagUrl(group.tag)"
+          role="option"
+          tabindex="-1"
+          :aria-selected="consoleTagCursor === index"
+          :data-console-tag-index="index"
+          @click="consoleTagCursor = index"
         >
           <code>/tags/{{ group.tag }}</code>
           <span class="console-tag-index__label">{{ group.tag }}</span>
@@ -97,18 +114,24 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import { getTagGroups } from '../data'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
+import {
+  CONSOLE_RESULT_NAVIGATION_EVENT,
+  moveConsoleSelection,
+} from '../console/selection'
 
 const captureTagCounts = ref(new Map())
 const captureTagPreviews = ref(new Map())
 const router = useRouter()
 const { isConsole } = useDisplayModePreference()
+const consoleTagList = ref(null)
+const consoleTagCursor = ref(-1)
 
 const tagGroups = computed(() => mergeCaptureTags(getTagGroups()))
 const visibleTagGroups = computed(() => limitCardGroup(tagGroups.value))
@@ -237,6 +260,61 @@ function tagUrl(tag) {
   return `/tags/${encodeURIComponent(tag)}`
 }
 
+function consoleTagOptionId(index) {
+  return `console-tag-option-${index}`
+}
+
+function scrollConsoleTagIntoView() {
+  if (consoleTagCursor.value < 0) return
+  void nextTick(() => {
+    consoleTagList.value
+      ?.querySelector(`[data-console-tag-index="${consoleTagCursor.value}"]`)
+      ?.scrollIntoView({ block: 'nearest' })
+  })
+}
+
+function moveConsoleTagSelection(delta) {
+  consoleTagCursor.value = moveConsoleSelection(consoleTagCursor.value, delta, tagGroups.value.length)
+  scrollConsoleTagIntoView()
+}
+
+function ensureConsoleTagSelection() {
+  if (consoleTagCursor.value < 0 && tagGroups.value.length) moveConsoleTagSelection(1)
+}
+
+function activateConsoleTagSelection() {
+  const selected = tagGroups.value[consoleTagCursor.value]
+  if (!selected) return
+  router.push(tagUrl(selected.tag))
+}
+
+function handleConsoleTagAction(action) {
+  if (action === 'previous') moveConsoleTagSelection(-1)
+  else if (action === 'next') moveConsoleTagSelection(1)
+  else if (action === 'activate') activateConsoleTagSelection()
+}
+
+function handleConsoleTagKeydown(event) {
+  const action = event.key === 'ArrowUp'
+    ? 'previous'
+    : event.key === 'ArrowDown'
+      ? 'next'
+      : event.key === 'Enter'
+        ? 'activate'
+        : null
+  if (!action) return
+  event.preventDefault()
+  handleConsoleTagAction(action)
+}
+
+function handleConsoleResultNavigation(event) {
+  if (!isConsole.value || !tagGroups.value.length) return
+  const action = event.detail
+  if (action !== 'previous' && action !== 'next' && action !== 'activate') return
+  event.preventDefault()
+  handleConsoleTagAction(action)
+}
+
 function isInteractiveTarget(target) {
   return target instanceof HTMLElement && Boolean(target.closest('a, button'))
 }
@@ -252,11 +330,19 @@ function tagHeadingId(tag) {
   return `tag-card-${slug || 'untitled'}`
 }
 
+watch(() => tagGroups.value.length, (count) => {
+  if (!count) consoleTagCursor.value = -1
+  else if (consoleTagCursor.value >= count) consoleTagCursor.value = count - 1
+})
+
 onMounted(async () => {
+  window.addEventListener(CONSOLE_RESULT_NAVIGATION_EVENT, handleConsoleResultNavigation)
   const { getCaptureTagCounts, getCaptureTagPreviews } = await import('../data/capture')
   captureTagCounts.value = getCaptureTagCounts()
   captureTagPreviews.value = getCaptureTagPreviews(1)
 })
+
+onBeforeUnmount(() => window.removeEventListener(CONSOLE_RESULT_NAVIGATION_EVENT, handleConsoleResultNavigation))
 </script>
 
 <style scoped>
@@ -327,7 +413,8 @@ onMounted(async () => {
 }
 
 .console-tag-index__row:hover,
-.console-tag-index__row:focus-visible {
+.console-tag-index__row:focus-visible,
+.console-tag-index__row.is-selected {
   border-color: var(--console-border-strong, var(--site-accent));
   color: var(--console-text, var(--site-text));
   background: var(--console-selection, transparent);
