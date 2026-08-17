@@ -175,7 +175,7 @@ export function useConsoleSession() {
       if (!isKnownConsoleCommandTarget(parsed, catalog)) return false
     }
 
-    if (resolution.kind === 'comment' && !(await comments.canToggleCurrentPage())) return false
+    if (resolution.kind === 'comment' && !(await comments.ensureTarget())) return false
 
     const sourceMenu = {
       input: commandInput.value,
@@ -202,10 +202,11 @@ export function useConsoleSession() {
           : 'Standard layout enabled.'
         clearPanelNavigation()
       } else if (resolution.kind === 'comment') {
-        await comments.toggleCurrentPage()
-        feedback.value = comments.isOpen.value ? 'Comments opened.' : 'Comments closed.'
+        // The thread is already on the page; `/comment` only takes the user to
+        // it. Leaving feedback empty keeps the dock collapsed so nothing hides
+        // the comment box the command just scrolled to.
         clearPanelNavigation()
-        if (comments.isOpen.value) requestConsoleOutputReveal('comment')
+        requestConsoleOutputReveal('comment')
       } else {
         if (!resolution.value && sourcePanel && sourcePanel.panel !== resolution.panel) {
           panelStack.value.push(sourcePanel)

@@ -17,6 +17,15 @@ const { outputText } = ts.transpileModule(source, {
 })
 const comments = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`)
 
+function read(relativePath) {
+  return fs.readFileSync(path.join(root, relativePath), 'utf8')
+}
+
+const session = read('src/composables/useConsoleCommentSession.ts')
+const consoleSession = read('src/composables/useConsoleSession.ts')
+const desktopLayout = read('src/layouts/DesktopSidebarLayout.vue')
+const commandRegistry = read('src/console/commandRegistry.ts')
+
 const captureGroups = [
   {
     id: 'capture-2026-06-16',
@@ -42,35 +51,49 @@ check(
   homeTarget?.source === 'site' && homeTarget.routeKey === '/home?lang=zh',
 )
 
-let state = comments.toggleConsoleCommentState({ openRouteKey: null, target: null }, homeTarget)
 check(
-  'first toggle opens comments for the current page',
-  state.openRouteKey === '/home?lang=zh' && state.target === homeTarget,
+  'hash-only navigation stays on the same thread',
+  comments.resolveConsoleCommentTarget(route('home', '/home?lang=zh#another'), captureGroups)?.routeKey
+    === homeTarget?.routeKey,
 )
-
-state = comments.toggleConsoleCommentState(state, homeTarget)
 check(
-  'second toggle on the same page closes comments',
-  state.openRouteKey === null && state.target === null,
+  'a different query is a different thread',
+  comments.resolveConsoleCommentTarget(route('home', '/home?lang=en'), captureGroups)?.routeKey
+    !== homeTarget?.routeKey,
 )
-
-state = comments.toggleConsoleCommentState({ openRouteKey: null, target: null }, homeTarget)
-const sameKeyAfterHashChange = comments.closeConsoleCommentStateForRoute(state, '/home?lang=zh#another-heading')
 check(
-  'hash-only navigation keeps current-page comments open',
-  sameKeyAfterHashChange.openRouteKey === '/home?lang=zh',
+  'the comment module carries no open/closed state at all',
+  !('toggleConsoleCommentState' in comments)
+    && !('closeConsoleCommentStateForRoute' in comments)
+    && !source.includes('openRouteKey'),
 )
-
-const afterPathChange = comments.closeConsoleCommentStateForRoute(state, '/archive')
 check(
-  'path changes close current-page comments',
-  afterPathChange.openRouteKey === null && afterPathChange.target === null,
+  'the session derives one comment target from the current route',
+  /const target = ref<ConsoleCommentTarget \| null>\(null\)/.test(session)
+    && /watch\(\(\) => route\.fullPath, \(\) => void syncTarget\(route\), \{ immediate: true \}\)/.test(session)
+    && !session.includes('isOpen')
+    && !session.includes('toggleCurrentPage'),
 )
-
-const afterQueryChange = comments.closeConsoleCommentStateForRoute(state, '/home?lang=en')
 check(
-  'query changes close current-page comments',
-  afterQueryChange.openRouteKey === null && afterQueryChange.target === null,
+  'a slow capture resolution cannot publish a stale thread',
+  /requestedRoute !== requested/.test(session),
+)
+check(
+  'console mounts the thread for every commentable route',
+  desktopLayout.includes('v-if="isConsole && commentTarget"')
+    && !desktopLayout.includes('commentsOpen'),
+)
+check(
+  '/comment only takes the user to the thread and focuses it',
+  /resolution\.kind === 'comment' && !\(await comments\.ensureTarget\(\)\)/.test(consoleSession)
+    && /resolution\.kind === 'comment'\)[\s\S]*?requestConsoleOutputReveal\('comment'\)/.test(consoleSession)
+    && !consoleSession.includes('Comments opened.')
+    && /request\.kind === 'comment'[\s\S]*?focusCommentFrame\(route\.fullPath\)/.test(desktopLayout)
+    && desktopLayout.includes("querySelector<HTMLIFrameElement>('iframe.giscus-frame')"),
+)
+check(
+  '/comment no longer advertises itself as a toggle',
+  commandRegistry.includes("{ input: '/comment', description: 'Jump to the comment box for this page' }"),
 )
 
 check(

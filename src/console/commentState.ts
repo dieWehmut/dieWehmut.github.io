@@ -1,9 +1,10 @@
 /**
- * Pure state and route helpers for the Console's explicit `/comment` action.
+ * Pure route helpers deciding which comment thread a Console route owns.
  *
+ * Console mode always shows the thread of the route it is displaying, so the
+ * only question left is "which thread, if any" — there is no open/closed state.
  * Keeping this module free of Vue/router imports makes the route contract easy
- * to exercise in a small Node test and prevents comment UI state from leaking
- * into the standard layout.
+ * to exercise in a small Node test.
  */
 
 export type ConsoleCommentSource = 'site' | 'capture'
@@ -23,11 +24,6 @@ export interface ConsoleCommentTarget {
   source: ConsoleCommentSource
   routeKey: string
   term?: string
-}
-
-export interface ConsoleCommentState {
-  openRouteKey: string | null
-  target: ConsoleCommentTarget | null
 }
 
 /**
@@ -86,28 +82,3 @@ export function resolveConsoleCommentTarget(
 
   return { source: 'site', routeKey }
 }
-
-export function toggleConsoleCommentState(
-  state: ConsoleCommentState,
-  target: ConsoleCommentTarget | null,
-): ConsoleCommentState {
-  if (!target) return state
-
-  if (state.openRouteKey === target.routeKey) {
-    return { openRouteKey: null, target: null }
-  }
-
-  return { openRouteKey: target.routeKey, target }
-}
-
-export function closeConsoleCommentStateForRoute(
-  state: ConsoleCommentState,
-  fullPath: string,
-): ConsoleCommentState {
-  if (!state.openRouteKey) return state
-
-  return state.openRouteKey === getConsoleCommentRouteKey(fullPath)
-    ? state
-    : { openRouteKey: null, target: null }
-}
-

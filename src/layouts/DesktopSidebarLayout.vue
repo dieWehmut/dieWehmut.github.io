@@ -23,7 +23,7 @@
         </main>
 
         <section
-          v-if="isConsole && commentsOpen && commentTarget"
+          v-if="isConsole && commentTarget"
           ref="commentRef"
           class="desktop-layout__comment"
           data-console-comment-start
@@ -59,7 +59,7 @@ import { useConsoleOutputReveal } from '../composables/useConsoleOutputReveal'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
 const { isConsole } = useDisplayModePreference()
-const { isOpen: commentsOpen, target: commentTarget, close: closeComments } = useConsoleCommentSession()
+const { target: commentTarget } = useConsoleCommentSession()
 const { revealRequest } = useConsoleOutputReveal()
 const route = useRoute()
 const outputRef = ref<HTMLElement | null>(null)
@@ -93,6 +93,23 @@ function afterLayout(callback: () => void) {
   })
 }
 
+/**
+ * Giscus builds its editor inside a cross-origin iframe on an idle callback, so
+ * the frame can still be missing right after a navigation and the page can only
+ * ever hand focus to the frame itself, not to the textarea inside it. Retry for
+ * a bounded while, and stop if the user has navigated on in the meantime.
+ */
+function focusCommentFrame(routePath: string, attempt = 0) {
+  if (typeof window === 'undefined' || route.fullPath !== routePath) return
+  const frame = commentRef.value?.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
+  if (frame) {
+    frame.focus()
+    return
+  }
+  if (attempt >= 20) return
+  window.setTimeout(() => focusCommentFrame(routePath, attempt + 1), 100)
+}
+
 function revealRouteOutput() {
   pendingRouteReveal = false
   if (route.name === 'root') scrollToTop()
@@ -113,7 +130,10 @@ watch(
       return
     }
     if (request.kind === 'comment') {
-      afterLayout(() => scrollToAnchor(commentRef.value))
+      afterLayout(() => {
+        scrollToAnchor(commentRef.value)
+        focusCommentFrame(route.fullPath)
+      })
       return
     }
 
@@ -134,7 +154,6 @@ watch(
 watch(isConsole, (enabled) => {
   if (!enabled) {
     pendingRouteReveal = false
-    closeComments()
     return
   }
   pendingRouteReveal = true

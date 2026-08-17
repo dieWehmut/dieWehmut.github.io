@@ -150,7 +150,7 @@ export function resolveConsoleCommand(
 export function listConsoleCommands(availability: ConsoleCommandAvailability = {}) {
   const commands = [
     { input: '/home', description: 'Browse the Home timeline' },
-    { input: '/comment', description: 'Toggle comments for the current page' },
+    { input: '/comment', description: 'Jump to the comment box for this page' },
     { input: '/post', description: 'Select a post' },
     { input: '/note', description: 'Select a note' },
     { input: '/capture', description: 'Browse captured assets' },

@@ -1,15 +1,19 @@
-import { computed, readonly, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  closeConsoleCommentStateForRoute,
   resolveConsoleCommentTarget,
-  toggleConsoleCommentState,
   type ConsoleCommentGroup,
-  type ConsoleCommentState,
+  type ConsoleCommentTarget,
 } from '../console/commentState'
 
-const state = ref<ConsoleCommentState>({ openRouteKey: null, target: null })
+/**
+ * The comment thread belonging to the route Console mode is showing. Comments
+ * are always on screen, so this is state derived from the route rather than
+ * something the user opens and closes.
+ */
+const target = ref<ConsoleCommentTarget | null>(null)
 let routeWatcherInstalled = false
+let requestedRoute = ''
 
 function decodeRouteParam(value: unknown): string {
   const raw = Array.isArray(value) ? value[0] : value
@@ -51,43 +55,35 @@ async function resolveCurrentTarget(route: ReturnType<typeof useRoute>) {
   )
 }
 
+/**
+ * Capture routes need the capture index to find their canonical group, so the
+ * thread lands an await later than the navigation. The requested path is
+ * compared on the way back, otherwise a slow resolution could publish the
+ * previous route's thread over a newer one.
+ */
+async function syncTarget(route: ReturnType<typeof useRoute>) {
+  const requested = route.fullPath
+  requestedRoute = requested
+  const resolved = await resolveCurrentTarget(route)
+  if (requestedRoute !== requested) return target.value
+  target.value = resolved
+  return resolved
+}
+
 export function useConsoleCommentSession() {
   const route = useRoute()
 
   if (!routeWatcherInstalled) {
     routeWatcherInstalled = true
-    watch(
-      () => route.fullPath,
-      (fullPath) => {
-        state.value = closeConsoleCommentStateForRoute(state.value, fullPath)
-      },
-    )
-  }
-
-  const isOpen = computed(() => Boolean(state.value.openRouteKey))
-
-  async function canToggleCurrentPage() {
-    return Boolean(await resolveCurrentTarget(route))
-  }
-
-  async function toggleCurrentPage() {
-    const target = await resolveCurrentTarget(route)
-    if (!target) return false
-
-    state.value = toggleConsoleCommentState(state.value, target)
-    return true
-  }
-
-  function close() {
-    state.value = { openRouteKey: null, target: null }
+    watch(() => route.fullPath, () => void syncTarget(route), { immediate: true })
   }
 
   return {
-    state: readonly(state),
-    target: computed(() => state.value.target),
-    isOpen,
-    canToggleCurrentPage,
-    toggleCurrentPage,
-    close,
+    target: computed(() => target.value),
+    /**
+     * Resolve the current route's thread right away instead of waiting for the
+     * watcher, so a command can act on the same tick it is typed.
+     */
+    ensureTarget: () => syncTarget(route),
   }
 }
