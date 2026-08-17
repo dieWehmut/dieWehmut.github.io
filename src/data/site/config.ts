@@ -1,4 +1,5 @@
 import type { SiteConfig } from '../../types/content'
+import consoleIcon from '../../assets/icon.png'
 
 type CodeRunnerEnv = {
   VITE_CODE_RUNNER_API_URL?: string
@@ -34,6 +35,10 @@ export const siteConfig: SiteConfig = {
   siteUrl: 'https://diewehmut.github.io',
   startedAt: '2025-08-24T22:00:00+08:00',
   colorScheme: 'purple',
+  console: {
+    icon: consoleIcon,
+    darkIconEffect: 'grayscale',
+  },
 
   // --- External Services ---
   googleAnalyticsId: 'G-TZG91QDSZ5',

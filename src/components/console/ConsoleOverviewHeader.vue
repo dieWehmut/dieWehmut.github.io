@@ -3,8 +3,9 @@
     <div class="console-overview__portrait">
       <img
         class="console-overview__avatar"
+        :class="`console-overview__avatar--${darkIconEffect}`"
         :src="avatarUrl"
-        :alt="`${config.owner} GitHub avatar`"
+        :alt="`${config.owner} Console icon`"
         decoding="async"
       />
     </div>
@@ -60,7 +61,11 @@ const {
   uptime,
 } = useSiteOverview()
 const { setDisplayMode } = useDisplayModePreference()
-const avatarUrl = `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
+const configuredIcon = String(config.console?.icon || '').trim()
+const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
+const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.console?.darkIconEffect || '')
+  ? config.console?.darkIconEffect
+  : 'grayscale'
 </script>
 
 <style scoped>
@@ -101,8 +106,24 @@ const avatarUrl = `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
   max-height: none;
   object-fit: contain;
   object-position: left top;
-  filter: grayscale(1);
+  filter: none;
   image-rendering: auto;
+}
+
+:global(html[data-theme="light"]) .console-overview__avatar {
+  filter: none;
+}
+
+:global(html[data-theme="dark"]) .console-overview__avatar--grayscale {
+  filter: grayscale(1);
+}
+
+:global(html[data-theme="dark"]) .console-overview__avatar--whiten {
+  filter: brightness(0) invert(1);
+}
+
+:global(html[data-theme="dark"]) .console-overview__avatar--original {
+  filter: none;
 }
 
 .console-overview__dashboard {
