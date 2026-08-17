@@ -62,6 +62,20 @@ check('non slash input stays silent', parser.parseConsoleInput('archive')?.kind 
 check('blank input stays silent', parser.parseConsoleInput('   ')?.kind === 'silent')
 check('malformed percent encoding stays silent', parser.parseConsoleInput('/note/bad%2')?.kind === 'silent')
 
+const removedCommands = [
+  '/agent',
+  '/list',
+  '/status',
+  '/permissions',
+  '/docker',
+  '/workspace',
+  '/model',
+]
+for (const input of removedCommands) {
+  check(`${input} stays silent after removal`, parser.parseConsoleInput(input)?.kind === 'silent')
+  check(`${input.toUpperCase()} stays silent after removal`, parser.parseConsoleInput(input.toUpperCase())?.kind === 'silent')
+}
+
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
 if (failures.length) process.exitCode = 1

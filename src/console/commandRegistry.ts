@@ -5,15 +5,9 @@
 export type ConsoleMode = 'console' | 'standard'
 
 export type ConsolePanel =
-  | 'agent'
   | 'help'
-  | 'status'
   | 'config'
-  | 'permissions'
-  | 'list'
   | 'doctor'
-  | 'model'
-  | 'workspace'
   | 'theme'
   | 'color'
   | 'background'
@@ -55,15 +49,9 @@ const ROUTES: Record<string, { path: string; routeName: string }> = {
 }
 
 const PANELS: Record<string, ConsolePanel> = {
-  agent: 'agent',
   help: 'help',
-  status: 'status',
   config: 'config',
-  permissions: 'permissions',
-  list: 'list',
   doctor: 'doctor',
-  model: 'model',
-  workspace: 'workspace',
 }
 
 const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }> = {
@@ -164,14 +152,8 @@ export function listConsoleCommands(availability: ConsoleCommandAvailability = {
     { input: '/', description: 'Return to the Console landing' },
     { input: '/home', description: 'Browse the Home timeline' },
     { input: '/comment', description: 'Toggle comments for the current page' },
-    { input: '/agent', description: 'Show agent workspace' },
-    { input: '/list', description: 'List available commands' },
-    { input: '/status', description: 'Show workspace status' },
     { input: '/config', description: 'Show resolved configuration' },
-    { input: '/permissions', description: 'Show effective permissions' },
     { input: '/doctor', description: 'Run availability checks' },
-    { input: '/workspace', description: 'Show workspace details' },
-    { input: '/model', description: 'Show configured model' },
     { input: '/archive', description: 'Browse posts by date' },
     { input: '/post', description: 'Select a post' },
     { input: '/notes', description: 'Browse notes by date' },

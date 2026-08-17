@@ -3,7 +3,6 @@ import type { ConsoleCommand, ParsedConsoleInput, SilentConsoleInput } from './t
 const FIXED_SEGMENTS = new Set([
   'about',
   'archive',
-  'agent',
   'background',
   'capture',
   'classic',
@@ -16,20 +15,25 @@ const FIXED_SEGMENTS = new Set([
   'home',
   'infra',
   'language',
-  'list',
   'mode',
-  'model',
   'notes',
-  'permissions',
   'project',
   'search',
-  'status',
   'tags',
   'theme',
   'terminal',
-  'workspace',
   'post',
   'note',
+])
+
+const REMOVED_COMMANDS = new Set([
+  'agent',
+  'list',
+  'status',
+  'permissions',
+  'docker',
+  'workspace',
+  'model',
 ])
 
 const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])
@@ -77,6 +81,8 @@ export function parseConsoleInput(input: string): ParsedConsoleInput {
       .map((segment) => decodeURIComponent(segment))
 
     const head = decodedSegments[0]?.toLowerCase() || ''
+    if (REMOVED_COMMANDS.has(head)) return silent(rawInput)
+
     const segments = decodedSegments.map((segment, index) => {
       const lower = segment.toLowerCase()
 

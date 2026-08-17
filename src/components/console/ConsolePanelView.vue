@@ -57,7 +57,6 @@ import { useThemePreference } from '../../composables/useThemePreference'
 const props = defineProps<{
   panel: ConsolePanel | null
   value?: string
-  currentPath?: string
   feedback?: string
   listboxId: string
 }>()
@@ -107,15 +106,9 @@ const rowsRef = ref<HTMLElement | null>(null)
 
 const heading = computed(() => {
   const labels: Record<string, string> = {
-    agent: 'Agent workspace',
     help: 'Command reference',
-    list: 'Available commands',
-    status: 'Workspace status',
     config: 'Resolved configuration',
-    permissions: 'Effective permissions',
     doctor: 'Availability checks',
-    model: 'Configured model',
-    workspace: 'Workspace details',
     theme: 'Select theme',
     color: 'Select color scheme',
     background: 'Dynamic background',
@@ -132,7 +125,6 @@ const backgroundEnabled = computed(() => dynamicBackgroundEnabled.value ? 'on' :
 const listLabel = computed(() => {
   const labels: Partial<Record<ConsolePanel, string>> = {
     help: 'Console commands',
-    list: 'Console commands',
     mode: 'Display mode options',
     theme: 'Theme options',
     color: 'Color scheme options',
@@ -147,7 +139,6 @@ const listLabel = computed(() => {
 const panelOptions = computed<PanelOption[] | null>(() => {
   switch (props.panel) {
     case 'help':
-    case 'list':
       return commands.map((item) => ({
         command: item.input,
         code: item.input,
@@ -274,21 +265,6 @@ defineExpose({ moveSelection, activateSelection })
 
 const detailLines = computed(() => {
   switch (props.panel) {
-    case 'agent':
-      return [
-        { label: 'name', value: 'Nexus Console' },
-        { label: 'version', value: '0.1.0' },
-        { label: 'mode', value: 'desktop terminal workspace' },
-        { label: 'owner', value: siteConfig.owner },
-      ]
-    case 'status':
-      return [
-        { label: 'directory', value: 'browser workspace' },
-        { label: 'route', value: props.currentPath || '/' },
-        { label: 'theme', value: theme.value },
-        { label: 'color', value: colorScheme.value },
-        { label: 'background', value: backgroundEnabled.value },
-      ]
     case 'config':
       return [
         { label: 'site', value: siteConfig.title },
@@ -296,30 +272,12 @@ const detailLines = computed(() => {
         { label: 'locale', value: 'user preference' },
         { label: 'scroll', value: 'document + terminal viewport' },
       ]
-    case 'permissions':
-      return [
-        { label: 'read', value: 'allow' },
-        { label: 'navigate', value: 'allow' },
-        { label: 'external links', value: 'ask' },
-        { label: 'write / upload', value: 'gated by existing page rules' },
-      ]
     case 'doctor':
       return [
         { label: 'router', value: 'ready' },
         { label: 'markdown renderer', value: 'ready' },
         { label: 'capture index', value: 'ready' },
         { label: 'comments', value: 'deferred until route mount' },
-      ]
-    case 'model':
-      return [
-        { label: 'site agent', value: 'Nexus Console' },
-        { label: 'runner', value: 'existing page integration' },
-      ]
-    case 'workspace':
-      return [
-        { label: 'site', value: siteConfig.title },
-        { label: 'host', value: typeof window === 'undefined' ? 'static render' : window.location.host },
-        { label: 'base', value: import.meta.env.BASE_URL },
       ]
     default:
       return [{ label: 'info', value: props.value || 'No additional details.' }]

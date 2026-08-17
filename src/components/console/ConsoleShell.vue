@@ -72,7 +72,6 @@
         ref="panelRef"
         :panel="activePanel?.panel || null"
         :value="activePanel?.value"
-        :current-path="route.fullPath"
         :feedback="feedback"
         :listbox-id="panelListboxId"
         @execute="executeCommand"
@@ -86,12 +85,10 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import type { ConsolePanel } from '../../console/commandRegistry'
 
-const route = useRoute()
 const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
 const suggestionsRef = ref<HTMLElement | null>(null)
@@ -100,7 +97,6 @@ const suggestionListboxId = 'console-command-suggestions'
 const panelListboxId = 'console-panel-options'
 const optionPanels = new Set<ConsolePanel>([
   'help',
-  'list',
   'mode',
   'theme',
   'color',

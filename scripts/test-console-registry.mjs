@@ -54,15 +54,24 @@ check(
   registry.resolveConsoleCommand(command(['comment'], { query: 'thread=other' })).kind === 'silent'
     && registry.resolveConsoleCommand(command(['comment'], { hash: '#other' })).kind === 'silent',
 )
-check('informational panels reject values', registry.resolveConsoleCommand(command(['status', 'extra'])).kind === 'silent')
 check('theme rejects unknown values', registry.resolveConsoleCommand(command(['theme', 'nope'])).kind === 'silent')
 check('theme rejects extra segments', registry.resolveConsoleCommand(command(['theme', 'dark', 'extra'])).kind === 'silent')
 check('language accepts a supported value', registry.resolveConsoleCommand(command(['language', 'zh_tw'])).kind === 'panel')
 check('command reference includes About', registry.listConsoleCommands().some((item) => item.input === '/about'))
 check('command reference includes Friends', registry.listConsoleCommands().some((item) => item.input === '/friends'))
-check('command reference includes List', registry.listConsoleCommands().some((item) => item.input === '/list'))
 check('command reference includes the canonical Home route', registry.listConsoleCommands().some((item) => item.input === '/home'))
 check('command reference includes current-page comments', registry.listConsoleCommands().some((item) => item.input === '/comment'))
+const removedCommands = ['agent', 'list', 'status', 'permissions', 'docker', 'workspace', 'model']
+for (const removedCommand of removedCommands) {
+  check(
+    `removed /${removedCommand} command resolves silently`,
+    registry.resolveConsoleCommand(command([removedCommand])).kind === 'silent',
+  )
+  check(
+    `removed /${removedCommand} command is absent from command reference`,
+    !registry.listConsoleCommands().some((item) => item.input === `/${removedCommand}`),
+  )
+}
 const disabledFeatureCommands = registry.listConsoleCommands({ infra: false, project: false })
 check('disabled infra is omitted from the command reference', !disabledFeatureCommands.some((item) => item.input === '/infra'))
 check('disabled project is omitted from the command reference', !disabledFeatureCommands.some((item) => item.input === '/project'))

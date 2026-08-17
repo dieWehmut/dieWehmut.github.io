@@ -24,6 +24,7 @@ const captureView = read('src/views/CaptureView.vue')
 const consoleShell = read('src/components/console/ConsoleShell.vue')
 const consoleOverview = readOptional('src/components/console/ConsoleOverviewHeader.vue')
 const consolePanel = read('src/components/console/ConsolePanelView.vue')
+const commandRegistry = read('src/console/commandRegistry.ts')
 const routeBreadcrumb = read('src/components/system/RouteBreadcrumb.vue')
 const postView = read('src/views/PostView.vue')
 const noteView = read('src/views/NoteView.vue')
@@ -75,6 +76,14 @@ check('console mode marks the document for native cursor overrides', displayPref
 check('console uses the terminal text cursor everywhere', consoleStyles.includes('cursor: text !important'))
 check('console suggestions keep the selected row visible', consoleShell.includes('suggestionsRef') && consoleShell.includes('scrollIntoView'))
 check('nested panels close with Escape', consolePanel.includes("event.key === 'Escape'"))
+const removedPanelCommands = ['agent', 'list', 'status', 'permissions', 'docker', 'workspace', 'model']
+for (const removedCommand of removedPanelCommands) {
+  check(
+    `removed /${removedCommand} command has no dedicated panel entry`,
+    !new RegExp(`(?:case\\s+['\"]${removedCommand}['\"]|\\b${removedCommand}\\s*:\\s*['\"])`).test(consolePanel)
+      && !new RegExp(`\\|\\s*['\"]${removedCommand}['\"]`).test(commandRegistry),
+  )
+}
 check(
   'Console viewport reserves its final row for the command dock',
   /grid-template-rows:\s*minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
