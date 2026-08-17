@@ -7,8 +7,8 @@
     <SiteSidebar v-if="!isConsole" class="desktop-layout__sidebar" />
     <div class="desktop-layout__content">
       <RouteBreadcrumb v-if="!isConsole" />
+      <ConsoleOverviewHeader v-if="isConsole" />
       <div ref="resultRef" class="desktop-layout__result">
-        <ConsoleOverviewHeader v-if="isConsole" />
         <main
           ref="outputRef"
           class="desktop-layout__main"
@@ -198,7 +198,7 @@ watch(isConsole, (enabled) => {
 
 .desktop-layout--console .desktop-layout__content {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100%;
   min-height: 0;
   margin-left: 0;

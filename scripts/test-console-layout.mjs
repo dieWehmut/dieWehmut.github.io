@@ -55,6 +55,11 @@ check(
     && desktopTemplate.indexOf('<ConsoleOverviewHeader') < desktopTemplate.indexOf('<main')
     && desktopTemplate.indexOf('desktop-layout__result') < desktopTemplate.indexOf('desktop-layout__command-dock'),
 )
+check(
+  'Console overview remains outside the scrolling route result',
+  desktopTemplate.indexOf('<ConsoleOverviewHeader') < desktopTemplate.indexOf('ref="resultRef"')
+    && /grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
+)
 check('mobile layout does not mount the console shell', !mobileLayout.includes('ConsoleShell'))
 check('mobile layout does not mount the Console overview', !mobileLayout.includes('ConsoleOverviewHeader'))
 check('desktop/mobile breakpoint remains 900px', siteShell.includes('(max-width: 900px)'))
@@ -97,7 +102,7 @@ for (const removedCommand of removedPanelCommands) {
 }
 check(
   'Console viewport reserves its final row for the command dock',
-  /grid-template-rows:\s*minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
+  /grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
 )
 check(
   'Console command choices open below the prompt',
@@ -139,8 +144,16 @@ check(
   /image-rendering:\s*auto\s*;/.test(consoleOverview) && !/image-rendering:\s*(?:pixelated|crisp-edges)/.test(consoleOverview),
 )
 check(
-  'Console overview renders rich site, workspace, content, contact, and runtime sections',
-  ['SITE', 'WORKSPACE', 'CONTENT', 'CONTACT', 'RUNTIME'].every((label) => consoleOverview.includes(label)),
+  'Console overview keeps only compact content and runtime sections',
+  ['CONTENT', 'RUNTIME'].every((label) => consoleOverview.includes(label))
+    && !['WORKSPACE', 'CONTACT', 'Hi!This is dieWehmut.'].some((label) => consoleOverview.includes(label)),
+)
+check('Console overview cards omit route labels', !consoleOverview.includes('<code>{{ stat.path }}</code>'))
+check(
+  'Console overview columns share a fixed one-third-height row',
+  /aspect-ratio:\s*3\s*\/\s*1/.test(consoleOverview)
+    && /\.console-overview__avatar[\s\S]*?height:\s*100%/.test(consoleOverview)
+    && consoleOverview.includes('overflow: clip'),
 )
 check(
   'Console overview renders shared statistics and footer metadata',
