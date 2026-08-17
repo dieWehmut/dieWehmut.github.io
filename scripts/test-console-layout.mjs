@@ -32,6 +32,7 @@ const noteView = read('src/views/NoteView.vue')
 const homeView = read('src/views/HomeView.vue')
 const displayPreference = read('src/composables/useDisplayModePreference.ts')
 const consoleStyles = read('src/styles/console.scss')
+const router = read('src/router.ts')
 const desktopTemplate = desktopLayout.split('<script setup')[0]
 const consoleLayoutBlock = desktopLayout.match(/\.desktop-layout--console \{[\s\S]*?\n\}/)?.[0] || ''
 const consoleContentBlock = desktopLayout.match(/\.desktop-layout--console \.desktop-layout__content \{[\s\S]*?\n\}/)?.[0] || ''
@@ -70,6 +71,15 @@ check(
   'Console reveal helpers drive the window scroller',
   desktopLayout.includes('window.scrollTo({ top: 0')
     && desktopLayout.includes('window.scrollY + anchor.getBoundingClientRect().top'),
+)
+check(
+  'Console route output can always reach the top of the page',
+  /\.desktop-layout--console \.desktop-layout__main \{[\s\S]*?min-height:\s*100vh\s*;/.test(desktopLayout)
+    && /\.desktop-layout--console \.desktop-layout__main--empty \{[\s\S]*?min-height:\s*0\s*;/.test(desktopLayout),
+)
+check(
+  'router hands the scroller to Console mode',
+  /scrollBehavior\([\s\S]*?useDisplayModePreference\(\)\.isConsole\.value\) return false/.test(router),
 )
 check('mobile layout does not mount the console shell', !mobileLayout.includes('ConsoleShell'))
 check('mobile layout does not mount the Console overview', !mobileLayout.includes('ConsoleOverviewHeader'))

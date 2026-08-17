@@ -210,6 +210,9 @@ watch(isConsole, (enabled) => {
 
 .desktop-layout--console .desktop-layout__main {
   width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
+  /* Reserve a full viewport so short routes can still scroll their own top to
+     the top of the page, which is what the `/` reveal aligns against. */
+  min-height: 100vh;
   margin: 0 auto;
   padding: 28px 0 58px;
   overflow: visible;

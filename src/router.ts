@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { siteConfig } from './data/site/config'
+import { useDisplayModePreference } from './composables/useDisplayModePreference'
 
 const viewLoaders = {
   postDetail: () => import('./views/PostView.vue'),
@@ -64,6 +65,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
+    // Console 模式由布局自己把路由输出对齐到页面顶部，router 再回顶会打架
+    if (useDisplayModePreference().isConsole.value) return false
     if (savedPosition) return savedPosition
     if (to.hash) return false
     // 仅 query 变化（搜索、筛选）时留在原处，别把用户弹回顶部
