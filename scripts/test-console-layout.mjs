@@ -143,6 +143,21 @@ check(
     && consoleSession.includes('panelStack.value.pop()'),
 )
 check(
+  'choosing a value collapses the dock back to the bare prompt',
+  /if \(commits\) collapseCommittedPanel\(resolution\.panel\)/.test(consoleSession)
+    && /function collapseCommittedPanel\([\s\S]*?activePanel\.value = null[\s\S]*?feedback\.value = ''/.test(consoleSession),
+)
+check(
+  'Escape reopens the panel a choice collapsed',
+  /function reopenCommittedPanel\([\s\S]*?activePanel\.value = \{ panel: committed\.panel \}/.test(consoleSession)
+    && /if \(target === null\) return reopenCommittedPanel\(\)/.test(consoleSession),
+)
+check(
+  'the collapsed panel is only the step just taken',
+  /function setInput\([^}]*committedPanel\.value = null/.test(consoleSession)
+    && /function clearPanelNavigation\([^}]*committedPanel\.value = null/.test(consoleSession),
+)
+check(
   'suggestion filtering lives in the pure console module',
   consoleSession.includes("from '../console/suggestions'")
     && /return filterConsoleSuggestions\(prefix, listConsoleCommands\(commandAvailability\), dynamicOptions\)/.test(consoleSession)

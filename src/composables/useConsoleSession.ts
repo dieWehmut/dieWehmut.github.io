@@ -32,6 +32,16 @@ const feedback = ref('')
 const executing = ref(false)
 const panelStack = ref<Array<{ panel: ConsolePanel; value?: string }>>([])
 const menuReturnState = ref<{ input: string; cursor: number } | null>(null)
+/**
+ * The panel that was collapsed by choosing one of its values, kept only so the
+ * next Escape can put it back. Any other input drops it: "the previous step"
+ * means the step just taken, not one from minutes ago.
+ */
+const committedPanel = ref<{
+  panel: ConsolePanel
+  stack: Array<{ panel: ConsolePanel; value?: string }>
+  menu: { input: string; cursor: number } | null
+} | null>(null)
 
 function normalizePrefix(value: string) {
   return value.trim().toLowerCase()
@@ -72,6 +82,7 @@ export function useConsoleSession() {
 
   function setInput(value: string) {
     commandInput.value = value
+    committedPanel.value = null
     resetNavigation()
   }
 
@@ -96,6 +107,37 @@ export function useConsoleSession() {
     activePanel.value = null
     panelStack.value = []
     menuReturnState.value = null
+    committedPanel.value = null
+  }
+
+  /**
+   * A chosen value ends the interaction: the rows have nothing left to offer, so
+   * the dock drops back to the bare prompt instead of sitting there showing the
+   * menu the choice came from. The panel is remembered as the Escape
+   * destination, so revisiting or changing the choice is one key away.
+   */
+  function collapseCommittedPanel(panel: ConsolePanel) {
+    committedPanel.value = {
+      panel,
+      stack: [...panelStack.value],
+      menu: menuReturnState.value,
+    }
+    activePanel.value = null
+    feedback.value = ''
+  }
+
+  function reopenCommittedPanel() {
+    const committed = committedPanel.value
+    if (!committed) return false
+
+    panelStack.value = committed.stack
+    menuReturnState.value = committed.menu
+    activePanel.value = { panel: committed.panel }
+    committedPanel.value = null
+    feedback.value = ''
+    commandInput.value = ''
+    resetNavigation()
+    return true
   }
 
   function returnToPreviousMenu() {
@@ -120,7 +162,7 @@ export function useConsoleSession() {
     }
 
     const target = consoleEscapeTarget({ input: commandInput.value, hasPanel: false })
-    if (target === null) return false
+    if (target === null) return reopenCommittedPanel()
     commandInput.value = target
     feedback.value = ''
     resetNavigation()
@@ -189,6 +231,7 @@ export function useConsoleSession() {
     resetNavigation()
     commandInput.value = ''
     feedback.value = ''
+    committedPanel.value = null
 
     try {
       if (resolution.kind === 'route') {
@@ -208,9 +251,10 @@ export function useConsoleSession() {
         clearPanelNavigation()
         requestConsoleOutputReveal('comment')
       } else {
-        if (!resolution.value && sourcePanel && sourcePanel.panel !== resolution.panel) {
+        const commits = Boolean(resolution.value)
+        if (!commits && sourcePanel && sourcePanel.panel !== resolution.panel) {
           panelStack.value.push(sourcePanel)
-        } else if (!sourcePanel && !resolution.value) {
+        } else if (!commits && !sourcePanel) {
           menuReturnState.value = {
             input: sourceMenu.input.startsWith('/') ? sourceMenu.input : '/',
             cursor: sourceMenu.cursor,
@@ -218,6 +262,7 @@ export function useConsoleSession() {
         }
         setPanel(resolution.panel, resolution.value)
         await applyPanelValue(resolution.panel, resolution.value)
+        if (commits) collapseCommittedPanel(resolution.panel)
       }
     } catch {
       feedback.value = 'Navigation could not be completed.'
