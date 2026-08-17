@@ -227,6 +227,37 @@ check(
 check('mobile keeps automatic comments', mobileLayout.includes('<GiscusComments layout="mobile" />'))
 check('mobile keeps its Footer', mobileLayout.includes('<Footer />'))
 check('mobile keeps one shared route outlet', (mobileLayout.match(/<RouterView\b/g) || []).length === 1)
+check(
+  'theme and color rows preview the moment the cursor lands on them',
+  /livePreview: \{ kind: 'theme'/.test(consolePanel)
+    && /livePreview: \{ kind: 'color'/.test(consolePanel)
+    && /function selectIndex\([\s\S]*?previewIndex\(selectedIndex\.value\)/.test(consolePanel)
+    && /function moveSelection\([\s\S]*?previewIndex\(selectedIndex\.value\)/.test(consolePanel),
+)
+check(
+  'only click or Enter commits the previewed preference',
+  consolePanel.includes('@click="commitIndex(index)"')
+    && /function commitIndex\([\s\S]*?previewBaseline = null[\s\S]*?emit\('execute'/.test(consolePanel)
+    && /function activateSelection\(\)[\s\S]*?commitIndex\(selectedIndex\.value\)/.test(consolePanel),
+)
+check(
+  'leaving a preference panel rolls the preview back',
+  /function cancelPreview\(\)[\s\S]*?applyPreference\(previewBaseline\)/.test(consolePanel)
+    && /function closePanel\(\)[\s\S]*?cancelPreview\(\)/.test(consolePanel)
+    && /event\.key === 'Escape'[\s\S]*?cancelPreview\(\)/.test(consolePanel)
+    && /watch\(\s*\[\(\) => props\.panel[\s\S]*?cancelPreview\(\)/.test(consolePanel),
+)
+check(
+  'opening a preference panel starts on the option that is already live',
+  consolePanel.includes('findIndex((option) => option.current)'),
+)
+check(
+  'light themes keep the avatar plate and the command input on the page background',
+  /--console-canvas: var\(--console-surface\)/.test(desktopLayout)
+    && /html\[data-theme='light'\] \.desktop-layout--console \{[\s\S]*?--console-canvas: var\(--console-bg\)/.test(desktopLayout)
+    && /\.console-shell__prompt \{[\s\S]*?background: var\(--console-canvas/.test(consoleShell)
+    && /\.console-overview__portrait \{[\s\S]*?background: var\(--console-canvas/.test(consoleOverview),
+)
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)

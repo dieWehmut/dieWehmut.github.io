@@ -3,7 +3,7 @@
     <div class="console-panel__heading">
       <span class="console-panel__marker" aria-hidden="true">›</span>
       <h2>{{ heading }}</h2>
-      <button class="console-panel__close" type="button" aria-label="Back to previous menu" title="Back to previous menu" @click="$emit('close')">×</button>
+      <button class="console-panel__close" type="button" aria-label="Back to previous menu" title="Back to previous menu" @click="closePanel">×</button>
     </div>
 
     <p v-if="feedback" class="console-panel__feedback">{{ feedback }}</p>
@@ -28,7 +28,7 @@
         :data-option-index="index"
         @focus="selectIndex(index)"
         @pointerenter="selectIndex(index)"
-        @click="$emit('execute', option.command)"
+        @click="commitIndex(index)"
       >
         <code :class="{ 'is-current': option.current }">{{ option.code }}</code>
         <span>{{ option.label }}</span>
@@ -52,7 +52,8 @@ import { siteConfig } from '../../data/site/config'
 import { listConsoleCommands, type ConsolePanel } from '../../console/commandRegistry'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
-import { useThemePreference } from '../../composables/useThemePreference'
+import { useThemePreference, type ThemeMode } from '../../composables/useThemePreference'
+import type { SiteColorScheme } from '../../types/content'
 
 const props = defineProps<{
   panel: ConsolePanel | null
@@ -67,8 +68,8 @@ const emit = defineEmits<{
   'selection-change': [optionId: string]
 }>()
 
-const { theme } = useThemePreference()
-const { colorScheme, colorSchemeOptions } = useColorSchemePreference()
+const { theme, setTheme } = useThemePreference()
+const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 
 const commands = listConsoleCommands({
@@ -77,7 +78,7 @@ const commands = listConsoleCommands({
 })
 const notes = getNotes()
 const posts = getPosts()
-const themeOptions = [
+const themeOptions: Array<{ value: ThemeMode; label: string }> = [
   { value: 'dark', label: 'Low-light terminal palette' },
   { value: 'light', label: 'High-contrast light palette' },
 ]
@@ -94,11 +95,20 @@ const languages = [
   { value: 'la', label: 'Latina' },
 ]
 
+/**
+ * A preference this row can apply the moment the cursor lands on it, so the
+ * selection doubles as a live preview. Committing (click / Enter) just keeps it.
+ */
+type LivePreview =
+  | { kind: 'theme'; value: ThemeMode }
+  | { kind: 'color'; value: SiteColorScheme }
+
 type PanelOption = {
   command: string
   code: string
   label: string
   current?: boolean
+  livePreview?: LivePreview
 }
 
 const selectedIndex = ref(0)
@@ -155,6 +165,7 @@ const panelOptions = computed<PanelOption[] | null>(() => {
         code: option.value,
         label: option.label,
         current: theme.value === option.value,
+        livePreview: { kind: 'theme', value: option.value },
       }))
     case 'color':
       return colorSchemeOptions.value.map((option) => ({
@@ -162,6 +173,7 @@ const panelOptions = computed<PanelOption[] | null>(() => {
         code: option.id,
         label: option.label,
         current: colorScheme.value === option.id,
+        livePreview: { kind: 'color', value: option.id },
       }))
     case 'background':
       return backgroundOptions.map((option) => ({
@@ -193,12 +205,58 @@ const panelOptions = computed<PanelOption[] | null>(() => {
   }
 })
 
+/**
+ * The preference value that was live before the cursor started roaming. Kept
+ * outside reactive state because it only ever feeds the rollback, never render.
+ */
+let previewBaseline: LivePreview | null = null
+
+function applyPreference(preference: LivePreview) {
+  if (preference.kind === 'theme') setTheme(preference.value)
+  else setColorScheme(preference.value)
+}
+
+function currentPreference(kind: LivePreview['kind']): LivePreview {
+  return kind === 'theme'
+    ? { kind: 'theme', value: theme.value }
+    : { kind: 'color', value: colorScheme.value }
+}
+
+function previewIndex(index: number) {
+  const preference = panelOptions.value?.[index]?.livePreview
+  if (!preference) return
+  if (!previewBaseline) previewBaseline = currentPreference(preference.kind)
+  applyPreference(preference)
+}
+
+/** Roll the roaming preview back to whatever was live before it started. */
+function cancelPreview() {
+  if (!previewBaseline) return
+  applyPreference(previewBaseline)
+  previewBaseline = null
+}
+
+function closePanel() {
+  cancelPreview()
+  emit('close')
+}
+
+/** Keep the previewed preference: the roaming value is now the chosen one. */
+function commitIndex(index: number) {
+  const option = panelOptions.value?.[index]
+  if (!option) return false
+  previewBaseline = null
+  emit('execute', option.command)
+  return true
+}
+
 function selectIndex(index: number) {
   if (!panelOptions.value?.length) {
     emit('selection-change', '')
     return
   }
   selectedIndex.value = Math.min(Math.max(index, 0), panelOptions.value.length - 1)
+  previewIndex(selectedIndex.value)
   emit('selection-change', optionId(selectedIndex.value))
 }
 
@@ -218,21 +276,20 @@ function moveSelection(delta: number): boolean {
   const count = panelOptions.value?.length || 0
   if (!count) return false
   selectedIndex.value = (selectedIndex.value + delta + count) % count
+  previewIndex(selectedIndex.value)
   emit('selection-change', optionId(selectedIndex.value))
   scrollSelectionIntoView()
   return true
 }
 
 function activateSelection(): boolean {
-  const option = panelOptions.value?.[selectedIndex.value]
-  if (!option) return false
-  emit('execute', option.command)
-  return true
+  return commitIndex(selectedIndex.value)
 }
 
 function handlePanelKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
     event.preventDefault()
+    cancelPreview()
     emit('close')
     return
   }
@@ -254,8 +311,13 @@ function handlePanelKeydown(event: KeyboardEvent) {
 watch(
   [() => props.panel, () => panelOptions.value?.length || 0],
   () => {
-    selectedIndex.value = 0
-    emit('selection-change', panelOptions.value?.length ? optionId(0) : '')
+    cancelPreview()
+    const options = panelOptions.value || []
+    // Start on the option that is already live, so merely opening the panel
+    // previews nothing — only moving the cursor does.
+    const currentIndex = options.findIndex((option) => option.current)
+    selectedIndex.value = currentIndex >= 0 ? currentIndex : 0
+    emit('selection-change', options.length ? optionId(selectedIndex.value) : '')
     scrollSelectionIntoView()
   },
   { immediate: true },
