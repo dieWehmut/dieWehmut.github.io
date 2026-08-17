@@ -6,6 +6,10 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), 'u
 
 const projectView = read('src/views/ProjectView.vue')
 const captureView = read('src/views/CaptureView.vue')
+const captureConsoleTemplate = captureView.slice(
+  captureView.indexOf('<template v-if="isConsole">'),
+  captureView.indexOf('\n      <template v-else>', captureView.indexOf('<template v-if="isConsole">')),
+)
 const infraView = read('src/views/InfraView.vue')
 const app = read('src/App.vue')
 const desktopLayout = read('src/layouts/DesktopSidebarLayout.vue')
@@ -36,6 +40,21 @@ const checks = [
       && captureView.includes('hiddenAssetCount(asCaptureGroup(item))'),
   ],
   ['capture detail still renders the complete selected group', captureView.includes('v-for="asset in selectedGroup.assets"')],
+  [
+    'capture detail images defer offscreen loading',
+    /v-for="asset in selectedGroup\.assets"[\s\S]{0,700}?<img[\s\S]{0,180}?loading="lazy"/.test(captureConsoleTemplate),
+  ],
+  [
+    'capture group links save the console result viewport before navigation',
+    /class="console-capture-group__overflow"[\s\S]{0,320}?@click="saveCaptureScrollPosition"/.test(captureConsoleTemplate)
+      && /console-capture-group__body[\s\S]{0,220}?<RouterLink[^>]*@click="saveCaptureScrollPosition"/.test(captureConsoleTemplate),
+  ],
+  [
+    'capture month selection survives a detail round trip',
+    captureView.includes('state-key="capture"')
+      && monthNavigator.includes('stateKey')
+      && monthNavigator.includes('sessionStorage'),
+  ],
   ['capture back navigation restores the console result viewport', captureView.includes('activeCaptureScrollContainer')],
   ['console feed cards cannot overflow their viewport', consoleStyles.includes('.desktop-layout--console .feed-entry-card') && consoleStyles.includes('margin-inline: 0 !important')],
   ['console infra stops the orbit side ticker', infraView.includes('syncSideTicker') && infraView.includes('watch(isConsole')],

@@ -42,7 +42,7 @@
                   <img
                     :src="asset.image"
                     :alt="asset.title || asset.id"
-                    loading="eager"
+                    loading="lazy"
                     decoding="async"
                     @error="retryPublicAssetImage($event, asset.image)"
                   />
@@ -85,7 +85,7 @@
           </div>
         </template>
 
-        <ConsoleMonthNavigator v-else :months="consoleMonths">
+        <ConsoleMonthNavigator v-else :months="consoleMonths" state-key="capture">
           <template #default="{ item }">
             <article class="console-capture-group">
               <div class="console-capture-group__media">
@@ -123,13 +123,17 @@
                   class="console-capture-group__overflow"
                   :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`"
                   :aria-label="`Open ${hiddenAssetCount(asCaptureGroup(item))} more captures`"
+                  @click="saveCaptureScrollPosition"
                 >
                   <strong>+{{ hiddenAssetCount(asCaptureGroup(item)) }}</strong>
                   <span>more</span>
                 </RouterLink>
               </div>
               <div class="console-capture-group__body">
-                <RouterLink :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`">
+                <RouterLink
+                  :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`"
+                  @click="saveCaptureScrollPosition"
+                >
                   <code>/capture/{{ encodeURIComponent(asCaptureGroup(item).id) }}</code>
                 </RouterLink>
                 <time v-if="asCaptureGroup(item).date" :datetime="asCaptureGroup(item).date">{{ formatDateOnly(asCaptureGroup(item).date) }}</time>

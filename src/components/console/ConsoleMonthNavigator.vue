@@ -53,22 +53,33 @@ export interface ConsoleMonthGroup {
   items: readonly unknown[]
 }
 
-const props = defineProps<{ months: readonly ConsoleMonthGroup[] }>()
+const props = defineProps<{
+  months: readonly ConsoleMonthGroup[]
+  stateKey?: string
+}>()
 const currentIndex = ref(0)
 const tabRefs = ref<HTMLButtonElement[]>([])
 
 const current = computed(() => props.months[currentIndex.value])
+const stateStorageKey = computed(() => props.stateKey ? `nexus:console-month:${props.stateKey}` : '')
 
 watch(
-  () => props.months.length,
-  (count) => {
-    currentIndex.value = moveConsoleMonth(currentIndex.value, 0, count)
+  [
+    () => props.months.map((month, index) => monthKey(month, index)).join('\u0000'),
+    () => props.stateKey,
+  ],
+  () => {
+    const restoredIndex = restoredMonthIndex()
+    currentIndex.value = restoredIndex >= 0
+      ? restoredIndex
+      : moveConsoleMonth(currentIndex.value, 0, props.months.length)
   },
   { immediate: true },
 )
 
 function selectMonth(index: number, focus = false) {
   currentIndex.value = moveConsoleMonth(index, 0, props.months.length)
+  persistCurrentMonth()
   void nextTick(() => {
     const tab = tabRefs.value[currentIndex.value]
     tab?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
@@ -88,6 +99,24 @@ function handleExternalNavigation(event: Event) {
 
 function tabId(index: number) {
   return `console-month-tab-${index}`
+}
+
+function monthKey(month: ConsoleMonthGroup, index: number) {
+  return String(month.id || month.key || index)
+}
+
+function restoredMonthIndex() {
+  if (!stateStorageKey.value || typeof window === 'undefined') return -1
+  const savedKey = window.sessionStorage.getItem(stateStorageKey.value)
+  if (!savedKey) return -1
+  return props.months.findIndex((month, index) => monthKey(month, index) === savedKey)
+}
+
+function persistCurrentMonth() {
+  if (!stateStorageKey.value || typeof window === 'undefined') return
+  const month = props.months[currentIndex.value]
+  if (!month) return
+  window.sessionStorage.setItem(stateStorageKey.value, monthKey(month, currentIndex.value))
 }
 
 function itemKey(item: unknown, index: number) {
