@@ -98,7 +98,7 @@ const routeTerm = computed(() => {
   const explicitTerm = props.term.trim()
   if (explicitTerm) return explicitTerm
 
-  const name = String(route.name || 'route')
+  const name = route.name === 'root' ? 'home' : String(route.name || 'route')
   const path = route.path === '/' ? 'home' : route.path.replace(/^\/+/, '').replace(/\/+$/g, '')
   return `route:${name}:${path || 'home'}`
 })

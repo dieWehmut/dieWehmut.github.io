@@ -4,7 +4,7 @@
     <BackgroundLayer />
     <BounceCursor />
     <SiteShell />
-    <FloatButton />
+    <FloatButton v-if="!isConsole" />
   </el-config-provider>
 </template>
 
@@ -14,4 +14,7 @@ import PageScrollProgress from './components/system/PageScrollProgress.vue'
 import BounceCursor from './components/system/BounceCursor.vue'
 import FloatButton from './components/system/FloatButton.vue'
 import SiteShell from './layouts/SiteShell.vue'
+import { useDisplayModePreference } from './composables/useDisplayModePreference'
+
+const { isConsole } = useDisplayModePreference()
 </script>

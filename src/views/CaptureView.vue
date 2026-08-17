@@ -75,7 +75,6 @@
                 >{{ source.title }}</RouterLink>
               </div>
             </div>
-            <GiscusComments layout="inline" source="capture" :term="selectedCommentTerm" />
           </div>
         </template>
 
