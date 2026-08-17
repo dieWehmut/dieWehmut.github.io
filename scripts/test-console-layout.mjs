@@ -123,8 +123,9 @@ check(
     && consoleSession.includes('panelStack.value.pop()'),
 )
 check(
-  'root slash suggestions expose every registered command',
-  /if \(prefix === ['"]\/['"]\) return options\s/.test(consoleSession)
+  'suggestion filtering lives in the pure console module',
+  consoleSession.includes("from '../console/suggestions'")
+    && /return filterConsoleSuggestions\(prefix, listConsoleCommands\(commandAvailability\), dynamicOptions\)/.test(consoleSession)
     && !consoleSession.includes('options.slice(0, 12)'),
 )
 const removedPanelCommands = [

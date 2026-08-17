@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { addConsoleHistoryEntry } from '../console/history'
 import { parseConsoleInput } from '../console/commandParser'
 import { isKnownConsoleCommandTarget, type ConsoleCommandTargetCatalog } from '../console/commandTarget'
+import { filterConsoleSuggestions } from '../console/suggestions'
 import {
   listConsoleCommands,
   resolveConsoleCommand,
@@ -53,9 +54,6 @@ export function useConsoleSession() {
     const prefix = normalizePrefix(commandInput.value)
     if (!prefix.startsWith('/')) return []
 
-    const options = listConsoleCommands(commandAvailability)
-    if (prefix === '/') return options
-
     const dynamicOptions = prefix.startsWith('/note/')
       ? getNotes().map((note) => ({ input: `/note/${note.id}`, description: note.title || note.id }))
       : prefix.startsWith('/post/')
@@ -64,8 +62,7 @@ export function useConsoleSession() {
           ? getTagGroups().map((group) => ({ input: `/tags/${group.tag}`, description: `${group.count} entries` }))
           : []
 
-    return [...dynamicOptions, ...options]
-      .filter((option) => option.input.toLowerCase().startsWith(prefix))
+    return filterConsoleSuggestions(prefix, listConsoleCommands(commandAvailability), dynamicOptions)
   })
 
   function resetNavigation() {
