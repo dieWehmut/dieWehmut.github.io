@@ -297,6 +297,7 @@ const detailLines = computed(() => {
   align-items: center;
   gap: 8px;
   min-height: 28px;
+  padding-left: var(--console-prompt-indent, 34px);
 }
 
 .console-panel__marker {
@@ -333,6 +334,7 @@ const detailLines = computed(() => {
 .console-panel__feedback,
 .console-panel__empty {
   margin: 8px 0;
+  padding-left: var(--console-prompt-indent, 34px);
   color: var(--console-muted);
 }
 
@@ -348,7 +350,7 @@ const detailLines = computed(() => {
   align-items: baseline;
   gap: 18px;
   min-height: 30px;
-  padding: 3px 8px;
+  padding: 3px 9px 3px var(--console-prompt-indent, 34px);
   border: 1px solid transparent;
   color: var(--console-muted);
   background: transparent;
@@ -378,7 +380,8 @@ const detailLines = computed(() => {
 .console-panel__details {
   display: grid;
   gap: 3px;
-  margin: 10px 0 2px 18px;
+  margin: 10px 0 2px;
+  padding-left: var(--console-prompt-indent, 34px);
 }
 
 .console-panel__details p {

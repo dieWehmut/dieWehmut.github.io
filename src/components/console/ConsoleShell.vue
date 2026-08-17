@@ -232,6 +232,9 @@ onMounted(() => {
 
 <style scoped>
 .console-shell {
+  /* Single column that the prompt caret, the suggestion rows and the panel rows
+     all start from, so every `/` lines up under the one being typed. */
+  --console-prompt-indent: 34px;
   position: relative;
   display: block;
   box-sizing: border-box;
@@ -293,13 +296,18 @@ onMounted(() => {
 
 .console-shell__feedback {
   margin: 0;
-  padding: 9px 8px;
+  padding: 9px 9px 9px var(--console-prompt-indent);
   color: var(--console-muted);
 }
 
 .console-shell__prompt-symbol {
   flex: 0 0 auto;
-  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--console-prompt-indent);
+  padding: 0;
   color: var(--console-accent);
   font-weight: 700;
 }
@@ -352,7 +360,7 @@ onMounted(() => {
   grid-template-columns: minmax(170px, 260px) 1fr;
   gap: 16px;
   min-height: 30px;
-  padding: 4px 9px;
+  padding: 4px 9px 4px var(--console-prompt-indent);
   border: 1px solid transparent;
   color: var(--console-muted);
   background: transparent;

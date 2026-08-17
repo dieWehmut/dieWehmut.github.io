@@ -102,6 +102,14 @@ check(
   'console typography uses neutral letter spacing',
   [...consoleShell.matchAll(/letter-spacing:\s*([^;]+);/g)].every((match) => match[1].trim() === '0'),
 )
+check(
+  'console prompt caret and every option row share one left edge',
+  /--console-prompt-indent:\s*34px/.test(consoleShell)
+    && /\.console-shell__prompt-symbol \{[\s\S]*?width:\s*var\(--console-prompt-indent\)/.test(consoleShell)
+    && /\.console-shell__suggestion \{[\s\S]*?padding:[^;]*var\(--console-prompt-indent\)/.test(consoleShell)
+    && /\.console-panel__heading \{[\s\S]*?padding-left:\s*var\(--console-prompt-indent/.test(consolePanel)
+    && /\.console-panel__row \{[\s\S]*?padding:[^;]*var\(--console-prompt-indent/.test(consolePanel),
+)
 check('shared article PDF export remains in standard mode', routeBreadcrumb.includes('ArticleExportButton'))
 check('shared article PDF export remains in console posts', postView.includes('ArticleExportButton'))
 check('shared article PDF export remains in console notes', noteView.includes('ArticleExportButton'))
