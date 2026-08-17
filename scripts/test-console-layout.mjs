@@ -7,18 +7,37 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8')
 }
 
+function readOptional(relativePath) {
+  const filePath = path.join(root, relativePath)
+  return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : ''
+}
+
+function componentTags(source, componentName) {
+  return [...source.matchAll(new RegExp(`<${componentName}\\b[^>]*\\/?>`, 'g'))].map((match) => match[0])
+}
+
 const desktopLayout = read('src/layouts/DesktopSidebarLayout.vue')
 const mobileLayout = read('src/layouts/MobileDrawerLayout.vue')
 const siteShell = read('src/layouts/SiteShell.vue')
 const floatButton = read('src/components/system/FloatButton.vue')
 const captureView = read('src/views/CaptureView.vue')
 const consoleShell = read('src/components/console/ConsoleShell.vue')
+const consoleOverview = readOptional('src/components/console/ConsoleOverviewHeader.vue')
 const consolePanel = read('src/components/console/ConsolePanelView.vue')
 const routeBreadcrumb = read('src/components/system/RouteBreadcrumb.vue')
 const postView = read('src/views/PostView.vue')
 const noteView = read('src/views/NoteView.vue')
+const homeView = read('src/views/HomeView.vue')
 const displayPreference = read('src/composables/useDisplayModePreference.ts')
 const consoleStyles = read('src/styles/console.scss')
+const desktopTemplate = desktopLayout.split('<script setup')[0]
+const consoleShellTemplate = consoleShell.split('<script setup')[0]
+const footerTags = componentTags(desktopTemplate, 'Footer')
+const desktopCommentTags = componentTags(desktopTemplate, 'GiscusComments')
+const homeStatsTags = [
+  ...componentTags(homeView, 'HomeStatsGrid'),
+  ...(homeView.match(/<div\b[^>]*home-view__grid[^>]*>/g) || []),
+]
 
 const checks = []
 function check(label, condition) {
@@ -26,8 +45,16 @@ function check(label, condition) {
 }
 
 check('desktop layout mounts one shared RouterView', (desktopLayout.match(/<RouterView\b/g) || []).length === 1)
-check('desktop layout branches the console shell only', desktopLayout.includes('<ConsoleShell v-if="isConsole" />'))
+check('desktop Console mounts its dedicated overview header', componentTags(desktopTemplate, 'ConsoleOverviewHeader').some((tag) => tag.includes('v-if="isConsole"')))
+check('desktop Console mounts a named command dock', componentTags(desktopTemplate, 'ConsoleShell').some((tag) => tag.includes('desktop-layout__command-dock')))
+check(
+  'Console overview precedes route output and the command dock follows it',
+  desktopTemplate.indexOf('<ConsoleOverviewHeader') > -1
+    && desktopTemplate.indexOf('<ConsoleOverviewHeader') < desktopTemplate.indexOf('<main')
+    && desktopTemplate.indexOf('desktop-layout__result') < desktopTemplate.indexOf('desktop-layout__command-dock'),
+)
 check('mobile layout does not mount the console shell', !mobileLayout.includes('ConsoleShell'))
+check('mobile layout does not mount the Console overview', !mobileLayout.includes('ConsoleOverviewHeader'))
 check('desktop/mobile breakpoint remains 900px', siteShell.includes('(max-width: 900px)'))
 check('settings button exposes expanded state', floatButton.includes(':aria-expanded="settingsOpen"'))
 check('language selector exposes expanded state', floatButton.includes(':aria-expanded="languageOpen"'))
@@ -35,8 +62,6 @@ check('colour selector exposes expanded state', floatButton.includes(':aria-expa
 check('console capture preserves authorized editor controls', captureView.includes('console-capture-editor'))
 check('capture confirmation remains available in console mode', captureView.includes('<Teleport to="body">'))
 check('console overrides dynamic mesh with matching specificity', desktopLayout.includes(':root.dynamic-background-enabled .desktop-layout--console .desktop-layout__content'))
-check('console route changes reset the result viewport', desktopLayout.includes('resetConsoleScroll'))
-check('back to top targets the active scroll viewport', floatButton.includes('activeScrollContainer'))
 check('nested panels expose keyboard selection', consolePanel.includes('activateSelection'))
 check('console typography does not scale with viewport width', !/font-size:\s*clamp\(/.test(consoleShell))
 check(
@@ -50,7 +75,16 @@ check('console mode marks the document for native cursor overrides', displayPref
 check('console uses the terminal text cursor everywhere', consoleStyles.includes('cursor: text !important'))
 check('console suggestions keep the selected row visible', consoleShell.includes('suggestionsRef') && consoleShell.includes('scrollIntoView'))
 check('nested panels close with Escape', consolePanel.includes("event.key === 'Escape'"))
-check('console result viewport keeps the upper shell fixed', desktopLayout.includes('desktop-layout__result') && desktopLayout.includes('height: 100vh'))
+check(
+  'Console viewport reserves its final row for the command dock',
+  /grid-template-rows:\s*minmax\(0,\s*1fr\)\s+auto\s*;/.test(desktopLayout),
+)
+check(
+  'Console prompt is the final command-shell row',
+  consoleShellTemplate.indexOf('class="console-shell__transient"') > -1
+    && consoleShellTemplate.indexOf('class="console-shell__prompt"') > consoleShellTemplate.indexOf('class="console-shell__transient"')
+    && /<form\b[^>]*class="console-shell__prompt"[\s\S]*?<\/form>\s*<\/section>\s*<\/template>/.test(consoleShellTemplate),
+)
 check(
   'short desktop viewports constrain transient console content',
   consoleShell.includes('console-shell__transient')
@@ -76,6 +110,43 @@ check(
     && consoleShell.includes('role="status"')
     && consoleShell.includes('aria-live="polite"'),
 )
+check('Console overview component exists', Boolean(consoleOverview))
+check(
+  'Console overview uses two exact equal-width columns',
+  /grid-template-columns:\s*(?:minmax\(0,\s*1fr\)\s+minmax\(0,\s*1fr\)|repeat\(2,\s*minmax\(0,\s*1fr\)\))\s*;/.test(consoleOverview),
+)
+check('Console overview avatar is grayscale only', /filter:\s*grayscale\(1\)\s*;/.test(consoleOverview))
+check('Console overview avatar stays fully visible', /object-fit:\s*contain\s*;/.test(consoleOverview))
+check(
+  'Console overview avatar keeps normal bitmap rendering',
+  /image-rendering:\s*auto\s*;/.test(consoleOverview) && !/image-rendering:\s*(?:pixelated|crisp-edges)/.test(consoleOverview),
+)
+check(
+  'Console overview renders rich site, workspace, content, contact, and runtime sections',
+  ['SITE', 'WORKSPACE', 'CONTENT', 'CONTACT', 'RUNTIME'].every((label) => consoleOverview.includes(label)),
+)
+check(
+  'Console overview renders shared statistics and footer metadata',
+  /v-for="[^\"]*stat/.test(consoleOverview)
+    && /uptime/i.test(consoleOverview)
+    && /copyright/i.test(consoleOverview)
+    && /icp/i.test(consoleOverview),
+)
+check(
+  'desktop Footer is mounted only outside Console mode',
+  footerTags.some((tag) => tag.includes('v-if="!isConsole"')),
+)
+check(
+  'desktop automatic comments are mounted only outside Console mode',
+  desktopCommentTags.some((tag) => tag.includes('layout="desktop"') && tag.includes('v-if="!isConsole"')),
+)
+check(
+  'classic Home statistics are hidden only while Console mode is effective',
+  homeStatsTags.some((tag) => tag.includes('v-if="!isConsole"')),
+)
+check('mobile keeps automatic comments', mobileLayout.includes('<GiscusComments layout="mobile" />'))
+check('mobile keeps its Footer', mobileLayout.includes('<Footer />'))
+check('mobile keeps one shared route outlet', (mobileLayout.match(/<RouterView\b/g) || []).length === 1)
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)

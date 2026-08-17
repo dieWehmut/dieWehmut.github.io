@@ -26,7 +26,15 @@ function check(label, condition) {
 }
 
 const rootCommand = parser.parseConsoleInput('/')
-check('root command resolves Home', rootCommand?.kind === 'command' && rootCommand.canonicalInput === '/')
+check('root command keeps the console landing path', rootCommand?.kind === 'command' && rootCommand.canonicalInput === '/')
+
+const homeCommand = parser.parseConsoleInput('/HOME')
+check('home command is case insensitive', homeCommand?.segments?.[0] === 'home')
+check('home command uses its canonical route', homeCommand?.canonicalInput === '/home')
+
+const commentCommand = parser.parseConsoleInput('/COMMENT')
+check('comment action is case insensitive', commentCommand?.segments?.[0] === 'comment')
+check('comment action has a stable canonical command', commentCommand?.canonicalInput === '/comment')
 
 const noteCommand = parser.parseConsoleInput('/NOTE/CurrentAffairsReading')
 check('fixed command segments are case insensitive', noteCommand?.segments?.[0] === 'note')
