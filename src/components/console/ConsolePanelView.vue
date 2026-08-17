@@ -16,7 +16,7 @@
       :aria-label="listLabel"
     >
       <button
-        v-for="(option, index) in panelOptions"
+        v-for="{ option, index } in visibleOptions"
         :id="optionId(index)"
         :key="option.command"
         class="console-panel__row"
@@ -42,6 +42,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { getNotes, getPosts } from '../../data'
 import { siteConfig } from '../../data/site/config'
 import { listConsoleCommands, type ConsolePanel } from '../../console/commandRegistry'
+import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { useThemePreference, type ThemeMode } from '../../composables/useThemePreference'
@@ -195,6 +196,18 @@ const panelOptions = computed<PanelOption[]>(() => {
 })
 
 /**
+ * The rows actually rendered. Like the suggestion list, the panel shows a fixed
+ * number of options and travels the window with the selection, so a long list
+ * such as the note picker never stretches the dock.
+ */
+const visibleOptions = computed(() => {
+  const start = consoleOptionWindowStart(selectedIndex.value, panelOptions.value.length)
+  return panelOptions.value
+    .slice(start, start + CONSOLE_OPTION_WINDOW)
+    .map((option, offset) => ({ option, index: start + offset }))
+})
+
+/**
  * The preference value that was live before the cursor started roaming. Kept
  * outside reactive state because it only ever feeds the rollback, never render.
  */
@@ -253,21 +266,12 @@ function optionId(index: number) {
   return `${props.listboxId}-option-${index}`
 }
 
-function scrollSelectionIntoView() {
-  void nextTick(() => {
-    rowsRef.value
-      ?.querySelector<HTMLElement>(`[data-option-index="${selectedIndex.value}"]`)
-      ?.scrollIntoView({ block: 'nearest' })
-  })
-}
-
 function moveSelection(delta: number): boolean {
   const count = panelOptions.value?.length || 0
   if (!count) return false
   selectedIndex.value = (selectedIndex.value + delta + count) % count
   previewIndex(selectedIndex.value)
   emit('selection-change', optionId(selectedIndex.value))
-  scrollSelectionIntoView()
   return true
 }
 
@@ -307,7 +311,6 @@ watch(
     const currentIndex = options.findIndex((option) => option.current)
     selectedIndex.value = currentIndex >= 0 ? currentIndex : 0
     emit('selection-change', options.length ? optionId(selectedIndex.value) : '')
-    scrollSelectionIntoView()
   },
   { immediate: true },
 )

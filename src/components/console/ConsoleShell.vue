@@ -1,5 +1,9 @@
 <template>
-  <section class="console-shell" aria-label="Nexus Console">
+  <section
+    class="console-shell"
+    :class="{ 'console-shell--expanded': hasTransient }"
+    aria-label="Nexus Console"
+  >
     <div v-if="history.length" class="console-shell__history" aria-label="Recent commands">
       <span class="console-shell__history-label">recent</span>
       <button v-for="entry in history" :key="entry" type="button" @click="executeCommand(entry)">{{ entry }}</button>
@@ -31,19 +35,18 @@
     </form>
 
     <div
-      v-if="suggestions.length || activePanel || (feedback && !activePanel)"
+      v-if="hasTransient"
       class="console-shell__transient"
     >
       <div
         v-if="suggestions.length"
         :id="suggestionListboxId"
-        ref="suggestionsRef"
         class="console-shell__suggestions"
         role="listbox"
         aria-label="Command suggestions"
       >
         <button
-          v-for="(suggestion, index) in suggestions"
+          v-for="{ suggestion, index } in visibleSuggestions"
           :id="suggestionOptionId(index)"
           :key="suggestion.input"
           class="console-shell__suggestion"
@@ -88,6 +91,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import type { ConsolePanel } from '../../console/commandRegistry'
+import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import {
   CONSOLE_RESULT_NAVIGATION_EVENT,
   type ConsoleResultNavigationAction,
@@ -96,7 +100,6 @@ import { CONSOLE_MONTH_NAVIGATION_EVENT } from '../../console/timeline'
 
 const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
-const suggestionsRef = ref<HTMLElement | null>(null)
 const panelActiveOptionId = ref('')
 const suggestionListboxId = 'console-command-suggestions'
 const panelListboxId = 'console-panel-options'
@@ -128,6 +131,21 @@ const {
 const hasPanelListbox = computed(() => Boolean(
   activePanel.value && optionPanels.has(activePanel.value.panel),
 ))
+/** Whether the dock currently shows anything below the prompt. */
+const hasTransient = computed(() => Boolean(
+  suggestions.value.length || activePanel.value || (feedback.value && !activePanel.value),
+))
+/**
+ * Only a fixed number of rows is ever rendered. The window travels with the
+ * cursor instead of the rows scrolling inside a box, which keeps the dock a
+ * constant height and leaves the page scroll position alone.
+ */
+const visibleSuggestions = computed(() => {
+  const start = consoleOptionWindowStart(suggestionCursor.value, suggestions.value.length)
+  return suggestions.value
+    .slice(start, start + CONSOLE_OPTION_WINDOW)
+    .map((suggestion, offset) => ({ suggestion, index: start + offset }))
+})
 const activeListboxId = computed(() => {
   if (suggestions.value.length) return suggestionListboxId
   return hasPanelListbox.value ? panelListboxId : ''
@@ -209,15 +227,6 @@ function handleShellKeydown(event: KeyboardEvent) {
   }
   handleSessionInputKeydown(event)
 }
-
-watch(suggestionCursor, (index) => {
-  if (index < 0) return
-  void nextTick(() => {
-    suggestionsRef.value
-      ?.querySelector<HTMLElement>(`[data-suggestion-index="${index}"]`)
-      ?.scrollIntoView({ block: 'nearest' })
-  })
-})
 
 watch(activePanel, (panel) => {
   if (!panel) panelActiveOptionId.value = ''

@@ -40,3 +40,21 @@ export function filterConsoleSuggestions(
   return [...dynamicOptions.filter(withinDepth), ...options]
     .filter((option) => option.input.toLowerCase().startsWith(normalized))
 }
+
+/** How many option rows the console shows at once, suggestions and panels alike. */
+export const CONSOLE_OPTION_WINDOW = 5
+
+/**
+ * First index of the visible window. The cursor is kept centred while there is
+ * room on both sides, then the window parks against whichever end it reaches,
+ * so a list of any length still occupies exactly `size` rows.
+ */
+export function consoleOptionWindowStart(
+  cursor: number,
+  total: number,
+  size: number = CONSOLE_OPTION_WINDOW,
+): number {
+  if (total <= size) return 0
+  const centred = (cursor < 0 ? 0 : cursor) - Math.floor(size / 2)
+  return Math.min(Math.max(centred, 0), total - size)
+}

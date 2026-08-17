@@ -115,7 +115,27 @@ check('shared article PDF export remains in console posts', postView.includes('A
 check('shared article PDF export remains in console notes', noteView.includes('ArticleExportButton'))
 check('console mode marks the document for native cursor overrides', displayPreference.includes('console-mode-active'))
 check('console uses the terminal text cursor everywhere', consoleStyles.includes('cursor: text !important'))
-check('console suggestions keep the selected row visible', consoleShell.includes('suggestionsRef') && consoleShell.includes('scrollIntoView'))
+check(
+  'console option rows are a fixed window that travels with the cursor',
+  consoleShell.includes("from '../../console/suggestions'")
+    && /const visibleSuggestions = computed\([\s\S]*?consoleOptionWindowStart\(suggestionCursor\.value, suggestions\.value\.length\)/.test(consoleShell)
+    && consoleShell.includes('v-for="{ suggestion, index } in visibleSuggestions"')
+    && /const visibleOptions = computed\([\s\S]*?consoleOptionWindowStart\(selectedIndex\.value, panelOptions\.value\.length\)/.test(consolePanel)
+    && consolePanel.includes('v-for="{ option, index } in visibleOptions"'),
+)
+check(
+  'the windowed rows replace scrolling inside the dock',
+  !consoleShell.includes('scrollIntoView')
+    && !consolePanel.includes('scrollIntoView')
+    && !consoleShell.includes('suggestionsRef'),
+)
+check(
+  'an expanded dock rides the viewport bottom without moving the page',
+  consoleShell.includes("'console-shell--expanded': hasTransient")
+    && /const hasTransient = computed\([\s\S]*?feedback\.value && !activePanel\.value/.test(consoleShell)
+    && /\.desktop-layout__command-dock\.console-shell--expanded \{[^}]*position: sticky;[^}]*bottom: 0;/.test(desktopLayout),
+)
+
 check(
   'nested panels return to the previous menu with Escape',
   consolePanel.includes("event.key === 'Escape'")

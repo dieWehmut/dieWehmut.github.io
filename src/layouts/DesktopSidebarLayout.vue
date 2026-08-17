@@ -245,6 +245,15 @@ html[data-theme='light'] .desktop-layout--console {
   width: 100%;
 }
 
+/* While option rows are open the dock rides the bottom edge of the viewport,
+   with the last row flush against it and the prompt above. Sticky rather than
+   fixed so the dock keeps its box in the flow: opening the rows cannot change
+   the document height, and therefore cannot move the page's scroll offset. */
+.desktop-layout--console .desktop-layout__command-dock.console-shell--expanded {
+  position: sticky;
+  bottom: 0;
+}
+
 .desktop-layout--console :deep(.desktop-layout__comment .giscus-comments) {
   width: 100%;
   margin: 0;

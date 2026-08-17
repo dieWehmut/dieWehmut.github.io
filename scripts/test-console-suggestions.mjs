@@ -50,6 +50,30 @@ check('matching is case-insensitive', inputs('/MODE/').includes('/mode/classic')
 check('the root depth is one', suggestions.typedConsoleDepth('/') === 1 && suggestions.typedConsoleDepth('/mo') === 1)
 check('an open level counts as one deeper', suggestions.typedConsoleDepth('/mode/') === 2 && suggestions.typedConsoleDepth('/mode/cl') === 2)
 
+const { CONSOLE_OPTION_WINDOW: windowSize, consoleOptionWindowStart: windowStart } = suggestions
+
+check('the window is five rows', windowSize === 5)
+check('a short list is never windowed', windowStart(0, 3) === 0 && windowStart(2, 3) === 0 && windowStart(0, 5) === 0)
+check('an unselected list starts at the top', windowStart(-1, 20) === 0)
+check('the first rows keep the window parked at the top', windowStart(0, 20) === 0 && windowStart(2, 20) === 0)
+check('the cursor stays centred once there is room on both sides', windowStart(3, 20) === 1 && windowStart(10, 20) === 8)
+check('the window parks against the end instead of running past it', windowStart(18, 20) === 15 && windowStart(19, 20) === 15)
+check(
+  'every window is exactly as wide as the row count allows',
+  [0, 1, 7, 13, 19].every((cursor) => {
+    const start = windowStart(cursor, 20)
+    return start >= 0 && start + windowSize <= 20
+  }),
+)
+check(
+  'the selected row is always inside the window it produced',
+  [-1, 0, 1, 4, 9, 14, 19].every((cursor) => {
+    const start = windowStart(cursor, 20)
+    const index = cursor < 0 ? 0 : cursor
+    return index >= start && index < start + windowSize
+  }),
+)
+
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
 if (failures.length) process.exitCode = 1
