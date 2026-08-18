@@ -981,7 +981,6 @@ watch(isDetailRoute, (detail) => {
 
 .console-capture-group__overflow:hover,
 .console-capture-group__overflow:focus-visible {
-  border-color: var(--console-accent, var(--site-accent));
   color: var(--console-text, var(--site-text));
   background: var(--console-selection, transparent);
   outline: none;
@@ -999,9 +998,10 @@ watch(isDetailRoute, (detail) => {
   cursor: zoom-in;
 }
 
+/* A thumbnail has no text to recolour, so it answers the cursor by fading. */
 .console-capture-asset > button:first-child:hover,
 .console-capture-asset > button:first-child:focus-visible {
-  border-color: var(--console-accent, var(--site-accent));
+  opacity: 0.68;
   outline: none;
 }
 
@@ -1013,7 +1013,7 @@ watch(isDetailRoute, (detail) => {
   width: 18px;
   height: 18px;
   padding: 0;
-  border: 1px solid currentColor;
+  border: 1px solid transparent;
   border-radius: 0;
   color: #ef6a6a;
   background: var(--console-bg, var(--site-bg));

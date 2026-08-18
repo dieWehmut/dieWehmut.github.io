@@ -207,8 +207,11 @@ watch(isConsole, (enabled) => {
   --console-muted: color-mix(in srgb, var(--site-text) 70%, transparent);
   --console-dim: color-mix(in srgb, var(--site-text) 44%, transparent);
   --console-accent: var(--site-accent);
-  --console-border: color-mix(in srgb, var(--site-text) 18%, transparent);
-  --console-border-strong: color-mix(in srgb, var(--site-accent) 48%, var(--site-text));
+  /* The console draws no rules. Every frame line in console mode resolves
+     through these two tokens, so keeping them invisible retires the lines in
+     one place while the 1px they occupy keeps the spacing rhythm intact. */
+  --console-border: transparent;
+  --console-border-strong: transparent;
   --console-selection: color-mix(in srgb, var(--site-accent) 12%, transparent);
   min-height: 100vh;
 }

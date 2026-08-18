@@ -326,7 +326,53 @@ check(
     && !consolePanel.includes('detailLines')
     && /const panelOptions = computed<PanelOption\[\]>/.test(consolePanel),
 )
+check(
+  'console mode draws no rules',
+  /\.desktop-layout--console \{[^}]*--console-border: transparent;[^}]*--console-border-strong: transparent;/
+    .test(desktopLayout),
+)
+check(
+  'every line in a console rule resolves through a border token',
+  paintedConsoleLines().length === 0,
+)
+
+/**
+ * Console mode stays rule-free by keeping its two border tokens transparent, so
+ * a line that names any other colour escapes that switch. This walks the whole
+ * stylesheet surface rather than a list of files, so a console block added
+ * later cannot quietly reintroduce one.
+ */
+function paintedConsoleLines() {
+  const lineProperty = /^(?:border|outline)(?:-(?:top|right|bottom|left))?(?:-color)?$/
+  const painted = []
+  for (const file of styleFiles(path.join(root, 'src'))) {
+    const source = fs.readFileSync(file, 'utf8')
+    for (const [, selector, body] of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      if (!/console/i.test(selector)) continue
+      for (const declaration of body.split(';')) {
+        const separator = declaration.indexOf(':')
+        if (separator < 0) continue
+        const property = declaration.slice(0, separator).trim()
+        const value = declaration.slice(separator + 1).replace('!important', '').trim()
+        if (!lineProperty.test(property)) continue
+        if (/^(?:0|none)$/.test(value)) continue
+        if (/\btransparent\b/.test(value) || value.includes('--console-border')) continue
+        painted.push(`${file} :: ${selector.trim()} :: ${property}: ${value}`)
+      }
+    }
+  }
+  return painted
+}
+
+function styleFiles(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(directory, entry.name)
+    if (entry.isDirectory()) return styleFiles(full)
+    return /\.(?:vue|scss|css)$/.test(entry.name) ? [full] : []
+  })
+}
 
 const failures = checks.filter(([, ok]) => !ok)
 for (const [label, ok] of checks) console.log(`${ok ? 'PASS' : 'FAIL'} ${label}`)
+for (const painted of paintedConsoleLines()) console.log(`     ${painted}`)
 if (failures.length) process.exitCode = 1

@@ -516,15 +516,15 @@ watch(tag, loadCaptures)
 
 .console-tag-detail__capture-overflow:hover,
 .console-tag-detail__capture-overflow:focus-visible {
-  border-color: var(--console-accent, var(--site-accent));
   color: var(--console-text, var(--site-text));
   background: var(--console-selection, transparent);
   outline: none;
 }
 
+/* A thumbnail has no text to recolour, so it answers the cursor by fading. */
 .console-tag-detail__capture-assets button:hover,
 .console-tag-detail__capture-assets button:focus-visible {
-  border-color: var(--console-accent, var(--site-accent));
+  opacity: 0.68;
   outline: none;
 }
 

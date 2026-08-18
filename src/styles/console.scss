@@ -124,7 +124,9 @@ html.console-mode-active .sakura-burst-overlay {
 .desktop-layout--console .friends-card:hover,
 .desktop-layout--console .tag-card:hover,
 .desktop-layout--console .capture-card:hover,
-.desktop-layout--console .search-result:hover {
+.desktop-layout--console .search-result:hover,
+.desktop-layout--console .feed-entry-card:hover,
+.desktop-layout--console .feed-entry-card:focus-visible {
   border-color: var(--console-border-strong) !important;
   transform: none !important;
 }
@@ -245,6 +247,18 @@ html.console-mode-active .sakura-burst-overlay {
 .desktop-layout--console .search-result-infra,
 .desktop-layout--console .search-result-capture {
   min-height: 42px;
+}
+
+/*
+ * Rules drawn by shared components out of site tokens, which the console
+ * tokens cannot reach from here. Recolouring rather than removing keeps the
+ * 1px they occupy, so silencing them shifts nothing.
+ */
+.desktop-layout--console .search-result__feed,
+.desktop-layout--console .search-result-infra > a,
+.desktop-layout--console .search-result-capture__media,
+.desktop-layout--console .giscus-comments__header {
+  border-color: var(--console-border) !important;
 }
 
 .desktop-layout--console .markdown-body pre,

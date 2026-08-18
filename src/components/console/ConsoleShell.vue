@@ -351,7 +351,6 @@ onMounted(() => {
 
 .console-shell__submit:hover,
 .console-shell__submit:focus-visible {
-  border-color: var(--console-accent);
   color: var(--console-accent);
   outline: none;
 }
