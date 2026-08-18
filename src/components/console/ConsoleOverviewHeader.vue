@@ -94,7 +94,8 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
 
 .console-overview__portrait {
   position: relative;
-  display: block;
+  display: grid;
+  place-items: center;
   min-width: 0;
   height: 100%;
   min-height: 0;
@@ -108,13 +109,13 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
   display: block;
   /*
    * The plate is sized by the banner row; only the artwork inside it is inset.
-   * Shrinking the icon therefore cannot move the column edges.
+   * Resizing the icon therefore cannot move the column edges. Centring the box
+   * splits the remaining sliver evenly instead of pooling it on two sides.
    */
-  width: 80%;
-  height: 80%;
+  width: 94%;
+  height: 94%;
   max-height: none;
   object-fit: contain;
-  object-position: left top;
   filter: none;
   image-rendering: auto;
 }

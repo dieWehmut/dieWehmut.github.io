@@ -263,11 +263,22 @@ check(
     && consoleOverview.includes('overflow: clip'),
 )
 check(
-  'the portrait plate keeps its size while the icon inside is inset',
-  /width:\s*80%/.test(consoleOverviewAvatarBlock)
-    && /height:\s*80%/.test(consoleOverviewAvatarBlock)
-    && !/height:\s*100%/.test(consoleOverviewAvatarBlock),
+  'the portrait plate keeps its size while the icon inside is nearly plate-sized',
+  avatarInset() >= 90
+    && avatarInset() < 100
+    && !/height:\s*100%/.test(consoleOverviewAvatarBlock)
+    && /\.console-overview__portrait \{[^}]*place-items: center/.test(consoleOverview),
 )
+
+/**
+ * How much of the plate the icon takes, as a whole percent, and 0 unless both
+ * axes agree — an icon inset on one axis only would gain a lopsided margin.
+ */
+function avatarInset() {
+  const width = consoleOverviewAvatarBlock.match(/width:\s*(\d+)%/)?.[1]
+  const height = consoleOverviewAvatarBlock.match(/height:\s*(\d+)%/)?.[1]
+  return width && width === height ? Number(width) : 0
+}
 check(
   'Console overview renders shared statistics and footer metadata',
   /v-for="[^\"]*stat/.test(consoleOverview)
