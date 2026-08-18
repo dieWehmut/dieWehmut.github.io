@@ -13,6 +13,7 @@
         <div v-if="canEdit" class="console-capture-editor" :aria-busy="editorBusy">
           <span><strong>{{ t('capture.editor') }}</strong> {{ editorStatusText }}</span>
           <button
+            class="console-button"
             type="button"
             :disabled="editorBusy"
             :aria-label="t('capture.uploadImage')"
@@ -23,7 +24,7 @@
         <template v-if="selectedGroup">
           <div class="console-capture-detail">
             <header class="console-capture-detail__header">
-              <button type="button" aria-label="Back to captures" title="Back to captures" @click="backToCapture">&lt;</button>
+              <button class="console-button console-button--icon" type="button" aria-label="Back to captures" title="Back to captures" @click="backToCapture">&lt;</button>
               <span>{{ selectedGroup.assets.length }} assets</span>
             </header>
             <div class="console-capture-detail__assets">
@@ -80,7 +81,7 @@
         <template v-else-if="isDetailRoute">
           <div class="console-capture-empty">
             <code>capture not found</code>
-            <button type="button" @click="backToCapture">/&nbsp;capture</button>
+            <button class="console-button" type="button" @click="backToCapture">/&nbsp;capture</button>
           </div>
         </template>
 
@@ -130,12 +131,17 @@
               </div>
               <div class="console-capture-group__body">
                 <RouterLink
+                  class="console-capture-group__title"
                   :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`"
                   @click="saveCaptureScrollPosition"
                 >
-                  <code>/capture/{{ encodeURIComponent(asCaptureGroup(item).id) }}</code>
+                  <!-- The route id was never meant to be read. The group's own
+                       heading is the same information in the wording the rest of
+                       the site uses, and the machine-readable date rides along on
+                       the element rather than in a second row repeating it. -->
+                  <time v-if="asCaptureGroup(item).date" :datetime="asCaptureGroup(item).date">{{ asCaptureGroup(item).heading }}</time>
+                  <span v-else>{{ asCaptureGroup(item).heading }}</span>
                 </RouterLink>
-                <time v-if="asCaptureGroup(item).date" :datetime="asCaptureGroup(item).date">{{ formatDateOnly(asCaptureGroup(item).date) }}</time>
                 <div v-if="asCaptureGroup(item).tags.length" class="console-capture-group__tags">
                   <RouterLink
                     v-for="tag in asCaptureGroup(item).tags"
@@ -151,8 +157,8 @@
                   >{{ source.title }}</RouterLink>
                 </div>
                 <button
-                  v-if="canEdit && asCaptureGroup(item).assets.length < capturePreviewLimit"
-                  class="console-capture-group__upload"
+                  v-if="canEdit"
+                  class="console-button"
                   type="button"
                   :disabled="editorBusy"
                   :aria-label="t('capture.uploadImage')"
@@ -934,7 +940,7 @@ watch(isDetailRoute, (detail) => {
 }
 
 .console-capture-group {
-  grid-template-columns: minmax(120px, 280px) minmax(0, 1fr);
+  grid-template-columns: minmax(200px, 380px) minmax(0, 1fr);
   align-items: start;
   min-height: 78px;
   padding: 8px;
@@ -942,30 +948,33 @@ watch(isDetailRoute, (detail) => {
   background: var(--console-surface, transparent);
 }
 
+/* Wrapping rather than scrolling: at this thumbnail size a horizontal scroller
+   would hide most of a group behind a gesture, so the rows grow instead. */
 .console-capture-group__media,
 .console-capture-detail__assets {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   min-width: 0;
-  overflow-x: auto;
 }
 
 .console-capture-asset {
   position: relative;
-  flex: 0 0 58px;
-  width: 58px;
-  height: 58px;
+  flex: 0 0 var(--console-thumb, 88px);
+  width: var(--console-thumb, 88px);
+  height: var(--console-thumb, 88px);
 }
 
 .console-capture-group__overflow {
   display: grid;
-  flex: 0 0 58px;
-  width: 58px;
-  height: 58px;
+  flex: 0 0 var(--console-thumb, 88px);
+  width: var(--console-thumb, 88px);
+  height: var(--console-thumb, 88px);
   place-content: center;
   gap: 1px;
   border: 1px solid var(--console-border, var(--site-border));
   color: var(--console-muted, var(--site-muted));
+  background: var(--console-control, transparent);
   text-align: center;
   text-decoration: none;
 }
@@ -1044,10 +1053,12 @@ watch(isDetailRoute, (detail) => {
   min-width: 0;
 }
 
-.console-capture-group__body > a code {
+/* Specific enough to outrank the muted colour the generic body-link rule below
+   hands every other anchor in this column. */
+.console-capture-group__body > a.console-capture-group__title {
   overflow: hidden;
   color: var(--console-accent, var(--site-accent));
-  font: inherit;
+  font-size: 0.82rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1111,30 +1122,6 @@ watch(isDetailRoute, (detail) => {
   color: var(--console-accent, var(--site-accent));
 }
 
-.console-capture-editor button,
-.console-capture-group__upload {
-  width: fit-content;
-  min-height: 28px;
-  padding: 3px 8px;
-  border: 1px solid var(--console-border-strong, var(--site-accent));
-  border-radius: 0;
-  color: var(--console-accent, var(--site-accent));
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-}
-
-.console-capture-editor button:hover,
-.console-capture-editor button:focus-visible,
-.console-capture-group__upload:hover,
-.console-capture-group__upload:focus-visible {
-  color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
-  outline: none;
-}
-
-.console-capture-editor button:disabled,
-.console-capture-group__upload:disabled,
 .console-capture-action:disabled {
   cursor: progress;
   opacity: 0.55;
@@ -1150,44 +1137,9 @@ watch(isDetailRoute, (detail) => {
   border-bottom: 1px solid var(--console-border, var(--site-border));
 }
 
-.console-capture-detail__header button {
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--console-border-strong, var(--site-accent));
-  color: var(--console-accent, var(--site-accent));
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-}
-
-.console-capture-empty button {
-  min-width: 112px;
-  min-height: 34px;
-  padding: 5px 9px;
-  border: 1px solid var(--console-border-strong, var(--site-accent));
-  color: var(--console-accent, var(--site-accent));
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-}
-
-.console-capture-detail__header button:hover,
-.console-capture-detail__header button:focus-visible,
-.console-capture-empty button:hover,
-.console-capture-empty button:focus-visible {
-  color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
-  outline: none;
-}
-
 .console-capture-detail__header > span {
   color: var(--console-muted, var(--site-muted));
   font-size: 0.78rem;
-}
-
-.console-capture-detail__assets {
-  flex-wrap: wrap;
-  overflow: visible;
 }
 
 .console-capture-empty {
@@ -1206,7 +1158,7 @@ watch(isDetailRoute, (detail) => {
 
 @media (max-width: 1100px) {
   .console-capture-group {
-    grid-template-columns: minmax(100px, 220px) minmax(0, 1fr);
+    grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
   }
 }
 

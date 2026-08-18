@@ -83,10 +83,9 @@ function initials(name) {
 
 .console-friends__row {
   display: grid;
-  grid-template-columns: 26px minmax(130px, 0.7fr) minmax(160px, 1fr) minmax(220px, 1.2fr);
+  grid-template-columns: var(--console-thumb, 88px) minmax(130px, 0.7fr) minmax(160px, 1fr) minmax(220px, 1.2fr);
   align-items: center;
   gap: 14px;
-  min-height: 36px;
   padding: 6px 8px;
   border: 1px solid transparent;
   color: var(--console-muted, var(--site-muted));
@@ -102,8 +101,8 @@ function initials(name) {
 }
 
 .console-friends__avatar {
-  width: 26px;
-  height: 26px;
+  width: var(--console-thumb, 88px);
+  height: var(--console-thumb, 88px);
   border: 1px solid var(--console-border, var(--site-border));
   object-fit: cover;
 }
@@ -112,7 +111,8 @@ function initials(name) {
   display: grid;
   place-items: center;
   color: var(--console-accent, var(--site-accent));
-  font-size: 0.66rem;
+  background: var(--console-control, transparent);
+  font-size: 1.3rem;
   letter-spacing: .04em;
 }
 
@@ -134,7 +134,7 @@ function initials(name) {
 
 @media (max-width: 1100px) {
   .console-friends__row {
-    grid-template-columns: 26px minmax(110px, 0.7fr) minmax(130px, 1fr) minmax(150px, 1fr);
+    grid-template-columns: var(--console-thumb, 88px) minmax(110px, 0.7fr) minmax(130px, 1fr) minmax(150px, 1fr);
     gap: 9px;
   }
 }

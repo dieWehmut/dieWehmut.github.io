@@ -214,6 +214,50 @@ html.console-mode-active .sakura-burst-overlay {
   text-shadow: none !important;
 }
 
+/*
+ * One recipe for every push-button the console draws. With the frame rules
+ * retired a button can only read as a button by its fill, so that fill is
+ * defined once here instead of being restated in each view's scoped block —
+ * where four near-identical copies had already drifted apart.
+ */
+.desktop-layout--console .console-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: fit-content;
+  min-height: 30px;
+  padding: 3px 10px;
+  border: 1px solid var(--console-border-strong);
+  border-radius: 0 !important;
+  color: var(--console-accent);
+  background: var(--console-control);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.74rem;
+  text-decoration: none;
+}
+
+.desktop-layout--console .console-button:hover,
+.desktop-layout--console .console-button:focus-visible {
+  color: var(--console-text);
+  background: var(--console-control-strong);
+  outline: none;
+}
+
+.desktop-layout--console .console-button:disabled {
+  cursor: progress;
+  opacity: 0.55;
+}
+
+/* Square variant for buttons whose whole label is one glyph. */
+.desktop-layout--console .console-button--icon {
+  width: 32px;
+  min-width: 32px;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
 .desktop-layout--console .search-input {
   min-height: 44px !important;
   padding: 0 10px !important;

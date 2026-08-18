@@ -213,6 +213,14 @@ watch(isConsole, (enabled) => {
   --console-border: transparent;
   --console-border-strong: transparent;
   --console-selection: color-mix(in srgb, var(--site-accent) 12%, transparent);
+  /* One edge for every square console thumbnail — friend avatars, capture
+     thumbnails, the "+n more" tile. Their scale is a single number here rather
+     than one literal per view, so a fork can retune all of them at once. */
+  --console-thumb: 88px;
+  /* With the frame rules retired a control can no longer be outlined, so a
+     tinted fill carries the affordance instead and hover deepens it. */
+  --console-control: color-mix(in srgb, var(--site-accent) 10%, transparent);
+  --console-control-strong: color-mix(in srgb, var(--site-accent) 24%, transparent);
   min-height: 100vh;
 }
 

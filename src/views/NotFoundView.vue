@@ -6,7 +6,7 @@
         <strong>route not found</strong>
       </div>
       <p>The requested path is not registered in this workspace.</p>
-      <RouterLink class="console-not-found__link" to="/home">/home</RouterLink>
+      <RouterLink class="console-button" to="/home">/home</RouterLink>
     </div>
     <template v-else>
       <PageHeading title="Not Found" :icon="Warning" />
@@ -55,22 +55,6 @@ const { isConsole } = useDisplayModePreference()
 .console-not-found p {
   margin: 0;
   color: var(--console-muted, var(--site-muted));
-}
-
-.console-not-found__link {
-  width: fit-content;
-  min-height: 34px;
-  padding: 6px 9px;
-  border: 1px solid var(--console-border-strong, var(--site-accent));
-  color: var(--console-accent, var(--site-accent));
-  text-decoration: none;
-}
-
-.console-not-found__link:hover,
-.console-not-found__link:focus-visible {
-  color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
-  outline: none;
 }
 
 @media (max-width: 900px) {

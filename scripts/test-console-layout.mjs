@@ -21,6 +21,9 @@ const mobileLayout = read('src/layouts/MobileDrawerLayout.vue')
 const siteShell = read('src/layouts/SiteShell.vue')
 const floatButton = read('src/components/system/FloatButton.vue')
 const captureView = read('src/views/CaptureView.vue')
+const friendsView = read('src/views/FriendsView.vue')
+const aboutView = read('src/views/AboutView.vue')
+const notFoundView = read('src/views/NotFoundView.vue')
 const consoleShell = read('src/components/console/ConsoleShell.vue')
 const consoleSession = read('src/composables/useConsoleSession.ts')
 const consoleOverview = readOptional('src/components/console/ConsoleOverviewHeader.vue')
@@ -289,8 +292,7 @@ check(
 )
 check(
   'Console overview exposes a direct classic mode switch',
-  consoleOverview.includes('console-overview__classic')
-    && consoleOverview.includes("setDisplayMode('standard')")
+  consoleOverview.includes("setDisplayMode('standard')")
     && consoleOverview.includes('aria-label="Switch to classic mode"'),
 )
 check(
@@ -409,6 +411,57 @@ check(
 check(
   'every line in a console rule resolves through a border token',
   paintedConsoleLines().length === 0,
+)
+check(
+  'one token sizes every square console thumbnail',
+  /--console-thumb: \d+px/.test(consoleLayoutBlock)
+    && /\.console-capture-asset \{[^}]*var\(--console-thumb/.test(captureView)
+    && /\.console-capture-group__overflow \{[^}]*var\(--console-thumb/.test(captureView)
+    && /\.console-friends__avatar \{[^}]*var\(--console-thumb/.test(friendsView)
+    && !/flex: 0 0 \d+px/.test(captureView),
+)
+check(
+  'one recipe styles every console button, out of the fill tokens',
+  /--console-control: [^;]*var\(--site-accent\)/.test(consoleLayoutBlock)
+    && /--console-control-strong: [^;]*var\(--site-accent\)/.test(consoleLayoutBlock)
+    && /\.desktop-layout--console \.console-button \{[^}]*background: var\(--console-control\)/.test(consoleStyles)
+    && /\.console-button:focus-visible \{[^}]*background: var\(--console-control-strong\)/.test(consoleStyles)
+    && /\.console-button--icon \{/.test(consoleStyles),
+)
+check(
+  'the views delegate their buttons to that recipe instead of restating it',
+  [captureView, notFoundView, consoleOverview, consoleShell].every((source) => source.includes('console-button'))
+    && !/\.console-capture-group__upload \{/.test(captureView)
+    && !/\.console-overview__classic \{/.test(consoleOverview)
+    && !/\.console-not-found__link \{/.test(notFoundView)
+    && !/\.console-shell__submit \{[^}]*background/.test(consoleShell),
+)
+check(
+  'a capture row is titled by its heading, never by its route id',
+  !captureView.includes('<code>/capture/')
+    && captureView.includes('class="console-capture-group__title"')
+    && /asCaptureGroup\(item\)\.heading/.test(captureView),
+)
+check(
+  'appending to a capture group is not gated on a display limit',
+  !/asCaptureGroup\(item\)\.assets\.length < capturePreviewLimit/.test(captureView)
+    && /v-if="canEdit"[\s\S]{0,320}\+ append/.test(captureView),
+)
+check(
+  'console mode restyles the about contact block rather than replacing it',
+  !aboutView.includes('console-about-contact')
+    && aboutView.includes('about-contact__icon--github')
+    && aboutView.includes('<Message />')
+    && aboutView.includes('id="contact-me"')
+    && /\.about-layout--console \.about-contact \{/.test(aboutView),
+)
+check(
+  'the dashboard lists the profile and template repositories above CONTENT',
+  consoleOverview.includes('>LINKS<')
+    && consoleOverview.indexOf('>LINKS<') < consoleOverview.indexOf('>CONTENT<')
+    && consoleOverview.includes('githubProfileUrl')
+    && consoleOverview.includes('repositoryUrl')
+    && /\.console-overview__links dd \{[^}]*text-overflow: ellipsis/.test(consoleOverview),
 )
 
 /**

@@ -68,7 +68,10 @@
                   class="console-tag-detail__capture-route"
                   :to="captureGroupUrl(asCaptureTimelineItem(item).group)"
                 >
-                  <code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.id) }}</code>
+                  <!-- The row already states its title and date, so the link
+                       carries the one fact it does not: how much is inside. The
+                       opaque route id it used to print was not meant to be read. -->
+                  {{ asCaptureTimelineItem(item).group.assets.length }} assets
                 </RouterLink>
               </div>
             </div>

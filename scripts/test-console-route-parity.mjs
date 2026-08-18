@@ -181,9 +181,15 @@ const checks = [
       && !tagsView.includes('console-tag-index__prompt'),
   ],
   [
-    'console rows keep the route they navigate to',
-    captureView.includes('<code>/capture/{{ encodeURIComponent(asCaptureGroup(item).id) }}</code>')
-      && tagDetailView.includes('<code>/capture/{{ encodeURIComponent(asCaptureTimelineItem(item).group.id) }}</code>')
+    // A tag name is a label a reader recognises, so it stays. A capture group id
+    // is a slug the reader never chose, so those rows are labelled by what the
+    // group actually is and only navigate to the id.
+    'console rows are labelled readably and never by an opaque route id',
+    !captureView.includes('<code>/capture/')
+      && !tagDetailView.includes('<code>/capture/')
+      && captureView.includes('asCaptureGroup(item).heading')
+      && tagDetailView.includes('asCaptureTimelineItem(item).group.assets.length')
+      && tagDetailView.includes('captureGroupUrl(asCaptureTimelineItem(item).group)')
       && tagsView.includes('<code>/tags/{{ group.tag }}</code>'),
   ],
   [
@@ -191,7 +197,7 @@ const checks = [
     friendsView.includes('class="console-friends__avatar"')
       && friendsView.includes('console-friends__avatar--fallback')
       && !friendsView.includes('<code>{{ friend.id }}</code>')
-      && /\.console-friends__row \{[\s\S]*?grid-template-columns: 26px/.test(friendsView),
+      && /\.console-friends__row \{[^}]*grid-template-columns: var\(--console-thumb/.test(friendsView),
   ],
   [
     'the command reference is a routed page, not a dock panel',

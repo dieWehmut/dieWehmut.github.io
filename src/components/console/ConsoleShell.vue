@@ -40,7 +40,7 @@
         >{{ caretGlyph }}</span>
       </span>
       <span v-if="caretActive" class="console-shell__mode" aria-hidden="true">-- INSERT --</span>
-      <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
+      <button class="console-button console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
     </form>
 
     <div
@@ -414,23 +414,10 @@ onMounted(() => {
   color: var(--console-dim);
 }
 
+/* Only its place in the row belongs here; the look comes from `.console-button`. */
 .console-shell__submit {
   flex: 0 0 auto;
-  height: 30px;
   margin-right: 8px;
-  padding: 0 9px;
-  border: 1px solid var(--console-border-strong);
-  color: var(--console-muted);
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.72rem;
-}
-
-.console-shell__submit:hover,
-.console-shell__submit:focus-visible {
-  color: var(--console-accent);
-  outline: none;
 }
 
 .console-shell__suggestions {
