@@ -8,18 +8,7 @@
         heading-selector="h2"
       />
       <div class="about-content">
-        <div v-if="isConsole" class="console-about-contact" aria-label="Contact links">
-          <a :href="`https://github.com/${siteConfig.githubUser}`" target="_blank" rel="noopener noreferrer">
-            <code>github</code>
-            <span>https://github.com/{{ siteConfig.githubUser }}</span>
-          </a>
-          <a :href="`mailto:${siteConfig.email}`">
-            <code>email</code>
-            <span>{{ siteConfig.email }}</span>
-          </a>
-        </div>
-
-        <div v-else class="about-contact">
+        <div class="about-contact">
           <h2 id="contact-me">Contact Me</h2>
           <div class="about-contact__list">
             <div class="about-contact__item">
@@ -77,47 +66,62 @@ const { isConsole } = useDisplayModePreference()
   order: -1;
 }
 
-.console-about-contact {
-  display: grid;
-  gap: 2px;
-  margin-bottom: 24px;
+/*
+ * Console mode restyles the contact block rather than substituting a text-only
+ * version of it. A second branch was how the GitHub and mail icons — and the
+ * heading the section chips are built from — went missing from this mode.
+ */
+.about-layout--console .about-contact {
+  margin-bottom: 20px;
   font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
 }
 
-.console-about-contact a {
-  display: grid;
-  grid-template-columns: 90px minmax(0, 1fr);
+.about-layout--console .about-contact h2 {
+  color: var(--console-text, var(--site-text));
+  font-size: 0.86rem;
+}
+
+.about-layout--console .about-contact__item {
   gap: 14px;
-  align-items: baseline;
   min-height: 34px;
   padding: 5px 8px;
-  border: 1px solid transparent;
-  color: var(--console-muted, var(--site-muted));
-  text-decoration: none;
+  font-size: 0.8rem;
 }
 
-.console-about-contact a:hover,
-.console-about-contact a:focus-visible {
-  border-color: var(--console-border-strong, var(--site-accent));
+.about-layout--console .about-contact__label {
+  min-width: 104px;
   color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
-  outline: none;
+  font-size: 0.8rem;
 }
 
-.console-about-contact code {
+.about-layout--console .about-contact__icon {
+  width: 16px;
+  height: 16px;
   color: var(--console-accent, var(--site-accent));
-  font: inherit;
 }
 
-.console-about-contact span {
+.about-layout--console .about-contact__icon--email {
+  font-size: 16px;
+}
+
+.about-layout--console .about-contact__item a {
   overflow: hidden;
+  color: var(--console-muted, var(--site-muted));
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.about-layout--console .about-contact__item a:hover {
+  opacity: 1;
+  color: var(--console-accent, var(--site-accent));
+}
+
+.about-layout--console .about-contact__divider {
+  background: var(--console-border, var(--site-border));
+}
+
 @media (max-width: 900px) {
-  .about-layout--console,
-  .console-about-contact {
+  .about-layout--console {
     display: none;
   }
 }
