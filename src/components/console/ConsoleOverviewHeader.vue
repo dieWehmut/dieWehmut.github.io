@@ -17,13 +17,21 @@
           <strong>{{ config.title }}</strong>
         </div>
         <button
-          class="console-overview__classic"
+          class="console-button"
           type="button"
           aria-label="Switch to classic mode"
           title="Switch to classic mode"
           @click="setDisplayMode('standard')"
         >classic</button>
       </div>
+
+      <section class="console-overview__section">
+        <div class="console-overview__section-title">LINKS</div>
+        <dl class="console-overview__rows console-overview__links">
+          <div><dt>github</dt><dd><a :href="githubProfileUrl" target="_blank" rel="noopener noreferrer">{{ githubProfileUrl }}</a></dd></div>
+          <div><dt>template</dt><dd><a :href="repositoryUrl" target="_blank" rel="noopener noreferrer">{{ repositoryUrl }}</a></dd></div>
+        </dl>
+      </section>
 
       <section class="console-overview__section">
         <div class="console-overview__section-title">CONTENT</div>
@@ -62,6 +70,8 @@ const {
   stats,
   footerMeta,
   uptime,
+  githubProfileUrl,
+  repositoryUrl,
 } = useSiteOverview()
 const { setDisplayMode } = useDisplayModePreference()
 const { theme } = useThemePreference()
@@ -181,23 +191,6 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
   white-space: nowrap;
 }
 
-.console-overview__classic {
-  min-height: 26px;
-  padding: 3px 8px;
-  border: 1px solid var(--console-border-strong);
-  border-radius: 0;
-  color: var(--console-muted);
-  background: transparent;
-  font: inherit;
-}
-
-.console-overview__classic:hover,
-.console-overview__classic:focus-visible {
-  color: var(--console-accent);
-  background: var(--console-selection);
-  outline: none;
-}
-
 .console-overview__section {
   margin-right: 20px;
   margin-left: 20px;
@@ -248,6 +241,15 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
 .console-overview__owner {
   color: inherit;
   text-decoration: none;
+}
+
+/* URLs are long enough to wrap the row in two; the banner has a fixed height, so
+   they are truncated instead of allowed to push the sections below out of it. */
+.console-overview__links dd {
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .console-overview__owner:hover,
