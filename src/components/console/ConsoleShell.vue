@@ -106,9 +106,9 @@ import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import {
   CONSOLE_RESULT_NAVIGATION_EVENT,
+  CONSOLE_ROW_NAVIGATION_EVENT,
   type ConsoleResultNavigationAction,
 } from '../../console/selection'
-import { CONSOLE_MONTH_NAVIGATION_EVENT } from '../../console/timeline'
 
 const inputRef = ref<HTMLInputElement | null>(null)
 const panelRef = ref<InstanceType<typeof ConsolePanelView> | null>(null)
@@ -233,7 +233,7 @@ function handleShellKeydown(event: KeyboardEvent) {
     && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')
   ) {
     event.preventDefault()
-    window.dispatchEvent(new CustomEvent(CONSOLE_MONTH_NAVIGATION_EVENT, {
+    window.dispatchEvent(new CustomEvent(CONSOLE_ROW_NAVIGATION_EVENT, {
       detail: event.key === 'ArrowLeft' ? -1 : 1,
     }))
     return

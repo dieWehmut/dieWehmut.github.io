@@ -34,6 +34,8 @@ import {
   waitForHeading,
 } from '../../utils/headingNavigation'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
+import { useConsoleRowNavigation } from '../../composables/useConsoleRowNavigation'
+import { moveConsoleSelection } from '../../console/selection'
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
@@ -261,6 +263,21 @@ function scheduleHashScroll(hash, shouldEmit = false) {
 function scrollToHeading(id) {
   scheduleHashScroll(canonicalHeadingHash(id), true)
 }
+
+/**
+ * Left/Right on the console prompt walks this row the way it walks the month
+ * strip: one box per press, wrapping at either end. Scrolling to the heading is
+ * the whole move — `updateActive()` stays the only writer of `activeId`, so the
+ * percentage and the highlight follow the page instead of racing it.
+ */
+function stepSection(delta) {
+  if (!items.value.length) return
+  const index = items.value.findIndex((item) => item.id === activeId.value)
+  const next = items.value[moveConsoleSelection(index, delta, items.value.length)]
+  if (next) scrollToHeading(next.id)
+}
+
+useConsoleRowNavigation(stepSection)
 
 function followActive() {
   if (effectiveMode.value === 'console') {

@@ -31,6 +31,7 @@ const consoleSession = read('src/composables/useConsoleSession.ts')
 const tagsView = read('src/views/TagsView.vue')
 const tagDetailView = read('src/views/TagDetailView.vue')
 const consoleSelection = read('src/console/selection.ts')
+const rowNavigation = read('src/composables/useConsoleRowNavigation.ts')
 const friendsView = read('src/views/FriendsView.vue')
 const scrollSpySidebar = read('src/components/system/ScrollSpySidebar.vue')
 const helpView = read('src/views/HelpView.vue')
@@ -119,10 +120,25 @@ const checks = [
       && monthNavigator.includes('.console-month-navigator__header::-webkit-scrollbar'),
   ],
   [
-    'empty console prompt forwards horizontal keys to the month tabs',
-    consoleShell.includes('CONSOLE_MONTH_NAVIGATION_EVENT')
+    // Two rows can occupy the top of a console page — the month strip on a list,
+    // the section chips on an article — and only one is ever mounted. So the shell
+    // names the event after that role and both rows subscribe through one
+    // composable, instead of the shell having to know which page it is driving.
+    'empty console prompt forwards horizontal keys to whichever top row is mounted',
+    consoleShell.includes('CONSOLE_ROW_NAVIGATION_EVENT')
       && consoleShell.includes('ArrowLeft')
-      && consoleShell.includes('ArrowRight'),
+      && consoleShell.includes('ArrowRight')
+      && consoleSelection.includes('CONSOLE_ROW_NAVIGATION_EVENT')
+      && rowNavigation.includes('addEventListener(CONSOLE_ROW_NAVIGATION_EVENT')
+      && rowNavigation.includes('removeEventListener(CONSOLE_ROW_NAVIGATION_EVENT')
+      && monthNavigator.includes('useConsoleRowNavigation(move)')
+      && !monthNavigator.includes('addEventListener'),
+  ],
+  [
+    'the section bar steps its own row, so detail pages answer the same keys',
+    scrollSpySidebar.includes('useConsoleRowNavigation(stepSection)')
+      && /function stepSection\([\s\S]{0,400}?moveConsoleSelection\(index, delta, items\.value\.length\)/.test(scrollSpySidebar)
+      && /function stepSection\([\s\S]{0,400}?scrollToHeading\(next\.id\)/.test(scrollSpySidebar),
   ],
   [
     'the console section bar is a percentage plus one row of section boxes',

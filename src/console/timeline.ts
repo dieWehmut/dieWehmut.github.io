@@ -1,7 +1,5 @@
 import type { ConsoleTimelineMonth } from './types'
 
-export const CONSOLE_MONTH_NAVIGATION_EVENT = 'nexus:console-month-navigate'
-
 function monthKey(value: unknown): string | null {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}`

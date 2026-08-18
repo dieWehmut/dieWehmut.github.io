@@ -41,8 +41,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { CONSOLE_MONTH_NAVIGATION_EVENT, moveConsoleMonth } from '../../console/timeline'
+import { computed, nextTick, ref, watch } from 'vue'
+import { moveConsoleMonth } from '../../console/timeline'
+import { useConsoleRowNavigation } from '../../composables/useConsoleRowNavigation'
 
 export interface ConsoleMonthGroup {
   id?: string
@@ -97,11 +98,6 @@ function move(delta: number, focus = false) {
   selectMonth(currentIndex.value, focus)
 }
 
-function handleExternalNavigation(event: Event) {
-  const delta = (event as CustomEvent<number>).detail
-  if (delta === -1 || delta === 1) move(delta)
-}
-
 function tabId(index: number) {
   return `console-month-tab-${index}`
 }
@@ -129,8 +125,7 @@ function itemKey(item: unknown, index: number) {
   return index
 }
 
-onMounted(() => window.addEventListener(CONSOLE_MONTH_NAVIGATION_EVENT, handleExternalNavigation))
-onBeforeUnmount(() => window.removeEventListener(CONSOLE_MONTH_NAVIGATION_EVENT, handleExternalNavigation))
+useConsoleRowNavigation(move)
 </script>
 
 <style scoped>
