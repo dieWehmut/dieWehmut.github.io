@@ -32,6 +32,7 @@ const tagsView = read('src/views/TagsView.vue')
 const tagDetailView = read('src/views/TagDetailView.vue')
 const consoleSelection = read('src/console/selection.ts')
 const rowNavigation = read('src/composables/useConsoleRowNavigation.ts')
+const resultNavigation = read('src/composables/useConsoleResultNavigation.ts')
 const friendsView = read('src/views/FriendsView.vue')
 const scrollSpySidebar = read('src/components/system/ScrollSpySidebar.vue')
 const helpView = read('src/views/HelpView.vue')
@@ -172,11 +173,34 @@ const checks = [
   [
     'console tag index supports cyclic arrow selection and Enter from the command prompt',
     tagsView.includes('moveConsoleSelection')
-      && tagsView.includes('CONSOLE_RESULT_NAVIGATION_EVENT')
       && tagsView.includes("action === 'activate'")
       && tagsView.includes("'is-selected': consoleTagCursor === index")
       && consoleShell.includes('CONSOLE_RESULT_NAVIGATION_EVENT')
       && consoleSelection.includes('CONSOLE_RESULT_NAVIGATION_EVENT'),
+  ],
+  [
+    // Both listeners the vertical keys have ever had now come from one composable,
+    // so a page opts in by naming a handler instead of restating the wiring — and
+    // the "did anyone want this key" contract lives in one place rather than two.
+    'vertical prompt keys reach a page through the same composable the row keys use',
+    resultNavigation.includes('addEventListener(CONSOLE_RESULT_NAVIGATION_EVENT')
+      && resultNavigation.includes('removeEventListener(CONSOLE_RESULT_NAVIGATION_EVENT')
+      && resultNavigation.includes('if (handle(action)) event.preventDefault()')
+      && tagsView.includes('useConsoleResultNavigation(handleConsoleResultNavigation)')
+      && !tagsView.includes('addEventListener')
+      && monthNavigator.includes('useConsoleResultNavigation(handleResultNavigation)'),
+  ],
+  [
+    // The row is index -1, so Down descends from it into the boxes and Up climbs
+    // back to it. Releasing the key above the row is what keeps Up meaning
+    // "recall history" once the cursor is back where it started.
+    'Down walks off the percentage row into the boxes it steers, and Enter opens one',
+    /if \(delta < 0 && itemCursor\.value < 0\) return false/.test(monthNavigator)
+      && /setItemCursor\(Math\.min\(itemCursor\.value \+ delta, boxes\.length - 1\)\)/.test(monthNavigator)
+      && /watch\(current, \(\) => setItemCursor\(-1\)\)/.test(monthNavigator)
+      // Only the host view knows a box's destination, so the box's own link is followed.
+      && /function activateItemCursor\(\)[\s\S]{0,320}?querySelector<HTMLElement>\('a\[href\]'\)/.test(monthNavigator)
+      && /function activateItemCursor\(\)[\s\S]{0,320}?\(link \|\| box\)\.click\(\)/.test(monthNavigator),
   ],
   [
     'console tag capture groups use bounded previews with a remaining count',

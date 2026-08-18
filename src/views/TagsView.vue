@@ -113,17 +113,15 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { PriceTag } from '@element-plus/icons-vue'
 import { getTagGroups } from '../data'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { retryPublicAssetImage } from '../utils/publicAssets'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
-import {
-  CONSOLE_RESULT_NAVIGATION_EVENT,
-  moveConsoleSelection,
-} from '../console/selection'
+import { useConsoleResultNavigation } from '../composables/useConsoleResultNavigation'
+import { moveConsoleSelection } from '../console/selection'
 
 const captureTagCounts = ref(new Map())
 const captureTagPreviews = ref(new Map())
@@ -306,12 +304,10 @@ function handleConsoleTagKeydown(event) {
   handleConsoleTagAction(action)
 }
 
-function handleConsoleResultNavigation(event) {
-  if (!isConsole.value || !tagGroups.value.length) return
-  const action = event.detail
-  if (action !== 'previous' && action !== 'next' && action !== 'activate') return
-  event.preventDefault()
+function handleConsoleResultNavigation(action) {
+  if (!isConsole.value || !tagGroups.value.length) return false
   handleConsoleTagAction(action)
+  return true
 }
 
 function isInteractiveTarget(target) {
@@ -335,13 +331,12 @@ watch(() => tagGroups.value.length, (count) => {
 })
 
 onMounted(async () => {
-  window.addEventListener(CONSOLE_RESULT_NAVIGATION_EVENT, handleConsoleResultNavigation)
   const { getCaptureTagCounts, getCaptureTagPreviews } = await import('../data/capture')
   captureTagCounts.value = getCaptureTagCounts()
   captureTagPreviews.value = getCaptureTagPreviews(1)
 })
 
-onBeforeUnmount(() => window.removeEventListener(CONSOLE_RESULT_NAVIGATION_EVENT, handleConsoleResultNavigation))
+useConsoleResultNavigation(handleConsoleResultNavigation)
 </script>
 
 <style scoped>

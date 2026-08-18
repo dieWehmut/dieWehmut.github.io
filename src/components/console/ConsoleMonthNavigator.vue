@@ -29,6 +29,7 @@
       <div
         v-if="current"
         id="console-month-panel"
+        ref="itemsRef"
         class="console-month-navigator__items"
         role="tabpanel"
         :aria-labelledby="tabId(currentIndex)"
@@ -44,6 +45,16 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { moveConsoleMonth } from '../../console/timeline'
 import { useConsoleRowNavigation } from '../../composables/useConsoleRowNavigation'
+import { useConsoleResultNavigation } from '../../composables/useConsoleResultNavigation'
+import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
+import type { ConsoleResultNavigationAction } from '../../console/selection'
+
+/**
+ * The boxes under the row are slot content, so they wear the host view's style
+ * scope rather than this component's — a scoped selector could never reach them.
+ * The cursor marker is therefore a global class, defined in `console.scss`.
+ */
+const CONSOLE_BOX_SELECTED_CLASS = 'console-box-selected'
 
 export interface ConsoleMonthGroup {
   id?: string
@@ -60,6 +71,10 @@ const props = defineProps<{
 }>()
 const currentIndex = ref(0)
 const tabRefs = ref<HTMLButtonElement[]>([])
+const itemsRef = ref<HTMLElement | null>(null)
+/** -1 keeps the cursor on the row itself; 0 and up address the boxes under it. */
+const itemCursor = ref(-1)
+const { rowAccent } = useConsoleRowAccent()
 
 const current = computed(() => props.months[currentIndex.value])
 const stateStorageKey = computed(() => props.stateKey ? `nexus:console-month:${props.stateKey}` : '')
@@ -125,7 +140,67 @@ function itemKey(item: unknown, index: number) {
   return index
 }
 
+/** The boxes are slot content, so the rendered children are the only list of them. */
+function itemBoxes(): HTMLElement[] {
+  return itemsRef.value ? Array.from(itemsRef.value.children) as HTMLElement[] : []
+}
+
+function setItemCursor(index: number) {
+  itemCursor.value = Math.max(index, -1)
+  void nextTick(applyItemCursor)
+}
+
+function applyItemCursor() {
+  itemBoxes().forEach((box, index) => {
+    const selected = index === itemCursor.value
+    box.classList.toggle(CONSOLE_BOX_SELECTED_CLASS, selected)
+    if (!selected) {
+      box.style.removeProperty('--console-row-accent')
+      return
+    }
+    // The cursor changes colour as it travels, exactly as it does in the prompt's
+    // own menu, so the box under it is handed the same accent cycle.
+    box.style.setProperty('--console-row-accent', rowAccent(index))
+    box.scrollIntoView({ block: 'nearest' })
+  })
+}
+
+function moveItemCursor(delta: number) {
+  const boxes = itemBoxes()
+  if (!boxes.length) return false
+  // Up walks back out the way it came in: off the first box onto the row, then
+  // off the row entirely, where Up means "recall history" again. Down never
+  // leaves, so the end of a long list is a wall rather than a trapdoor.
+  if (delta < 0 && itemCursor.value < 0) return false
+  setItemCursor(Math.min(itemCursor.value + delta, boxes.length - 1))
+  return true
+}
+
+/**
+ * Only the host view knows where a box leads, so the link inside the box is the
+ * answer: following it routes through the very RouterLink the mouse would have
+ * used. Cards that carry the destination on their own root answer a click there.
+ */
+function activateItemCursor() {
+  const box = itemBoxes()[itemCursor.value]
+  if (!box) return false
+  const link = box.matches('a[href]') ? box : box.querySelector<HTMLElement>('a[href]')
+  ;(link || box).click()
+  return true
+}
+
+function handleResultNavigation(action: ConsoleResultNavigationAction) {
+  if (!props.months.length) return false
+  if (action === 'activate') return activateItemCursor()
+  return moveItemCursor(action === 'previous' ? -1 : 1)
+}
+
+// Any change of month replaces every box under the row, so the cursor goes back
+// to the row it was launched from instead of pointing at a stranger.
+watch(current, () => setItemCursor(-1))
+
 useConsoleRowNavigation(move)
+useConsoleResultNavigation(handleResultNavigation)
 </script>
 
 <style scoped>
@@ -137,7 +212,7 @@ useConsoleRowNavigation(move)
   display: flex;
   align-items: center;
   gap: 0;
-  min-height: 54px;
+  min-height: var(--console-top-row-height);
   margin-bottom: 12px;
   overflow-x: auto;
   border-top: 1px solid var(--console-border);

@@ -146,6 +146,28 @@ html.console-mode-active .sakura-burst-overlay {
   background: var(--console-bg);
 }
 
+/*
+ * The counterpart to the row above: the box the keyboard cursor rests on after
+ * Down has walked it off the row and into the results. It has to be a global
+ * class because the boxes are slot content — they wear the host view's style
+ * scope, so the component steering them cannot reach them from its own.
+ *
+ * The fill is the same recipe the `/` suggestions use, and the accent travels
+ * per box the same way, so "the cursor is here" reads identically whether it is
+ * sitting in the prompt's menu or out in the page. The scroll margin keeps a box
+ * clear of the row it would otherwise scroll underneath.
+ *
+ * The class is written twice on purpose: the boxes bring their own resting
+ * surface from their host view's scoped styles, which lands at exactly the
+ * specificity a single class here would, leaving the winner to bundle order
+ * rather than intent. Repeating it outranks them by one — the same move
+ * `!important` would make, without the escalation.
+ */
+.desktop-layout--console .console-box-selected.console-box-selected {
+  background: color-mix(in srgb, var(--console-row-accent, var(--console-accent)) 18%, transparent);
+  scroll-margin-top: var(--console-top-row-height);
+}
+
 .desktop-layout--console .scroll-spy {
   width: 100% !important;
   margin: 0 0 14px !important;

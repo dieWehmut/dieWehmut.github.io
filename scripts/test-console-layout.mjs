@@ -112,6 +112,24 @@ check(
     && !/navRef\.value\.scrollLeft \+= event\.deltaY/.test(scrollSpy),
 )
 check(
+  // The boxes are slot content, so they wear their host view's style scope and the
+  // marker has to be global. Being global it ties with the surface those hosts give
+  // their own cards, which is why the class is doubled rather than made important.
+  'the box under the keyboard cursor is marked globally and outranks its own surface',
+  /\.console-box-selected\.console-box-selected \{[^}]*background: color-mix\(in srgb, var\(--console-row-accent/.test(consoleStyles)
+    && monthNavigator.includes("const CONSOLE_BOX_SELECTED_CLASS = 'console-box-selected'")
+    && monthNavigator.includes('classList.toggle(CONSOLE_BOX_SELECTED_CLASS, selected)')
+    // Same accent cycle as the prompt's own menu, so one cursor reads one way.
+    && monthNavigator.includes("setProperty('--console-row-accent', rowAccent(index))")
+    && !/\.desktop-layout--console \.console-box-selected[^.{]*\{/.test(consoleStyles),
+)
+check(
+  'a box scrolling into view clears the row it is stuck under, from the row height itself',
+  /--console-top-row-height:\s*\d+px/.test(consoleLayoutBlock)
+    && /\.console-box-selected\.console-box-selected \{[^}]*scroll-margin-top: var\(--console-top-row-height\)/.test(consoleStyles)
+    && /__header \{[^}]*min-height: var\(--console-top-row-height\)/.test(monthNavigator),
+)
+check(
   'router hands the scroller to Console mode',
   /scrollBehavior\([\s\S]*?useDisplayModePreference\(\)\.isConsole\.value\) return false/.test(router),
 )

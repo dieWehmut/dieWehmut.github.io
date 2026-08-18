@@ -227,6 +227,10 @@ watch(isConsole, (enabled) => {
      route that has them, before the prompt on a route that does not. One number so
      a fork retunes the console's vertical rhythm in a single place. */
   --console-block-tail: 14px;
+  /* How tall a page's top row stands. The row is stuck to the top of the viewport,
+     so this is also how far a box below it must hold clear when it scrolls itself
+     into view — otherwise the keyboard cursor lands underneath the row. */
+  --console-top-row-height: 54px;
   min-height: 100vh;
 }
 
