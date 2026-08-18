@@ -11,26 +11,35 @@
 
     <form class="console-shell__prompt" @submit.prevent="executeCommand()">
       <label class="console-shell__prompt-symbol" for="console-command-input">&gt;_</label>
-      <input
-        id="console-command-input"
-        ref="inputRef"
-        data-console-input
-        class="console-shell__input"
-        role="combobox"
-        :value="commandInput"
-        :aria-expanded="Boolean(activeListboxId)"
-        :aria-controls="activeListboxId || undefined"
-        :aria-activedescendant="activeOptionId || undefined"
-        aria-autocomplete="list"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        inputmode="text"
-        placeholder="/help"
-        aria-label="Console command"
-        @input="setInput(($event.target as HTMLInputElement).value)"
-        @keydown="handleShellKeydown"
-      />
+      <span class="console-shell__field">
+        <input
+          id="console-command-input"
+          ref="inputRef"
+          data-console-input
+          class="console-shell__input"
+          role="combobox"
+          :value="commandInput"
+          :aria-expanded="Boolean(activeListboxId)"
+          :aria-controls="activeListboxId || undefined"
+          :aria-activedescendant="activeOptionId || undefined"
+          aria-autocomplete="list"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          inputmode="text"
+          placeholder="/help"
+          aria-label="Console command"
+          @input="setInput(($event.target as HTMLInputElement).value)"
+          @keydown="handleShellKeydown"
+        />
+        <span
+          v-if="caretActive"
+          class="console-shell__caret"
+          aria-hidden="true"
+          :style="{ width: `${caretWidth}px`, transform: `translate(${caretOffset}px, -50%)` }"
+        >{{ caretGlyph }}</span>
+      </span>
+      <span v-if="caretActive" class="console-shell__mode" aria-hidden="true">-- INSERT --</span>
       <button class="console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
     </form>
 
@@ -91,6 +100,7 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
+import { useConsoleBlockCaret } from '../../composables/useConsoleBlockCaret'
 import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
 import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
@@ -129,6 +139,7 @@ const {
   returnToPreviousMenu,
 } = useConsoleSession()
 const { rowAccent } = useConsoleRowAccent()
+const { caretActive, caretOffset, caretWidth, caretGlyph } = useConsoleBlockCaret(inputRef, commandInput)
 
 const hasPanelListbox = computed(() => Boolean(
   activePanel.value && optionPanels.has(activePanel.value.panel),
@@ -245,6 +256,9 @@ onMounted(() => {
   /* Single column that the prompt caret, the suggestion rows and the panel rows
      all start from, so every `/` lines up under the one being typed. */
   --console-prompt-indent: 34px;
+  /* Shared by the field and the block caret drawn over it: the block measures
+     the text, so the two must render at one size or it would sit off the glyph. */
+  --console-input-size: 0.95rem;
   position: relative;
   display: block;
   box-sizing: border-box;
@@ -322,6 +336,14 @@ onMounted(() => {
   font-weight: 700;
 }
 
+.console-shell__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+}
+
 .console-shell__input {
   min-width: 0;
   flex: 1;
@@ -330,9 +352,62 @@ onMounted(() => {
   color: var(--console-text);
   outline: none;
   background: transparent;
-  caret-color: var(--console-accent);
+  /* The block below stands in for the caret, so the browser's hairline would
+     only show through it as a darker seam. */
+  caret-color: transparent;
   font: inherit;
-  font-size: 0.95rem;
+  font-size: var(--console-input-size);
+}
+
+/*
+ * Vim's caret rather than the browser's: a block over the cell the insertion
+ * point rests on, carrying the character it covers in reverse so the text stays
+ * readable under it. Offset and width arrive as measured pixels, and the size
+ * has to match the field's or the block would land off the glyph.
+ */
+.console-shell__caret {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 1.2em;
+  line-height: 1.2em;
+  color: var(--console-bg);
+  background: var(--console-accent);
+  pointer-events: none;
+  white-space: pre;
+  font-size: var(--console-input-size);
+  animation: console-caret-blink 1.06s step-end infinite;
+}
+
+/* A hard on/off square wave, the way a terminal blinks, not a soft pulse. */
+@keyframes console-caret-blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .console-shell__caret {
+    animation: none;
+  }
+}
+
+/*
+ * The mode marker sits at the far end of the row on purpose: dropping it beside
+ * the `>_` would push the field right and break the column every `/` lines up
+ * on.
+ */
+.console-shell__mode {
+  flex: 0 0 auto;
+  margin-right: 8px;
+  color: var(--console-muted);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .console-shell__input::placeholder {

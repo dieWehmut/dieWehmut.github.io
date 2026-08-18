@@ -27,6 +27,7 @@ const consoleOverview = readOptional('src/components/console/ConsoleOverviewHead
 const consolePanel = read('src/components/console/ConsolePanelView.vue')
 const commandRegistry = read('src/console/commandRegistry.ts')
 const consoleRowAccent = read('src/composables/useConsoleRowAccent.ts')
+const consoleBlockCaret = read('src/composables/useConsoleBlockCaret.ts')
 const monthNavigator = read('src/components/console/ConsoleMonthNavigator.vue')
 const routeBreadcrumb = read('src/components/system/RouteBreadcrumb.vue')
 const postView = read('src/views/PostView.vue')
@@ -108,10 +109,45 @@ check(
 check(
   'console prompt caret and every option row share one left edge',
   /--console-prompt-indent:\s*34px/.test(consoleShell)
-    && /\.console-shell__prompt-symbol \{[\s\S]*?width:\s*var\(--console-prompt-indent\)/.test(consoleShell)
-    && /\.console-shell__suggestion \{[\s\S]*?padding:[^;]*var\(--console-prompt-indent\)/.test(consoleShell)
-    && /\.console-panel__heading \{[\s\S]*?padding-left:\s*var\(--console-prompt-indent/.test(consolePanel)
-    && /\.console-panel__row \{[\s\S]*?padding:[^;]*var\(--console-prompt-indent/.test(consolePanel),
+    && /\.console-shell__prompt-symbol \{[^}]*width:\s*var\(--console-prompt-indent\)/.test(consoleShell)
+    && /\.console-shell__suggestion \{[^}]*padding:[^;]*var\(--console-prompt-indent\)/.test(consoleShell)
+    && /\.console-panel__heading \{[^}]*padding-left:\s*var\(--console-prompt-indent/.test(consolePanel)
+    && /\.console-panel__row \{[^}]*padding:[^;]*var\(--console-prompt-indent/.test(consolePanel),
+)
+check(
+  'a measured block replaces the browser caret in the prompt',
+  /\.console-shell__input \{[^}]*caret-color: transparent/.test(consoleShell)
+    && consoleShellTemplate.includes('class="console-shell__caret"')
+    && consoleShellTemplate.includes('`${caretWidth}px`')
+    && consoleShellTemplate.includes('translate(${caretOffset}px, -50%)')
+    && /\.console-shell__caret \{[^}]*background: var\(--console-accent\)/.test(consoleShell),
+)
+check(
+  'the block is measured from the field it covers, at the same size',
+  /getComputedStyle\(input\)/.test(consoleBlockCaret)
+    && /measureText\(text\)\.width/.test(consoleBlockCaret)
+    && /paddingLeft\) \+ parseFloat\(styles\.borderLeftWidth\)/.test(consoleBlockCaret)
+    && /input\.scrollLeft/.test(consoleBlockCaret)
+    && /\.console-shell__input \{[^}]*font-size: var\(--console-input-size\)/.test(consoleShell)
+    && /\.console-shell__caret \{[^}]*font-size: var\(--console-input-size\)/.test(consoleShell),
+)
+check(
+  'the block only reads the selection and never touches a key binding',
+  !/keydown|preventDefault|event\.key/.test(consoleBlockCaret)
+    && /requestAnimationFrame\(measure\)/.test(consoleBlockCaret)
+    && (consoleShellTemplate.match(/@keydown="handleShellKeydown"/g) || []).length === 1
+    && consoleShell.includes('handleSessionInputKeydown(event)'),
+)
+check(
+  'the block blinks like a terminal and holds still for reduced motion',
+  /animation: console-caret-blink [^;]*step-end infinite/.test(consoleShell)
+    && /@media \(prefers-reduced-motion: reduce\) \{\s*\.console-shell__caret \{[^}]*animation: none/.test(consoleShell),
+)
+check(
+  'the INSERT marker rides the far end of the row, clear of the slash column',
+  consoleShellTemplate.includes('-- INSERT --')
+    && consoleShellTemplate.indexOf('console-shell__mode') > consoleShellTemplate.indexOf('console-shell__field')
+    && consoleShellTemplate.indexOf('console-shell__mode') < consoleShellTemplate.indexOf('console-shell__submit'),
 )
 check('shared article PDF export remains in standard mode', routeBreadcrumb.includes('ArticleExportButton'))
 check(
