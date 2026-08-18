@@ -40,6 +40,15 @@ const REMOVED_COMMANDS = new Set([
   'doctor',
 ])
 
+/**
+ * Commands whose argument is free text instead of a path id. For these a space
+ * after the command word means "all of the rest is the argument", so
+ * `/search vue router` reads the way it would in any other terminal. The gate is
+ * the command word on purpose: dynamic ids such as `/capture/My Image (1).png`
+ * legitimately contain spaces and must keep them.
+ */
+const ARGUMENT_SEGMENTS = new Set(['search'])
+
 const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])
 const FIXED_CHILD_VALUES: Record<string, Set<string>> = {
   mode: MODE_VALUES,
@@ -82,10 +91,14 @@ export function parseConsoleInput(input: string): ParsedConsoleInput {
 
   try {
     const { path, query, hash } = splitSuffix(trimmed)
-    const decodedSegments = path
-      .split('/')
-      .filter(Boolean)
-      .map((segment) => decodeURIComponent(segment))
+    const [, spacedHead = '', spacedText = ''] = /^\/+([^/\s]+)[ \t]+(.*)$/.exec(path) || []
+    const argumentHead = ARGUMENT_SEGMENTS.has(spacedHead.toLowerCase()) ? spacedHead.toLowerCase() : ''
+    const decodedSegments = argumentHead
+      ? [argumentHead, spacedText.trim()].filter(Boolean)
+      : path
+        .split('/')
+        .filter(Boolean)
+        .map((segment) => decodeURIComponent(segment))
 
     const head = decodedSegments[0]?.toLowerCase() || ''
     if (REMOVED_COMMANDS.has(head)) return silent(rawInput)
@@ -108,11 +121,15 @@ export function parseConsoleInput(input: string): ParsedConsoleInput {
       query,
       hash,
     }
-    command.canonicalInput = toConsoleRoutePath(command)
+    command.canonicalInput = toConsoleCommandText(command)
     return command
   } catch {
     return silent(rawInput)
   }
+}
+
+function commandSuffix(command: ConsoleCommand): string {
+  return `${command.query ? `?${command.query}` : ''}${command.hash || ''}`
 }
 
 export function toConsoleRoutePath(input: ConsoleCommand | ParsedConsoleInput): string {
@@ -120,5 +137,17 @@ export function toConsoleRoutePath(input: ConsoleCommand | ParsedConsoleInput): 
   const path = input.segments.length
     ? `/${input.segments.map((segment) => encodeURIComponent(segment)).join('/')}`
     : '/'
-  return `${path}${input.query ? `?${input.query}` : ''}${input.hash || ''}`
+  return `${path}${commandSuffix(input)}`
+}
+
+/**
+ * What the console echoes back and keeps in its history. The same as the route
+ * path, except that an argument command stays readable: `/search hello world`
+ * rather than `/search/hello%20world`. Both spellings parse back to one command,
+ * so a history entry can be re-run either way.
+ */
+function toConsoleCommandText(input: ConsoleCommand): string {
+  const [head = '', ...rest] = input.segments
+  if (!ARGUMENT_SEGMENTS.has(head) || !rest.length) return toConsoleRoutePath(input)
+  return `/${head} ${rest.join(' ')}${commandSuffix(input)}`
 }

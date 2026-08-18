@@ -23,6 +23,11 @@ const consoleStyles = read('src/styles/console.scss')
 const monthNavigator = read('src/components/console/ConsoleMonthNavigator.vue')
 const consoleShell = read('src/components/console/ConsoleShell.vue')
 const searchView = read('src/views/SearchView.vue')
+const searchConsoleBranch = searchView.slice(
+  searchView.indexOf('<div v-if="isConsole"'),
+  searchView.indexOf('<div v-else'),
+)
+const consoleSession = read('src/composables/useConsoleSession.ts')
 const tagsView = read('src/views/TagsView.vue')
 const tagDetailView = read('src/views/TagDetailView.vue')
 const consoleSelection = read('src/console/selection.ts')
@@ -123,6 +128,20 @@ const checks = [
       && consoleStyles.includes('.desktop-layout--console .scroll-spy__nav::-webkit-scrollbar'),
   ],
   ['console search reuses typed result behavior', (searchView.match(/<SearchResultItem\b/g) || []).length >= 2],
+  [
+    'the command line is the console search box',
+    !searchConsoleBranch.includes('<SearchInput')
+      && searchView.includes('<SearchInput v-model="query" />')
+      && searchView.includes("typeof route.query.q === 'string'"),
+  ],
+  [
+    'typing /search previews its results without Enter',
+    consoleSession.includes('function previewSearch(')
+      && consoleSession.includes('watch(commandInput, previewSearch)')
+      && consoleSession.includes("segments[0] !== 'search'")
+      && consoleSession.includes('router.replace(resolution.path)')
+      && consoleSession.includes('router.push(resolution.path)'),
+  ],
   [
     'console tag index supports cyclic arrow selection and Enter from the command prompt',
     tagsView.includes('moveConsoleSelection')

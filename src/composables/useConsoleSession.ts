@@ -1,4 +1,4 @@
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { addConsoleHistoryEntry } from '../console/history'
@@ -76,6 +76,30 @@ export function useConsoleSession() {
 
     return filterConsoleSuggestions(prefix, listConsoleCommands(commandAvailability), dynamicOptions)
   })
+
+  /**
+   * `/search` previews itself: the result page follows the prompt, so the query
+   * runs while it is still being typed and Enter is only needed to leave the
+   * command in the history. No other command previews — navigating on a
+   * half-typed `/post/...` would be noise rather than a preview.
+   */
+  function previewSearch(value: string) {
+    const parsed = parseConsoleInput(value)
+    if (parsed.kind !== 'command' || parsed.segments[0] !== 'search') return
+    const resolution = resolveConsoleCommand(parsed, commandAvailability)
+    if (resolution.kind !== 'route') return
+
+    // Refining the term replaces, so a long query does not bury the page the
+    // search started from under one history entry per keystroke. Only the first
+    // arrival pushes, and only it scrolls the results into view.
+    if (router.currentRoute.value.name === 'search') {
+      void router.replace(resolution.path)
+      return
+    }
+    void router.push(resolution.path).then(() => requestConsoleOutputReveal('route'))
+  }
+
+  watch(commandInput, previewSearch)
 
   function resetNavigation() {
     historyCursor.value = null

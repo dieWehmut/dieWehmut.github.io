@@ -49,7 +49,6 @@ const ROUTES: Record<string, { path: string; routeName: string }> = {
   tags: { path: '/tags', routeName: 'tags' },
   about: { path: '/about', routeName: 'about' },
   friends: { path: '/friends', routeName: 'friends' },
-  search: { path: '/search', routeName: 'search' },
 }
 
 const PANELS: Record<string, ConsolePanel> = {
@@ -106,6 +105,19 @@ export function resolveConsoleCommand(
     return second === undefined && !rest.length && !command.query && !command.hash
       ? { kind: 'export' }
       : { kind: 'silent' }
+  }
+
+  /**
+   * `/search` is the only command that carries free text: everything after the
+   * command word is the query, so `/search vue router` reaches
+   * `/search?q=vue%20router`. The term travels as a query parameter rather than a
+   * path segment, which keeps the result page linkable outside the console.
+   */
+  if (key === 'search') {
+    const term = command.segments.slice(1).join(' ').trim()
+    if (!term) return { kind: 'route', path: routeWithSuffix('/search', command), routeName: 'search' }
+    if (command.query || command.hash) return { kind: 'silent' }
+    return { kind: 'route', path: `/search?q=${encoded(term)}`, routeName: 'search' }
   }
 
   if (key === 'mode') {
@@ -171,7 +183,7 @@ export function listConsoleCommands(availability: ConsoleCommandAvailability = {
     { input: '/tags', description: 'Browse tags' },
     { input: '/about', description: 'Read site information' },
     { input: '/friends', description: 'Browse friend links' },
-    { input: '/search', description: 'Search the workspace' },
+    { input: '/search', description: 'Search as you type, e.g. /search vue' },
     { input: '/theme', description: 'Choose light or dark theme' },
     { input: '/color', description: 'Choose a color scheme' },
     { input: '/background', description: 'Configure the dynamic background' },

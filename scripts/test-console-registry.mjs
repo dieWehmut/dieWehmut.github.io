@@ -94,6 +94,30 @@ check(
   'command reference lists the list routes and the article export',
   ['/posts', '/notes', '/export'].every((input) => registry.listConsoleCommands().some((item) => item.input === input)),
 )
+
+const bareSearch = registry.resolveConsoleCommand(command(['search']))
+check(
+  'a bare search opens the plain result page',
+  bareSearch.kind === 'route' && bareSearch.path === '/search' && bareSearch.routeName === 'search',
+)
+const termSearch = registry.resolveConsoleCommand(command(['search', 'vue router']))
+check(
+  'a search term travels as the q query parameter',
+  termSearch.kind === 'route' && termSearch.path === '/search?q=vue%20router' && termSearch.routeName === 'search',
+)
+check(
+  'a slash-separated search term rejoins into one query',
+  registry.resolveConsoleCommand(command(['search', 'vue', 'router'])).path === '/search?q=vue%20router',
+)
+check(
+  'a search term rejects query and hash suffixes of its own',
+  registry.resolveConsoleCommand(command(['search', 'vue'], { query: 'q=other' })).kind === 'silent'
+    && registry.resolveConsoleCommand(command(['search', 'vue'], { hash: '#top' })).kind === 'silent',
+)
+check(
+  'the search command reference teaches the free-text form',
+  registry.listConsoleCommands().some((item) => item.input === '/search' && item.description.includes('/search vue')),
+)
 const removedCommands = [
   'agent',
   'list',
