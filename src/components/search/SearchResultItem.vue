@@ -33,11 +33,10 @@
             <el-icon class="search-result-infra__date-icon"><Calendar /></el-icon>
             {{ formatDate(infraEntry.date) }}
           </time>
-          <span v-if="statusLabel(infraEntry.url)" class="search-result-infra__status" :class="statusClass(infraEntry.url)">
+          <span class="search-result-infra__status" :class="statusClass(infraEntry.url)">
             {{ statusLabel(infraEntry.url) }}
           </span>
         </div>
-        <p v-if="!statusLabel(infraEntry.url)">Infrastructure endpoint</p>
       </div>
     </div>
     <a v-if="infraEntry.url" :href="infraEntry.url" target="_blank" rel="noopener noreferrer" @click.stop>Open</a>
@@ -210,21 +209,16 @@ function openInternal(url: string, event?: MouseEvent | KeyboardEvent) {
 }
 
 function normalizedStatus(url: string | undefined) {
-  if (!url) return ''
-  const status = statusMap[url]
-  if (!status || status.status === 'checking') return ''
-  return status.status === 'online' ? 'online' : 'offline'
+  if (!url) return 'offline'
+  return statusMap[url]?.status === 'online' ? 'online' : 'offline'
 }
 
 function statusLabel(url: string | undefined) {
-  const status = normalizedStatus(url)
-  if (!status) return ''
-  return status === 'online' ? 'Online' : 'Offline'
+  return normalizedStatus(url) === 'online' ? 'Online' : 'Offline'
 }
 
 function statusClass(url: string | undefined) {
-  const status = normalizedStatus(url)
-  return status ? `is-${status}` : ''
+  return `is-${normalizedStatus(url)}`
 }
 </script>
 

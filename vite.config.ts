@@ -338,36 +338,22 @@ function pingProxy(): Plugin {
         const url = new URL(requestUrl, `http://${host}`).searchParams.get('url')
 
         if (!url) {
-          writeJson(res, { ok: false, error: 'Missing ?url=' }, 400)
+          writeJson(res, { online: false, error: 'Missing ?url=' }, 400)
           return
         }
 
-        const t0 = performance.now()
+        const ctrl = new AbortController()
+        const timer = setTimeout(() => ctrl.abort(), 4000)
         try {
-          const ctrl = new AbortController()
-          const timer = setTimeout(() => ctrl.abort(), 4000)
-
-          const upstream = await fetch(url, {
+          await fetch(url, {
             signal: ctrl.signal,
             redirect: 'follow',
           })
-
+          writeJson(res, { online: true })
+        } catch {
+          writeJson(res, { online: false })
+        } finally {
           clearTimeout(timer)
-          writeJson(res, {
-            ok: true,
-            status: upstream.status,
-            latency: Math.round(performance.now() - t0),
-          })
-        } catch (error: unknown) {
-          const err = error as { name?: string; cause?: { code?: string }; code?: string }
-          const code = err.cause?.code || err.code || ''
-          const isAbort = err.name === 'AbortError'
-          const isConnRefused = code === 'ECONNREFUSED' || code === 'ENOTFOUND' || code === 'EAI_AGAIN'
-          writeJson(res, {
-            ok: false,
-            error: isAbort && !isConnRefused ? 'timeout' : 'offline',
-            latency: Math.round(performance.now() - t0),
-          })
         }
       })
     },

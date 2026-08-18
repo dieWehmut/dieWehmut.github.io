@@ -18,7 +18,7 @@
             :rel="item.url ? 'noopener noreferrer' : undefined"
             role="listitem"
           >
-            <span class="console-infra__state" :class="statusClass(item.url)">{{ statusLabel(item.url) || 'unknown' }}</span>
+            <span class="console-infra__state" :class="statusClass(item.url)">{{ statusLabel(item.url) }}</span>
             <strong>{{ item.name }}</strong>
             <time v-if="item.date" :datetime="item.date">{{ formatDate(item.date) }}</time>
             <code>{{ item.url || 'local / unavailable' }}</code>
@@ -153,7 +153,6 @@ import { Cpu, Calendar } from '@element-plus/icons-vue'
 import PageHeading from '../components/content/PageHeading.vue'
 import { infra } from '../data/site/infra.ts'
 import { useUrlStatus } from '../composables/useUrlStatus'
-import { useKumaStatus } from '../composables/useKumaStatus'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 const { t } = useI18n()
@@ -189,20 +188,7 @@ const serviceItems = computed(() =>
 const visibleServiceItems = computed(() => limitCardGroup(serviceItems.value))
 const serviceItemsHiddenCount = computed(() => hiddenCardCount(serviceItems.value))
 
-const kuma = useKumaStatus(serviceItems)
-const fallback = useUrlStatus()
-const mergedStatusMap = computed(() => {
-  const out = {}
-  for (const item of serviceItems.value) {
-    const url = item.url
-    if (!url) continue
-    const fromKuma = kuma.statusMap[url]
-    const fromFallback = fallback.statusMap[url]
-    if (fromKuma) out[url] = fromKuma
-    else if (fromFallback) out[url] = fromFallback
-  }
-  return out
-})
+const { statusMap, checkUrls } = useUrlStatus()
 
 const totalCount = computed(() => serviceItems.value.length)
 const hasOuterRing = computed(() => totalCount.value > INNER_RING_LIMIT)
@@ -278,7 +264,6 @@ watch(
 onMounted(() => {
   refreshTimer = window.setInterval(() => {
     refreshStatuses(serviceItems.value, true)
-    kuma.refresh()
   }, STATUS_REFRESH_INTERVAL_MS)
   syncSideTicker(isConsole.value)
 })
@@ -307,9 +292,7 @@ const onlineCount = computed(() => {
   return serviceItems.value.filter((item) => normalizedStatus(item.url) === 'online').length
 })
 
-const offlineCount = computed(() => {
-  return serviceItems.value.filter((item) => normalizedStatus(item.url) === 'offline').length
-})
+const offlineCount = computed(() => totalCount.value - onlineCount.value)
 
 function infraIconSrc(item, index = 0) {
   return item.icon ? infraAsset(item.icon) : rings[index % rings.length]
@@ -322,8 +305,8 @@ function infraKeyClass(item) {
 function refreshStatuses(items, force = false) {
   const urls = items
     .map((item) => item.url)
-    .filter((url) => url && !kuma.coveredUrls.has(url))
-  if (urls.length) fallback.checkUrls(urls, { force })
+    .filter(Boolean)
+  if (urls.length) checkUrls(urls, { force })
 }
 
 function lineStyle(point) {
@@ -373,21 +356,16 @@ function formatDate(dateStr) {
 }
 
 function normalizedStatus(url) {
-  if (!url) return ''
-  const status = mergedStatusMap.value[url]?.status
-  if (!status || status === 'checking') return ''
-  return status === 'online' ? 'online' : 'offline'
+  if (!url) return 'offline'
+  return statusMap[url]?.status === 'online' ? 'online' : 'offline'
 }
 
 function statusLabel(url) {
-  const status = normalizedStatus(url)
-  if (!status) return ''
-  return status === 'online' ? 'Online' : 'Offline'
+  return normalizedStatus(url) === 'online' ? 'Online' : 'Offline'
 }
 
 function statusClass(url) {
-  const status = normalizedStatus(url)
-  return status ? `is-${status}` : ''
+  return `is-${normalizedStatus(url)}`
 }
 
 function isInteractiveTarget(target) {

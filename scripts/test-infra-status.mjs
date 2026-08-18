@@ -109,6 +109,7 @@ const trackedFiles = execFileSync(
 )
   .split(/\r?\n/)
   .filter(Boolean)
+  .filter((file) => fs.existsSync(path.join(root, file)))
   .filter((file) => /\.(?:ts|tsx|vue|mjs|js|json|ya?ml|md)$/.test(file))
 
 const forbiddenProduct = ['ku', 'ma'].join('')
@@ -123,7 +124,7 @@ check(
 
 const pingProxySource = fs
   .readFileSync(path.join(root, 'vite.config.ts'), 'utf8')
-  .match(/function pingProxy\(\): Plugin \{[\s\S]*?\n\}\n\nexport default/)?.[0] ?? ''
+  .match(/function pingProxy\(\): Plugin \{[\s\S]*?\r?\n\}\r?\n\r?\nexport default/)?.[0] ?? ''
 check(
   'local ping proxy returns no latency or upstream HTTP status detail',
   Boolean(pingProxySource) && !/latency|status:\s*upstream/.test(pingProxySource),
