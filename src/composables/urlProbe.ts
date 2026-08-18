@@ -1,5 +1,20 @@
 export type BinaryUrlStatus = 'online' | 'offline'
 
+interface ProbeUrlOptions {
+  isDev: boolean
+  fetchImpl?: typeof fetch
+  signal?: AbortSignal
+}
+
+export function probeUrl(
+  url: string,
+  { isDev, fetchImpl = fetch, signal }: ProbeUrlOptions,
+): Promise<BinaryUrlStatus> {
+  return isDev
+    ? probeProxyUrl(url, fetchImpl, signal)
+    : probeDirectUrl(url, fetchImpl, signal)
+}
+
 export async function probeDirectUrl(
   url: string,
   fetchImpl: typeof fetch = fetch,

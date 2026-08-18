@@ -1,7 +1,6 @@
 import { reactive, onBeforeUnmount } from 'vue'
 import {
-  probeDirectUrl,
-  probeProxyUrl,
+  probeUrl,
   type BinaryUrlStatus,
 } from './urlProbe'
 
@@ -36,9 +35,11 @@ export function useUrlStatus() {
     const timeoutId = setTimeout(() => controller.abort(), import.meta.env.DEV ? 6000 : 5000)
 
     try {
-      const status = import.meta.env.DEV
-        ? await probeProxyUrl(url, fetch, controller.signal)
-        : await probeDirectUrl(url, fetch, controller.signal)
+      const status = await probeUrl(url, {
+        isDev: import.meta.env.DEV,
+        fetchImpl: fetch,
+        signal: controller.signal,
+      })
       statusMap[url] = { status }
     } finally {
       clearTimeout(timeoutId)

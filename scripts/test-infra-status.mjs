@@ -80,14 +80,50 @@ if (probe) {
       ['online', 'offline'].includes(status),
     ),
   )
+
+  check('environment-aware probe dispatcher exists', typeof probe.probeUrl === 'function')
+  if (typeof probe.probeUrl === 'function') {
+    const productionCalls = []
+    const productionStatus = await probe.probeUrl('https://production.example', {
+      isDev: false,
+      fetchImpl: async (input, init) => {
+        productionCalls.push([input, init])
+        return { ok: true }
+      },
+    })
+    check(
+      'production dispatcher selects direct no-cors probing',
+      productionStatus === 'online' &&
+        productionCalls.length === 1 &&
+        productionCalls[0][0] === 'https://production.example' &&
+        productionCalls[0][1]?.mode === 'no-cors',
+    )
+
+    const developmentCalls = []
+    await probe.probeUrl('https://development.example', {
+      isDev: true,
+      fetchImpl: async (input, init) => {
+        developmentCalls.push([input, init])
+        return { ok: true, json: async () => ({ online: true }) }
+      },
+    })
+    check(
+      'development dispatcher selects the same-origin proxy',
+      developmentCalls.length === 1 &&
+        String(developmentCalls[0][0]).startsWith('/api/ping?url=') &&
+        developmentCalls[0][1]?.mode === undefined,
+    )
+  }
 }
 
 const composablePath = path.join(root, 'src/composables/useUrlStatus.ts')
 const composableSource = fs.readFileSync(composablePath, 'utf8')
+const probeSource = fs.readFileSync(path.join(root, 'src/composables/urlProbe.ts'), 'utf8')
 check(
   'status type declares exactly two states',
   /export type StatusKind\s*=\s*BinaryUrlStatus/.test(composableSource) &&
-    !/checking|latency|httpStatus/.test(composableSource),
+    /export type BinaryUrlStatus\s*=\s*'online'\s*\|\s*'offline'/.test(probeSource) &&
+    !/checking|latency|httpStatus/.test(`${composableSource}\n${probeSource}`),
 )
 
 const infraViewSource = fs.readFileSync(path.join(root, 'src/views/InfraView.vue'), 'utf8')
@@ -104,13 +140,14 @@ check('status-page integration composable is removed', !fs.existsSync(removedCom
 
 const trackedFiles = execFileSync(
   'git',
-  ['ls-files', '--', '.github', 'src', 'vite.config.ts'],
+  ['ls-files'],
   { cwd: root, encoding: 'utf8' },
 )
   .split(/\r?\n/)
   .filter(Boolean)
   .filter((file) => fs.existsSync(path.join(root, file)))
   .filter((file) => /\.(?:ts|tsx|vue|mjs|js|json|ya?ml|md)$/.test(file))
+  .filter((file) => file !== 'scripts/test-infra-status.mjs')
 
 const forbiddenProduct = ['ku', 'ma'].join('')
 const forbiddenMatches = trackedFiles.filter((file) => {
@@ -120,6 +157,22 @@ const forbiddenMatches = trackedFiles.filter((file) => {
 check(
   'tracked application and starter files contain no status-page product integration',
   forbiddenMatches.length === 0,
+)
+
+const starterSyncSource = fs.readFileSync(
+  path.join(root, '.github/workflows/sync-starter.yml'),
+  'utf8',
+)
+check(
+  'starter repository description advertises binary reachability',
+  /binary infrastructure reachability dashboard/i.test(starterSyncSource) &&
+    !/server uptime monitoring/i.test(starterSyncSource),
+)
+
+const deploySource = fs.readFileSync(path.join(root, '.github/workflows/deploy.yml'), 'utf8')
+check(
+  'GitHub Pages deployment enforces the Infra status regression',
+  /pnpm (?:run )?test:infra-status/.test(deploySource),
 )
 
 const pingProxySource = fs
