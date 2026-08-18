@@ -119,10 +119,13 @@ if (probe) {
 const composablePath = path.join(root, 'src/composables/useUrlStatus.ts')
 const composableSource = fs.readFileSync(composablePath, 'utf8')
 const probeSource = fs.readFileSync(path.join(root, 'src/composables/urlProbe.ts'), 'utf8')
+const binaryTypeLine = probeSource
+  .split(/\r?\n/)
+  .find((line) => line.includes('export type BinaryUrlStatus'))
 check(
   'status type declares exactly two states',
   /export type StatusKind\s*=\s*BinaryUrlStatus/.test(composableSource) &&
-    /export type BinaryUrlStatus\s*=\s*'online'\s*\|\s*'offline'/.test(probeSource) &&
+    binaryTypeLine?.trim() === "export type BinaryUrlStatus = 'online' | 'offline'" &&
     !/checking|latency|httpStatus/.test(`${composableSource}\n${probeSource}`),
 )
 
@@ -138,7 +141,7 @@ check(
 const removedComposable = path.join(root, 'src/composables', `use${'Ku' + 'ma'}Status.ts`)
 check('status-page integration composable is removed', !fs.existsSync(removedComposable))
 
-const trackedFiles = execFileSync(
+const trackedPaths = execFileSync(
   'git',
   ['ls-files'],
   { cwd: root, encoding: 'utf8' },
@@ -146,28 +149,37 @@ const trackedFiles = execFileSync(
   .split(/\r?\n/)
   .filter(Boolean)
   .filter((file) => fs.existsSync(path.join(root, file)))
+
+const forbiddenProduct = ['ku', 'ma'].join('')
+const forbiddenPathMatches = trackedPaths.filter((file) =>
+  file.toLowerCase().includes(forbiddenProduct),
+)
+const trackedTextFiles = trackedPaths
   .filter((file) => /\.(?:ts|tsx|vue|mjs|js|json|ya?ml|md)$/.test(file))
   .filter((file) => file !== 'scripts/test-infra-status.mjs')
 
-const forbiddenProduct = ['ku', 'ma'].join('')
-const forbiddenMatches = trackedFiles.filter((file) => {
+const forbiddenContentMatches = trackedTextFiles.filter((file) => {
   const content = fs.readFileSync(path.join(root, file), 'utf8')
-  return `${file}\n${content}`.toLowerCase().includes(forbiddenProduct)
+  return content.toLowerCase().includes(forbiddenProduct)
 })
 check(
   'tracked application and starter files contain no status-page product integration',
-  forbiddenMatches.length === 0,
+  forbiddenPathMatches.length === 0 && forbiddenContentMatches.length === 0,
 )
 
-const starterSyncSource = fs.readFileSync(
-  path.join(root, '.github/workflows/sync-starter.yml'),
-  'utf8',
-)
-check(
-  'starter repository description advertises binary reachability',
-  /binary infrastructure reachability dashboard/i.test(starterSyncSource) &&
-    !/server uptime monitoring/i.test(starterSyncSource),
-)
+const starterSyncPath = path.join(root, '.github/workflows/sync-starter.yml')
+if (fs.existsSync(starterSyncPath)) {
+  const starterSyncSource = fs.readFileSync(starterSyncPath, 'utf8')
+  check(
+    'starter repository description advertises binary reachability',
+    /binary infrastructure reachability dashboard/i.test(starterSyncSource) &&
+      !/server uptime monitoring/i.test(starterSyncSource),
+  )
+  check(
+    'generated starter deployment enforces the Infra status regression',
+    /Verify Infra status probing[\s\S]*?pnpm test:infra-status/.test(starterSyncSource),
+  )
+}
 
 const deploySource = fs.readFileSync(path.join(root, '.github/workflows/deploy.yml'), 'utf8')
 check(

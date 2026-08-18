@@ -412,6 +412,9 @@ jobs:
                 - name: Install dependencies
                   run: pnpm install --frozen-lockfile
 
+                - name: Verify Infra status probing
+                  run: pnpm test:infra-status
+
                 - name: Build
                   shell: bash
                   run: |
