@@ -21,6 +21,7 @@
         :key="option.command"
         class="console-panel__row"
         :class="{ 'is-selected': selectedIndex === index }"
+        :style="{ '--console-row-accent': rowAccent(index) }"
         type="button"
         role="option"
         :aria-selected="selectedIndex === index"
@@ -44,6 +45,7 @@ import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
+import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
 import { useThemePreference, type ThemeMode } from '../../composables/useThemePreference'
 import type { SiteColorScheme } from '../../types/content'
 
@@ -62,6 +64,7 @@ const emit = defineEmits<{
 const { theme, setTheme } = useThemePreference()
 const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
+const { rowAccent } = useConsoleRowAccent()
 
 const notes = getNotes()
 const posts = getPosts()
@@ -379,18 +382,25 @@ defineExpose({ moveSelection, activateSelection })
   font: inherit;
 }
 
+/* Frameless rows mark the cursor by colour, one accent per row index. */
 .console-panel__row:hover,
 .console-panel__row:focus-visible,
 .console-panel__row.is-selected {
   border-color: var(--console-border-strong);
   color: var(--console-text);
-  background: var(--console-selection);
+  background: color-mix(in srgb, var(--console-row-accent, var(--console-accent)) 18%, transparent);
   outline: none;
 }
 
 .console-panel__row code {
   color: var(--console-accent);
   font: inherit;
+}
+
+.console-panel__row:hover code,
+.console-panel__row:focus-visible code,
+.console-panel__row.is-selected code {
+  color: var(--console-row-accent, var(--console-accent));
 }
 
 .console-panel__row code.is-current {

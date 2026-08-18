@@ -51,6 +51,7 @@
           :key="suggestion.input"
           class="console-shell__suggestion"
           :class="{ 'is-selected': suggestionCursor === index }"
+          :style="{ '--console-row-accent': rowAccent(index) }"
           type="button"
           role="option"
           tabindex="-1"
@@ -90,6 +91,7 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
+import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
 import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import {
@@ -126,6 +128,7 @@ const {
   setPanel,
   returnToPreviousMenu,
 } = useConsoleSession()
+const { rowAccent } = useConsoleRowAccent()
 
 const hasPanelListbox = computed(() => Boolean(
   activePanel.value && optionPanels.has(activePanel.value.panel),
@@ -375,18 +378,29 @@ onMounted(() => {
   font: inherit;
 }
 
+/*
+ * No frame is left to mark the cursor, so the row it rests on is repainted in
+ * another scheme's accent. Because the colour is keyed to the row index, walking
+ * the list visibly changes it step by step.
+ */
 .console-shell__suggestion:hover,
 .console-shell__suggestion:focus-visible,
 .console-shell__suggestion.is-selected {
   border-color: var(--console-border-strong);
   color: var(--console-text);
-  background: var(--console-selection);
+  background: color-mix(in srgb, var(--console-row-accent, var(--console-accent)) 18%, transparent);
   outline: none;
 }
 
 .console-shell__suggestion code {
   color: var(--console-accent);
   font: inherit;
+}
+
+.console-shell__suggestion:hover code,
+.console-shell__suggestion:focus-visible code,
+.console-shell__suggestion.is-selected code {
+  color: var(--console-row-accent, var(--console-accent));
 }
 
 @media (max-width: 1100px) {

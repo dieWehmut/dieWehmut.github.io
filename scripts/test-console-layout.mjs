@@ -26,6 +26,7 @@ const consoleSession = read('src/composables/useConsoleSession.ts')
 const consoleOverview = readOptional('src/components/console/ConsoleOverviewHeader.vue')
 const consolePanel = read('src/components/console/ConsolePanelView.vue')
 const commandRegistry = read('src/console/commandRegistry.ts')
+const consoleRowAccent = read('src/composables/useConsoleRowAccent.ts')
 const routeBreadcrumb = read('src/components/system/RouteBreadcrumb.vue')
 const postView = read('src/views/PostView.vue')
 const noteView = read('src/views/NoteView.vue')
@@ -330,6 +331,20 @@ check(
   'console mode draws no rules',
   /\.desktop-layout--console \{[^}]*--console-border: transparent;[^}]*--console-border-strong: transparent;/
     .test(desktopLayout),
+)
+check(
+  'the cursored row borrows another colour scheme, cycling by row index',
+  /filter\(\(id\) => id !== colorScheme\.value\)/.test(consoleRowAccent)
+    && /siteColorSchemes\[id\]\[theme\.value\]\.accent/.test(consoleRowAccent)
+    && /accents\[index % accents\.length\]/.test(consoleRowAccent),
+)
+check(
+  'both option lists paint the cursor with that row accent',
+  [consoleShell, consolePanel].every((source) => source.includes("'--console-row-accent': rowAccent(index)"))
+    && /\.console-shell__suggestion\.is-selected \{[^}]*var\(--console-row-accent/.test(consoleShell)
+    && /\.console-shell__suggestion\.is-selected code \{[^}]*var\(--console-row-accent/.test(consoleShell)
+    && /\.console-panel__row\.is-selected \{[^}]*var\(--console-row-accent/.test(consolePanel)
+    && /\.console-panel__row\.is-selected code \{[^}]*var\(--console-row-accent/.test(consolePanel),
 )
 check(
   'every line in a console rule resolves through a border token',
