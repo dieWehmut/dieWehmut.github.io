@@ -81,8 +81,19 @@ check(
 )
 check(
   'Console route output can always reach the top of the page',
-  /\.desktop-layout--console \.desktop-layout__main \{[\s\S]*?min-height:\s*100vh\s*;/.test(desktopLayout)
-    && /\.desktop-layout--console \.desktop-layout__main--empty \{[\s\S]*?min-height:\s*0\s*;/.test(desktopLayout),
+  // The reserve belongs to the output block as a whole. Held on the route output
+  // alone it would have spent its slack between that output and its comments,
+  // which is the gap this places after them instead.
+  /min-height:\s*100vh\s*;/.test(consoleResultBlock)
+    && !/\.desktop-layout--console \.desktop-layout__main \{[^}]*min-height/.test(desktopLayout)
+    && /\.desktop-layout--console \.desktop-layout__result--empty \{[^}]*min-height:\s*0\s*;/.test(desktopLayout)
+    && desktopTemplate.includes("'desktop-layout__result--empty': isConsole && route.name === 'root'"),
+)
+check(
+  'the comment block reads as the tail of the output it belongs to',
+  /--console-block-tail:\s*\d+px/.test(consoleLayoutBlock)
+    && /\.desktop-layout--console \.desktop-layout__main \{[^}]*padding:[^;]*var\(--console-block-tail\)/.test(desktopLayout)
+    && /\.desktop-layout__comment \{[^}]*padding: 0 0 var\(--console-block-tail\)/.test(desktopLayout),
 )
 check(
   'router hands the scroller to Console mode',

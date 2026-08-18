@@ -8,11 +8,13 @@
     <div class="desktop-layout__content">
       <RouteBreadcrumb v-if="!isConsole" />
       <ConsoleOverviewHeader v-if="isConsole" />
-      <div class="desktop-layout__result">
+      <div
+        class="desktop-layout__result"
+        :class="{ 'desktop-layout__result--empty': isConsole && route.name === 'root' }"
+      >
         <main
           ref="outputRef"
           class="desktop-layout__main"
-          :class="{ 'desktop-layout__main--empty': isConsole && route.name === 'root' }"
           data-console-output-start
         >
           <RouterView v-slot="{ Component, route: viewRoute }">
@@ -221,6 +223,10 @@ watch(isConsole, (enabled) => {
      tinted fill carries the affordance instead and hover deepens it. */
   --console-control: color-mix(in srgb, var(--site-accent) 10%, transparent);
   --console-control-strong: color-mix(in srgb, var(--site-accent) 24%, transparent);
+  /* The air an output block leaves under itself: the seam before the comments on a
+     route that has them, before the prompt on a route that does not. One number so
+     a fork retunes the console's vertical rhythm in a single place. */
+  --console-block-tail: 14px;
   min-height: 100vh;
 }
 
@@ -242,29 +248,36 @@ html[data-theme='light'] .desktop-layout--console {
   display: block;
   min-width: 0;
   width: 100%;
+  /* Reserve a full viewport for the output block as a whole, so short routes can
+     still scroll their own top to the top of the page — which is what the `/`
+     reveal aligns against. Reserving it on the route output alone would spend the
+     slack between that output and its comments instead of after them. */
+  min-height: 100vh;
   margin: 0;
+  padding: 0;
+}
+
+/* The root route prints nothing above the prompt, so it needs neither the reserve
+   nor the padding that would hold the prompt away from an empty box. */
+.desktop-layout--console .desktop-layout__result--empty {
+  min-height: 0;
+}
+
+.desktop-layout--console .desktop-layout__result--empty .desktop-layout__main {
   padding: 0;
 }
 
 .desktop-layout--console .desktop-layout__main {
   width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
-  /* Reserve a full viewport so short routes can still scroll their own top to
-     the top of the page, which is what the `/` reveal aligns against. */
-  min-height: 100vh;
   margin: 0 auto;
-  padding: 28px 0 58px;
+  padding: 28px 0 var(--console-block-tail);
   overflow: visible;
-}
-
-.desktop-layout--console .desktop-layout__main--empty {
-  min-height: 0;
-  padding: 0;
 }
 
 .desktop-layout__comment {
   width: min(1180px, calc(100vw - 2 * var(--site-desktop-content-gutter)));
   margin: 0 auto;
-  padding: 18px 0 42px;
+  padding: 0 0 var(--console-block-tail);
   border-top: 1px solid var(--console-border-strong);
 }
 
