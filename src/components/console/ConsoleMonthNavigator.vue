@@ -6,7 +6,7 @@
     @keydown.right.prevent="move(1, true)"
   >
     <template v-if="months.length">
-      <header class="console-month-navigator__header" role="tablist" aria-label="Dates">
+      <header class="console-month-navigator__header console-top-row" role="tablist" aria-label="Dates">
         <span class="console-month-navigator__label" aria-hidden="true">{{ percent }}%</span>
         <button
           v-for="(month, index) in months"

@@ -37,6 +37,7 @@ const postView = read('src/views/PostView.vue')
 const noteView = read('src/views/NoteView.vue')
 const homeView = read('src/views/HomeView.vue')
 const displayPreference = read('src/composables/useDisplayModePreference.ts')
+const scrollSpy = read('src/components/system/ScrollSpySidebar.vue')
 const consoleStyles = read('src/styles/console.scss')
 const router = read('src/router.ts')
 const desktopTemplate = desktopLayout.split('<script setup')[0]
@@ -94,6 +95,21 @@ check(
   /--console-block-tail:\s*\d+px/.test(consoleLayoutBlock)
     && /\.desktop-layout--console \.desktop-layout__main \{[^}]*padding:[^;]*var\(--console-block-tail\)/.test(desktopLayout)
     && /\.desktop-layout__comment \{[^}]*padding: 0 0 var\(--console-block-tail\)/.test(desktopLayout),
+)
+check(
+  'both console top rows ride the top of the viewport out of one recipe',
+  /\.desktop-layout--console \.console-top-row \{[^}]*position: sticky/.test(consoleStyles)
+    && /\.desktop-layout--console \.console-top-row \{[^}]*top: 0/.test(consoleStyles)
+    && /\.desktop-layout--console \.console-top-row \{[^}]*background: var\(--console-bg\)/.test(consoleStyles)
+    && scrollSpy.includes("'console-top-row': effectiveMode === 'console'")
+    && monthNavigator.includes('console-month-navigator__header console-top-row')
+    // The rule that used to flatten the sidebar also un-stuck it.
+    && !/\.desktop-layout--console \.scroll-spy \{[^}]*position: static/.test(consoleStyles),
+)
+check(
+  'a stuck row leaves the wheel to the page it is pinned over',
+  /effectiveMode\.value === 'console'\) return/.test(scrollSpy)
+    && !/navRef\.value\.scrollLeft \+= event\.deltaY/.test(scrollSpy),
 )
 check(
   'router hands the scroller to Console mode',

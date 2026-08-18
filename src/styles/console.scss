@@ -131,14 +131,27 @@ html.console-mode-active .sakura-burst-overlay {
   transform: none !important;
 }
 
+/*
+ * Whatever row a console page puts at its top — the month strip on a list, the
+ * section chips on an article — rides the top of the viewport once the page has
+ * scrolled past it, so the percentage and the boxes it steers stay reachable from
+ * anywhere in the page. A row joins by wearing this class; nothing here needs to
+ * know which rows exist. The fill is what makes it readable while the content
+ * passes underneath, and the layer stays below the prompt dock.
+ */
+.desktop-layout--console .console-top-row {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--console-bg);
+}
+
 .desktop-layout--console .scroll-spy {
-  position: static !important;
   width: 100% !important;
   margin: 0 0 14px !important;
   padding: 0 0 8px !important;
   border: 0 !important;
   border-bottom: 1px solid var(--console-border) !important;
-  background: transparent !important;
 }
 
 .desktop-layout--console .scroll-spy__status {

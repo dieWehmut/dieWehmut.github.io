@@ -1,5 +1,9 @@
 <template>
-  <aside v-if="items.length" class="scroll-spy" :class="`scroll-spy--${effectiveMode}`">
+  <aside
+    v-if="items.length"
+    class="scroll-spy"
+    :class="[`scroll-spy--${effectiveMode}`, { 'console-top-row': effectiveMode === 'console' }]"
+  >
     <div class="scroll-spy__status">
       <div class="scroll-spy__progress">
         <div class="scroll-spy__bar">
@@ -309,11 +313,10 @@ function followActive() {
 }
 
 function onSidebarWheel(event) {
-  if (effectiveMode.value === 'console' && navRef.value) {
-    event.preventDefault()
-    navRef.value.scrollLeft += event.deltaY
-    return
-  }
+  // The console row is stuck to the top of the page, so it sits under the pointer
+  // for most of a scroll. Redirecting the wheel into it would trap the page, and
+  // the row already follows the active section on its own.
+  if (effectiveMode.value === 'console') return
   event.preventDefault()
   window.scrollBy({ top: event.deltaY, behavior: 'auto' })
 }
