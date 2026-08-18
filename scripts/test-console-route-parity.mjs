@@ -33,6 +33,17 @@ const tagDetailView = read('src/views/TagDetailView.vue')
 const consoleSelection = read('src/console/selection.ts')
 const friendsView = read('src/views/FriendsView.vue')
 const scrollSpySidebar = read('src/components/system/ScrollSpySidebar.vue')
+const helpView = read('src/views/HelpView.vue')
+const panelView = read('src/components/console/ConsolePanelView.vue')
+const commandRegistry = read('src/console/commandRegistry.ts')
+const consolePanelUnion = commandRegistry.slice(
+  commandRegistry.indexOf('export type ConsolePanel ='),
+  commandRegistry.indexOf('export interface ConsoleCommandShape'),
+)
+const optionPanelsSet = consoleShell.slice(
+  consoleShell.indexOf('const optionPanels'),
+  consoleShell.indexOf('])', consoleShell.indexOf('const optionPanels')),
+)
 
 const checks = [
   ['project console keeps site links', projectView.includes('console-project__link--site')],
@@ -181,6 +192,26 @@ const checks = [
       && friendsView.includes('console-friends__avatar--fallback')
       && !friendsView.includes('<code>{{ friend.id }}</code>')
       && /\.console-friends__row \{[\s\S]*?grid-template-columns: 26px/.test(friendsView),
+  ],
+  [
+    'the command reference is a routed page, not a dock panel',
+    /path:\s*['"]\/help['"][^\n]+name:\s*['"]help['"][^\n]+component:\s*viewLoaders\.help/.test(router)
+      && /\[['"]\/help['"],\s*viewLoaders\.help\]/.test(router)
+      && routeBreadcrumb.includes("help: { label: 'Help', to: '/help' }")
+      && !consolePanelUnion.includes("'help'")
+      && !panelView.includes("case 'help'")
+      && !optionPanelsSet.includes("'help'"),
+  ],
+  [
+    'the help page derives its command tables from the registry',
+    helpView.includes('listConsoleCommands(')
+      && helpView.includes('consoleCommandGroups')
+      && helpView.includes('command.group === group.id'),
+  ],
+  [
+    'the help page feeds the console section bar with its own headings',
+    /<ScrollSpySidebar\s+v-if="isConsole"[\s\S]*?heading-selector="h2"/.test(helpView)
+      && (helpView.match(/<h2\b/g) || []).length >= 2,
   ],
 ]
 

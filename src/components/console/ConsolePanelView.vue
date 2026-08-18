@@ -40,8 +40,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
 import { getNotes, getPosts } from '../../data'
-import { siteConfig } from '../../data/site/config'
-import { listConsoleCommands, type ConsolePanel } from '../../console/commandRegistry'
+import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
@@ -64,10 +63,6 @@ const { theme, setTheme } = useThemePreference()
 const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 
-const commands = listConsoleCommands({
-  infra: siteConfig.enableInfra,
-  project: siteConfig.enableProject,
-})
 const notes = getNotes()
 const posts = getPosts()
 const themeOptions: Array<{ value: ThemeMode; label: string }> = [
@@ -108,7 +103,6 @@ const rowsRef = ref<HTMLElement | null>(null)
 
 const heading = computed(() => {
   const labels: Record<string, string> = {
-    help: 'Command reference',
     theme: 'Select theme',
     color: 'Select color scheme',
     background: 'Dynamic background',
@@ -124,7 +118,6 @@ const backgroundEnabled = computed(() => dynamicBackgroundEnabled.value ? 'on' :
 
 const listLabel = computed(() => {
   const labels: Partial<Record<ConsolePanel, string>> = {
-    help: 'Console commands',
     mode: 'Display mode options',
     theme: 'Theme options',
     color: 'Color scheme options',
@@ -138,12 +131,6 @@ const listLabel = computed(() => {
 
 const panelOptions = computed<PanelOption[]>(() => {
   switch (props.panel) {
-    case 'help':
-      return commands.map((item) => ({
-        command: item.input,
-        code: item.input,
-        label: item.description,
-      }))
     case 'mode':
       return [
         { command: '/mode/console', code: 'console', label: 'Nexus Console desktop workspace', current: true },

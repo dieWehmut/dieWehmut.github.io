@@ -93,6 +93,7 @@ const staticPages: Record<string, Crumb> = {
   about: { label: 'About', to: '/about' },
   friends: { label: 'Friends', to: '/friends' },
   search: { label: 'Search', to: '/search' },
+  help: { label: 'Help', to: '/help' },
 }
 
 function decodeParam(value: unknown) {

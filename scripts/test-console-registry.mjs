@@ -118,6 +118,24 @@ check(
   'the search command reference teaches the free-text form',
   registry.listConsoleCommands().some((item) => item.input === '/search' && item.description.includes('/search vue')),
 )
+const helpResolution = registry.resolveConsoleCommand(command(['help']))
+check(
+  'help resolves a page rather than a dock panel',
+  helpResolution.kind === 'route' && helpResolution.path === '/help' && helpResolution.routeName === 'help',
+)
+check('help rejects extra segments', registry.resolveConsoleCommand(command(['help', 'commands'])).kind === 'silent')
+const groupIds = new Set(registry.consoleCommandGroups.map((group) => group.id))
+check(
+  'every command is filed under a declared group',
+  registry.listConsoleCommands().every((item) => groupIds.has(item.group)),
+)
+check(
+  'every declared group has at least one command to show',
+  registry.consoleCommandGroups.every(
+    (group) => registry.listConsoleCommands().some((item) => item.group === group.id),
+  ),
+)
+
 const removedCommands = [
   'agent',
   'list',

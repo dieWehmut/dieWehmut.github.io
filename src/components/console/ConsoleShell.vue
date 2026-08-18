@@ -104,7 +104,6 @@ const panelActiveOptionId = ref('')
 const suggestionListboxId = 'console-command-suggestions'
 const panelListboxId = 'console-panel-options'
 const optionPanels = new Set<ConsolePanel>([
-  'help',
   'mode',
   'theme',
   'color',

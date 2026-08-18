@@ -17,6 +17,7 @@ const viewLoaders = {
   about: () => import('./views/AboutView.vue'),
   friends: () => import('./views/FriendsView.vue'),
   search: () => import('./views/SearchView.vue'),
+  help: () => import('./views/HelpView.vue'),
   notFound: () => import('./views/NotFoundView.vue'),
 }
 
@@ -32,6 +33,7 @@ const primaryRoutePreloaders = new Map<string, () => Promise<unknown>>([
   ['/about', viewLoaders.about],
   ['/friends', viewLoaders.friends],
   ['/search', viewLoaders.search],
+  ['/help', viewLoaders.help],
 ])
 // 详情页按首段路径前缀匹配：/post/:id、/note/:id、/tags/:tag
 // 这些 chunk 很重（尤其 markdown 渲染链），不进空闲预热队列，只在鼠标悬停链接时按需拉取
@@ -58,6 +60,7 @@ const routes = [
   { path: '/about', name: 'about', component: viewLoaders.about },
   { path: '/friends', name: 'friends', component: viewLoaders.friends },
   { path: '/search', name: 'search', component: viewLoaders.search },
+  { path: '/help', name: 'help', component: viewLoaders.help },
   { path: '/:pathMatch(.*)*', name: 'not-found', component: viewLoaders.notFound },
 ]
 

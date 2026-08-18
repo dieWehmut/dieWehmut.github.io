@@ -93,7 +93,7 @@ check(
 )
 check(
   '/comment no longer advertises itself as a toggle',
-  commandRegistry.includes("{ input: '/comment', description: 'Jump to the comment box for this page' }"),
+  /input: '\/comment', description: 'Jump to the comment box for this page'/.test(commandRegistry),
 )
 
 check(
