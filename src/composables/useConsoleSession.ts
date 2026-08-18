@@ -16,6 +16,7 @@ import { useDisplayModePreference } from './useDisplayModePreference'
 import { useThemePreference } from './useThemePreference'
 import { useBackgroundPreference } from './useBackgroundPreference'
 import { useConsoleCommentSession } from './useConsoleCommentSession'
+import { hasExportableArticle, useArticlePdfExport } from './useArticlePdfExport'
 import { requestConsoleOutputReveal } from './useConsoleOutputReveal'
 import type { SiteColorScheme } from '../types/content'
 import { getNotes, getPosts, getTagGroups } from '../data'
@@ -55,6 +56,7 @@ export function useConsoleSession() {
   const color = useColorSchemePreference()
   const background = useBackgroundPreference()
   const comments = useConsoleCommentSession()
+  const { exportArticlePdf } = useArticlePdfExport()
   const commandAvailability = {
     infra: siteConfig.enableInfra,
     project: siteConfig.enableProject,
@@ -218,6 +220,9 @@ export function useConsoleSession() {
     }
 
     if (resolution.kind === 'comment' && !(await comments.ensureTarget())) return false
+    // `/export` reads the article back out of the page, so on a route without
+    // one there is nothing to act on and the command stays as quiet as a typo.
+    if (resolution.kind === 'export' && !hasExportableArticle()) return false
 
     const sourceMenu = {
       input: commandInput.value,
@@ -250,6 +255,11 @@ export function useConsoleSession() {
         // the comment box the command just scrolled to.
         clearPanelNavigation()
         requestConsoleOutputReveal('comment')
+      } else if (resolution.kind === 'export') {
+        clearPanelNavigation()
+        feedback.value = await exportArticlePdf()
+          ? 'Article exported as PDF.'
+          : 'Article could not be exported.'
       } else {
         const commits = Boolean(resolution.value)
         if (!commits && sourcePanel && sourcePanel.panel !== resolution.panel) {

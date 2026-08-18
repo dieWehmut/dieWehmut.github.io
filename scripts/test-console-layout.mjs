@@ -111,8 +111,16 @@ check(
     && /\.console-panel__row \{[\s\S]*?padding:[^;]*var\(--console-prompt-indent/.test(consolePanel),
 )
 check('shared article PDF export remains in standard mode', routeBreadcrumb.includes('ArticleExportButton'))
-check('shared article PDF export remains in console posts', postView.includes('ArticleExportButton'))
-check('shared article PDF export remains in console notes', noteView.includes('ArticleExportButton'))
+check(
+  'console article pages carry no export button of their own',
+  !postView.includes('ArticleExportButton') && !noteView.includes('ArticleExportButton'),
+)
+check(
+  'the console exports the current article through /export',
+  consoleSession.includes("from './useArticlePdfExport'")
+    && /resolution\.kind === 'export' && !hasExportableArticle\(\)/.test(consoleSession)
+    && /resolution\.kind === 'export'\)[\s\S]*?await exportArticlePdf\(\)/.test(consoleSession),
+)
 check('console mode marks the document for native cursor overrides', displayPreference.includes('console-mode-active'))
 check('console uses the terminal text cursor everywhere', consoleStyles.includes('cursor: text !important'))
 check(
@@ -172,7 +180,6 @@ const removedPanelCommands = [
   'workspace',
   'model',
   'archive',
-  'notes',
   'config',
   'doctor',
 ]

@@ -62,6 +62,38 @@ check('command reference includes Friends', registry.listConsoleCommands().some(
 check('command reference includes the canonical Home route', registry.listConsoleCommands().some((item) => item.input === '/home'))
 check('command reference includes current-page comments', registry.listConsoleCommands().some((item) => item.input === '/comment'))
 check('command reference omits the standalone root slash', !registry.listConsoleCommands().some((item) => item.input === '/'))
+
+const postsResolution = registry.resolveConsoleCommand(command(['posts']))
+check(
+  'posts is the command name for the archive route',
+  postsResolution.kind === 'route' && postsResolution.path === '/archive' && postsResolution.routeName === 'archive',
+)
+const notesResolution = registry.resolveConsoleCommand(command(['notes']))
+check(
+  'notes resolves the note index route',
+  notesResolution.kind === 'route' && notesResolution.path === '/notes' && notesResolution.routeName === 'notes',
+)
+check(
+  'the list routes stay distinct from the pickers',
+  registry.resolveConsoleCommand(command(['post'])).panel === 'post-picker'
+    && registry.resolveConsoleCommand(command(['note'])).panel === 'note-picker',
+)
+check(
+  'posts and notes both reject extra segments',
+  registry.resolveConsoleCommand(command(['posts', 'extra'])).kind === 'silent'
+    && registry.resolveConsoleCommand(command(['notes', 'extra'])).kind === 'silent',
+)
+check('export resolves a current-page action', registry.resolveConsoleCommand(command(['export'])).kind === 'export')
+check(
+  'export rejects segments, query and hash suffixes',
+  registry.resolveConsoleCommand(command(['export', 'pdf'])).kind === 'silent'
+    && registry.resolveConsoleCommand(command(['export'], { query: 'format=pdf' })).kind === 'silent'
+    && registry.resolveConsoleCommand(command(['export'], { hash: '#top' })).kind === 'silent',
+)
+check(
+  'command reference lists the list routes and the article export',
+  ['/posts', '/notes', '/export'].every((input) => registry.listConsoleCommands().some((item) => item.input === input)),
+)
 const removedCommands = [
   'agent',
   'list',
@@ -70,9 +102,8 @@ const removedCommands = [
   'docker',
   'workspace',
   'model',
-  // Still routable pages, but only from the CONTENT stat cards.
+  // The archive page answers to /posts instead, so its own path is not a command.
   'archive',
-  'notes',
   'config',
   'doctor',
 ]

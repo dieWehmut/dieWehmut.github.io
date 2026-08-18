@@ -7,12 +7,15 @@ const FIXED_SEGMENTS = new Set([
   'classic',
   'color',
   'comment',
+  'export',
   'friends',
   'help',
   'home',
   'infra',
   'language',
   'mode',
+  'notes',
+  'posts',
   'project',
   'search',
   'tags',
@@ -30,10 +33,9 @@ const REMOVED_COMMANDS = new Set([
   'docker',
   'workspace',
   'model',
-  // Retired from the command line. /archive and /notes remain routable pages,
-  // reached from the CONTENT stat cards rather than by typing.
+  // Retired from the command line: the archive page answers to /posts instead,
+  // so its own path is not something the console accepts.
   'archive',
-  'notes',
   'config',
   'doctor',
 ])

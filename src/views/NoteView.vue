@@ -11,7 +11,6 @@
             :reading-minutes="note.readingMinutes"
             :tags="note.tags"
           />
-          <ArticleExportButton v-if="isConsole && note.body" variant="console" />
           <DocLoading v-if="isLoading">Loading note...</DocLoading>
           <div v-if="loadError" class="note-view__loading" role="alert">{{ loadError }}</div>
           <MarkdownContent
@@ -35,7 +34,6 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import ArticleMeta from '../components/content/ArticleMeta.vue'
-import ArticleExportButton from '../components/content/ArticleExportButton.vue'
 import DocLoading from '../components/content/DocLoading.vue'
 import MarkdownContent from '../components/content/MarkdownContent.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'

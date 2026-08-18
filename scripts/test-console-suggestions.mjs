@@ -43,7 +43,12 @@ check(
 )
 check(
   'dynamic entries stay hidden while the parent is still being typed',
-  inputs('/note', [{ input: '/note/alpha', description: 'Alpha' }]).join() === '/note',
+  !inputs('/note', [{ input: '/note/alpha', description: 'Alpha' }]).includes('/note/alpha'),
+)
+check(
+  'a picker and its index page both answer to the shared prefix',
+  ['/note', '/notes'].every((input) => inputs('/note').includes(input))
+    && ['/post', '/posts'].every((input) => inputs('/post').includes(input)),
 )
 check('unmatched prefixes offer nothing', inputs('/zzz').length === 0)
 check('matching is case-insensitive', inputs('/MODE/').includes('/mode/classic'))

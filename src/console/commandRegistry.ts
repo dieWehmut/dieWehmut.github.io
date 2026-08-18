@@ -30,15 +30,19 @@ export interface ConsoleCommandAvailability {
 export type ConsoleResolution =
   | { kind: 'route'; path: string; routeName: string }
   | { kind: 'comment' }
+  | { kind: 'export' }
   | { kind: 'panel'; panel: ConsolePanel; value?: string }
   | { kind: 'mode'; mode: ConsoleMode }
   | { kind: 'silent' }
 
 /**
- * Only routes that the command line can reach. `/archive` and `/notes` are
- * deliberately absent: they stay reachable through the CONTENT stat cards.
+ * Only routes that the command line can reach. `/posts` is the command name for
+ * the archive route: the console speaks in posts and notes, so the pair reads as
+ * one family instead of borrowing the page's own title.
  */
 const ROUTES: Record<string, { path: string; routeName: string }> = {
+  posts: { path: '/archive', routeName: 'archive' },
+  notes: { path: '/notes', routeName: 'notes' },
   capture: { path: '/capture', routeName: 'capture' },
   infra: { path: '/infra', routeName: 'infra' },
   project: { path: '/project', routeName: 'project' },
@@ -98,6 +102,11 @@ export function resolveConsoleCommand(
       ? { kind: 'comment' }
       : { kind: 'silent' }
   }
+  if (key === 'export') {
+    return second === undefined && !rest.length && !command.query && !command.hash
+      ? { kind: 'export' }
+      : { kind: 'silent' }
+  }
 
   if (key === 'mode') {
     if (!secondKey && !rest.length) return { kind: 'panel', panel: 'mode' }
@@ -150,7 +159,10 @@ export function resolveConsoleCommand(
 export function listConsoleCommands(availability: ConsoleCommandAvailability = {}) {
   const commands = [
     { input: '/home', description: 'Browse the Home timeline' },
+    { input: '/posts', description: 'Browse the post archive' },
+    { input: '/notes', description: 'Browse the note index' },
     { input: '/comment', description: 'Jump to the comment box for this page' },
+    { input: '/export', description: 'Export this article as PDF' },
     { input: '/post', description: 'Select a post' },
     { input: '/note', description: 'Select a note' },
     { input: '/capture', description: 'Browse captured assets' },

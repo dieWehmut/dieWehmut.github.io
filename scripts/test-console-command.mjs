@@ -62,6 +62,15 @@ check('non slash input stays silent', parser.parseConsoleInput('archive')?.kind 
 check('blank input stays silent', parser.parseConsoleInput('   ')?.kind === 'silent')
 check('malformed percent encoding stays silent', parser.parseConsoleInput('/note/bad%2')?.kind === 'silent')
 
+const listCommands = ['/POSTS', '/NOTES', '/EXPORT']
+for (const input of listCommands) {
+  const parsed = parser.parseConsoleInput(input)
+  check(
+    `${input} normalizes to its canonical lower-case command`,
+    parsed?.kind === 'command' && parsed.canonicalInput === input.toLowerCase(),
+  )
+}
+
 const removedCommands = [
   '/agent',
   '/list',
@@ -70,9 +79,8 @@ const removedCommands = [
   '/docker',
   '/workspace',
   '/model',
-  // Retired: /archive and /notes stay reachable from the CONTENT stat cards.
+  // Retired: the archive page is typed as /posts, never as its own path.
   '/archive',
-  '/notes',
   '/config',
   '/doctor',
 ]
