@@ -173,21 +173,29 @@ html.console-mode-active .sakura-burst-overlay {
   display: none;
 }
 
+/*
+ * Section chips match the month row: sized to their label instead of inheriting
+ * the sidebar's full-width block, and capped at a quarter of the row so four
+ * boxes stay reachable no matter how long a heading runs.
+ */
 .desktop-layout--console .scroll-spy__nav button {
   flex: 0 0 auto !important;
-  min-height: 28px !important;
-  padding: 3px 8px !important;
-  border: 1px solid transparent !important;
+  width: auto !important;
+  max-width: 25% !important;
+  min-height: 38px !important;
+  padding: 5px 12px !important;
+  border: 0 !important;
   color: var(--console-muted) !important;
   background: transparent !important;
   box-shadow: none !important;
   transform: none !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
 }
 
 .desktop-layout--console .scroll-spy__nav button:hover,
 .desktop-layout--console .scroll-spy__nav button:focus-visible,
 .desktop-layout--console .scroll-spy__nav button.is-active {
-  border-color: var(--console-border-strong) !important;
   color: var(--console-accent) !important;
   background: var(--console-selection) !important;
   outline: none !important;

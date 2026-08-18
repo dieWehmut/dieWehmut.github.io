@@ -102,7 +102,9 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
   align-self: stretch;
   overflow: clip;
   border-right: 1px solid var(--console-border-strong);
-  background: var(--console-canvas, var(--console-surface));
+  /* The plate reads as part of the banner, not as a panel laid on it, so it
+     takes the page background in both themes rather than the raised surface. */
+  background: var(--console-bg);
 }
 
 .console-overview__avatar {

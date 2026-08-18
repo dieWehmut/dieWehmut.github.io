@@ -27,6 +27,7 @@ const consoleOverview = readOptional('src/components/console/ConsoleOverviewHead
 const consolePanel = read('src/components/console/ConsolePanelView.vue')
 const commandRegistry = read('src/console/commandRegistry.ts')
 const consoleRowAccent = read('src/composables/useConsoleRowAccent.ts')
+const monthNavigator = read('src/components/console/ConsoleMonthNavigator.vue')
 const routeBreadcrumb = read('src/components/system/RouteBreadcrumb.vue')
 const postView = read('src/views/PostView.vue')
 const noteView = read('src/views/NoteView.vue')
@@ -326,11 +327,23 @@ check(
   consolePanel.includes('findIndex((option) => option.current)'),
 )
 check(
-  'light themes keep the avatar plate and the command input on the page background',
+  'light themes keep the command input on the page background',
   /--console-canvas: var\(--console-surface\)/.test(desktopLayout)
-    && /html\[data-theme='light'\] \.desktop-layout--console \{[\s\S]*?--console-canvas: var\(--console-bg\)/.test(desktopLayout)
-    && /\.console-shell__prompt \{[\s\S]*?background: var\(--console-canvas/.test(consoleShell)
-    && /\.console-overview__portrait \{[\s\S]*?background: var\(--console-canvas/.test(consoleOverview),
+    && /html\[data-theme='light'\] \.desktop-layout--console \{[^}]*--console-canvas: var\(--console-bg\)/.test(desktopLayout)
+    && /\.console-shell__prompt \{[^}]*background: var\(--console-canvas/.test(consoleShell),
+)
+check(
+  'the avatar plate takes the banner background in both themes',
+  /\.console-overview__portrait \{[^}]*background: var\(--console-bg\)/.test(consoleOverview)
+    && !consoleOverview.includes('--console-canvas'),
+)
+check(
+  'console section chips are sized like the month chips, so several fit the row',
+  /\.desktop-layout--console \.scroll-spy__nav button \{[^}]*width: auto !important;[^}]*max-width: 25% !important;/
+    .test(consoleStyles)
+    && /\.desktop-layout--console \.scroll-spy__nav button \{[^}]*white-space: nowrap !important;/.test(consoleStyles)
+    && /\.desktop-layout--console \.scroll-spy__nav button \{[^}]*text-overflow: ellipsis !important;/.test(consoleStyles)
+    && /\.console-month-navigator__header button \{[^}]*white-space: nowrap;/.test(monthNavigator),
 )
 check(
   'every console panel is a list of options, so the detail table is gone',

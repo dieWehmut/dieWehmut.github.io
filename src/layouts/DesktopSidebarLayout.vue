@@ -199,9 +199,9 @@ watch(isConsole, (enabled) => {
   --console-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --console-bg: var(--site-bg);
   --console-surface: color-mix(in srgb, var(--site-bg) 90%, var(--site-text));
-  /* Surfaces that should read as the page's own paper rather than a raised
-     panel: the avatar plate and the command input. Light themes keep them
-     flush with the background, dark themes still need the lift to separate. */
+  /* The command input should read as the page's own paper rather than a raised
+     panel. Light themes keep it flush with the background; dark themes still
+     need the lift, since no rule is left to outline the field. */
   --console-canvas: var(--console-surface);
   --console-text: var(--site-text);
   --console-muted: color-mix(in srgb, var(--site-text) 70%, transparent);
