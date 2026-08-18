@@ -62,6 +62,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify Infra status probing
+        run: pnpm test:infra-status
+
       # 调试时可开启，确认变量是否注入成功
       # - name: Debug env
       #   run: |

@@ -62,13 +62,6 @@ export const siteConfig: SiteConfig = {
     backendToken: codeRunnerApiToken,
   },
 
-  // --- Uptime Kuma Status Page (optional) ---
-  kuma: {
-    baseUrl: 'https://kuma.diesw.tech',
-    slug: 'nexus',
-    refreshMs: 60_000,
-  },
-
   // --- Social Links ---
   links: [
     { label: 'GitHub', url: 'https://github.com/dieWehmut' },

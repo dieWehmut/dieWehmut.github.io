@@ -121,11 +121,6 @@ export interface SiteConfig {
     backendApiUrl: string
     backendToken: string
   }
-  kuma?: {
-    baseUrl: string
-    slug: string
-    refreshMs?: number
-  }
   links: SiteLink[]
   console?: ConsoleSiteConfig
 }
