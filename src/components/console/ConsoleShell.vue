@@ -93,6 +93,15 @@
       />
     </div>
 
+    <!-- Last in the dock, so the prompt and its menu stay adjacent and this reads
+         as the dock's footer. With nothing transient open — the resting state —
+         that puts it directly under the input. -->
+    <p class="console-shell__status">
+      <template v-for="(segment, index) in statusSegments" :key="segment.key">
+        <span v-if="index" aria-hidden="true">&middot;</span>
+        <span class="console-shell__status-value" :data-console-status="segment.key">{{ segment.value }}</span>
+      </template>
+    </p>
   </section>
 </template>
 
@@ -102,6 +111,7 @@ import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import { useConsoleBlockCaret } from '../../composables/useConsoleBlockCaret'
 import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
+import { useConsoleStatusLine } from '../../composables/useConsoleStatusLine'
 import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import {
@@ -139,6 +149,7 @@ const {
   returnToPreviousMenu,
 } = useConsoleSession()
 const { rowAccent } = useConsoleRowAccent()
+const { segments: statusSegments } = useConsoleStatusLine()
 const { caretActive, caretOffset, caretWidth, caretGlyph } = useConsoleBlockCaret(inputRef, commandInput)
 
 const hasPanelListbox = computed(() => Boolean(
@@ -316,6 +327,26 @@ onMounted(() => {
 
 .console-shell__transient {
   border-bottom: 1px solid var(--console-border);
+}
+
+/* Reads as a caption of the input rather than a row of its own: values only,
+   middle dots between them, and the whole line hung off the same column the
+   prompt's `/` starts from. The dots stay a step dimmer than the values so the
+   eye groups the readings instead of the punctuation. */
+.console-shell__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 12px 0 var(--console-prompt-indent);
+  color: var(--console-dim);
+  font-size: .78rem;
+}
+
+.console-shell__status-value {
+  color: var(--console-muted);
 }
 
 .console-shell__feedback {

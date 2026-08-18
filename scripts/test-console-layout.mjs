@@ -38,6 +38,7 @@ const noteView = read('src/views/NoteView.vue')
 const homeView = read('src/views/HomeView.vue')
 const displayPreference = read('src/composables/useDisplayModePreference.ts')
 const scrollSpy = read('src/components/system/ScrollSpySidebar.vue')
+const consoleStatusLine = read('src/composables/useConsoleStatusLine.ts')
 const consoleStyles = read('src/styles/console.scss')
 const router = read('src/router.ts')
 const desktopTemplate = desktopLayout.split('<script setup')[0]
@@ -132,6 +133,29 @@ check(
 check(
   'router hands the scroller to Console mode',
   /scrollBehavior\([\s\S]*?useDisplayModePreference\(\)\.isConsole\.value\) return false/.test(router),
+)
+check(
+  // One array, read straight off the live preferences, so a fork adds a reading by
+  // appending an entry rather than by touching the template.
+  'the status line reads back the state every preference command owns',
+  ['path', 'mode', 'theme', 'color', 'language', 'background']
+    .every((key) => new RegExp(`key: '${key}'`).test(consoleStatusLine))
+  && consoleStatusLine.includes('route.path')
+  && consoleStatusLine.includes('activeMode.value')
+  && consoleStatusLine.includes('dynamicBackgroundEnabled.value')
+  && consoleShell.includes('const { segments: statusSegments } = useConsoleStatusLine()')
+  && /v-for="\(segment, index\) in statusSegments"/.test(consoleShellTemplate),
+)
+check(
+  // Last in the dock: the prompt keeps its menu directly beneath it, and with
+  // nothing transient open this lands right under the input, as pictured.
+  'the status line sits below the prompt without splitting it from its suggestions',
+  consoleShellTemplate.indexOf('console-shell__status')
+    > consoleShellTemplate.indexOf('console-shell__transient')
+  && /\.console-shell__status \{[^}]*padding: 0 12px 0 var\(--console-prompt-indent\)/.test(consoleShell)
+  // Values a step brighter than the dots between them.
+  && /\.console-shell__status \{[^}]*color: var\(--console-dim\)/.test(consoleShell)
+  && /\.console-shell__status-value \{[^}]*color: var\(--console-muted\)/.test(consoleShell),
 )
 check('mobile layout does not mount the console shell', !mobileLayout.includes('ConsoleShell'))
 check('mobile layout does not mount the Console overview', !mobileLayout.includes('ConsoleOverviewHeader'))

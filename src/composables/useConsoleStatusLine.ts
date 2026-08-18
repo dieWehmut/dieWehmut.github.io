@@ -1,0 +1,44 @@
+import { computed, type ComputedRef } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useBackgroundPreference } from './useBackgroundPreference'
+import { useColorSchemePreference } from './useColorSchemePreference'
+import { useDisplayModePreference } from './useDisplayModePreference'
+import { useThemePreference } from './useThemePreference'
+
+export interface ConsoleStatusSegment {
+  /** Stable identity for the rendered span, and the hook a test or theme can aim at. */
+  key: string
+  value: string
+}
+
+/**
+ * The line under the prompt reads back the state a command would change: where
+ * the reader currently is, plus every preference `/mode`, `/theme`, `/color`,
+ * `/language` and `/background` own.
+ *
+ * It is deliberately one flat array rather than a fixed row of spans — a fork
+ * adds a reading by appending an entry here, and the template keeps rendering
+ * whatever it is handed, separators and all.
+ */
+export function useConsoleStatusLine(): { segments: ComputedRef<ConsoleStatusSegment[]> } {
+  const route = useRoute()
+  const { activeMode } = useDisplayModePreference()
+  const { theme } = useThemePreference()
+  const { colorScheme } = useColorSchemePreference()
+  const { dynamicBackgroundEnabled } = useBackgroundPreference()
+  const { locale } = useI18n()
+
+  const segments = computed<ConsoleStatusSegment[]>(() => [
+    { key: 'path', value: route.path },
+    { key: 'mode', value: activeMode.value },
+    { key: 'theme', value: theme.value },
+    { key: 'color', value: colorScheme.value },
+    { key: 'language', value: locale.value },
+    // Every other reading is a name that says what it is on its own. This one is
+    // a switch, so it carries the name of the switch it reports.
+    { key: 'background', value: `background ${dynamicBackgroundEnabled.value ? 'on' : 'off'}` },
+  ])
+
+  return { segments }
+}
