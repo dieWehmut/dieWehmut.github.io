@@ -106,8 +106,12 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
 
 .console-overview__avatar {
   display: block;
-  width: 100%;
-  height: 100%;
+  /*
+   * The plate is sized by the banner row; only the artwork inside it is inset.
+   * Shrinking the icon therefore cannot move the column edges.
+   */
+  width: 80%;
+  height: 80%;
   max-height: none;
   object-fit: contain;
   object-position: left top;

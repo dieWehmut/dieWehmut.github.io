@@ -38,6 +38,7 @@ const consoleLayoutBlock = desktopLayout.match(/\.desktop-layout--console \{[\s\
 const consoleContentBlock = desktopLayout.match(/\.desktop-layout--console \.desktop-layout__content \{[\s\S]*?\n\}/)?.[0] || ''
 const consoleResultBlock = desktopLayout.match(/\.desktop-layout--console \.desktop-layout__result \{[\s\S]*?\n\}/)?.[0] || ''
 const consoleShellTemplate = consoleShell.split('<script setup')[0]
+const consoleOverviewAvatarBlock = consoleOverview.match(/\.console-overview__avatar \{[^}]*\}/)?.[0] || ''
 const footerTags = componentTags(desktopTemplate, 'Footer')
 const desktopCommentTags = componentTags(desktopTemplate, 'GiscusComments')
 const homeStatsTags = [
@@ -257,8 +258,14 @@ check(
 check(
   'Console overview columns share a fixed one-third-height row',
   /aspect-ratio:\s*3\s*\/\s*1/.test(consoleOverview)
-    && /\.console-overview__avatar[\s\S]*?height:\s*100%/.test(consoleOverview)
+    && /\.console-overview__portrait \{[^}]*height:\s*100%/.test(consoleOverview)
     && consoleOverview.includes('overflow: clip'),
+)
+check(
+  'the portrait plate keeps its size while the icon inside is inset',
+  /width:\s*80%/.test(consoleOverviewAvatarBlock)
+    && /height:\s*80%/.test(consoleOverviewAvatarBlock)
+    && !/height:\s*100%/.test(consoleOverviewAvatarBlock),
 )
 check(
   'Console overview renders shared statistics and footer metadata',
