@@ -22,6 +22,11 @@ const checks = [
   ['the coarse form resamples with nearest-neighbour sampling', /--pixelated\s*\{[\s\S]*?image-rendering:\s*pixelated/.test(header)
     && /--pixelated\s*\{[\s\S]*?transform:\s*scale\(var\(--console-icon-pixel\)\)/.test(header)],
   ['the portrait plate is a button that cycles the form', /<button[\s\S]{0,200}class="console-overview__portrait"[\s\S]*?@click="cycleIconForm\(\)"/.test(header)],
+  // The plate is a third of the banner. Tinting it under a passing cursor was a
+  // third of the page changing colour to report a pointer position. Keyboard focus
+  // still needs a mark, and console mode draws no rules, so that one keeps the fill.
+  ['the plate marks keyboard focus but says nothing on hover', /\.console-overview__portrait:focus-visible\s*\{[^}]*background:\s*var\(--console-control-strong\)/.test(header)
+    && !/\.console-overview__portrait:hover/.test(header)],
   // The click ring and the /icon picker read the same ordered list, so the two
   // can never disagree about what comes next.
   ['the cycle order is declared once, in order', /grayscale[\s\S]*?whiten[\s\S]*?original[\s\S]*?pixelated/.test(iconPreference)],

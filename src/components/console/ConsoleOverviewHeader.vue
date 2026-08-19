@@ -125,11 +125,14 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
   cursor: pointer;
 }
 
-/* Console mode draws no rules, so the plate marks hover and focus the way every
-   other console control does — by shifting its fill rather than ringing itself.
-   Only the sliver of plate around the inset artwork carries the shift, which is
-   enough to place the cursor without putting a line back on the page. */
-.console-overview__portrait:hover,
+/* The plate takes up a third of the banner, so shifting its fill was a third of
+   the page changing colour under a passing cursor — far more announcement than a
+   pointer needs. Hovering now says nothing; the artwork answers the click itself,
+   which is the whole affordance anyway.
+
+   Keyboard focus still has to be visible, and console mode draws no rules, so it
+   keeps the fill shift every other console control uses. Only the sliver of plate
+   around the inset artwork carries it. */
 .console-overview__portrait:focus-visible {
   background: var(--console-control-strong);
   outline: none;
