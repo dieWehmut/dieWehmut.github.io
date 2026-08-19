@@ -106,6 +106,7 @@ function mirrorPublicCaptureAssetsToAssetsRepo() {
   copyDirContents(path.join(publicCaptureDir, 'standalone'), path.join(assetsDir, 'standalone'))
   copyDirContents(path.join(publicCaptureDir, 'local'), path.join(assetsDir, 'local'))
   copyDirContents(path.join(publicCaptureDir, 'infra'), path.join(assetsDir, 'infra'))
+  copyDirContents(path.join(publicCaptureDir, 'site'), path.join(assetsDir, 'site'))
 }
 
 function fail(message) {

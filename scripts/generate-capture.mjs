@@ -10,8 +10,13 @@ const publicCaptureDir = path.join(rootDir, 'public', 'capture-assets')
 const publicDocsDir = path.join(publicCaptureDir, 'docs')
 const publicStandaloneDir = path.join(publicCaptureDir, 'standalone')
 const publicLocalDir = path.join(publicCaptureDir, 'local')
-const publicInfraDir = path.join(publicCaptureDir, 'infra')
 const captureUrlPrefix = '/capture-assets/'
+// Folders in the private assets repository that ship verbatim under
+// /capture-assets/. Images cannot be tracked here (sync-assets-repo.mjs refuses
+// to run if any are), so anything the site names by a literal runtime path is
+// copied in at build time instead of being resolved by the bundler — which is
+// what makes it survive a CI checkout, where none of the local images exist.
+const publicAssetFolders = ['infra', 'site']
 const preservedAssetPrefixes = [`${captureUrlPrefix}standalone/`, `${captureUrlPrefix}local/`]
 
 function toPosix(value) {
@@ -237,22 +242,20 @@ function copyStandaloneAsset(assetsDir, imageUrl) {
   fs.copyFileSync(sourcePath, destinationPath)
 }
 
-function syncInfraAssets(assetsDir) {
-  const sourceDir = path.join(assetsDir, 'infra')
-  fs.rmSync(publicInfraDir, { recursive: true, force: true })
-  ensureDir(publicInfraDir)
+function syncPublicAssetFolder(assetsDir, folder) {
+  const sourceDir = path.join(assetsDir, folder)
+  const targetDir = path.join(publicCaptureDir, folder)
+  fs.rmSync(targetDir, { recursive: true, force: true })
+  ensureDir(targetDir)
 
   if (!fs.existsSync(sourceDir)) {
-    console.warn(`Infra assets directory not found, skipping optional infra capture assets: ${sourceDir}`)
+    console.warn(`Assets folder not found, skipping optional ${folder} assets: ${sourceDir}`)
     return
   }
 
   for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
     if (!entry.isFile()) continue
-    const sourcePath = path.join(sourceDir, entry.name)
-    const destinationPath = path.join(publicInfraDir, entry.name)
-    ensureDir(path.dirname(destinationPath))
-    fs.copyFileSync(sourcePath, destinationPath)
+    fs.copyFileSync(path.join(sourceDir, entry.name), path.join(targetDir, entry.name))
   }
 }
 
@@ -279,8 +282,7 @@ async function main() {
   ensureDir(publicDocsDir)
   ensureDir(publicStandaloneDir)
   ensureDir(publicLocalDir)
-  ensureDir(publicInfraDir)
-  syncInfraAssets(assetsDir)
+  for (const folder of publicAssetFolders) syncPublicAssetFolder(assetsDir, folder)
 
   const existingCaptureAssets = loadExistingCaptureAssets()
   const byImage = new Map()

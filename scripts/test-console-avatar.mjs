@@ -7,10 +7,20 @@ const header = read('src/components/console/ConsoleOverviewHeader.vue')
 const config = read('src/data/site/config.ts')
 const types = read('src/types/content.ts')
 const iconPreference = read('src/composables/useConsoleIconPreference.ts')
+const captureGenerator = read('scripts/generate-capture.mjs')
 
 const checks = [
-  ['custom console icon asset exists', fs.existsSync(path.join(root, 'src/assets/icon.png'))],
-  ['site config supports a custom console icon', types.includes('ConsoleIconForm') && config.includes("icon: consoleIcon")],
+  // The icon used to be `new URL('../../assets/icon.png', import.meta.url)`, which
+  // only ever resolved on a machine that had the file: this repository tracks no
+  // images at all, so a CI checkout left the expression unrewritten and the
+  // deployed page asked for an asset the build had never emitted. Naming a runtime
+  // /capture-assets/ path instead keeps the bundler out of it, and the build-time
+  // copy is what puts the file there — hence both halves are asserted together.
+  ['the console icon is a runtime asset path, not a bundled import', /consoleIcon = '\/capture-assets\/site\/icon\.png'/.test(config)
+    && !/new URL\([^)]*\.png/.test(config)],
+  ['the build copies that folder out of the private assets repository', /publicAssetFolders = \[[^\]]*'site'/.test(captureGenerator)
+    && /for \(const folder of publicAssetFolders\) syncPublicAssetFolder\(/.test(captureGenerator)],
+  ['site config supports a custom console icon', types.includes('ConsoleIconForm') && config.includes('icon: consoleIcon')],
   ['site config seeds a starting icon form', /iconForm:\s*'(grayscale|whiten|original|pixelated)'/.test(config)],
   ['header falls back to GitHub avatar when no icon is configured', header.includes('config.console?.icon') && header.includes('getGitHubAvatarUrl(config.githubUser)')],
   ['all four icon forms are drawn', ['grayscale', 'whiten', 'original', 'pixelated'].every((form) => header.includes(`avatar--${form}`))],

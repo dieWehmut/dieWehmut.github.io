@@ -1,10 +1,11 @@
 import type { SiteConfig } from '../../types/content'
 
-// 用 `new URL(..., import.meta.url)` 而不是 `import icon from '...png'`：
-// vite.config.ts 也引这个模块拿 githubUser/owner，esbuild 预打包配置时没有
-// png loader，静态 import 会让整个 build 起不来。这种写法 Vite 构建时照样会
-// 重写成带 hash 的资源 URL，但对 esbuild 只是个普通运行时表达式。
-const consoleIcon = new URL('../../assets/icon.png', import.meta.url).href
+// 图标走 `/capture-assets/` 这条构建期公共资源通道（和 InfraView 一样），不让
+// 打包器参与解析：本仓库不追踪任何图片（scripts/sync-assets-repo.mjs 有硬性守卫），
+// 所以 `src/assets/icon.png` 只在本地存在。CI 检出里没有它时，Vite 会把
+// `new URL(..., import.meta.url)` 原样留下，线上就只能 404。真正的文件由
+// scripts/generate-capture.mjs 从私有 assets 仓库拷进 public/，本地与 CI 同路。
+const consoleIcon = '/capture-assets/site/icon.png'
 
 type CodeRunnerEnv = {
   VITE_CODE_RUNNER_API_URL?: string
