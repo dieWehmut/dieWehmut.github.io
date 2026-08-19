@@ -82,6 +82,8 @@ let spyEl = null
  * selection back to the scroll position.
  */
 let pinnedId = ''
+/** Which section the console strip is currently aimed at — see `followActive`. */
+let centredId = ''
 
 function registerButton(id, el) {
   if (el) buttonEls.set(id, el)
@@ -101,6 +103,7 @@ function clearHeadings() {
   items.value = []
   activeId.value = ''
   pinnedId = ''
+  centredId = ''
   setReadingPath(null)
 }
 
@@ -314,12 +317,21 @@ function followActive() {
   if (effectiveMode.value === 'console') {
     const button = buttonEls.get(activeId.value)
     const nav = navRef.value
-    if (button && nav) {
-      const navRect = nav.getBoundingClientRect()
-      const buttonRect = button.getBoundingClientRect()
-      if (buttonRect.left < navRect.left) nav.scrollLeft -= navRect.left - buttonRect.left + 12
-      else if (buttonRect.right > navRect.right) nav.scrollLeft += buttonRect.right - navRect.right + 12
-    }
+    if (!button || !nav) return
+    // Re-aimed only when the section changes, so a reader who drags the strip by
+    // hand keeps their view of it for as long as they stay in that section.
+    if (centredId === activeId.value) return
+    centredId = activeId.value
+    // The same rule the prompt's own option list follows (`consoleOptionWindowStart`),
+    // written in pixels because these boxes are as wide as their titles: hold the
+    // selection in the middle while there is strip on both sides of it, and let the
+    // strip park against whichever end it reaches — assigning past either limit is
+    // clamped for us. Moving the strip only far enough to expose the box instead
+    // leaves it against an edge, which on a long article shows nothing at all of the
+    // direction the reader is travelling in.
+    const navRect = nav.getBoundingClientRect()
+    const buttonRect = button.getBoundingClientRect()
+    nav.scrollLeft += (buttonRect.left + buttonRect.width / 2) - (navRect.left + navRect.width / 2)
     return
   }
   if (props.mode !== 'desktop') return
@@ -395,9 +407,13 @@ const displayProgress = computed(() => {
 })
 
 watch(effectiveMode, () => {
+  // A different mode is a different row, so whatever the strip was aimed at no
+  // longer describes where it is pointing.
+  centredId = ''
   void nextTick(() => {
     scheduleCollectHeadings()
     updateNow()
+    followActive()
   })
 })
 
