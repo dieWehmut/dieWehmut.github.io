@@ -15,10 +15,11 @@ import { useColorSchemePreference } from './useColorSchemePreference'
 import { useDisplayModePreference } from './useDisplayModePreference'
 import { useThemePreference } from './useThemePreference'
 import { useBackgroundPreference } from './useBackgroundPreference'
+import { useConsoleIconPreference } from './useConsoleIconPreference'
 import { useConsoleCommentSession } from './useConsoleCommentSession'
 import { hasExportableArticle, useArticlePdfExport } from './useArticlePdfExport'
 import { requestConsoleOutputReveal } from './useConsoleOutputReveal'
-import type { SiteColorScheme } from '../types/content'
+import type { ConsoleIconForm, SiteColorScheme } from '../types/content'
 import { getNotes, getPosts, getTagGroups } from '../data'
 import { siteConfig } from '../data/site/config'
 import { consoleEscapeTarget, moveConsoleSelection } from '../console/selection'
@@ -55,6 +56,7 @@ export function useConsoleSession() {
   const theme = useThemePreference()
   const color = useColorSchemePreference()
   const background = useBackgroundPreference()
+  const icon = useConsoleIconPreference()
   const comments = useConsoleCommentSession()
   const { exportArticlePdf } = useArticlePdfExport()
   const commandAvailability = {
@@ -207,6 +209,9 @@ export function useConsoleSession() {
     } else if (panel === 'background' && (value === 'on' || value === 'off')) {
       background.setDynamicBackgroundEnabled(value === 'on')
       feedback.value = `Dynamic background ${value}.`
+    } else if (panel === 'icon' && icon.iconFormOptions.value.some((option) => option.id === value)) {
+      icon.setIconForm(value as ConsoleIconForm)
+      feedback.value = `Icon form set to ${value}.`
     } else if (panel === 'language' && ['zh', 'zh_tw', 'en', 'ja', 'de', 'la'].includes(value)) {
       locale.value = value
       try {

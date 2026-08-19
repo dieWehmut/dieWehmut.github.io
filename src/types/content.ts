@@ -93,11 +93,17 @@ export interface SiteLink {
   url: string
 }
 
-export type ConsoleDarkIconEffect = 'grayscale' | 'whiten' | 'original'
+/**
+ * How the console portrait is drawn. It used to apply in the dark theme only,
+ * which is why it was once named for it; now that a click cycles it, every form
+ * has to answer in either theme, so the name no longer mentions one.
+ */
+export type ConsoleIconForm = 'grayscale' | 'whiten' | 'original' | 'pixelated'
 
 export interface ConsoleSiteConfig {
   icon?: string
-  darkIconEffect?: ConsoleDarkIconEffect
+  /** The starting form. A reader's own choice is remembered over it. */
+  iconForm?: ConsoleIconForm
 }
 
 export interface SiteConfig {

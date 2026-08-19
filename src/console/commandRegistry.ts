@@ -8,6 +8,7 @@ export type ConsolePanel =
   | 'theme'
   | 'color'
   | 'background'
+  | 'icon'
   | 'language'
   | 'mode'
   | 'note-picker'
@@ -57,6 +58,9 @@ const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }>
   // 边界是硬约束：scripts/test-console-registry.mjs 以 data: URL 加载它，相对 import 无法解析。
   color: { panel: 'color', values: new Set(['green', 'purple', 'pink', 'white', 'black']) },
   background: { panel: 'background', values: new Set(['on', 'off']) },
+  // 与 src/composables/useConsoleIconPreference.ts 的 consoleIconFormOptions 手工同步，
+  // 原因同上：本模块不得有相对 import。
+  icon: { panel: 'icon', values: new Set(['grayscale', 'whiten', 'original', 'pixelated']) },
   language: { panel: 'language', values: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']) },
 }
 
@@ -191,6 +195,7 @@ export function listConsoleCommands(availability: ConsoleCommandAvailability = {
     { input: '/theme', description: 'Choose light or dark theme', group: 'appearance' },
     { input: '/color', description: 'Choose a color scheme', group: 'appearance' },
     { input: '/background', description: 'Configure the dynamic background', group: 'appearance' },
+    { input: '/icon', description: 'Choose how the console icon is drawn', group: 'appearance' },
     { input: '/language', description: 'Choose interface language', group: 'appearance' },
     { input: '/mode', description: 'Choose Console or standard layout', group: 'console' },
     { input: '/mode/classic', description: 'Return to the standard layout', group: 'console' },

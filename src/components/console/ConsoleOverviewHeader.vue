@@ -1,14 +1,20 @@
 <template>
   <header class="console-overview" aria-label="Nexus Console overview">
-    <div class="console-overview__portrait">
+    <button
+      class="console-overview__portrait"
+      type="button"
+      :aria-label="`Icon form: ${iconForm}. Activate to cycle.`"
+      :title="`icon form: ${iconForm}`"
+      @click="cycleIconForm()"
+    >
       <img
         class="console-overview__avatar"
-        :class="`console-overview__avatar--${darkIconEffect}`"
+        :class="`console-overview__avatar--${iconForm}`"
         :src="avatarUrl"
         :alt="`${config.owner} Console icon`"
         decoding="async"
       />
-    </div>
+    </button>
 
     <div class="console-overview__dashboard">
       <div class="console-overview__chrome">
@@ -63,6 +69,7 @@ import { useSiteOverview } from '../../composables/useSiteOverview'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 import { useThemePreference } from '../../composables/useThemePreference'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
+import { useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
 import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 
 const {
@@ -76,11 +83,9 @@ const {
 const { setDisplayMode } = useDisplayModePreference()
 const { theme } = useThemePreference()
 const { colorScheme } = useColorSchemePreference()
+const { iconForm, cycleIconForm } = useConsoleIconPreference()
 const configuredIcon = String(config.console?.icon || '').trim()
 const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
-const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.console?.darkIconEffect || '')
-  ? config.console?.darkIconEffect
-  : 'grayscale'
 </script>
 
 <style scoped>
@@ -111,41 +116,81 @@ const darkIconEffect = ['grayscale', 'whiten', 'original'].includes(config.conso
   min-height: 0;
   align-self: stretch;
   overflow: clip;
+  padding: 0;
+  border: 0;
   border-right: 1px solid var(--console-border-strong);
   /* The plate reads as part of the banner, not as a panel laid on it, so it
      takes the page background in both themes rather than the raised surface. */
   background: var(--console-bg);
+  /* It is a button so the form can be cycled by clicking the artwork itself,
+     which is the whole affordance — the plate must still look like a plate. */
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Console mode draws no rules, so the plate marks hover and focus the way every
+   other console control does — by shifting its fill rather than ringing itself.
+   Only the sliver of plate around the inset artwork carries the shift, which is
+   enough to place the cursor without putting a line back on the page. */
+.console-overview__portrait:hover,
+.console-overview__portrait:focus-visible {
+  background: var(--console-control-strong);
+  outline: none;
 }
 
 .console-overview__avatar {
+  /* The inset of the artwork inside its plate, and the pixel size the coarse form
+     resamples to. Two numbers, so a fork retunes both from here. */
+  --console-icon-inset: 94%;
+  --console-icon-pixel: 14;
   display: block;
   /*
    * The plate is sized by the banner row; only the artwork inside it is inset.
    * Resizing the icon therefore cannot move the column edges. Centring the box
    * splits the remaining sliver evenly instead of pooling it on two sides.
    */
-  width: 94%;
-  height: 94%;
+  width: var(--console-icon-inset);
+  height: var(--console-icon-inset);
   max-height: none;
   object-fit: contain;
   filter: none;
   image-rendering: auto;
 }
 
-:global(html[data-theme="light"]) .console-overview__avatar {
-  filter: none;
-}
-
-:global(html[data-theme="dark"]) .console-overview__avatar--grayscale {
+/*
+ * The four forms `/icon` and the plate itself cycle. They answer in either theme,
+ * so none of them may depend on one — which the silhouette does, and resolves by
+ * inverting per theme rather than by switching itself off.
+ */
+.console-overview__avatar--grayscale {
   filter: grayscale(1);
 }
 
-:global(html[data-theme="dark"]) .console-overview__avatar--whiten {
+.console-overview__avatar--original {
+  filter: none;
+}
+
+/* Flat ink, drawn in whichever direction the page background is not. */
+.console-overview__avatar--whiten {
   filter: brightness(0) invert(1);
 }
 
-:global(html[data-theme="dark"]) .console-overview__avatar--original {
-  filter: none;
+:global(html[data-theme="light"]) .console-overview__avatar--whiten {
+  filter: brightness(0);
+}
+
+/*
+ * Pixelation has no CSS primitive. The artwork is laid out at a fraction of its
+ * footprint so the browser downsamples it, then scaled back to full size with
+ * nearest-neighbour sampling — the divisor is therefore the pixel size. The plate
+ * centres the box, so scaling from the centre lands it back where it started.
+ */
+.console-overview__avatar--pixelated {
+  width: calc(var(--console-icon-inset) / var(--console-icon-pixel));
+  height: calc(var(--console-icon-inset) / var(--console-icon-pixel));
+  transform: scale(var(--console-icon-pixel));
+  image-rendering: pixelated;
 }
 
 .console-overview__dashboard {

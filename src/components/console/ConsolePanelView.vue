@@ -45,9 +45,10 @@ import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
+import { useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
 import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
 import { useThemePreference, type ThemeMode } from '../../composables/useThemePreference'
-import type { SiteColorScheme } from '../../types/content'
+import type { ConsoleIconForm, SiteColorScheme } from '../../types/content'
 
 const props = defineProps<{
   panel: ConsolePanel | null
@@ -64,6 +65,7 @@ const emit = defineEmits<{
 const { theme, setTheme } = useThemePreference()
 const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
+const { iconForm, iconFormOptions, setIconForm } = useConsoleIconPreference()
 const { rowAccent } = useConsoleRowAccent()
 
 const notes = getNotes()
@@ -92,6 +94,7 @@ const languages = [
 type LivePreview =
   | { kind: 'theme'; value: ThemeMode }
   | { kind: 'color'; value: SiteColorScheme }
+  | { kind: 'icon'; value: ConsoleIconForm }
 
 type PanelOption = {
   command: string
@@ -109,6 +112,7 @@ const heading = computed(() => {
     theme: 'Select theme',
     color: 'Select color scheme',
     background: 'Dynamic background',
+    icon: 'Select icon form',
     language: 'Select language',
     mode: 'Select display mode',
     'note-picker': 'Select a note',
@@ -125,6 +129,7 @@ const listLabel = computed(() => {
     theme: 'Theme options',
     color: 'Color scheme options',
     background: 'Background options',
+    icon: 'Icon form options',
     language: 'Language options',
     'note-picker': 'Notes',
     'post-picker': 'Posts',
@@ -161,6 +166,14 @@ const panelOptions = computed<PanelOption[]>(() => {
         code: option.value,
         label: option.label,
         current: backgroundEnabled.value === option.value,
+      }))
+    case 'icon':
+      return iconFormOptions.value.map((option) => ({
+        command: `/icon/${option.id}`,
+        code: option.id,
+        label: option.label,
+        current: iconForm.value === option.id,
+        livePreview: { kind: 'icon', value: option.id },
       }))
     case 'language':
       return languages.map((option) => ({
@@ -205,13 +218,14 @@ let previewBaseline: LivePreview | null = null
 
 function applyPreference(preference: LivePreview) {
   if (preference.kind === 'theme') setTheme(preference.value)
-  else setColorScheme(preference.value)
+  else if (preference.kind === 'color') setColorScheme(preference.value)
+  else setIconForm(preference.value)
 }
 
 function currentPreference(kind: LivePreview['kind']): LivePreview {
-  return kind === 'theme'
-    ? { kind: 'theme', value: theme.value }
-    : { kind: 'color', value: colorScheme.value }
+  if (kind === 'theme') return { kind: 'theme', value: theme.value }
+  if (kind === 'color') return { kind: 'color', value: colorScheme.value }
+  return { kind: 'icon', value: iconForm.value }
 }
 
 function previewIndex(index: number) {

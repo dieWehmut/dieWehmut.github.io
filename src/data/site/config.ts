@@ -42,7 +42,7 @@ export const siteConfig: SiteConfig = {
   colorScheme: 'purple',
   console: {
     icon: consoleIcon,
-    darkIconEffect: 'grayscale',
+    iconForm: 'grayscale',
   },
 
   // --- External Services ---

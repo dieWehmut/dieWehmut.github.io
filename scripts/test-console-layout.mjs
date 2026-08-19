@@ -340,11 +340,20 @@ check(
 check('Console overview component exists', Boolean(consoleOverview))
 check('Console avatar occupies the left third', /grid-template-columns:\s*minmax\(0,\s*1fr\)\s+minmax\(0,\s*2fr\)\s*;/.test(consoleOverview))
 check('Console overview is flush with both viewport edges', /width:\s*100%\s*;/.test(consoleOverview) && /margin:\s*0\s*;/.test(consoleOverview))
-check('Console overview avatar is grayscale only', /filter:\s*grayscale\(1\)\s*;/.test(consoleOverview))
+check('Console overview avatar draws grayscale through a form of its own', /--grayscale \{[^}]*filter:\s*grayscale\(1\)\s*;/.test(consoleOverview))
 check('Console overview avatar stays fully visible', /object-fit:\s*contain\s*;/.test(consoleOverview))
+// The four icon forms are `test-console-avatar.mjs`'s subject. All this file asks
+// is that the base rule stays neutral, so each form adds its own look rather than
+// fighting a default, and that the coarse form's sampling cannot leak onto it.
 check(
-  'Console overview avatar keeps normal bitmap rendering',
-  /image-rendering:\s*auto\s*;/.test(consoleOverview) && !/image-rendering:\s*(?:pixelated|crisp-edges)/.test(consoleOverview),
+  'the avatar rule itself stays neutral so every icon form opts in',
+  /filter:\s*none\s*;/.test(consoleOverviewAvatarBlock)
+    && /image-rendering:\s*auto\s*;/.test(consoleOverviewAvatarBlock),
+)
+check(
+  'coarse sampling is confined to the form that asks for it',
+  !/image-rendering:\s*(?:pixelated|crisp-edges)/.test(consoleOverviewAvatarBlock)
+    && /--pixelated \{[^}]*image-rendering:\s*pixelated/.test(consoleOverview),
 )
 check(
   'Console overview keeps only compact content and runtime sections',
@@ -379,13 +388,15 @@ check(
 )
 
 /**
- * How much of the plate the icon takes, as a whole percent, and 0 unless both
- * axes agree — an icon inset on one axis only would gain a lopsided margin.
+ * How much of the plate the icon takes, as a whole percent, read from the token
+ * both axes are sized from. 0 unless both axes actually resolve through it — an
+ * icon inset on one axis only would gain a lopsided margin.
  */
 function avatarInset() {
-  const width = consoleOverviewAvatarBlock.match(/width:\s*(\d+)%/)?.[1]
-  const height = consoleOverviewAvatarBlock.match(/height:\s*(\d+)%/)?.[1]
-  return width && width === height ? Number(width) : 0
+  const inset = consoleOverviewAvatarBlock.match(/--console-icon-inset:\s*(\d+)%/)?.[1]
+  const bothAxes = /width:\s*var\(--console-icon-inset\)/.test(consoleOverviewAvatarBlock)
+    && /height:\s*var\(--console-icon-inset\)/.test(consoleOverviewAvatarBlock)
+  return inset && bothAxes ? Number(inset) : 0
 }
 check(
   'Console overview renders shared statistics and footer metadata',

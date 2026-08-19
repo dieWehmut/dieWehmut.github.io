@@ -130,6 +130,7 @@ const optionPanels = new Set<ConsolePanel>([
   'theme',
   'color',
   'background',
+  'icon',
   'language',
   'note-picker',
   'post-picker',
