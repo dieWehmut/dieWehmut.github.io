@@ -161,7 +161,7 @@
     },
     "option": {
       "theme": {
-        "dark": "Gedämpfte Terminalfarben",
+        "night": "Gedämpfte Terminalfarben",
         "light": "Helle Farben mit hohem Kontrast"
       },
       "background": {

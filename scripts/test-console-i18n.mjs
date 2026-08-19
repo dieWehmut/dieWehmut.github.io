@@ -32,6 +32,7 @@ const panelView = read('src/components/console/ConsolePanelView.vue')
 const shell = read('src/components/console/ConsoleShell.vue')
 const overview = read('src/components/console/ConsoleOverviewHeader.vue')
 const iconPreference = read('src/composables/useConsoleIconPreference.ts')
+const themePreference = read('src/composables/useThemePreference.ts')
 
 const checks = []
 function check(label, condition) {
@@ -157,6 +158,29 @@ check(
   'every icon form the ring cycles has wording in every locale',
   LOCALES.every((id) => iconForms.every((form) => (
     typeof message(id, `console.option.icon.${form}`) === 'string'
+  ))),
+)
+
+// The theme is the one preference whose public name is not its stored value, so
+// three hand-synced places have to agree: the name table, the set the command line
+// accepts, and the message keys. Reading all three closes the drift.
+const themeNames = [...literalBlock(themePreference, 'export const themeModeNames').matchAll(/:\s*'(\w+)'/g)]
+  .map(([, name]) => name)
+const themeValues = [...(registrySource.match(/theme:\s*\{[^}]*new Set\(\[([^\]]*)\]/)?.[1] || '')
+  .matchAll(/'(\w+)'/g)].map(([, value]) => value)
+check('the theme name table was found', themeNames.length === 2)
+check(
+  'the command line accepts exactly the names the theme answers to',
+  themeValues.length === themeNames.length && themeNames.every((name) => themeValues.includes(name)),
+)
+check(
+  'no theme is still offered under its stored name',
+  !themeValues.includes('dark') && !themeNames.includes('dark'),
+)
+check(
+  'every theme name /theme accepts has wording in every locale',
+  LOCALES.every((id) => themeNames.every((name) => (
+    typeof message(id, `console.option.theme.${name}`) === 'string'
   ))),
 )
 

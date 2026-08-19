@@ -161,7 +161,7 @@
     },
     "option": {
       "theme": {
-        "dark": "暗光終端配色",
+        "night": "暗光終端配色",
         "light": "高對比亮色配色"
       },
       "background": {

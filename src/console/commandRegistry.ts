@@ -53,9 +53,11 @@ const ROUTES: Record<string, { path: string; routeName: string }> = {
 }
 
 const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }> = {
-  theme: { panel: 'theme', values: new Set(['light', 'dark']) },
-  // 与 src/data/site/theme.ts 的 siteColorSchemeIds 手工同步。本模块顶部声明的「无 import」
-  // 边界是硬约束：scripts/test-console-registry.mjs 以 data: URL 加载它，相对 import 无法解析。
+  // `night` rather than `dark`: 与 src/composables/useThemePreference.ts 的 themeModeNames
+  // 手工同步 —— 命令行收的是公开叫法，存储值仍是 `dark`。本模块顶部声明的「无 import」边界是
+  // 硬约束：scripts/test-console-registry.mjs 以 data: URL 加载它，相对 import 无法解析。
+  theme: { panel: 'theme', values: new Set(['light', 'night']) },
+  // 与 src/data/site/theme.ts 的 siteColorSchemeIds 手工同步。理由同上。
   color: { panel: 'color', values: new Set(['green', 'purple', 'pink', 'white', 'black']) },
   background: { panel: 'background', values: new Set(['on', 'off']) },
   // 与 src/composables/useConsoleIconPreference.ts 的 consoleIconForms 手工同步，

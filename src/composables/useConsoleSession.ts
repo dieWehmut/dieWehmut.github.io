@@ -13,7 +13,7 @@ import {
 } from '../console/commandRegistry'
 import { useColorSchemePreference } from './useColorSchemePreference'
 import { useDisplayModePreference } from './useDisplayModePreference'
-import { useThemePreference } from './useThemePreference'
+import { useThemePreference, resolveThemeModeName } from './useThemePreference'
 import { useBackgroundPreference } from './useBackgroundPreference'
 import { useConsoleIconPreference, consoleIconForms } from './useConsoleIconPreference'
 import { useConsoleCommentSession } from './useConsoleCommentSession'
@@ -209,8 +209,12 @@ export function useConsoleSession() {
   async function applyPanelValue(panel: ConsolePanel, value?: string) {
     if (!value) return
 
-    if (panel === 'theme' && (value === 'light' || value === 'dark')) {
-      theme.setTheme(value)
+    // The command line speaks the theme's public name, which is not the one it is
+    // stored under, so the word has to be resolved before it can be applied.
+    const themeMode = panel === 'theme' ? resolveThemeModeName(value) : null
+
+    if (themeMode) {
+      theme.setTheme(themeMode)
       feedback.value = t('console.feedback.theme', { value })
     } else if (panel === 'color' && color.colorSchemeOptions.value.some((option) => option.id === value)) {
       color.setColorScheme(value as SiteColorScheme)

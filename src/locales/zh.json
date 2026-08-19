@@ -158,7 +158,7 @@
     },
     "option": {
       "theme": {
-        "dark": "暗光终端配色",
+        "night": "暗光终端配色",
         "light": "高对比亮色配色"
       },
       "background": {

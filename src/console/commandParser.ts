@@ -52,7 +52,9 @@ const ARGUMENT_SEGMENTS = new Set(['search'])
 const MODE_VALUES = new Set(['classic', 'standard', 'console', 'terminal'])
 const FIXED_CHILD_VALUES: Record<string, Set<string>> = {
   mode: MODE_VALUES,
-  theme: new Set(['light', 'dark']),
+  // `night` rather than `dark`: 与 src/composables/useThemePreference.ts 的
+  // themeModeNames 手工同步。存储值仍是 `dark`，这里只收公开叫法。不能 import，原因同下。
+  theme: new Set(['light', 'night']),
   // 与 src/data/site/theme.ts 的 siteColorSchemeIds 手工同步。不能 import：本模块会被
   // scripts/test-console-command.mjs 转译后以 data: URL 动态加载，data URL 没有 base URL，
   // 任何相对 import 都会以 ERR_UNSUPPORTED_ESM_URL_SCHEME 失败。漂移由测试断言看住。

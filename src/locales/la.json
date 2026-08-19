@@ -161,7 +161,7 @@
     },
     "option": {
       "theme": {
-        "dark": "Tabula colorum ad lucem tenuem",
+        "night": "Tabula colorum ad lucem tenuem",
         "light": "Tabula colorum clara, discrimine forti"
       },
       "background": {

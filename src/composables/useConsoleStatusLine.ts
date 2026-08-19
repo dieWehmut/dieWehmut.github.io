@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useBackgroundPreference } from './useBackgroundPreference'
 import { useColorSchemePreference } from './useColorSchemePreference'
 import { useDisplayModePreference } from './useDisplayModePreference'
-import { useThemePreference } from './useThemePreference'
+import { useThemePreference, themeModeNames } from './useThemePreference'
 
 export interface ConsoleStatusSegment {
   /** Stable identity for the rendered span, and the hook a test or theme can aim at. */
@@ -32,7 +32,9 @@ export function useConsoleStatusLine(): { segments: ComputedRef<ConsoleStatusSeg
   const segments = computed<ConsoleStatusSegment[]>(() => [
     { key: 'path', value: route.path },
     { key: 'mode', value: activeMode.value },
-    { key: 'theme', value: theme.value },
+    // The reading is the name `/theme` answers to, not the one the value is stored
+    // under, so what the line reports is what the reader could type back.
+    { key: 'theme', value: themeModeNames[theme.value] },
     { key: 'color', value: colorScheme.value },
     { key: 'language', value: locale.value },
     // Every other reading is a name that says what it is on its own. This one is

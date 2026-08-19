@@ -53,8 +53,6 @@
         <div class="console-overview__section-title">RUNTIME</div>
         <dl class="console-overview__rows">
           <div class="console-overview__uptime"><dt>uptime</dt><dd>{{ uptime.days }}d {{ uptime.hours }}h {{ uptime.minutes }}m {{ uptime.seconds }}s</dd></div>
-          <div><dt>theme</dt><dd>{{ theme }}</dd></div>
-          <div><dt>color</dt><dd>{{ colorScheme }}</dd></div>
           <div class="console-overview__copyright"><dt>copyright</dt><dd>&copy; {{ footerMeta.copyrightYear }} <a class="console-overview__owner" :href="footerMeta.githubProfileUrl" target="_blank" rel="noopener noreferrer">{{ footerMeta.displayName }}</a></dd></div>
           <div class="console-overview__icp"><dt>icp</dt><dd><a v-if="footerMeta.icp" :href="footerMeta.icp.href" target="_blank" rel="noopener noreferrer">{{ footerMeta.icp.text }}</a><span v-else>not configured</span></dd></div>
         </dl>
@@ -68,8 +66,6 @@ import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSiteOverview } from '../../composables/useSiteOverview'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
-import { useThemePreference } from '../../composables/useThemePreference'
-import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
 import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 
@@ -83,8 +79,6 @@ const {
   repositoryUrl,
 } = useSiteOverview()
 const { setDisplayMode } = useDisplayModePreference()
-const { theme } = useThemePreference()
-const { colorScheme } = useColorSchemePreference()
 const { iconForm, cycleIconForm } = useConsoleIconPreference()
 const configuredIcon = String(config.console?.icon || '').trim()
 const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
@@ -198,7 +192,15 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
 .console-overview__dashboard {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /*
+   * The sections sit at their own margins rather than being spread to fill the
+   * banner. `space-between` used to distribute the slack between them, which made
+   * the gaps a function of how much the banner happened to be taller than its
+   * contents — so trimming a row widened every gap instead of tightening the
+   * column. Pooling the slack after the last section keeps the spacing below the
+   * property of the margins alone.
+   */
+  justify-content: flex-start;
   box-sizing: border-box;
   min-width: 0;
   height: 100%;
@@ -244,13 +246,13 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
 }
 
 .console-overview__chrome + .console-overview__section {
-  margin-top: 12px;
+  margin-top: 9px;
 }
 
 .console-overview__section + .console-overview__section {
-  margin-top: 15px;
-  margin-bottom: 16px;
-  padding-top: 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-top: 8px;
   border-top: 1px solid var(--console-border);
 }
 

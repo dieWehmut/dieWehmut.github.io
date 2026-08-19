@@ -48,7 +48,7 @@ import { useColorSchemePreference } from '../../composables/useColorSchemePrefer
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { consoleIconForms, useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
 import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
-import { useThemePreference, type ThemeMode } from '../../composables/useThemePreference'
+import { useThemePreference, themeModeNames, type ThemeMode } from '../../composables/useThemePreference'
 import type { ConsoleIconForm, SiteColorScheme } from '../../types/content'
 
 const props = defineProps<{
@@ -72,6 +72,10 @@ const { rowAccent } = useConsoleRowAccent()
 
 const notes = getNotes()
 const posts = getPosts()
+/**
+ * Reading order of the theme rows. Each is listed under the name it answers to on
+ * the command line, which is not the name it is stored under — see themeModeNames.
+ */
 const themeModes: readonly ThemeMode[] = ['dark', 'light']
 const backgroundStates = ['on', 'off'] as const
 /**
@@ -146,9 +150,9 @@ const panelOptions = computed<PanelOption[]>(() => {
       ]
     case 'theme':
       return themeModes.map((mode) => ({
-        command: `/theme/${mode}`,
-        code: mode,
-        label: t(`console.option.theme.${mode}`),
+        command: `/theme/${themeModeNames[mode]}`,
+        code: themeModeNames[mode],
+        label: t(`console.option.theme.${themeModeNames[mode]}`),
         current: theme.value === mode,
         livePreview: { kind: 'theme', value: mode },
       }))

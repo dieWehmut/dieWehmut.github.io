@@ -3,6 +3,25 @@ import { applyCurrentColorScheme } from './useColorSchemePreference'
 
 export type ThemeMode = 'light' | 'dark'
 
+/**
+ * What each theme is called wherever a reader can see it. The stored value stays
+ * `dark` — `data-theme="dark"` is written into a hundred stylesheet selectors and
+ * a directory name — but nothing shows that word any more. Beside a `/color`
+ * panel offering white and black, "dark" reads as one more colour; `night` names
+ * the light the page is read under instead of the ink it is drawn in.
+ */
+export const themeModeNames: Record<ThemeMode, string> = {
+  dark: 'night',
+  light: 'light',
+}
+
+/** The inverse, derived from the same table so the two can never disagree. */
+export function resolveThemeModeName(name: string): ThemeMode | null {
+  const modes = Object.keys(themeModeNames) as ThemeMode[]
+  return modes.find((mode) => themeModeNames[mode] === name) ?? null
+}
+
+
 const STORAGE_KEY = 'theme'
 const DEFAULT_THEME: ThemeMode = 'dark'
 

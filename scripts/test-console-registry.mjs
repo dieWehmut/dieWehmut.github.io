@@ -55,7 +55,9 @@ check(
     && registry.resolveConsoleCommand(command(['comment'], { hash: '#other' })).kind === 'silent',
 )
 check('theme rejects unknown values', registry.resolveConsoleCommand(command(['theme', 'nope'])).kind === 'silent')
-check('theme rejects extra segments', registry.resolveConsoleCommand(command(['theme', 'dark', 'extra'])).kind === 'silent')
+// `night` is deliberate: with an unknown value the rejection would happen for the
+// wrong reason and the check would pass without ever testing a third segment.
+check('theme rejects extra segments', registry.resolveConsoleCommand(command(['theme', 'night', 'extra'])).kind === 'silent')
 check('language accepts a supported value', registry.resolveConsoleCommand(command(['language', 'zh_tw'])).kind === 'panel')
 const bareIcon = registry.resolveConsoleCommand(command(['icon']))
 check('bare icon opens its picker', bareIcon.kind === 'panel' && bareIcon.panel === 'icon' && bareIcon.value === undefined)

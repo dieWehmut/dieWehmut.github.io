@@ -158,7 +158,7 @@
     },
     "option": {
       "theme": {
-        "dark": "Low-light terminal palette",
+        "night": "Low-light terminal palette",
         "light": "High-contrast light palette"
       },
       "background": {
