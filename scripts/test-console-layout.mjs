@@ -150,10 +150,11 @@ check(
   // One array, read straight off the live preferences, so a fork adds a reading by
   // appending an entry rather than by touching the template.
   'the status line reads back the state every preference command owns',
-  ['path', 'mode', 'theme', 'color', 'language', 'background']
+  ['path', 'mode', 'theme', 'color', 'icon', 'language', 'background']
     .every((key) => new RegExp(`key: '${key}'`).test(consoleStatusLine))
   && consoleStatusLine.includes('route.path')
   && consoleStatusLine.includes('activeMode.value')
+  && consoleStatusLine.includes('iconForm.value')
   && consoleStatusLine.includes('dynamicBackgroundEnabled.value')
   && consoleShell.includes('const { segments: statusSegments } = useConsoleStatusLine()')
   && /v-for="\(segment, index\) in statusSegments"/.test(consoleShellTemplate),
