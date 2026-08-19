@@ -547,7 +547,11 @@ check(
   consoleOverview.includes('>LINKS<')
     && consoleOverview.indexOf('>LINKS<') < consoleOverview.indexOf('>CONTENT<')
     && consoleOverview.includes('githubProfileUrl')
-    && consoleOverview.includes('repositoryUrl')
+    // The template row names the repository the code came from, which is not this
+    // site's own: it used to be derived from githubUser/githubRepo, so every fork
+    // linked to itself under the label `template`.
+    && consoleOverview.includes('templateRepoUrl')
+    && !consoleOverview.includes('repositoryUrl')
     && /\.console-overview__links dd \{[^}]*text-overflow: ellipsis/.test(consoleOverview),
 )
 

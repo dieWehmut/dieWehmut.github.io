@@ -99,6 +99,7 @@ npm install
 export const siteConfig = {
   githubUser: 'your-github-username',
   githubRepo: 'your-repo-name',
+  templateRepoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
   owner: 'your-name',
   displayName: 'your-name',
   email: 'you@example.com',
@@ -127,6 +128,7 @@ export const siteConfig = {
 
 - `githubUser`：你的 GitHub 用户名或组织名。
 - `githubRepo`：部署这个站点的仓库名。
+- `templateRepoUrl`：这份代码的来源仓库。控制台首屏 `LINKS` 段的 `template` 一行就指向它。fork 之后通常保持不变 —— 你自己的仓库不是你 fork 的那个模板。
 - `siteUrl`：最终访问地址。项目页仓库通常是 `https://YOUR_USERNAME.github.io/YOUR_REPO/`。
 - `enableInfra`：是否显示基础设施状态页。
 - `enableProject`：是否显示项目展示页。

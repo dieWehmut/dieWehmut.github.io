@@ -109,6 +109,12 @@ export interface ConsoleSiteConfig {
 export interface SiteConfig {
   githubUser: string
   githubRepo: string
+  /**
+   * Where this site's code came from. Not derived from `githubUser`/`githubRepo`:
+   * a fork's own repository is not the template it was forked from, and the two
+   * only coincide for whoever published the template.
+   */
+  templateRepoUrl: string
   owner: string
   displayName: string
   email: string

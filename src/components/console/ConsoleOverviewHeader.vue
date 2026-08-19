@@ -35,7 +35,7 @@
         <div class="console-overview__section-title">LINKS</div>
         <dl class="console-overview__rows console-overview__links">
           <div><dt>github</dt><dd><a :href="githubProfileUrl" target="_blank" rel="noopener noreferrer">{{ githubProfileUrl }}</a></dd></div>
-          <div><dt>template</dt><dd><a :href="repositoryUrl" target="_blank" rel="noopener noreferrer">{{ repositoryUrl }}</a></dd></div>
+          <div><dt>template</dt><dd><a :href="templateRepoUrl" target="_blank" rel="noopener noreferrer">{{ templateRepoUrl }}</a></dd></div>
         </dl>
       </section>
 
@@ -76,7 +76,7 @@ const {
   footerMeta,
   uptime,
   githubProfileUrl,
-  repositoryUrl,
+  templateRepoUrl,
 } = useSiteOverview()
 const { setDisplayMode } = useDisplayModePreference()
 const { iconForm, cycleIconForm } = useConsoleIconPreference()

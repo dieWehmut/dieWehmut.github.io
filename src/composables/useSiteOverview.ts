@@ -89,7 +89,7 @@ export function useSiteOverview() {
     now: new Date(now.value),
   }))
   const uptime = computed(() => formatSiteUptime(siteConfig.startedAt, now.value))
-  const repositoryUrl = `https://github.com/${siteConfig.githubUser}/${siteConfig.githubRepo}`
+  const templateRepoUrl = siteConfig.templateRepoUrl
   const githubProfileUrl = `https://github.com/${siteConfig.githubUser}`
 
   onMounted(() => {
@@ -105,7 +105,7 @@ export function useSiteOverview() {
     captureCount: readonly(captureCount),
     footerMeta,
     uptime,
-    repositoryUrl,
+    templateRepoUrl,
     githubProfileUrl,
     loadCaptureCount,
   }

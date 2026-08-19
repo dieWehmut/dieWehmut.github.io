@@ -29,6 +29,7 @@ export const siteConfig: SiteConfig = {
   // --- Identity ---
   githubUser: 'dieWehmut',
   githubRepo: 'dieWehmut.github.io',
+  templateRepoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
   owner: 'dieWehmut',
   displayName: 'diesw',
   email: 'diewehmut@outlook.com',
