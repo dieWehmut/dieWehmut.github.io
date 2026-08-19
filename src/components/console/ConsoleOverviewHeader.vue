@@ -3,8 +3,8 @@
     <button
       class="console-overview__portrait"
       type="button"
-      :aria-label="`Icon form: ${iconForm}. Activate to cycle.`"
-      :title="`icon form: ${iconForm}`"
+      :aria-label="t('console.overview.iconCycle', { form: iconForm })"
+      :title="t('console.overview.iconForm', { form: iconForm })"
       @click="cycleIconForm()"
     >
       <img
@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useSiteOverview } from '../../composables/useSiteOverview'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 import { useThemePreference } from '../../composables/useThemePreference'
@@ -72,6 +73,7 @@ import { useColorSchemePreference } from '../../composables/useColorSchemePrefer
 import { useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
 import { getGitHubAvatarUrl } from '../../utils/githubAvatar'
 
+const { t } = useI18n()
 const {
   config,
   stats,

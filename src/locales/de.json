@@ -115,5 +115,119 @@
     "loadMore": "Mehr laden",
     "uploadFailed": "Upload fehlgeschlagen.",
     "deleteFailed": "Löschen fehlgeschlagen."
+  },
+  "console": {
+    "shell": {
+      "label": "Nexus-Konsole",
+      "recentLabel": "Letzte Befehle",
+      "recent": "zuletzt",
+      "commandLabel": "Konsolenbefehl",
+      "suggestionsLabel": "Befehlsvorschläge",
+      "insert": "-- EINFÜGEN --",
+      "run": "Befehl ausführen"
+    },
+    "overview": {
+      "iconCycle": "Symbolform: {form}. Auslösen, um weiterzuschalten.",
+      "iconForm": "Symbolform: {form}"
+    },
+    "suggestion": {
+      "tagEntries": "{count} Einträge"
+    },
+    "panel": {
+      "fallback": "Konsole",
+      "back": "Zurück zum vorherigen Menü",
+      "empty": "Keine Optionen verfügbar.",
+      "heading": {
+        "theme": "Thema wählen",
+        "color": "Farbschema wählen",
+        "background": "Bewegter Hintergrund",
+        "icon": "Symbolform wählen",
+        "language": "Sprache wählen",
+        "mode": "Anzeigemodus wählen",
+        "notePicker": "Notiz wählen",
+        "postPicker": "Beitrag wählen"
+      },
+      "list": {
+        "fallback": "Konsolenoptionen",
+        "theme": "Themaoptionen",
+        "color": "Farbschemaoptionen",
+        "background": "Hintergrundoptionen",
+        "icon": "Symbolformoptionen",
+        "language": "Sprachoptionen",
+        "mode": "Anzeigemodusoptionen",
+        "notePicker": "Notizen",
+        "postPicker": "Beiträge"
+      }
+    },
+    "option": {
+      "theme": {
+        "dark": "Gedämpfte Terminalfarben",
+        "light": "Helle Farben mit hohem Kontrast"
+      },
+      "background": {
+        "on": "Animierten Seitenhintergrund aktiv lassen",
+        "off": "Animierten Seitenhintergrund abschalten"
+      },
+      "mode": {
+        "console": "Arbeitsbereich der Nexus-Konsole",
+        "classic": "Standardlayout mit Seitenleiste"
+      },
+      "icon": {
+        "grayscale": "Symbol auf Graustufen reduzieren",
+        "whiten": "Symbol zur Silhouette verflachen",
+        "original": "Symbol unverändert lassen",
+        "pixelated": "Symbol auf grobe Pixel heruntersetzen"
+      },
+      "color": {
+        "green": "Grün",
+        "purple": "Violett",
+        "pink": "Rosa",
+        "white": "Weiß",
+        "black": "Schwarz"
+      }
+    },
+    "feedback": {
+      "theme": "Thema auf {value} gesetzt.",
+      "color": "Farbschema auf {value} gesetzt.",
+      "background": "Bewegter Hintergrund auf {value} gesetzt.",
+      "icon": "Symbolform auf {value} gesetzt.",
+      "language": "Sprache auf {value} gesetzt.",
+      "modeConsole": "Nexus-Konsole aktiviert.",
+      "modeClassic": "Standardlayout aktiviert.",
+      "exported": "Artikel als PDF exportiert.",
+      "exportFailed": "Artikel konnte nicht exportiert werden.",
+      "navigationFailed": "Navigation konnte nicht abgeschlossen werden."
+    },
+    "group": {
+      "navigate": "Herumnavigieren",
+      "page": "Auf die gelesene Seite einwirken",
+      "appearance": "Aussehen der Website ändern",
+      "console": "Die Konsole selbst"
+    },
+    "command": {
+      "home": "Die Startseiten-Chronik durchsehen",
+      "posts": "Das Beitragsarchiv durchsehen",
+      "notes": "Das Notizverzeichnis durchsehen",
+      "comment": "Zum Kommentarfeld dieser Seite springen",
+      "export": "Diesen Artikel als PDF exportieren",
+      "post": "Einen Beitrag wählen",
+      "note": "Eine Notiz wählen",
+      "capture": "Capture-Bilder durchsehen",
+      "infra": "Dienststatus prüfen",
+      "project": "Projekte durchsehen",
+      "tags": "Tags durchsehen",
+      "about": "Website-Informationen lesen",
+      "friends": "Freundeslinks durchsehen",
+      "search": "Beim Tippen suchen, z. B. /search vue",
+      "theme": "Helles oder dunkles Thema wählen",
+      "color": "Ein Farbschema wählen",
+      "background": "Den bewegten Hintergrund einstellen",
+      "icon": "Wählen, wie das Konsolensymbol gezeichnet wird",
+      "language": "Sprache der Oberfläche wählen",
+      "mode": "Konsole oder Standardlayout wählen",
+      "mode_classic": "Zum Standardlayout zurückkehren",
+      "mode_console": "Die Nexus-Konsole verwenden",
+      "help": "Die Befehlsübersicht lesen"
+    }
   }
 }

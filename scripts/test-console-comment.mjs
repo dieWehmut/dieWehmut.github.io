@@ -93,7 +93,11 @@ check(
 )
 check(
   '/comment no longer advertises itself as a toggle',
-  /input: '\/comment', description: 'Jump to the comment box for this page'/.test(commandRegistry),
+  // The registry only names its wording now, so the claim is read where the
+  // wording lives. Every locale's row has to describe a jump, not a toggle.
+  /input: '\/comment', descriptionKey: 'console\.command\.comment'/.test(commandRegistry)
+    && JSON.parse(read('src/locales/en.json')).console.command.comment
+      === 'Jump to the comment box for this page',
 )
 
 check(

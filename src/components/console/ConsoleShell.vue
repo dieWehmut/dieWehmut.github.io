@@ -2,10 +2,10 @@
   <section
     class="console-shell"
     :class="{ 'console-shell--expanded': hasTransient }"
-    aria-label="Nexus Console"
+    :aria-label="t('console.shell.label')"
   >
-    <div v-if="history.length" class="console-shell__history" aria-label="Recent commands">
-      <span class="console-shell__history-label">recent</span>
+    <div v-if="history.length" class="console-shell__history" :aria-label="t('console.shell.recentLabel')">
+      <span class="console-shell__history-label">{{ t('console.shell.recent') }}</span>
       <button v-for="entry in history" :key="entry" type="button" @click="executeCommand(entry)">{{ entry }}</button>
     </div>
 
@@ -28,7 +28,7 @@
           spellcheck="false"
           inputmode="text"
           placeholder="/help"
-          aria-label="Console command"
+          :aria-label="t('console.shell.commandLabel')"
           @input="setInput(($event.target as HTMLInputElement).value)"
           @keydown="handleShellKeydown"
         />
@@ -39,8 +39,10 @@
           :style="{ width: `${caretWidth}px`, transform: `translate(${caretOffset}px, -50%)` }"
         >{{ caretGlyph }}</span>
       </span>
-      <span v-if="caretActive" class="console-shell__mode" aria-hidden="true">-- INSERT --</span>
-      <button class="console-button console-shell__submit" type="submit" aria-label="Run command" title="Run command">Enter</button>
+      <span v-if="caretActive" class="console-shell__mode" aria-hidden="true">{{ t('console.shell.insert') }}</span>
+      <!-- The caption names a key on the keyboard, so it stays literal; only what
+           a screen reader hears is translated. -->
+      <button class="console-button console-shell__submit" type="submit" :aria-label="t('console.shell.run')" :title="t('console.shell.run')">Enter</button>
     </form>
 
     <div
@@ -52,7 +54,7 @@
         :id="suggestionListboxId"
         class="console-shell__suggestions"
         role="listbox"
-        aria-label="Command suggestions"
+        :aria-label="t('console.shell.suggestionsLabel')"
       >
         <button
           v-for="{ suggestion, index } in visibleSuggestions"
@@ -107,6 +109,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ConsolePanelView from './ConsolePanelView.vue'
 import { useConsoleSession } from '../../composables/useConsoleSession'
 import { useConsoleBlockCaret } from '../../composables/useConsoleBlockCaret'
@@ -149,6 +152,7 @@ const {
   setPanel,
   returnToPreviousMenu,
 } = useConsoleSession()
+const { t } = useI18n()
 const { rowAccent } = useConsoleRowAccent()
 const { segments: statusSegments } = useConsoleStatusLine()
 const { caretActive, caretOffset, caretWidth, caretGlyph } = useConsoleBlockCaret(inputRef, commandInput)

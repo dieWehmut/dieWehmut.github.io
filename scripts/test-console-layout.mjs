@@ -216,8 +216,10 @@ check(
     && /@media \(prefers-reduced-motion: reduce\) \{\s*\.console-shell__caret \{[^}]*animation: none/.test(consoleShell),
 )
 check(
+  // Where the marker sits is this suite's claim; what it says is translated now, so
+  // the wording is checked in scripts/test-console-i18n.mjs instead.
   'the INSERT marker rides the far end of the row, clear of the slash column',
-  consoleShellTemplate.includes('-- INSERT --')
+  consoleShellTemplate.includes("t('console.shell.insert')")
     && consoleShellTemplate.indexOf('console-shell__mode') > consoleShellTemplate.indexOf('console-shell__field')
     && consoleShellTemplate.indexOf('console-shell__mode') < consoleShellTemplate.indexOf('console-shell__submit'),
 )
@@ -279,7 +281,12 @@ check(
 check(
   'suggestion filtering lives in the pure console module',
   consoleSession.includes("from '../console/suggestions'")
-    && /return filterConsoleSuggestions\(prefix, listConsoleCommands\(commandAvailability\), dynamicOptions\)/.test(consoleSession)
+    // The registry's rows now pass through a `map` that turns each description key
+    // into text, so the command list reaches the filter as a local rather than
+    // inline. What matters is unchanged: the registry supplies the rows and the pure
+    // module does the filtering, with no second cap applied here.
+    && /const commands = listConsoleCommands\(commandAvailability\)/.test(consoleSession)
+    && /return filterConsoleSuggestions\(prefix, commands, dynamicOptions\)/.test(consoleSession)
     && !consoleSession.includes('options.slice(0, 12)'),
 )
 const removedPanelCommands = [

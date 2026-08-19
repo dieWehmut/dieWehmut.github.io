@@ -15,7 +15,7 @@ import { useColorSchemePreference } from './useColorSchemePreference'
 import { useDisplayModePreference } from './useDisplayModePreference'
 import { useThemePreference } from './useThemePreference'
 import { useBackgroundPreference } from './useBackgroundPreference'
-import { useConsoleIconPreference } from './useConsoleIconPreference'
+import { useConsoleIconPreference, consoleIconForms } from './useConsoleIconPreference'
 import { useConsoleCommentSession } from './useConsoleCommentSession'
 import { hasExportableArticle, useArticlePdfExport } from './useArticlePdfExport'
 import { requestConsoleOutputReveal } from './useConsoleOutputReveal'
@@ -51,7 +51,7 @@ function normalizePrefix(value: string) {
 
 export function useConsoleSession() {
   const router = useRouter()
-  const { locale } = useI18n()
+  const { locale, t } = useI18n()
   const displayMode = useDisplayModePreference()
   const theme = useThemePreference()
   const color = useColorSchemePreference()
@@ -73,10 +73,19 @@ export function useConsoleSession() {
       : prefix.startsWith('/post/')
         ? getPosts().map((post) => ({ input: `/post/${post.id}`, description: post.title || post.id }))
         : prefix.startsWith('/tags/')
-          ? getTagGroups().map((group) => ({ input: `/tags/${group.tag}`, description: `${group.count} entries` }))
+          ? getTagGroups().map((group) => ({
+            input: `/tags/${group.tag}`,
+            description: t('console.suggestion.tagEntries', { count: group.count }),
+          }))
           : []
 
-    return filterConsoleSuggestions(prefix, listConsoleCommands(commandAvailability), dynamicOptions)
+    // The registry names its descriptions but cannot read them: it is import-free
+    // so the tests can load it from a `data:` URL. Resolving here is also what
+    // makes the rows follow `/language` — `t` re-runs whenever the locale does.
+    const commands = listConsoleCommands(commandAvailability)
+      .map(({ input, descriptionKey }) => ({ input, description: t(descriptionKey) }))
+
+    return filterConsoleSuggestions(prefix, commands, dynamicOptions)
   })
 
   /**
@@ -202,16 +211,16 @@ export function useConsoleSession() {
 
     if (panel === 'theme' && (value === 'light' || value === 'dark')) {
       theme.setTheme(value)
-      feedback.value = `Theme set to ${value}.`
+      feedback.value = t('console.feedback.theme', { value })
     } else if (panel === 'color' && color.colorSchemeOptions.value.some((option) => option.id === value)) {
       color.setColorScheme(value as SiteColorScheme)
-      feedback.value = `Color scheme set to ${value}.`
+      feedback.value = t('console.feedback.color', { value })
     } else if (panel === 'background' && (value === 'on' || value === 'off')) {
       background.setDynamicBackgroundEnabled(value === 'on')
-      feedback.value = `Dynamic background ${value}.`
-    } else if (panel === 'icon' && icon.iconFormOptions.value.some((option) => option.id === value)) {
+      feedback.value = t('console.feedback.background', { value })
+    } else if (panel === 'icon' && consoleIconForms.some((form) => form === value)) {
       icon.setIconForm(value as ConsoleIconForm)
-      feedback.value = `Icon form set to ${value}.`
+      feedback.value = t('console.feedback.icon', { value })
     } else if (panel === 'language' && ['zh', 'zh_tw', 'en', 'ja', 'de', 'la'].includes(value)) {
       locale.value = value
       try {
@@ -219,7 +228,9 @@ export function useConsoleSession() {
       } catch {
         // Locale remains active in memory when storage is unavailable.
       }
-      feedback.value = `Language set to ${value}.`
+      // Written after the switch, so the confirmation already speaks the language
+      // it is confirming.
+      feedback.value = t('console.feedback.language', { value })
     }
   }
 
@@ -275,8 +286,8 @@ export function useConsoleSession() {
       } else if (resolution.kind === 'mode') {
         displayMode.setDisplayMode(resolution.mode)
         feedback.value = resolution.mode === 'console'
-          ? 'Nexus Console enabled.'
-          : 'Standard layout enabled.'
+          ? t('console.feedback.modeConsole')
+          : t('console.feedback.modeClassic')
         clearPanelNavigation()
       } else if (resolution.kind === 'comment') {
         // The thread is already on the page; `/comment` only takes the user to
@@ -287,8 +298,8 @@ export function useConsoleSession() {
       } else if (resolution.kind === 'export') {
         clearPanelNavigation()
         feedback.value = await exportArticlePdf()
-          ? 'Article exported as PDF.'
-          : 'Article could not be exported.'
+          ? t('console.feedback.exported')
+          : t('console.feedback.exportFailed')
       } else {
         const commits = Boolean(resolution.value)
         if (!commits && sourcePanel && sourcePanel.panel !== resolution.panel) {
@@ -304,7 +315,7 @@ export function useConsoleSession() {
         if (commits) collapseCommittedPanel(resolution.panel)
       }
     } catch {
-      feedback.value = 'Navigation could not be completed.'
+      feedback.value = t('console.feedback.navigationFailed')
     } finally {
       executing.value = false
     }

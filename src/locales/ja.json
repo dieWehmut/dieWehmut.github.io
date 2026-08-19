@@ -115,5 +115,119 @@
     "loadMore": "さらに読み込む",
     "uploadFailed": "アップロードに失敗しました。",
     "deleteFailed": "削除に失敗しました。"
+  },
+  "console": {
+    "shell": {
+      "label": "Nexus コンソール",
+      "recentLabel": "最近のコマンド",
+      "recent": "最近",
+      "commandLabel": "コンソールコマンド",
+      "suggestionsLabel": "コマンド候補",
+      "insert": "-- 挿入 --",
+      "run": "コマンドを実行"
+    },
+    "overview": {
+      "iconCycle": "アイコン形式：{form}。押すと次に切り替わります。",
+      "iconForm": "アイコン形式：{form}"
+    },
+    "suggestion": {
+      "tagEntries": "{count} 件"
+    },
+    "panel": {
+      "fallback": "コンソール",
+      "back": "前のメニューに戻る",
+      "empty": "選択できる項目がありません。",
+      "heading": {
+        "theme": "テーマを選択",
+        "color": "カラースキームを選択",
+        "background": "動く背景",
+        "icon": "アイコン形式を選択",
+        "language": "言語を選択",
+        "mode": "表示モードを選択",
+        "notePicker": "ノートを選択",
+        "postPicker": "記事を選択"
+      },
+      "list": {
+        "fallback": "コンソールの選択肢",
+        "theme": "テーマの選択肢",
+        "color": "カラースキームの選択肢",
+        "background": "背景の選択肢",
+        "icon": "アイコン形式の選択肢",
+        "language": "言語の選択肢",
+        "mode": "表示モードの選択肢",
+        "notePicker": "ノート",
+        "postPicker": "記事"
+      }
+    },
+    "option": {
+      "theme": {
+        "dark": "光を抑えたターミナル配色",
+        "light": "コントラストの高い明るい配色"
+      },
+      "background": {
+        "on": "サイト背景のアニメーションを有効にしておく",
+        "off": "サイト背景のアニメーションを無効にする"
+      },
+      "mode": {
+        "console": "Nexus コンソールのデスクトップ作業環境",
+        "classic": "標準のサイドバーレイアウト"
+      },
+      "icon": {
+        "grayscale": "アイコンをグレースケールに落とす",
+        "whiten": "アイコンをシルエットに潰す",
+        "original": "アイコンを作られたまま残す",
+        "pixelated": "アイコンを粗いピクセルに再サンプリングする"
+      },
+      "color": {
+        "green": "グリーン",
+        "purple": "パープル",
+        "pink": "ピンク",
+        "white": "ホワイト",
+        "black": "ブラック"
+      }
+    },
+    "feedback": {
+      "theme": "テーマを {value} に設定しました。",
+      "color": "カラースキームを {value} に設定しました。",
+      "background": "動く背景を {value} に設定しました。",
+      "icon": "アイコン形式を {value} に設定しました。",
+      "language": "言語を {value} に設定しました。",
+      "modeConsole": "Nexus コンソールを有効にしました。",
+      "modeClassic": "標準レイアウトを有効にしました。",
+      "exported": "記事を PDF として書き出しました。",
+      "exportFailed": "記事を書き出せませんでした。",
+      "navigationFailed": "画面遷移を完了できませんでした。"
+    },
+    "group": {
+      "navigate": "移動する",
+      "page": "読んでいるページに対して操作する",
+      "appearance": "サイトの見た目を変える",
+      "console": "コンソールそのもの"
+    },
+    "command": {
+      "home": "ホームのタイムラインを見る",
+      "posts": "記事のアーカイブを見る",
+      "notes": "ノートの索引を見る",
+      "comment": "このページのコメント欄へ飛ぶ",
+      "export": "この記事を PDF として書き出す",
+      "post": "記事を選ぶ",
+      "note": "ノートを選ぶ",
+      "capture": "キャプチャ画像を見る",
+      "infra": "サービスの状態を確認する",
+      "project": "プロジェクトを見る",
+      "tags": "タグを見る",
+      "about": "サイト情報を読む",
+      "friends": "フレンドリンクを見る",
+      "search": "打ちながら検索する。例：/search vue",
+      "theme": "明るいテーマか暗いテーマを選ぶ",
+      "color": "カラースキームを選ぶ",
+      "background": "動く背景を設定する",
+      "icon": "コンソールアイコンの描き方を選ぶ",
+      "language": "表示言語を選ぶ",
+      "mode": "コンソールか標準レイアウトを選ぶ",
+      "mode_classic": "標準レイアウトに戻る",
+      "mode_console": "Nexus コンソールを使う",
+      "help": "コマンド一覧を読む"
+    }
   }
 }

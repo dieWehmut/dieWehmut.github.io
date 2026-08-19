@@ -74,11 +74,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { consoleCommandGroups, listConsoleCommands } from '../console/commandRegistry'
 import { siteConfig } from '../data/site/config'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
+const { t } = useI18n()
 const { isConsole } = useDisplayModePreference()
 
 const intro = [
@@ -144,10 +146,15 @@ const commandGroups = computed(() => {
     infra: siteConfig.enableInfra,
     project: siteConfig.enableProject,
   })
+  // The registry names its text but cannot read it, so the reference page resolves
+  // the keys the same way the suggestion rows do.
   return consoleCommandGroups
     .map((group) => ({
-      ...group,
-      commands: commands.filter((command) => command.group === group.id),
+      id: group.id,
+      title: t(group.titleKey),
+      commands: commands
+        .filter((command) => command.group === group.id)
+        .map((command) => ({ input: command.input, description: t(command.descriptionKey) })),
     }))
     .filter((group) => group.commands.length)
 })

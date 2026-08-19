@@ -112,5 +112,119 @@
     "loadMore": "Load more",
     "uploadFailed": "Upload failed.",
     "deleteFailed": "Delete failed."
+  },
+  "console": {
+    "shell": {
+      "label": "Nexus Console",
+      "recentLabel": "Recent commands",
+      "recent": "recent",
+      "commandLabel": "Console command",
+      "suggestionsLabel": "Command suggestions",
+      "insert": "-- INSERT --",
+      "run": "Run command"
+    },
+    "overview": {
+      "iconCycle": "Icon form: {form}. Activate to cycle.",
+      "iconForm": "icon form: {form}"
+    },
+    "suggestion": {
+      "tagEntries": "{count} entries"
+    },
+    "panel": {
+      "fallback": "Console",
+      "back": "Back to previous menu",
+      "empty": "No options available.",
+      "heading": {
+        "theme": "Select theme",
+        "color": "Select color scheme",
+        "background": "Dynamic background",
+        "icon": "Select icon form",
+        "language": "Select language",
+        "mode": "Select display mode",
+        "notePicker": "Select a note",
+        "postPicker": "Select a post"
+      },
+      "list": {
+        "fallback": "Console options",
+        "theme": "Theme options",
+        "color": "Color scheme options",
+        "background": "Background options",
+        "icon": "Icon form options",
+        "language": "Language options",
+        "mode": "Display mode options",
+        "notePicker": "Notes",
+        "postPicker": "Posts"
+      }
+    },
+    "option": {
+      "theme": {
+        "dark": "Low-light terminal palette",
+        "light": "High-contrast light palette"
+      },
+      "background": {
+        "on": "Keep the animated site background enabled",
+        "off": "Disable the animated site background"
+      },
+      "mode": {
+        "console": "Nexus Console desktop workspace",
+        "classic": "Standard sidebar layout"
+      },
+      "icon": {
+        "grayscale": "Drain the icon to gray",
+        "whiten": "Flatten the icon to a silhouette",
+        "original": "Leave the icon as authored",
+        "pixelated": "Resample the icon into coarse pixels"
+      },
+      "color": {
+        "green": "Green",
+        "purple": "Purple",
+        "pink": "Pink",
+        "white": "White",
+        "black": "Black"
+      }
+    },
+    "feedback": {
+      "theme": "Theme set to {value}.",
+      "color": "Color scheme set to {value}.",
+      "background": "Dynamic background set to {value}.",
+      "icon": "Icon form set to {value}.",
+      "language": "Language set to {value}.",
+      "modeConsole": "Nexus Console enabled.",
+      "modeClassic": "Standard layout enabled.",
+      "exported": "Article exported as PDF.",
+      "exportFailed": "Article could not be exported.",
+      "navigationFailed": "Navigation could not be completed."
+    },
+    "group": {
+      "navigate": "Move around",
+      "page": "Act on the page you are reading",
+      "appearance": "Change how the site looks",
+      "console": "The console itself"
+    },
+    "command": {
+      "home": "Browse the Home timeline",
+      "posts": "Browse the post archive",
+      "notes": "Browse the note index",
+      "comment": "Jump to the comment box for this page",
+      "export": "Export this article as PDF",
+      "post": "Select a post",
+      "note": "Select a note",
+      "capture": "Browse captured assets",
+      "infra": "Inspect service status",
+      "project": "Browse projects",
+      "tags": "Browse tags",
+      "about": "Read site information",
+      "friends": "Browse friend links",
+      "search": "Search as you type, e.g. /search vue",
+      "theme": "Choose light or dark theme",
+      "color": "Choose a color scheme",
+      "background": "Configure the dynamic background",
+      "icon": "Choose how the console icon is drawn",
+      "language": "Choose interface language",
+      "mode": "Choose Console or standard layout",
+      "mode_classic": "Return to the standard layout",
+      "mode_console": "Use Nexus Console",
+      "help": "Read the command reference"
+    }
   }
 }

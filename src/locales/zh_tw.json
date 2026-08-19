@@ -115,5 +115,119 @@
     "loadMore": "載入更多",
     "uploadFailed": "上傳失敗。",
     "deleteFailed": "刪除失敗。"
+  },
+  "console": {
+    "shell": {
+      "label": "Nexus 控制台",
+      "recentLabel": "最近命令",
+      "recent": "最近",
+      "commandLabel": "控制台命令",
+      "suggestionsLabel": "命令建議",
+      "insert": "-- 插入 --",
+      "run": "執行命令"
+    },
+    "overview": {
+      "iconCycle": "圖示形態：{form}。點擊可切換下一種。",
+      "iconForm": "圖示形態：{form}"
+    },
+    "suggestion": {
+      "tagEntries": "{count} 項"
+    },
+    "panel": {
+      "fallback": "控制台",
+      "back": "返回上一層",
+      "empty": "沒有可選項。",
+      "heading": {
+        "theme": "選擇主題",
+        "color": "選擇配色",
+        "background": "動態背景",
+        "icon": "選擇圖示形態",
+        "language": "選擇語言",
+        "mode": "選擇顯示模式",
+        "notePicker": "選擇一篇筆記",
+        "postPicker": "選擇一篇文章"
+      },
+      "list": {
+        "fallback": "控制台選項",
+        "theme": "主題選項",
+        "color": "配色選項",
+        "background": "背景選項",
+        "icon": "圖示形態選項",
+        "language": "語言選項",
+        "mode": "顯示模式選項",
+        "notePicker": "筆記",
+        "postPicker": "文章"
+      }
+    },
+    "option": {
+      "theme": {
+        "dark": "暗光終端配色",
+        "light": "高對比亮色配色"
+      },
+      "background": {
+        "on": "保持網站背景動效開啟",
+        "off": "關閉網站背景動效"
+      },
+      "mode": {
+        "console": "Nexus 控制台桌面工作區",
+        "classic": "標準側欄版面"
+      },
+      "icon": {
+        "grayscale": "把圖示褪成灰階",
+        "whiten": "把圖示壓成剪影",
+        "original": "保留圖示原樣",
+        "pixelated": "把圖示重新取樣成粗像素"
+      },
+      "color": {
+        "green": "綠",
+        "purple": "紫",
+        "pink": "粉",
+        "white": "白",
+        "black": "黑"
+      }
+    },
+    "feedback": {
+      "theme": "主題已設為 {value}。",
+      "color": "配色已設為 {value}。",
+      "background": "動態背景已設為 {value}。",
+      "icon": "圖示形態已設為 {value}。",
+      "language": "語言已設為 {value}。",
+      "modeConsole": "已啟用 Nexus 控制台。",
+      "modeClassic": "已啟用標準版面。",
+      "exported": "文章已匯出為 PDF。",
+      "exportFailed": "文章匯出失敗。",
+      "navigationFailed": "跳轉未能完成。"
+    },
+    "group": {
+      "navigate": "四處走走",
+      "page": "對目前頁面動手",
+      "appearance": "改變網站外觀",
+      "console": "控制台自身"
+    },
+    "command": {
+      "home": "瀏覽首頁時間軸",
+      "posts": "瀏覽文章歸檔",
+      "notes": "瀏覽筆記索引",
+      "comment": "跳到本頁留言框",
+      "export": "把本文匯出為 PDF",
+      "post": "選擇一篇文章",
+      "note": "選擇一篇筆記",
+      "capture": "瀏覽圖集資源",
+      "infra": "查看服務狀態",
+      "project": "瀏覽專案",
+      "tags": "瀏覽標籤",
+      "about": "閱讀網站資訊",
+      "friends": "瀏覽友鏈",
+      "search": "邊打邊搜，例如 /search vue",
+      "theme": "選擇亮色或暗色主題",
+      "color": "選擇一套配色",
+      "background": "設定動態背景",
+      "icon": "選擇控制台圖示的畫法",
+      "language": "選擇介面語言",
+      "mode": "選擇控制台或標準版面",
+      "mode_classic": "回到標準版面",
+      "mode_console": "使用 Nexus 控制台",
+      "help": "閱讀命令手冊"
+    }
   }
 }

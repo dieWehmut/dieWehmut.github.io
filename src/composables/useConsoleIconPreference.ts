@@ -1,4 +1,4 @@
-import { computed, readonly, ref } from 'vue'
+import { readonly, ref } from 'vue'
 import type { ConsoleIconForm } from '../types/content'
 import { siteConfig } from '../data/site/config'
 
@@ -7,20 +7,20 @@ export const CONSOLE_ICON_FORM_STORAGE_KEY = 'consoleIconForm'
 /**
  * The four ways the console portrait can be drawn, in the order clicking it
  * cycles them. Order is the contract: the picker lists them this way and the
- * click walks the same ring, so the two never disagree.
+ * click walks the same ring, so the two never disagree. How each one is worded
+ * is not settled here — that text is translated, and lives with the rest of the
+ * console's messages under `console.option.icon`.
  */
-export const consoleIconFormOptions: readonly { id: ConsoleIconForm; label: string }[] = [
-  { id: 'grayscale', label: 'Drain the icon to gray' },
-  { id: 'whiten', label: 'Flatten the icon to a silhouette' },
-  { id: 'original', label: 'Leave the icon as authored' },
-  { id: 'pixelated', label: 'Resample the icon into coarse pixels' },
+export const consoleIconForms: readonly ConsoleIconForm[] = [
+  'grayscale',
+  'whiten',
+  'original',
+  'pixelated',
 ]
-
-const consoleIconFormIds = consoleIconFormOptions.map((option) => option.id)
 
 function parseIconForm(value: unknown): ConsoleIconForm | null {
   const candidate = String(value ?? '').trim().toLowerCase() as ConsoleIconForm
-  return consoleIconFormIds.includes(candidate) ? candidate : null
+  return consoleIconForms.includes(candidate) ? candidate : null
 }
 
 /** The site config is the template's default; a reader's own choice outranks it. */
@@ -53,8 +53,8 @@ function setConsoleIconForm(next: ConsoleIconForm) {
 }
 
 function cycleConsoleIconForm() {
-  const index = consoleIconFormIds.indexOf(iconForm.value)
-  return setConsoleIconForm(consoleIconFormIds[(index + 1) % consoleIconFormIds.length])
+  const index = consoleIconForms.indexOf(iconForm.value)
+  return setConsoleIconForm(consoleIconForms[(index + 1) % consoleIconForms.length])
 }
 
 export function useConsoleIconPreference() {
@@ -62,7 +62,6 @@ export function useConsoleIconPreference() {
 
   return {
     iconForm: readonly(iconForm),
-    iconFormOptions: computed(() => consoleIconFormOptions),
     setIconForm: setConsoleIconForm,
     cycleIconForm: cycleConsoleIconForm,
   }

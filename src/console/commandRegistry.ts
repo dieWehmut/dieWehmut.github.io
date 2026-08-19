@@ -58,7 +58,7 @@ const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }>
   // 边界是硬约束：scripts/test-console-registry.mjs 以 data: URL 加载它，相对 import 无法解析。
   color: { panel: 'color', values: new Set(['green', 'purple', 'pink', 'white', 'black']) },
   background: { panel: 'background', values: new Set(['on', 'off']) },
-  // 与 src/composables/useConsoleIconPreference.ts 的 consoleIconFormOptions 手工同步，
+  // 与 src/composables/useConsoleIconPreference.ts 的 consoleIconForms 手工同步，
   // 原因同上：本模块不得有相对 import。
   icon: { panel: 'icon', values: new Set(['grayscale', 'whiten', 'original', 'pixelated']) },
   language: { panel: 'language', values: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']) },
@@ -162,46 +162,56 @@ export function resolveConsoleCommand(
 }
 
 /**
- * Reading order of the command groups, with the heading each one gets on the
- * `/help` page. The grouping lives here rather than in the page so that the
- * suggestion rows and the reference page can never disagree about what a command
- * is for.
+ * Reading order of the command groups, with the i18n key of the heading each one
+ * gets on the `/help` page. The grouping lives here rather than in the page so
+ * that the suggestion rows and the reference page can never disagree about what a
+ * command is for. Keys rather than text, because this module may not import the
+ * locale files: see the no-import note at the top.
  */
 export const consoleCommandGroups = [
-  { id: 'navigate', title: 'Move around' },
-  { id: 'page', title: 'Act on the page you are reading' },
-  { id: 'appearance', title: 'Change how the site looks' },
-  { id: 'console', title: 'The console itself' },
+  { id: 'navigate', titleKey: 'console.group.navigate' },
+  { id: 'page', titleKey: 'console.group.page' },
+  { id: 'appearance', titleKey: 'console.group.appearance' },
+  { id: 'console', titleKey: 'console.group.console' },
 ] as const
 
 export type ConsoleCommandGroup = typeof consoleCommandGroups[number]['id']
 
+/**
+ * The command reference, as keys. Sub-commands separate their segments with `_`
+ * rather than `.`, since vue-i18n reads a dot as a step down into the message
+ * tree and `/mode/classic` is one message, not a `classic` inside a `mode`.
+ */
 export function listConsoleCommands(availability: ConsoleCommandAvailability = {}) {
   const commands = [
-    { input: '/home', description: 'Browse the Home timeline', group: 'navigate' },
-    { input: '/posts', description: 'Browse the post archive', group: 'navigate' },
-    { input: '/notes', description: 'Browse the note index', group: 'navigate' },
-    { input: '/comment', description: 'Jump to the comment box for this page', group: 'page' },
-    { input: '/export', description: 'Export this article as PDF', group: 'page' },
-    { input: '/post', description: 'Select a post', group: 'navigate' },
-    { input: '/note', description: 'Select a note', group: 'navigate' },
-    { input: '/capture', description: 'Browse captured assets', group: 'navigate' },
-    { input: '/infra', description: 'Inspect service status', group: 'navigate' },
-    { input: '/project', description: 'Browse projects', group: 'navigate' },
-    { input: '/tags', description: 'Browse tags', group: 'navigate' },
-    { input: '/about', description: 'Read site information', group: 'navigate' },
-    { input: '/friends', description: 'Browse friend links', group: 'navigate' },
-    { input: '/search', description: 'Search as you type, e.g. /search vue', group: 'navigate' },
-    { input: '/theme', description: 'Choose light or dark theme', group: 'appearance' },
-    { input: '/color', description: 'Choose a color scheme', group: 'appearance' },
-    { input: '/background', description: 'Configure the dynamic background', group: 'appearance' },
-    { input: '/icon', description: 'Choose how the console icon is drawn', group: 'appearance' },
-    { input: '/language', description: 'Choose interface language', group: 'appearance' },
-    { input: '/mode', description: 'Choose Console or standard layout', group: 'console' },
-    { input: '/mode/classic', description: 'Return to the standard layout', group: 'console' },
-    { input: '/mode/console', description: 'Use Nexus Console', group: 'console' },
-    { input: '/help', description: 'Read the command reference', group: 'console' },
-  ] as const satisfies ReadonlyArray<{ input: string; description: string; group: ConsoleCommandGroup }>
+    { input: '/home', descriptionKey: 'console.command.home', group: 'navigate' },
+    { input: '/posts', descriptionKey: 'console.command.posts', group: 'navigate' },
+    { input: '/notes', descriptionKey: 'console.command.notes', group: 'navigate' },
+    { input: '/comment', descriptionKey: 'console.command.comment', group: 'page' },
+    { input: '/export', descriptionKey: 'console.command.export', group: 'page' },
+    { input: '/post', descriptionKey: 'console.command.post', group: 'navigate' },
+    { input: '/note', descriptionKey: 'console.command.note', group: 'navigate' },
+    { input: '/capture', descriptionKey: 'console.command.capture', group: 'navigate' },
+    { input: '/infra', descriptionKey: 'console.command.infra', group: 'navigate' },
+    { input: '/project', descriptionKey: 'console.command.project', group: 'navigate' },
+    { input: '/tags', descriptionKey: 'console.command.tags', group: 'navigate' },
+    { input: '/about', descriptionKey: 'console.command.about', group: 'navigate' },
+    { input: '/friends', descriptionKey: 'console.command.friends', group: 'navigate' },
+    { input: '/search', descriptionKey: 'console.command.search', group: 'navigate' },
+    { input: '/theme', descriptionKey: 'console.command.theme', group: 'appearance' },
+    { input: '/color', descriptionKey: 'console.command.color', group: 'appearance' },
+    { input: '/background', descriptionKey: 'console.command.background', group: 'appearance' },
+    { input: '/icon', descriptionKey: 'console.command.icon', group: 'appearance' },
+    { input: '/language', descriptionKey: 'console.command.language', group: 'appearance' },
+    { input: '/mode', descriptionKey: 'console.command.mode', group: 'console' },
+    { input: '/mode/classic', descriptionKey: 'console.command.mode_classic', group: 'console' },
+    { input: '/mode/console', descriptionKey: 'console.command.mode_console', group: 'console' },
+    { input: '/help', descriptionKey: 'console.command.help', group: 'console' },
+  ] as const satisfies ReadonlyArray<{
+    input: string
+    descriptionKey: string
+    group: ConsoleCommandGroup
+  }>
 
   return commands.filter((command) => {
     const key = command.input.slice(1)

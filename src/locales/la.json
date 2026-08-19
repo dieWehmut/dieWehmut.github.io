@@ -115,5 +115,119 @@
     "loadMore": "Plura onerare",
     "uploadFailed": "Oneratio defecit.",
     "deleteFailed": "Deletio defecit."
+  },
+  "console": {
+    "shell": {
+      "label": "Consolium Nexus",
+      "recentLabel": "Mandata recentia",
+      "recent": "recentia",
+      "commandLabel": "Mandatum consolii",
+      "suggestionsLabel": "Mandata suggesta",
+      "insert": "-- INSERTIO --",
+      "run": "Mandatum exsequere"
+    },
+    "overview": {
+      "iconCycle": "Forma imaginis: {form}. Preme ut mutetur.",
+      "iconForm": "forma imaginis: {form}"
+    },
+    "suggestion": {
+      "tagEntries": "{count} elementa"
+    },
+    "panel": {
+      "fallback": "Consolium",
+      "back": "Ad indicem superiorem redi",
+      "empty": "Nullae optiones praesto sunt.",
+      "heading": {
+        "theme": "Thema elige",
+        "color": "Colorum rationem elige",
+        "background": "Fundus mobilis",
+        "icon": "Formam imaginis elige",
+        "language": "Linguam elige",
+        "mode": "Modum ostensionis elige",
+        "notePicker": "Notam elige",
+        "postPicker": "Scriptum elige"
+      },
+      "list": {
+        "fallback": "Optiones consolii",
+        "theme": "Optiones thematis",
+        "color": "Optiones colorum",
+        "background": "Optiones fundi",
+        "icon": "Optiones formae imaginis",
+        "language": "Optiones linguarum",
+        "mode": "Optiones modi ostensionis",
+        "notePicker": "Notae",
+        "postPicker": "Scripta"
+      }
+    },
+    "option": {
+      "theme": {
+        "dark": "Tabula colorum ad lucem tenuem",
+        "light": "Tabula colorum clara, discrimine forti"
+      },
+      "background": {
+        "on": "Fundum situs mobilem serva",
+        "off": "Fundum situs mobilem exstingue"
+      },
+      "mode": {
+        "console": "Statio operis consolii Nexus",
+        "classic": "Forma usitata cum margine laterali"
+      },
+      "icon": {
+        "grayscale": "In cinereum remitte",
+        "whiten": "In umbram planam redige",
+        "original": "Imaginem ut auctor fecit relinque",
+        "pixelated": "In crassa quadratula iterum finge"
+      },
+      "color": {
+        "green": "Viridis",
+        "purple": "Purpureus",
+        "pink": "Roseus",
+        "white": "Albus",
+        "black": "Niger"
+      }
+    },
+    "feedback": {
+      "theme": "Thema ad {value} positum est.",
+      "color": "Ratio colorum ad {value} posita est.",
+      "background": "Fundus mobilis ad {value} positus est.",
+      "icon": "Forma imaginis ad {value} posita est.",
+      "language": "Lingua ad {value} posita est.",
+      "modeConsole": "Consolium Nexus nunc in usu est.",
+      "modeClassic": "Forma usitata nunc in usu est.",
+      "exported": "Articulus ut PDF expressus est.",
+      "exportFailed": "Articulus exprimi non potuit.",
+      "navigationFailed": "Iter perfici non potuit."
+    },
+    "group": {
+      "navigate": "Circumire",
+      "page": "Agere in pagina quam legis",
+      "appearance": "Speciem situs mutare",
+      "console": "Consolium ipsum"
+    },
+    "command": {
+      "home": "Paginam domesticam percurre",
+      "posts": "Archivum scriptorum percurre",
+      "notes": "Indicem notarum percurre",
+      "comment": "Ad arculam commentariorum sali",
+      "export": "Hunc articulum ut PDF exprime",
+      "post": "Scriptum elige",
+      "note": "Notam elige",
+      "capture": "Imagines captas percurre",
+      "infra": "Statum servitiorum inspice",
+      "project": "Proiecta percurre",
+      "tags": "Titulos percurre",
+      "about": "De hoc situ lege",
+      "friends": "Nexus amicorum percurre",
+      "search": "Dum scribis quaere, e.g. /search vue",
+      "theme": "Lucem aut tenebras elige",
+      "color": "Colorum rationem elige",
+      "background": "Fundum mobilem tempera",
+      "icon": "Formam imaginis elige",
+      "language": "Linguam interfaciei elige",
+      "mode": "Consolium aut formam usitatam elige",
+      "mode_classic": "Ad formam usitatam redi",
+      "mode_console": "Consolio Nexus utere",
+      "help": "Indicem mandatorum lege"
+    }
   }
 }

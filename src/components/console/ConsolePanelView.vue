@@ -3,7 +3,7 @@
     <div class="console-panel__heading">
       <span class="console-panel__marker" aria-hidden="true">›</span>
       <h2>{{ heading }}</h2>
-      <button class="console-panel__close" type="button" aria-label="Back to previous menu" title="Back to previous menu" @click="closePanel">×</button>
+      <button class="console-panel__close" type="button" :aria-label="t('console.panel.back')" :title="t('console.panel.back')" @click="closePanel">×</button>
     </div>
 
     <p v-if="feedback" class="console-panel__feedback">{{ feedback }}</p>
@@ -33,19 +33,20 @@
         <code :class="{ 'is-current': option.current }">{{ option.code }}</code>
         <span>{{ option.label }}</span>
       </button>
-      <p v-if="!panelOptions.length" class="console-panel__empty">No options available.</p>
+      <p v-if="!panelOptions.length" class="console-panel__empty">{{ t('console.panel.empty') }}</p>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { getNotes, getPosts } from '../../data'
 import type { ConsolePanel } from '../../console/commandRegistry'
 import { CONSOLE_OPTION_WINDOW, consoleOptionWindowStart } from '../../console/suggestions'
 import { useColorSchemePreference } from '../../composables/useColorSchemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
-import { useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
+import { consoleIconForms, useConsoleIconPreference } from '../../composables/useConsoleIconPreference'
 import { useConsoleRowAccent } from '../../composables/useConsoleRowAccent'
 import { useThemePreference, type ThemeMode } from '../../composables/useThemePreference'
 import type { ConsoleIconForm, SiteColorScheme } from '../../types/content'
@@ -62,22 +63,22 @@ const emit = defineEmits<{
   'selection-change': [optionId: string]
 }>()
 
+const { t } = useI18n()
 const { theme, setTheme } = useThemePreference()
 const { colorScheme, colorSchemeOptions, setColorScheme } = useColorSchemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
-const { iconForm, iconFormOptions, setIconForm } = useConsoleIconPreference()
+const { iconForm, setIconForm } = useConsoleIconPreference()
 const { rowAccent } = useConsoleRowAccent()
 
 const notes = getNotes()
 const posts = getPosts()
-const themeOptions: Array<{ value: ThemeMode; label: string }> = [
-  { value: 'dark', label: 'Low-light terminal palette' },
-  { value: 'light', label: 'High-contrast light palette' },
-]
-const backgroundOptions = [
-  { value: 'on', label: 'Keep the animated site background enabled' },
-  { value: 'off', label: 'Disable the animated site background' },
-]
+const themeModes: readonly ThemeMode[] = ['dark', 'light']
+const backgroundStates = ['on', 'off'] as const
+/**
+ * Every other row on the panel is translated; these are not. A language names
+ * itself, so the list stays readable to the reader looking for their own tongue
+ * even while the console is speaking one they cannot read.
+ */
 const languages = [
   { value: 'zh', label: '简体中文' },
   { value: 'zh_tw', label: '繁體中文' },
@@ -107,73 +108,72 @@ type PanelOption = {
 const selectedIndex = ref(0)
 const rowsRef = ref<HTMLElement | null>(null)
 
-const heading = computed(() => {
-  const labels: Record<string, string> = {
-    theme: 'Select theme',
-    color: 'Select color scheme',
-    background: 'Dynamic background',
-    icon: 'Select icon form',
-    language: 'Select language',
-    mode: 'Select display mode',
-    'note-picker': 'Select a note',
-    'post-picker': 'Select a post',
-  }
-  return labels[props.panel || ''] || 'Console'
-})
+/**
+ * The name each panel answers to inside the message tree. It tracks the panel id
+ * except where that id is hyphenated, since the locale files spell every key in
+ * camelCase. One map serves both the heading and the list label, so a panel can
+ * never be announced under one name and titled under another.
+ */
+const PANEL_KEYS: Record<ConsolePanel, string> = {
+  theme: 'theme',
+  color: 'color',
+  background: 'background',
+  icon: 'icon',
+  language: 'language',
+  mode: 'mode',
+  'note-picker': 'notePicker',
+  'post-picker': 'postPicker',
+}
+
+const panelKey = computed(() => (props.panel ? PANEL_KEYS[props.panel] : null))
+
+const heading = computed(() => (
+  panelKey.value ? t(`console.panel.heading.${panelKey.value}`) : t('console.panel.fallback')
+))
 
 const backgroundEnabled = computed(() => dynamicBackgroundEnabled.value ? 'on' : 'off')
 
-const listLabel = computed(() => {
-  const labels: Partial<Record<ConsolePanel, string>> = {
-    mode: 'Display mode options',
-    theme: 'Theme options',
-    color: 'Color scheme options',
-    background: 'Background options',
-    icon: 'Icon form options',
-    language: 'Language options',
-    'note-picker': 'Notes',
-    'post-picker': 'Posts',
-  }
-  return props.panel ? labels[props.panel] || 'Console options' : 'Console options'
-})
+const listLabel = computed(() => (
+  panelKey.value ? t(`console.panel.list.${panelKey.value}`) : t('console.panel.list.fallback')
+))
 
 const panelOptions = computed<PanelOption[]>(() => {
   switch (props.panel) {
     case 'mode':
       return [
-        { command: '/mode/console', code: 'console', label: 'Nexus Console desktop workspace', current: true },
-        { command: '/mode/classic', code: 'classic', label: 'Standard sidebar layout' },
+        { command: '/mode/console', code: 'console', label: t('console.option.mode.console'), current: true },
+        { command: '/mode/classic', code: 'classic', label: t('console.option.mode.classic') },
       ]
     case 'theme':
-      return themeOptions.map((option) => ({
-        command: `/theme/${option.value}`,
-        code: option.value,
-        label: option.label,
-        current: theme.value === option.value,
-        livePreview: { kind: 'theme', value: option.value },
+      return themeModes.map((mode) => ({
+        command: `/theme/${mode}`,
+        code: mode,
+        label: t(`console.option.theme.${mode}`),
+        current: theme.value === mode,
+        livePreview: { kind: 'theme', value: mode },
       }))
     case 'color':
       return colorSchemeOptions.value.map((option) => ({
         command: `/color/${option.id}`,
         code: option.id,
-        label: option.label,
+        label: t(`console.option.color.${option.id}`),
         current: colorScheme.value === option.id,
         livePreview: { kind: 'color', value: option.id },
       }))
     case 'background':
-      return backgroundOptions.map((option) => ({
-        command: `/background/${option.value}`,
-        code: option.value,
-        label: option.label,
-        current: backgroundEnabled.value === option.value,
+      return backgroundStates.map((state) => ({
+        command: `/background/${state}`,
+        code: state,
+        label: t(`console.option.background.${state}`),
+        current: backgroundEnabled.value === state,
       }))
     case 'icon':
-      return iconFormOptions.value.map((option) => ({
-        command: `/icon/${option.id}`,
-        code: option.id,
-        label: option.label,
-        current: iconForm.value === option.id,
-        livePreview: { kind: 'icon', value: option.id },
+      return consoleIconForms.map((form) => ({
+        command: `/icon/${form}`,
+        code: form,
+        label: t(`console.option.icon.${form}`),
+        current: iconForm.value === form,
+        livePreview: { kind: 'icon', value: form },
       }))
     case 'language':
       return languages.map((option) => ({
