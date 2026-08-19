@@ -514,10 +514,35 @@ check(
 check(
   'one token sizes every square console thumbnail',
   /--console-thumb: \d+px/.test(consoleLayoutBlock)
-    && /\.console-capture-asset \{[^}]*var\(--console-thumb/.test(captureView)
-    && /\.console-capture-group__overflow \{[^}]*var\(--console-thumb/.test(captureView)
     && /\.console-friends__avatar \{[^}]*var\(--console-thumb/.test(friendsView)
     && !/flex: 0 0 \d+px/.test(captureView),
+)
+// Capture opted out of that token deliberately: a contact sheet has to divide the
+// row it is given, and a fixed stamp width can only be three-to-a-row at one
+// container width. Friend avatars are a list of faces and do want a fixed size.
+check(
+  'capture sizes its tiles by dividing the row, not by the thumbnail token',
+  !/--console-thumb/.test(captureView)
+    && /\.console-capture-group__media \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/.test(captureView),
+)
+check(
+  'console capture is three to a row in both the list and the detail, as classic is',
+  /\.console-capture-group__media \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/.test(captureView)
+    && /\.console-capture-detail__assets \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/.test(captureView)
+    && /\.capture-grid \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/.test(captureView)
+    && /\.capture-detail__grid \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/.test(captureView),
+)
+check(
+  // Matching the column count alone would still leave the two modes at different
+  // sizes. The gap and the fit are the rest of the arithmetic: a seamless sheet of
+  // square crops in the list, a spaced gallery under a 76vh cap in the detail.
+  'the two modes agree on the gap and the fit at both scales',
+  /\.console-capture-group__media \{[^}]*gap: 0/.test(captureView)
+    && /\.capture-grid \{[^}]*gap: 0/.test(captureView)
+    && /\.console-capture-detail__assets \{[^}]*gap: 12px/.test(captureView)
+    && /\.capture-detail__grid \{[^}]*gap: 12px/.test(captureView)
+    && /\.console-capture-group__media \.console-capture-asset \{[^}]*aspect-ratio: 1/.test(captureView)
+    && /\.console-capture-detail__assets img \{[^}]*max-height: 76vh[^}]*object-fit: contain/.test(captureView),
 )
 check(
   'one recipe styles every console button, out of the fill tokens',
@@ -542,9 +567,20 @@ check(
     && /asCaptureGroup\(item\)\.heading/.test(captureView),
 )
 check(
-  'appending to a capture group is not gated on a display limit',
-  !/asCaptureGroup\(item\)\.assets\.length < capturePreviewLimit/.test(captureView)
-    && /v-if="canEdit"[\s\S]{0,320}\+ append/.test(captureView),
+  // Two ways into the same upload was one too many: the editor bar already owns
+  // it, and a per-row button spent a row of the contact sheet saying so again.
+  'console capture uploads run through the editor bar alone',
+  !captureView.includes('+ append')
+    && /class="console-capture-editor"[\s\S]{0,400}\+ upload/.test(captureView)
+    && captureView.includes('selectUploadGroup'),
+)
+check(
+  // The preview limit is nine, which is three rows of three. Spending a tenth cell
+  // on the overflow count would open a fourth row holding one item, so the count
+  // rides the last tile instead — the same answer classic's badge gives.
+  'a truncated capture group reports itself on its last tile',
+  /capturePreviewLimit - 1 && hiddenAssetCount\(asCaptureGroup\(item\)\)/.test(captureView)
+    && /\.console-capture-group__overflow \{[^}]*position: absolute/.test(captureView),
 )
 check(
   'console mode restyles the about contact block rather than replacing it',

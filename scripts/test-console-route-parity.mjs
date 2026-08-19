@@ -53,9 +53,12 @@ const checks = [
   ['capture detail keeps tag navigation', captureView.includes('selectedGroup.tags') && captureView.includes('console-capture-detail__tags')],
   ['capture timeline keeps tag navigation', captureView.includes('asCaptureGroup(item).tags') && captureView.includes('console-capture-group__tags')],
   [
+    // The claim is that the timeline shows a bounded preview rather than every
+    // asset, so it is anchored on which list is iterated, not on how the loop
+    // happens to be destructured — the badge needs the index too.
     'capture timeline bounds each image preview group',
-    captureView.includes('v-for="asset in previewAssets(asCaptureGroup(item))"')
-      && !captureView.includes('v-for="asset in asCaptureGroup(item).assets"'),
+    /v-for="\(?asset[^"]*in previewAssets\(asCaptureGroup\(item\)\)"/.test(captureView)
+      && !/in asCaptureGroup\(item\)\.assets"/.test(captureView),
   ],
   [
     'capture timeline exposes the hidden image count as a group link',

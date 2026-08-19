@@ -90,7 +90,7 @@
             <article class="console-capture-group">
               <div class="console-capture-group__media">
                 <div
-                  v-for="asset in previewAssets(asCaptureGroup(item))"
+                  v-for="(asset, index) in previewAssets(asCaptureGroup(item))"
                   :key="asset.id"
                   class="console-capture-asset"
                 >
@@ -108,6 +108,18 @@
                       @error="retryPublicAssetImage($event, asset.image)"
                     />
                   </button>
+                  <!-- A truncated group reports itself on its last tile, the way
+                       classic does, rather than spending a tile of its own on the
+                       count: three to a row only stays three to a row if the count
+                       is not competing for a cell. It stays a link here because the
+                       console grid, unlike classic's, is not itself clickable. -->
+                  <RouterLink
+                    v-if="index === capturePreviewLimit - 1 && hiddenAssetCount(asCaptureGroup(item)) > 0"
+                    class="console-capture-group__overflow"
+                    :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`"
+                    :aria-label="`Open ${hiddenAssetCount(asCaptureGroup(item))} more captures`"
+                    @click="saveCaptureScrollPosition"
+                  >+{{ hiddenAssetCount(asCaptureGroup(item)) }}</RouterLink>
                   <button
                     v-if="canEdit"
                     class="console-capture-action"
@@ -118,16 +130,6 @@
                     @click="deleteCapture(asset)"
                   >-</button>
                 </div>
-                <RouterLink
-                  v-if="hiddenAssetCount(asCaptureGroup(item)) > 0"
-                  class="console-capture-group__overflow"
-                  :to="`/capture/${encodeURIComponent(asCaptureGroup(item).id)}`"
-                  :aria-label="`Open ${hiddenAssetCount(asCaptureGroup(item))} more captures`"
-                  @click="saveCaptureScrollPosition"
-                >
-                  <strong>+{{ hiddenAssetCount(asCaptureGroup(item)) }}</strong>
-                  <span>more</span>
-                </RouterLink>
               </div>
               <div class="console-capture-group__body">
                 <RouterLink
@@ -156,15 +158,6 @@
                     :to="source.url"
                   >{{ source.title }}</RouterLink>
                 </div>
-                <button
-                  v-if="canEdit"
-                  class="console-button"
-                  type="button"
-                  :disabled="editorBusy"
-                  :aria-label="t('capture.uploadImage')"
-                  :title="t('capture.uploadImage')"
-                  @click="selectUploadGroup(asCaptureGroup(item))"
-                >+ append</button>
               </div>
             </article>
           </template>
@@ -940,58 +933,64 @@ watch(isDetailRoute, (detail) => {
 }
 
 .console-capture-group {
-  grid-template-columns: minmax(200px, 380px) minmax(0, 1fr);
-  align-items: start;
-  min-height: 78px;
-  padding: 8px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   border: 1px solid var(--console-border, var(--site-border));
   background: var(--console-surface, transparent);
 }
 
-/* Wrapping rather than scrolling: at this thumbnail size a horizontal scroller
-   would hide most of a group behind a gesture, so the rows grow instead. */
-.console-capture-group__media,
+/* Classic's contact sheet, copied: three square crops to a row, butted together,
+   the grid running edge to edge inside the group's own border. CARD_GROUP_LIMIT
+   is 9, so a full group reads as three tidy rows — arithmetic the old wrapping
+   flex of fixed-width stamps could not honour at any container width. */
+.console-capture-group__media {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  min-width: 0;
+}
+
+/* The detail page is where the picture is the point rather than the set, so it
+   copies classic's spaced grid instead of the seamless one. */
 .console-capture-detail__assets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
   min-width: 0;
 }
 
 .console-capture-asset {
   position: relative;
-  flex: 0 0 var(--console-thumb, 88px);
-  width: var(--console-thumb, 88px);
-  height: var(--console-thumb, 88px);
+  min-width: 0;
 }
 
+/* Squaring the cell is what makes the list a grid rather than a ragged wall.
+   Cropping is the list's job; showing the whole frame is the detail page's. */
+.console-capture-group__media .console-capture-asset {
+  aspect-ratio: 1;
+}
+
+/* Classic's overflow badge is a rounded pill with a drop shadow — the only
+   rounded thing that would appear on a console page. Same corner, same job,
+   drawn square in the console's own tokens. */
 .console-capture-group__overflow {
-  display: grid;
-  flex: 0 0 var(--console-thumb, 88px);
-  width: var(--console-thumb, 88px);
-  height: var(--console-thumb, 88px);
-  place-content: center;
-  gap: 1px;
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 1;
+  padding: 1px 5px;
   border: 1px solid var(--console-border, var(--site-border));
-  color: var(--console-muted, var(--site-muted));
-  background: var(--console-control, transparent);
-  text-align: center;
-  text-decoration: none;
-}
-
-.console-capture-group__overflow strong {
   color: var(--console-accent, var(--site-accent));
-  font-size: 0.82rem;
-}
-
-.console-capture-group__overflow span {
-  font-size: 0.66rem;
+  background: var(--console-bg, var(--site-bg));
+  font-size: 0.72rem;
+  line-height: 1.4;
+  text-decoration: none;
 }
 
 .console-capture-group__overflow:hover,
 .console-capture-group__overflow:focus-visible {
-  color: var(--console-text, var(--site-text));
-  background: var(--console-selection, transparent);
+  color: var(--console-bg, var(--site-bg));
+  background: var(--console-accent, var(--site-accent));
   outline: none;
 }
 
@@ -1038,12 +1037,21 @@ watch(isDetailRoute, (detail) => {
   outline: none;
 }
 
-.console-capture-group__media img,
-.console-capture-detail__assets img {
+.console-capture-group__media img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Classic caps its detail images at 76vh and lets them keep their proportions;
+   matching that is what makes the two modes the same size rather than merely the
+   same column count. */
+.console-capture-detail__assets img {
+  display: block;
+  width: 100%;
+  max-height: 76vh;
+  object-fit: contain;
 }
 
 .console-capture-group__body,
@@ -1051,6 +1059,12 @@ watch(isDetailRoute, (detail) => {
   display: grid;
   gap: 6px;
   min-width: 0;
+}
+
+/* The group no longer carries padding — the contact sheet has to reach its own
+   border — so the text below it insets itself instead. */
+.console-capture-group__body {
+  padding: 8px;
 }
 
 /* Specific enough to outrank the muted colour the generic body-link rule below
@@ -1154,12 +1168,6 @@ watch(isDetailRoute, (detail) => {
 .console-capture-empty code {
   color: #ef6a6a;
   font: inherit;
-}
-
-@media (max-width: 1100px) {
-  .console-capture-group {
-    grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
-  }
 }
 
 @media (max-width: 900px) {
