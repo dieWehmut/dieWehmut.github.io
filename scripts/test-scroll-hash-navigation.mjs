@@ -11,6 +11,15 @@ const mobile = read('src/layouts/MobileDrawerLayout.vue')
 const checks = [
   ['router delegates hash scrolling', /if\s*\(to\.hash\)\s*return false/.test(router) && !/el:\s*to\.hash/.test(router)],
   ['sidebar uses shared heading resolver', /waitForHeading/.test(sidebar) && /resolveHeading/.test(sidebar)],
+  // Both the scroll target and the reading of which heading was reached are the
+  // same offset line, so they belong to one helper: an inline exact comparison
+  // here loses to the sub-pixel rounding of the scroll it is reading the result
+  // of, and the row then freezes. The tolerance itself is tested in
+  // test-heading-navigation.mjs; this only pins that the component defers to it.
+  [
+    'sidebar reads the active heading through the shared helper',
+    /activeHeadingIndex\(/.test(sidebar) && !/const threshold\s*=/.test(sidebar),
+  ],
   ['sidebar watches route hash', /watch\(\s*\(\)\s*=>\s*route\.hash/.test(sidebar)],
   ['sidebar writes canonical hash', /router\.replace/.test(sidebar) && /canonicalHeadingHash/.test(sidebar)],
   ['content mutations retry pending hash', /onContentMutation[\s\S]*scheduleHashScroll/.test(sidebar)],

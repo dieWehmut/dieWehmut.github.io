@@ -56,6 +56,32 @@ if (!fs.existsSync(helperPath)) {
   if (helper.resolveHeading(rootNode, `#${encodeURIComponent(title)}`) !== heading) {
     failures.push('encoded raw title resolves to its canonical heading')
   }
+
+  // Measured off a real article. `scrollHeadingIntoView` aimed at
+  // 1338.6328125 - 120 and the browser parked the page at 1218.5, leaving the
+  // heading it had just scrolled to 0.13px below the offset line. Read without a
+  // tolerance that heading never becomes the active one, and a row that steps
+  // from the active heading then re-targets the position the page is already
+  // parked at: a scroll of nothing, so no scroll event, so no new reading, so
+  // the arrow keys stop answering for good.
+  const tops = [681.6953125, 738.984375, 1338.6328125, 1949.78125]
+  if (helper.activeHeadingIndex(tops, 1218.5, 120) !== 2) {
+    failures.push('the heading just scrolled to reads as active despite sub-pixel rounding')
+  }
+  if (helper.activeHeadingIndex(tops, 0, 120) !== 0) {
+    failures.push('the first heading is active before any of them reach the line')
+  }
+  if (helper.activeHeadingIndex(tops, 1949.78125 - 120, 120) !== 3) {
+    failures.push('the last heading takes over once the page reaches it')
+  }
+  if (helper.activeHeadingIndex([], 0, 120) !== -1) {
+    failures.push('an article with no headings has no active one')
+  }
+  // The tolerance answers a rounding error, so it has to stay far below the gap
+  // between two headings — otherwise scrolling to one would activate the next.
+  if (helper.activeHeadingIndex(tops, 738.984375 - 120, 120) !== 1) {
+    failures.push('the tolerance never reaches as far as the next heading')
+  }
 }
 
 if (failures.length) {

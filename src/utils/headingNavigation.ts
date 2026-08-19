@@ -137,6 +137,39 @@ export function scrollHeadingIntoView(
   view.scrollTo({ top, behavior })
 }
 
+/**
+ * How far below the offset line a heading may still sit and count as reached.
+ *
+ * `scrollHeadingIntoView` above aims at exactly that line, and browsers round the
+ * scroll offset they end up at onto a sub-pixel grid, so the heading it just
+ * scrolled to can land a fraction of a pixel short of it. Read without any
+ * tolerance that heading never becomes the active one — and anything that steps
+ * from the active heading then keeps re-targeting the position the page is already
+ * parked at, which scrolls nowhere, fires no scroll event, and so never produces a
+ * new reading. The row stops answering for good rather than merely lagging.
+ *
+ * A pixel covers the rounding with room to spare while staying far below the gap
+ * between two headings, so it can never hand the reading to the wrong one.
+ */
+export const HEADING_ACTIVATION_TOLERANCE = 1
+
+/**
+ * Which heading the reader is under, given where each one sits in the document
+ * and where the page is scrolled to. The last heading at or above the offset line
+ * wins; before any of them reach it the first one stands in.
+ */
+export function activeHeadingIndex(tops: number[], scrollY: number, offset: number): number {
+  if (!tops.length) return -1
+
+  const line = scrollY + offset + HEADING_ACTIVATION_TOLERANCE
+  let index = 0
+  for (let i = 0; i < tops.length; i += 1) {
+    if (tops[i] > line) break
+    index = i
+  }
+  return index
+}
+
 export function waitForHeading({
   getRoot,
   hash,

@@ -32,6 +32,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setReadingPath, useScrollRequests } from '../../composables/useReadingPath'
 import {
+  activeHeadingIndex,
   canonicalHeadingHash,
   resolveHeading,
   scrollHeadingIntoView,
@@ -166,13 +167,10 @@ function updateProgress() {
 function updateActive() {
   if (!isEnabled) return
   if (!headings.length) return
-  const threshold = window.scrollY + props.offset
-  let current = headings[0]
-
-  for (const item of headings) {
-    if (item.top > threshold) break
-    current = item
-  }
+  // The reading is shared with the scroll that puts a heading under the offset
+  // line, so that a heading the page was just sent to always reads as reached.
+  const index = activeHeadingIndex(headings.map((item) => item.top), window.scrollY, props.offset)
+  const current = headings[index] || headings[0]
 
   const nextActiveId = current?.id || ''
   if (nextActiveId !== activeId.value) activeId.value = nextActiveId
