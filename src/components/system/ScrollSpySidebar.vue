@@ -729,7 +729,7 @@ onBeforeUnmount(() => {
   line-height: 1.35;
 }
 
-:global([data-theme="light"]) .scroll-spy__bar {
+:root[data-theme="light"] .scroll-spy__bar {
   background: rgba(0, 0, 0, 0.08);
 }
 </style>

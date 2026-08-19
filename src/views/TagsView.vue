@@ -427,7 +427,7 @@ useConsoleResultNavigation(handleConsoleResultNavigation)
   --tag-border: rgba(255, 255, 255, 0.08);
 }
 
-:global([data-theme="light"]) .tag-view {
+:root[data-theme="light"] .tag-view {
   --tag-accent: var(--site-accent);
   --tag-accent-soft: rgb(var(--site-accent-rgb) / 0.14);
   --tag-accent-muted: rgb(var(--site-accent-rgb) / 0.06);

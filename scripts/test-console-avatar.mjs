@@ -16,9 +16,12 @@ const checks = [
   ['all four icon forms are drawn', ['grayscale', 'whiten', 'original', 'pixelated'].every((form) => header.includes(`avatar--${form}`))],
   // Every form has to answer in either theme now that a click cycles them, so
   // none may switch itself off in one. Only the silhouette is theme-dependent,
-  // and it resolves by inverting rather than by disappearing.
+  // and it resolves by inverting rather than by disappearing. The light override
+  // reaches the image through a plain ancestor selector: wrapping the ancestor in
+  // `:global()` would make Vue's scoped rewriter drop the half that names the
+  // image, landing the filter on <html> — see test-scoped-styles.mjs.
   ['the silhouette inverts per theme instead of switching off', /\.console-overview__avatar--whiten\s*\{\s*filter:\s*brightness\(0\)\s*invert\(1\)/.test(header)
-    && /data-theme="light"\]\)\s*\.console-overview__avatar--whiten\s*\{\s*filter:\s*brightness\(0\)/.test(header)],
+    && /\[data-theme="light"\]\s+\.console-overview__avatar--whiten\s*\{\s*filter:\s*brightness\(0\)/.test(header)],
   ['the coarse form resamples with nearest-neighbour sampling', /--pixelated\s*\{[\s\S]*?image-rendering:\s*pixelated/.test(header)
     && /--pixelated\s*\{[\s\S]*?transform:\s*scale\(var\(--console-icon-pixel\)\)/.test(header)],
   ['the portrait plate is a button that cycles the form', /<button[\s\S]{0,200}class="console-overview__portrait"[\s\S]*?@click="cycleIconForm\(\)"/.test(header)],

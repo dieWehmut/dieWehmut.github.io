@@ -175,7 +175,11 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
   filter: brightness(0) invert(1);
 }
 
-:global(html[data-theme="light"]) .console-overview__avatar--whiten {
+/* The scope attribute lands on the last compound selector, so the ancestor is
+   matched globally without `:global()` — which, wrapped around only the first
+   half of a descendant selector, would drop the half that names the target and
+   leave `filter: brightness(0)` on `<html>` itself. */
+:root[data-theme="light"] .console-overview__avatar--whiten {
   filter: brightness(0);
 }
 
