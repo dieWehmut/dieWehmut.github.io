@@ -170,6 +170,33 @@ export function activeHeadingIndex(tops: number[], scrollY: number, offset: numb
   return index
 }
 
+/**
+ * Which heading a table of contents shows as selected.
+ *
+ * The scroll position decides, which is `activeHeadingIndex` above — except that
+ * it cannot always. A document's last screenful collapses into a single reading:
+ * once the page has scrolled as far as it goes, no further scrolling can bring a
+ * heading nearer the offset line, so the position has run out of room to say
+ * which of the headings down there is meant. Feed this the maximum the page can
+ * scroll to and it names the last heading the position can express.
+ *
+ * Being sent to a heading past that point is still a move the reader made, so a
+ * pinned index holds the selection where the position cannot follow. A pin the
+ * position *can* express needs no holding — the reading arrives at it on its own
+ * — so it is ignored, which keeps the pin from outliving its one purpose.
+ */
+export function selectedHeadingIndex(
+  tops: number[],
+  scrollY: number,
+  maxScrollY: number,
+  offset: number,
+  pinnedIndex: number,
+): number {
+  const lastReachable = activeHeadingIndex(tops, maxScrollY, offset)
+  if (pinnedIndex > lastReachable) return pinnedIndex
+  return activeHeadingIndex(tops, scrollY, offset)
+}
+
 export function waitForHeading({
   getRoot,
   hash,

@@ -82,6 +82,33 @@ if (!fs.existsSync(helperPath)) {
   if (helper.activeHeadingIndex(tops, 738.984375 - 120, 120) !== 1) {
     failures.push('the tolerance never reaches as far as the next heading')
   }
+
+  // Also measured off /post/Harness. The article's last heading sits 2433.53 into
+  // the document; in a 900px-tall viewport the page runs out of scroll at 2230, so
+  // no scroll position can ever bring that heading to the offset line. A row that
+  // reads its selection back from the position therefore refuses to walk into the
+  // heading, or to wrap past it, and reports "no response" exactly the way the
+  // sub-pixel rounding above did.
+  const article = [628.36, 685.65, 1285.3, 1896.45, 2022.23, 2227.88, 2433.53]
+  const shortRange = 2230
+  const fullRange = 2421
+  if (helper.selectedHeadingIndex(article, shortRange, shortRange, 120, 6) !== 6) {
+    failures.push('a heading past the end of the scroll range can still be selected')
+  }
+  if (helper.selectedHeadingIndex(article, 1219, shortRange, 120, -1)
+    !== helper.activeHeadingIndex(article, 1219, 120)) {
+    failures.push('with nothing pinned the selection is just the reading')
+  }
+  // A pin the page can reach needs no holding, so it must not be honoured: doing so
+  // would freeze the selection at whatever was last clicked and stop it following
+  // the page.
+  if (helper.selectedHeadingIndex(article, 566, fullRange, 120, 6) !== 1) {
+    failures.push('a pin the page can scroll to yields to the reading')
+  }
+  if (helper.selectedHeadingIndex(article, 1219, shortRange, 120, 5)
+    !== helper.activeHeadingIndex(article, 1219, 120)) {
+    failures.push('the last heading inside the scroll range is not treated as unreachable')
+  }
 }
 
 if (failures.length) {

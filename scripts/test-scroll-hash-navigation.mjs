@@ -14,11 +14,18 @@ const checks = [
   // Both the scroll target and the reading of which heading was reached are the
   // same offset line, so they belong to one helper: an inline exact comparison
   // here loses to the sub-pixel rounding of the scroll it is reading the result
-  // of, and the row then freezes. The tolerance itself is tested in
-  // test-heading-navigation.mjs; this only pins that the component defers to it.
+  // of, and the row then freezes. The helper also carries the selection through
+  // the last screenful, where the scroll position has no room left to say which
+  // heading is meant. Both rules are tested in test-heading-navigation.mjs; this
+  // only pins that the component defers to them.
   [
     'sidebar reads the active heading through the shared helper',
-    /activeHeadingIndex\(/.test(sidebar) && !/const threshold\s*=/.test(sidebar),
+    /selectedHeadingIndex\(/.test(sidebar) && !/const threshold\s*=/.test(sidebar),
+  ],
+  [
+    'the reader takes the selection back from the pin',
+    /addEventListener\('wheel', releasePinnedHeading/.test(sidebar)
+    && /removeEventListener\('wheel', releasePinnedHeading/.test(sidebar),
   ],
   ['sidebar watches route hash', /watch\(\s*\(\)\s*=>\s*route\.hash/.test(sidebar)],
   ['sidebar writes canonical hash', /router\.replace/.test(sidebar) && /canonicalHeadingHash/.test(sidebar)],

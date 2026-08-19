@@ -32,10 +32,10 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setReadingPath, useScrollRequests } from '../../composables/useReadingPath'
 import {
-  activeHeadingIndex,
   canonicalHeadingHash,
   resolveHeading,
   scrollHeadingIntoView,
+  selectedHeadingIndex,
   waitForHeading,
 } from '../../utils/headingNavigation'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
@@ -76,6 +76,12 @@ let handledHash = ''
 let handledRequestHash = ''
 let ignoredRouteHash = ''
 let spyEl = null
+/**
+ * The heading the row was sent to that the page has no scroll position left to
+ * express — see `selectedHeadingIndex`. Any gesture of the reader's own hands the
+ * selection back to the scroll position.
+ */
+let pinnedId = ''
 
 function registerButton(id, el) {
   if (el) buttonEls.set(id, el)
@@ -94,6 +100,7 @@ function clearHeadings() {
   headings = []
   items.value = []
   activeId.value = ''
+  pinnedId = ''
   setReadingPath(null)
 }
 
@@ -169,7 +176,12 @@ function updateActive() {
   if (!headings.length) return
   // The reading is shared with the scroll that puts a heading under the offset
   // line, so that a heading the page was just sent to always reads as reached.
-  const index = activeHeadingIndex(headings.map((item) => item.top), window.scrollY, props.offset)
+  // Past the end of the scroll range there is no position left to read, so a pin
+  // carries the selection the rest of the way.
+  const tops = headings.map((item) => item.top)
+  const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+  const pinnedIndex = pinnedId ? headings.findIndex((item) => item.id === pinnedId) : -1
+  const index = selectedHeadingIndex(tops, window.scrollY, maxScrollY, props.offset, pinnedIndex)
   const current = headings[index] || headings[0]
 
   const nextActiveId = current?.id || ''
@@ -263,14 +275,31 @@ function scheduleHashScroll(hash, shouldEmit = false) {
 }
 
 function scrollToHeading(id) {
+  // Being sent somewhere is the move; the selection is updated here rather than
+  // waiting for a scroll event, because the page may already be as far down as it
+  // goes and then no scroll event is coming.
+  pinnedId = id
   scheduleHashScroll(canonicalHeadingHash(id), true)
+  updateActive()
+}
+
+/**
+ * A wheel or a finger is the reader taking the page back, so the selection goes
+ * back to following it. Only a pin past the end of the scroll range is affected —
+ * everything else already follows.
+ */
+function releasePinnedHeading() {
+  if (!pinnedId) return
+  pinnedId = ''
+  updateActive()
 }
 
 /**
  * Left/Right on the console prompt walks this row the way it walks the month
  * strip: one box per press, wrapping at either end. Scrolling to the heading is
  * the whole move — `updateActive()` stays the only writer of `activeId`, so the
- * percentage and the highlight follow the page instead of racing it.
+ * percentage and the highlight follow the page instead of racing it, and the pin
+ * covers the one stretch of the page the scroll position cannot describe.
  */
 function stepSection(delta) {
   if (!items.value.length) return
@@ -426,6 +455,8 @@ onMounted(async () => {
 
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', onResize)
+  window.addEventListener('wheel', releasePinnedHeading, { passive: true })
+  window.addEventListener('touchstart', releasePinnedHeading, { passive: true })
 
   const root = findRoot()
   if (window.ResizeObserver && root) {
@@ -462,6 +493,8 @@ onBeforeUnmount(() => {
   }
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('resize', onResize)
+  window.removeEventListener('wheel', releasePinnedHeading)
+  window.removeEventListener('touchstart', releasePinnedHeading)
 })
 </script>
 
