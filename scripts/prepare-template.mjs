@@ -3,7 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 import process from 'node:process'
 import { execFileSync } from 'node:child_process'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 
 const sourceOnlyPaths = [
   '.claude',
@@ -16,10 +16,14 @@ const sourceOnlyPaths = [
   '.github/workflows/sync-capture.yml',
   'scripts/checkout-assets-repo.mjs',
   'scripts/sync-assets-repo.mjs',
+  'scripts/smoke-sandkasten-doc.mjs',
   'scripts/template-identity.mjs',
   'scripts/prepare-template.mjs',
   'scripts/validate-template.mjs',
   'scripts/test-infra-integration-scan.mjs',
+  'scripts/test-markdown-render.mjs',
+  'scripts/test-vocabulary-audio.mjs',
+  'scripts/test-console-avatar.mjs',
   'scripts/test-template-export.mjs',
   'scripts/test-template-identity.mjs',
   'scripts/test-template-sync-workflow.mjs',
@@ -62,22 +66,22 @@ function assertSeparatedRoots(sourceRoot, outputRoot) {
   }
 }
 
-function copyTrackedFiles(sourceRoot, outputRoot) {
-  const files = execFileSync('git', ['-C', sourceRoot, 'ls-files', '-z'])
-    .toString('utf8')
-    .split('\0')
-    .filter(Boolean)
-
+function copyRevisionFiles(sourceRoot, outputRoot, sourceSha) {
+  const archivePath = path.join(
+    os.tmpdir(),
+    `vorlage-source-${process.pid}-${Math.random().toString(36).slice(2)}.tar`,
+  )
   fs.rmSync(outputRoot, { recursive: true, force: true })
   fs.mkdirSync(outputRoot, { recursive: true })
-  for (const relative of files) {
-    const source = path.join(sourceRoot, relative)
-    if (!fs.existsSync(source) || !fs.statSync(source).isFile()) {
-      throw new Error(`Tracked source file is missing: ${relative}`)
-    }
-    const destination = path.join(outputRoot, relative)
-    fs.mkdirSync(path.dirname(destination), { recursive: true })
-    fs.copyFileSync(source, destination)
+  try {
+    execFileSync(
+      'git',
+      ['-C', sourceRoot, 'archive', '--format=tar', '--output', archivePath, sourceSha],
+      { stdio: 'pipe' },
+    )
+    execFileSync('tar', ['-xf', archivePath, '-C', outputRoot], { stdio: 'pipe' })
+  } finally {
+    fs.rmSync(archivePath, { force: true })
   }
 }
 
@@ -328,7 +332,7 @@ function greet(name) {
 
   const log = execFileSync(
     'git',
-    ['-C', sourceRoot, 'log', '--date=iso-strict', '--pretty=format:- %h %cI - %s'],
+    ['-C', sourceRoot, 'log', sourceSha, '--date=iso-strict', '--pretty=format:- %h %cI - %s'],
     { encoding: 'utf8' },
   )
   const sanitizedLog = replaceLegacyTemplateIdentity(log, templateIdentity)
@@ -443,10 +447,11 @@ function writeTemplateDeployWorkflow(outputRoot) {
 
 function rewriteHtmlTitle(outputRoot, templateIdentity) {
   const htmlPath = path.join(outputRoot, 'index.html')
-  const html = fs.readFileSync(htmlPath, 'utf8').replace(
+  let html = fs.readFileSync(htmlPath, 'utf8').replace(
     /<title>[^<]*<\/title>/i,
     `<title>${templateIdentity.repositoryName}</title>`,
   )
+  html = html.replace(/\s*<link\s+rel=["']icon["'][^>]*>/i, '')
   writeText(outputRoot, 'index.html', html)
 }
 
@@ -491,18 +496,22 @@ export async function prepareTemplate({ sourceRoot, outputRoot, sourceSha }) {
   const output = path.resolve(outputRoot)
   assertSeparatedRoots(source, output)
 
-  const identityModule = await import(
-    pathToFileURL(path.join(source, 'scripts/template-identity.mjs')).href,
-  )
-  const templateIdentity = identityModule.templateIdentity
-  const resolvedSha = sourceSha || execFileSync(
+  const requestedSha = sourceSha || execFileSync(
     'git',
     ['-C', source, 'rev-parse', 'HEAD'],
     { encoding: 'utf8' },
   ).trim()
+  const resolvedSha = execFileSync(
+    'git',
+    ['-C', source, 'rev-parse', `${requestedSha}^{commit}`],
+    { encoding: 'utf8' },
+  ).trim()
   const sourceUpdated = getSourceUpdated(source, resolvedSha)
 
-  copyTrackedFiles(source, output)
+  copyRevisionFiles(source, output, resolvedSha)
+  const templateIdentity = Object.freeze(
+    JSON.parse(fs.readFileSync(path.join(output, 'src/data/site/template-identity.json'), 'utf8')),
+  )
   installTemplateReadmes(output)
   removeSourceOnlyFiles(output)
   rewriteTemplateGitignore(output)
