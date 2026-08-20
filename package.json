@@ -30,6 +30,7 @@
     "test:scoped-styles": "node scripts/test-scoped-styles.mjs",
     "test:site-overview": "node scripts/test-site-overview.mjs",
     "test:infra-status": "node scripts/test-infra-status.mjs",
+    "test:template-identity": "node scripts/test-template-identity.mjs",
     "test:console": "pnpm test:console-command && pnpm test:console-state && pnpm test:console-selection && pnpm test:console-timeline && pnpm test:console-registry && pnpm test:console-suggestions && pnpm test:console-target && pnpm test:console-display-mode && pnpm test:console-comment && pnpm test:console-avatar && pnpm test:console-i18n && pnpm test:site-overview && pnpm test:console-layout && pnpm test:console-route-parity && pnpm test:heading-navigation && pnpm test:scroll-hash-navigation && pnpm test:color-scheme && pnpm test:scoped-styles",
     "typecheck": "vue-tsc --noEmit",
     "build": "pnpm run content:sync && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
