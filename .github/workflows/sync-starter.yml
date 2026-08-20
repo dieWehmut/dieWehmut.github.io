@@ -1,12 +1,21 @@
-name: Sync Starter Template
+name: Sync Vorlage Template
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-vorlage
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
-  sync-starter:
+  sync-vorlage:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -17,416 +26,152 @@ jobs:
       - name: Check starter token
         env:
           STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
+        shell: bash
         run: |
-          if [ -z "$STARTER_PUSH_TOKEN" ]; then
+          set -euo pipefail
+          if [ -z "${STARTER_PUSH_TOKEN}" ]; then
             echo "STARTER_PUSH_TOKEN is not set." >&2
             exit 1
           fi
 
-      - name: Prepare template
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install source dependencies
+        shell: bash
+        run: pnpm install --frozen-lockfile
+
+      - name: Initialize staging paths
+        shell: bash
         run: |
-          set -e
-
-          # Remove files that should not be in the template
-          rm -rf prompt/ sample/ dist/ public/capture-assets/ .env.local .claude/ .githooks/
-          rm -f CAPTURE.md scripts/sync-assets-repo.mjs scripts/checkout-assets-repo.mjs
-
-          # --- Use generic package metadata for the template ---
-          node --input-type=module << 'EOF'
-          import fs from 'node:fs'
-
-          function writeJson(filePath, data) {
-            fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`)
-          }
-
-          const packagePath = 'package.json'
-          const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
-          packageJson.name = 'vorlage'
-          if (packageJson.scripts) delete packageJson.scripts['assets:push']
-          writeJson(packagePath, packageJson)
-
-          const packageLockPath = 'package-lock.json'
-          if (fs.existsSync(packageLockPath)) {
-            const packageLock = JSON.parse(fs.readFileSync(packageLockPath, 'utf8'))
-            packageLock.name = 'vorlage'
-            if (packageLock.packages?.['']) packageLock.packages[''].name = 'vorlage'
-            writeJson(packageLockPath, packageLock)
-          }
-          EOF
-
-          # --- Ensure MIT license is present in the template ---
-          cat > LICENSE << 'EOF'
-          MIT License
-
-          Copyright (c) 2026 dieWehmut
-
-          Permission is hereby granted, free of charge, to any person obtaining a copy
-          of this software and associated documentation files (the "Software"), to deal
-          in the Software without restriction, including without limitation the rights
-          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-          copies of the Software, and to permit persons to whom the Software is
-          furnished to do so, subject to the following conditions:
-
-          The above copyright notice and this permission notice shall be included in all
-          copies or substantial portions of the Software.
-
-          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-          SOFTWARE.
-          EOF
-
-          # --- Use the starter-readme.md as the template README ---
-          cp src/data/site/starter-readme.md README.md
-
-          # --- Replace config.ts with the placeholder config ---
-          # The placeholder lives in the source tree so that vue-tsc checks it against
-          # SiteConfig; a copy embedded here would drift silently every time the type
-          # gains a required field.
-          cp src/data/site/config.starter.ts src/data/site/config.ts
-          rm -f src/data/site/config.starter.ts
-
-          # --- Replace about.md with example ---
-          cat > src/data/site/about.md << 'ABOUTEOF'
-          ## About This Site
-
-          This site is built with the [Vorlage](https://github.com/dieWehmut/Vorlage) template.
-
-          - Template demo: [https://diewehmut.github.io/Vorlage/](https://diewehmut.github.io/Vorlage/)
-          - Production demo: [https://diewehmut.github.io/](https://diewehmut.github.io/)
-
-          ## Copyright
-
-          All content on this site is subject to a CC-BY-NC license unless otherwise stated.
-          ABOUTEOF
-
-          # --- Replace data files with example content ---
-          cat > src/data/site/friends.ts << 'EOF'
-          import type { FriendLink } from '../../types/content'
-
-          export const friends: FriendLink[] = [
-            {
-              id: 'nexus-author',
-              name: 'diesw',
-              description: 'Vorlage template author',
-              url: 'https://diewehmut.github.io/',
-              avatar: 'https://avatars.githubusercontent.com/dieWehmut',
-            },
-            // Add your friend links here:
-            // {
-            //   id: 'friend-1',
-            //   name: 'Friend Name',
-            //   description: 'A short description',
-            //   url: 'https://friend-site.com',
-            //   avatar: 'https://avatars.githubusercontent.com/friend-username',
-            // },
-          ]
-          EOF
-
-          cat > src/data/site/app.ts << 'EOF'
-          import { ref } from 'vue'
-
-          export const apps = ref([
-            {
-              name: 'Apps',
-              autoLoad: true,
-              description: 'Static apps list',
-              manualItems: [
-                // Add your apps here
-              ],
-            },
-          ])
-
-          export default apps
-          EOF
-
-          cat > src/data/site/game.ts << 'EOF'
-          import { ref } from 'vue'
-
-          export const games = ref([
-            {
-              name: 'Games',
-              autoLoad: true,
-              description: 'Static games list',
-              manualItems: [
-                // Add your game projects here
-              ],
-            },
-          ])
-
-          export default games
-          EOF
-
-          cat > src/data/site/infra.ts << 'EOF'
-          import { ref } from 'vue'
-          import type { InfraEntry } from '../../types/content'
-
-          // Sample endpoints — replace with your own services.
-          // Each entry is reported as online or offline via a binary reachability probe.
-          const initialInfra: InfraEntry[] = [
-            { name: 'Demo Site', key: 'demo', url: 'https://diewehmut.github.io/Vorlage/', date: '2026-05-01' },
-            { name: 'GitHub', key: 'github', url: 'https://github.com', date: '2026-05-01' },
-            // { name: 'Service Name', key: 'service', url: 'https://service.example.com', date: '2025-01-01' },
-          ]
-
-          initialInfra.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-
-          export const infra = ref(initialInfra)
-
-          export default infra
-          EOF
-
-          cat > src/data/site/page.ts << 'EOF'
-          import { ref } from 'vue'
-          import type { WebsiteEntry } from '../../types/content'
-
-          // Sample websites — replace with your own projects.
-          export const pages = ref<WebsiteEntry[]>([
-            {
-              name: 'Vorlage',
-              displayName: 'Vorlage',
-              repoUrl: 'https://github.com/dieWehmut/Vorlage',
-              date: '2026-05-01',
-              url: 'https://diewehmut.github.io/Vorlage/',
-            },
-            // {
-            //   name: 'your-site',
-            //   displayName: 'your-site',
-            //   repoUrl: 'https://github.com/your-username/your-repo',
-            //   date: '2026-06-01',
-            //   url: 'https://your-site.example.com',
-            // },
-          ])
-
-          export default pages
-          EOF
-
-          cat > src/data/site/tool.ts << 'EOF'
-          import { ref } from 'vue'
-          import { siteConfig } from './config'
-
-          export const tools = ref([
-            {
-              name: 'Tools',
-              autoLoad: true,
-              owner: siteConfig.githubUser,
-              repo: '',
-              description: 'Static tools list',
-              manualItems: [
-                // Add your tool projects here
-              ],
-            },
-          ])
-
-          export default tools
-          EOF
-
-          # --- Replace docs with a sample post ---
-          rm -rf src/data/docs/notes/*.md src/data/docs/posts/*.md
-
-          cat > src/data/docs/posts/hello-world.md << 'EOF'
-          ---
-          title: Hello World
-          date: 2026-05-01
-          tags: [intro, welcome]
-          ---
-
-          # Hello World
-
-          Welcome to your new Vorlage site! Edit or replace this post to get started.
-
-          ## Markdown Features
-
-          This template supports full GitHub-flavored Markdown:
-
-          - **Bold**, *italic*, ~~strikethrough~~
-          - `inline code` and fenced code blocks with syntax highlighting
-          - [Links](https://github.com), images, tables
-          - Blockquotes, task lists, details/summary
-
-          ### Math Support
-
-          Inline math: $E = mc^2$
-
-          Display math:
-
-          $$
-          \sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
-          $$
-
-          ### Code Block
-
-          ```javascript
-          function greet(name) {
-            console.log(`Hello, ${name}!`)
-          }
-          ```
-          EOF
-
-          latest_commit_date="$(git log -1 --format=%cI)"
+          set -euo pipefail
           {
-            cat << EOF
-          ---
-          title: 开发日志
-          date: ${latest_commit_date}
-          tags: [devlog, commit]
-          ---
+            echo "EXPORT_DIR=${RUNNER_TEMP}/vorlage-export"
+            echo "TARGET_DIR=${RUNNER_TEMP}/vorlage-repository"
+          } >> "$GITHUB_ENV"
 
-          # 开发日志
-
-          本文档由导出流程根据仓库 commit 历史自动生成，日期取最新 commit 时间。
-
-          EOF
-            git log --date=iso-strict --pretty=format:'- `%h` %cI - %s'
-            printf '\n'
-          } > src/data/docs/posts/development-log.md
-
-          cat > src/data/docs/notes/sample-note.md << 'EOF'
-          ---
-          title: Sample Note
-          date: 2026-05-01
-          tags: [note]
-          type: note
-          ---
-
-          This is a sample note. Replace it with your own content.
-          EOF
-
-          # --- Reset capture data for the template ---
-          cat > src/data/capture/manifest.json << 'EOF'
-          []
-          EOF
-
-          cat > src/data/capture/generated.ts << 'EOF'
-          import type { CaptureAsset } from '../../types/content'
-
-          export const generatedCaptureAssets: CaptureAsset[] = [] as CaptureAsset[]
-
-          export default generatedCaptureAssets
-          EOF
-
-          # --- Replace deploy workflow with a template-friendly GitHub Pages workflow ---
-          cat > .github/workflows/deploy.yml << 'EOF'
-          name: Deploy to GitHub Pages
-
-          on:
-            push:
-              branches: [main]
-            workflow_dispatch:
-
-          permissions:
-            contents: read
-            pages: write
-            id-token: write
-
-          concurrency:
-            group: pages
-            cancel-in-progress: true
-
-          jobs:
-            build-and-deploy:
-              runs-on: ubuntu-latest
-
-              env:
-                VITE_CODE_RUNNER_API_URL: ${{ '${{ vars.VITE_CODE_RUNNER_API_URL }}' }}
-                VITE_CODE_RUNNER_API_TOKEN: ${{ '${{ vars.VITE_CODE_RUNNER_API_TOKEN }}' }}
-
-              environment:
-                name: github-pages
-
-              steps:
-                - name: Checkout
-                  uses: actions/checkout@v4
-
-                - name: Setup pnpm
-                  uses: pnpm/action-setup@v4
-                  with:
-                    version: 9
-
-                - name: Setup Node.js
-                  uses: actions/setup-node@v4
-                  with:
-                    node-version: 20
-                    cache: pnpm
-
-                - name: Install dependencies
-                  run: pnpm install --frozen-lockfile
-
-                - name: Verify Infra status probing
-                  run: pnpm test:infra-status
-
-                - name: Build
-                  shell: bash
-                  run: |
-                    repo_name="${GITHUB_REPOSITORY#*/}"
-                    if [ "$repo_name" = "${GITHUB_REPOSITORY_OWNER}.github.io" ]; then
-                      export BASE_PATH="/"
-                    else
-                      export BASE_PATH="/${repo_name}/"
-                    fi
-                    echo "BASE_PATH=$BASE_PATH"
-                    pnpm run build
-
-                - name: Setup Pages
-                  uses: actions/configure-pages@v4
-
-                - name: Upload artifact
-                  uses: actions/upload-pages-artifact@v3
-                  with:
-                    path: dist
-
-                - name: Deploy to GitHub Pages
-                  id: deploy
-                  uses: actions/deploy-pages@v4
-          EOF
-
-          # --- Create docs/ folder with translated READMEs ---
-          mkdir -p docs
-          cp src/data/site/starter-readme.zh-TW.md docs/README.zh-TW.md
-          cp src/data/site/starter-readme.en.md docs/README.en.md
-          cp src/data/site/starter-readme.ja.md docs/README.ja.md
-
-          # --- Remove the starter-readme source files from template ---
-          rm -f src/data/site/starter-readme.md
-          rm -f src/data/site/starter-readme.zh-TW.md
-          rm -f src/data/site/starter-readme.en.md
-          rm -f src/data/site/starter-readme.ja.md
-
-          # --- Remove private sync workflows from the template ---
-          rm -f .github/workflows/sync-starter.yml
-          rm -f .github/workflows/sync-capture.yml
-
-          # --- Replace index.html title for the template ---
-          sed -i 's|<title>My Site</title>|<title>Vorlage</title>|' index.html
-
-      - name: Push to starter repo
-        env:
-          STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
+      - name: Prepare Vorlage export
+        shell: bash
         run: |
-          set -e
-          git config --global user.email "diesehnsucht0@gmail.com"
-          git config --global user.name "dieWehmut"
-          tmp_dir=$(mktemp -d)
-          git clone --depth 1 "https://x-access-token:${STARTER_PUSH_TOKEN}@github.com/dieWehmut/Vorlage.git" "$tmp_dir"
-          rsync -a --delete --exclude='.git' ./ "$tmp_dir"/
-          cd "$tmp_dir"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to push."
-            exit 0
+          set -euo pipefail
+          node scripts/prepare-template.mjs \
+            --source-root "${GITHUB_WORKSPACE}" \
+            --source-sha "${GITHUB_SHA}" \
+            --output "${EXPORT_DIR}"
+
+      - name: Validate exported source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-template.mjs --root "${EXPORT_DIR}"
+
+      - name: Install exported dependencies
+        shell: bash
+        run: pnpm --dir "$EXPORT_DIR" install --frozen-lockfile
+
+      - name: Run exported Infra status regression
+        shell: bash
+        run: pnpm --dir "$EXPORT_DIR" test:infra-status
+
+      - name: Typecheck exported repository
+        shell: bash
+        run: pnpm --dir "$EXPORT_DIR" typecheck
+
+      - name: Build Vorlage Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          export BASE_PATH="/Vorlage/"
+          pnpm --dir "$EXPORT_DIR" build
+
+      - name: Validate built Vorlage artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-template.mjs \
+            --root "${EXPORT_DIR}" \
+            --dist "$EXPORT_DIR/dist"
+
+      - name: Check source freshness
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest_source_sha="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"
+          if [ "${latest_source_sha}" != "${GITHUB_SHA}" ]; then
+            echo "Source main advanced from ${GITHUB_SHA} to ${latest_source_sha}; refusing stale template sync." >&2
+            exit 1
           fi
-          git commit -m "sync: update starter template"
-          git push origin main --force
 
-      - name: Update repository metadata
-        continue-on-error: true
+      - name: Clone Vorlage target
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --branch main --single-branch \
+            https://github.com/dieWehmut/Vorlage.git \
+            "${TARGET_DIR}"
+          target_sha="$(git -C "${TARGET_DIR}" rev-parse refs/remotes/origin/main)"
+          printf '%s\n' "${target_sha}" > "${RUNNER_TEMP}/vorlage-target-sha"
+
+      - name: Mirror validated export and push
         env:
           STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
+          target_sha="$(cat "${RUNNER_TEMP}/vorlage-target-sha")"
+          rm -rf \
+            "${TARGET_DIR}/node_modules" \
+            "${TARGET_DIR}/dist" \
+            "${TARGET_DIR}/public/capture-assets"
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='node_modules/' \
+            --exclude='dist/' \
+            --exclude='public/capture-assets/' \
+            "${EXPORT_DIR}/" "${TARGET_DIR}/"
+
+          latest_source_sha="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"
+          if [ "${latest_source_sha}" != "${GITHUB_SHA}" ]; then
+            echo "Source main advanced from ${GITHUB_SHA} to ${latest_source_sha}; refusing stale template sync." >&2
+            exit 1
+          fi
+
+          git -C "${TARGET_DIR}" config user.email "diesehnsucht0@gmail.com"
+          git -C "${TARGET_DIR}" config user.name "dieWehmut"
+          git -C "${TARGET_DIR}" add -A
+
+          latest_target_sha="$(git ls-remote https://github.com/dieWehmut/Vorlage.git refs/heads/main | cut -f1)"
+          if [ "${latest_target_sha}" != "${target_sha}" ]; then
+            echo "Vorlage main advanced from ${target_sha} to ${latest_target_sha}; refusing stale template sync." >&2
+            exit 1
+          fi
+
+          if git -C "${TARGET_DIR}" diff --cached --quiet; then
+            echo "Vorlage already matches source ${GITHUB_SHA}."
+          else
+            git -C "${TARGET_DIR}" commit -m "sync: mirror source ${GITHUB_SHA}"
+            authorization_header="$(printf 'x-access-token:%s' "${STARTER_PUSH_TOKEN}" | base64 -w0)"
+            git -C "${TARGET_DIR}" \
+              -c http.https://github.com/.extraheader="AUTHORIZATION: basic ${authorization_header}" \
+              push \
+              --force-with-lease=refs/heads/main:${target_sha} \
+              origin HEAD:main
+          fi
+
+      - name: Update Vorlage repository metadata
+        env:
+          STARTER_PUSH_TOKEN: ${{ secrets.STARTER_PUSH_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
           curl -fsSL -X PATCH \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${STARTER_PUSH_TOKEN}" \
@@ -434,6 +179,34 @@ jobs:
             https://api.github.com/repos/dieWehmut/Vorlage \
             -d '{
               "description": "A blog template with an integrated code sandbox and binary infrastructure reachability dashboard.",
-              "homepage": "https://diewehmut.github.io/Vorlage/"
+              "homepage": "https://diewehmut.github.io/Vorlage/",
+              "is_template": true
             }' > /dev/null
-          echo "Repository description & homepage updated."
+
+          metadata="$(curl -fsSL \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${STARTER_PUSH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/dieWehmut/Vorlage)"
+
+          METADATA_JSON="${metadata}" node --input-type=module <<'NODE'
+          const metadata = JSON.parse(process.env.METADATA_JSON)
+          if (
+            metadata.name !== 'Vorlage' ||
+            metadata.default_branch !== 'main' ||
+            metadata.description !== 'A blog template with an integrated code sandbox and binary infrastructure reachability dashboard.' ||
+            metadata.homepage !== 'https://diewehmut.github.io/Vorlage/' ||
+            metadata.is_template !== true
+          ) {
+            console.error(
+              'Repository metadata did not converge.',
+              metadata.name,
+              metadata.default_branch,
+              metadata.description,
+              metadata.homepage,
+              metadata.is_template,
+            )
+            process.exit(1)
+          }
+          console.log('Repository metadata verified.')
+          NODE
