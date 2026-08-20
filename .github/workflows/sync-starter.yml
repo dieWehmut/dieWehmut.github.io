@@ -41,15 +41,15 @@ jobs:
 
           const packagePath = 'package.json'
           const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
-          packageJson.name = 'diesuwa-starter'
+          packageJson.name = 'vorlage'
           if (packageJson.scripts) delete packageJson.scripts['assets:push']
           writeJson(packagePath, packageJson)
 
           const packageLockPath = 'package-lock.json'
           if (fs.existsSync(packageLockPath)) {
             const packageLock = JSON.parse(fs.readFileSync(packageLockPath, 'utf8'))
-            packageLock.name = 'diesuwa-starter'
-            if (packageLock.packages?.['']) packageLock.packages[''].name = 'diesuwa-starter'
+            packageLock.name = 'vorlage'
+            if (packageLock.packages?.['']) packageLock.packages[''].name = 'vorlage'
             writeJson(packageLockPath, packageLock)
           }
           EOF
@@ -93,9 +93,9 @@ jobs:
           cat > src/data/site/about.md << 'ABOUTEOF'
           ## About This Site
 
-          This site is built with the [diesuwa-starter](https://github.com/dieWehmut/diesuwa-starter) template.
+          This site is built with the [Vorlage](https://github.com/dieWehmut/Vorlage) template.
 
-          - Template demo: [https://diewehmut.github.io/diesuwa-starter/](https://diewehmut.github.io/diesuwa-starter/)
+          - Template demo: [https://diewehmut.github.io/Vorlage/](https://diewehmut.github.io/Vorlage/)
           - Production demo: [https://diewehmut.github.io/](https://diewehmut.github.io/)
 
           ## Copyright
@@ -111,7 +111,7 @@ jobs:
             {
               id: 'nexus-author',
               name: 'diesw',
-              description: 'diesuwa-starter template author',
+              description: 'Vorlage template author',
               url: 'https://diewehmut.github.io/',
               avatar: 'https://avatars.githubusercontent.com/dieWehmut',
             },
@@ -167,7 +167,7 @@ jobs:
           // Sample endpoints — replace with your own services.
           // Each entry is reported as online or offline via a binary reachability probe.
           const initialInfra: InfraEntry[] = [
-            { name: 'Demo Site', key: 'demo', url: 'https://diewehmut.github.io/diesuwa-starter/', date: '2026-05-01' },
+            { name: 'Demo Site', key: 'demo', url: 'https://diewehmut.github.io/Vorlage/', date: '2026-05-01' },
             { name: 'GitHub', key: 'github', url: 'https://github.com', date: '2026-05-01' },
             // { name: 'Service Name', key: 'service', url: 'https://service.example.com', date: '2025-01-01' },
           ]
@@ -186,11 +186,11 @@ jobs:
           // Sample websites — replace with your own projects.
           export const pages = ref<WebsiteEntry[]>([
             {
-              name: 'diesuwa-starter',
-              displayName: 'diesuwa-starter',
-              repoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
+              name: 'Vorlage',
+              displayName: 'Vorlage',
+              repoUrl: 'https://github.com/dieWehmut/Vorlage',
               date: '2026-05-01',
-              url: 'https://diewehmut.github.io/diesuwa-starter/',
+              url: 'https://diewehmut.github.io/Vorlage/',
             },
             // {
             //   name: 'your-site',
@@ -236,7 +236,7 @@ jobs:
 
           # Hello World
 
-          Welcome to your new diesuwa-starter site! Edit or replace this post to get started.
+          Welcome to your new Vorlage site! Edit or replace this post to get started.
 
           ## Markdown Features
 
@@ -400,7 +400,7 @@ jobs:
           rm -f .github/workflows/sync-capture.yml
 
           # --- Replace index.html title for the template ---
-          sed -i 's|<title>My Site</title>|<title>diesuwa-starter</title>|' index.html
+          sed -i 's|<title>My Site</title>|<title>Vorlage</title>|' index.html
 
       - name: Push to starter repo
         env:
@@ -410,7 +410,7 @@ jobs:
           git config --global user.email "diesehnsucht0@gmail.com"
           git config --global user.name "dieWehmut"
           tmp_dir=$(mktemp -d)
-          git clone --depth 1 "https://x-access-token:${STARTER_PUSH_TOKEN}@github.com/dieWehmut/diesuwa-starter.git" "$tmp_dir"
+          git clone --depth 1 "https://x-access-token:${STARTER_PUSH_TOKEN}@github.com/dieWehmut/Vorlage.git" "$tmp_dir"
           rsync -a --delete --exclude='.git' ./ "$tmp_dir"/
           cd "$tmp_dir"
           git add -A
@@ -431,9 +431,9 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${STARTER_PUSH_TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/dieWehmut/diesuwa-starter \
+            https://api.github.com/repos/dieWehmut/Vorlage \
             -d '{
               "description": "A blog template with an integrated code sandbox and binary infrastructure reachability dashboard.",
-              "homepage": "https://diewehmut.github.io/diesuwa-starter/"
+              "homepage": "https://diewehmut.github.io/Vorlage/"
             }' > /dev/null
           echo "Repository description & homepage updated."

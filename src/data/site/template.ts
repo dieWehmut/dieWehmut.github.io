@@ -1,19 +1,19 @@
 import { ref } from 'vue'
 import type { SiteProjectGroup } from '../../types/content'
-import { siteConfig } from './config'
+import templateIdentity from './template-identity.json'
 
 export const templates = ref<SiteProjectGroup[]>([
   {
     name: '模板',
     autoLoad: true,
-    owner: siteConfig.githubUser,
-    repo: 'diesuwa-starter',
+    owner: templateIdentity.owner,
+    repo: templateIdentity.repositoryName,
     description: '静态模板列表',
     manualItems: [
       {
-        name: 'diesuwa-starter',
-        html_url: 'https://github.com/dieWehmut/diesuwa-starter',
-        repo_url: 'https://github.com/dieWehmut/diesuwa-starter',
+        name: templateIdentity.repositoryName,
+        html_url: templateIdentity.repositoryUrl,
+        repo_url: templateIdentity.repositoryUrl,
         showDownload: false,
         downloadToast: false,
         downloadToastMessage: 'Open the repository',

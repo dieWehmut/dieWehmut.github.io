@@ -2,9 +2,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { execFileSync } from 'node:child_process'
+import { pathToFileURL } from 'node:url'
 
 const root = process.cwd()
 const identityPath = path.join(root, 'src', 'data', 'site', 'template-identity.json')
+const adapterPath = path.join(root, 'scripts', 'template-identity.mjs')
 const legacyToken = ['diesuwa', 'starter'].join('-')
 const legacyBadgeToken = ['diesuwa', '', 'starter'].join('-')
 const textPattern = /\.(?:html|json|md|mjs|ts|vue|ya?ml)$/i
@@ -16,6 +18,7 @@ function check(label, condition, detail = '') {
 }
 
 check('template identity JSON exists', fs.existsSync(identityPath))
+check('template identity Node adapter exists', fs.existsSync(adapterPath))
 
 if (fs.existsSync(identityPath)) {
   const templateIdentity = JSON.parse(fs.readFileSync(identityPath, 'utf8'))
@@ -23,6 +26,13 @@ if (fs.existsSync(identityPath)) {
   check('package name is lowercase', templateIdentity.packageName === 'vorlage')
   check('repository target is canonical', templateIdentity.repository === 'dieWehmut/Vorlage')
   check('Pages base preserves repository case', templateIdentity.pagesBase === '/Vorlage/')
+}
+
+if (fs.existsSync(adapterPath)) {
+  const adapter = await import(pathToFileURL(adapterPath).href)
+  check('Node adapter exports the canonical repository', adapter.templateIdentity.repository === 'dieWehmut/Vorlage')
+  check('Node adapter default matches the named export', adapter.default === adapter.templateIdentity)
+  check('Node adapter freezes the identity', Object.isFrozen(adapter.templateIdentity))
 }
 
 const tracked = execFileSync('git', ['ls-files', '-z'], { cwd: root })

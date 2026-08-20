@@ -1,13 +1,13 @@
-<h1 align="center">diesuwa-starter</h1>
+<h1 align="center">Vorlage</h1>
 
 <p align="center">
-  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+  <img src="https://count.getloli.com/get/@Vorlage?theme=rule34" alt="Visitors">
 </p>
 
 <div align="center">
 
 <div>
-<a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
+<a href="https://diewehmut.github.io/Vorlage/" target="_blank">
   <img src="https://img.shields.io/badge/TEMPLATE-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="Template Demo">
 </a>
 <a href="https://diewehmut.github.io/" target="_blank">
@@ -22,7 +22,7 @@
 <a href="https://vite.dev/" target="_blank">
   <img src="https://img.shields.io/badge/VITE-7-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=555555" alt="Vite">
 </a>
-<a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
+<a href="https://github.com/dieWehmut/Vorlage/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
 </a>
 </div>
@@ -37,12 +37,12 @@
 
 ---
 
-`diesuwa-starter` は `Vue 3 + Vite + TypeScript + Element Plus` で作られた個人サイト用テンプレートで、**Sandkasten コードサンドボックス** と二値のインフラ到達性ダッシュボードが組み込まれています。ブログ、ノート、プロジェクト紹介、リンク集、運用ダッシュボード付きの静的プロフィールページに向いています。
+`Vorlage` は `Vue 3 + Vite + TypeScript + Element Plus` で作られた個人サイト用テンプレートで、**Sandkasten コードサンドボックス** と二値のインフラ到達性ダッシュボードが組み込まれています。ブログ、ノート、プロジェクト紹介、リンク集、運用ダッシュボード付きの静的プロフィールページに向いています。
 
 ## デモ
 
 - サンプルリポジトリ：<https://github.com/dieWehmut/dieWehmut.github.io>
-- テンプレートデモ：<https://diewehmut.github.io/diesuwa-starter/>
+- テンプレートデモ：<https://diewehmut.github.io/Vorlage/>
 - 完成例：<https://diewehmut.github.io/>
 
 テンプレートデモが開けない場合は、リポジトリの `Settings -> Pages -> Source` を `GitHub Actions` に設定してください。デプロイ workflow は GitHub Pages のサブパスに合わせて Vite の `base` を自動設定します。
@@ -50,7 +50,7 @@
 ## クイックスタート
 
 ```bash
-git clone https://github.com/dieWehmut/diesuwa-starter.git my-site
+git clone https://github.com/dieWehmut/Vorlage.git my-site
 cd my-site
 pnpm install
 pnpm dev

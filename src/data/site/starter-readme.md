@@ -1,12 +1,12 @@
-<h1 align="center">diesuwa-starter</h1>
+<h1 align="center">Vorlage</h1>
 
 <p align="center">
-  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+  <img src="https://count.getloli.com/get/@Vorlage?theme=rule34" alt="Visitors">
 </p>
 
 <div align="center">
 
-<a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
+<a href="https://diewehmut.github.io/Vorlage/" target="_blank">
   <img src="https://img.shields.io/badge/%E6%A8%A1%E6%9D%BF-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="模板 Demo">
 </a>
 <a href="https://diewehmut.github.io/" target="_blank">
@@ -18,7 +18,7 @@
 <a href="https://vite.dev/" target="_blank">
   <img src="https://img.shields.io/badge/VITE-7-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=555555" alt="Vite">
 </a>
-<a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
+<a href="https://github.com/dieWehmut/Vorlage/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
 </a>
 
@@ -32,14 +32,14 @@
 
 ---
 
-`diesuwa-starter` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，适合用来搭建博客、笔记、项目展示、友链页和轻量级状态看板。它可以部署到 GitHub Pages，也可以部署到 Vercel、Netlify、Cloudflare Pages 等静态托管平台。
+`Vorlage` 是一个基于 `Vue 3 + Vite + TypeScript + Element Plus` 的个人站点模板，适合用来搭建博客、笔记、项目展示、友链页和轻量级状态看板。它可以部署到 GitHub Pages，也可以部署到 Vercel、Netlify、Cloudflare Pages 等静态托管平台。
 
 如果你希望长期跟进模板更新，推荐使用 **Fork**，而不是 `Use this template`。Fork 会保留上游仓库关系，后续可以直接同步最新模板代码。
 
 ## 示例
 
-- 模板仓库：<https://github.com/dieWehmut/diesuwa-starter>
-- 模板示例：<https://diewehmut.github.io/diesuwa-starter/>
+- 模板仓库：<https://github.com/dieWehmut/Vorlage>
+- 模板示例：<https://diewehmut.github.io/Vorlage/>
 - 成品示例：<https://diewehmut.github.io/>
 
 ## 功能
@@ -61,20 +61,20 @@
 
 ### 1. Fork 仓库
 
-在 GitHub 打开 <https://github.com/dieWehmut/diesuwa-starter>，点击 `Fork`，创建到自己的账号或组织下。
+在 GitHub 打开 <https://github.com/dieWehmut/Vorlage>，点击 `Fork`，创建到自己的账号或组织下。
 
 然后克隆你的 Fork：
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/diesuwa-starter.git
-cd diesuwa-starter
-git remote add upstream https://github.com/dieWehmut/diesuwa-starter.git
+git clone https://github.com/YOUR_USERNAME/Vorlage.git
+cd Vorlage
+git remote add upstream https://github.com/dieWehmut/Vorlage.git
 ```
 
 如果你已经用 `Use this template` 创建了仓库，也可以继续使用，只是后续同步上游会麻烦一些。建议手动添加上游：
 
 ```bash
-git remote add upstream https://github.com/dieWehmut/diesuwa-starter.git
+git remote add upstream https://github.com/dieWehmut/Vorlage.git
 ```
 
 ### 2. 安装依赖
@@ -99,7 +99,7 @@ npm install
 export const siteConfig = {
   githubUser: 'your-github-username',
   githubRepo: 'your-repo-name',
-  templateRepoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
+  templateRepoUrl: 'https://github.com/dieWehmut/Vorlage',
   owner: 'your-name',
   displayName: 'your-name',
   email: 'you@example.com',
@@ -137,7 +137,7 @@ export const siteConfig = {
 
 如果仓库名是 `YOUR_USERNAME.github.io`，或者你使用自定义域名，`vite.config.ts` 里的 `base` 保持 `/` 即可。
 
-如果部署到项目页仓库，例如 `https://YOUR_USERNAME.github.io/diesuwa-starter/`，请把 `vite.config.ts` 里的：
+如果部署到项目页仓库，例如 `https://YOUR_USERNAME.github.io/Vorlage/`，请把 `vite.config.ts` 里的：
 
 ```ts
 const base = '/'
@@ -146,7 +146,7 @@ const base = '/'
 改成：
 
 ```ts
-const base = '/diesuwa-starter/'
+const base = '/Vorlage/'
 ```
 
 如果你把仓库改名为 `my-site`，这里就写：

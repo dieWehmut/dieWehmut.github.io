@@ -1,13 +1,13 @@
-<h1 align="center">diesuwa-starter</h1>
+<h1 align="center">Vorlage</h1>
 
 <p align="center">
-  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+  <img src="https://count.getloli.com/get/@Vorlage?theme=rule34" alt="Visitors">
 </p>
 
 <div align="center">
 
 <div>
-<a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
+<a href="https://diewehmut.github.io/Vorlage/" target="_blank">
   <img src="https://img.shields.io/badge/TEMPLATE-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="Template Demo">
 </a>
 <a href="https://diewehmut.github.io/" target="_blank">
@@ -22,7 +22,7 @@
 <a href="https://vite.dev/" target="_blank">
   <img src="https://img.shields.io/badge/VITE-7-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=555555" alt="Vite">
 </a>
-<a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
+<a href="https://github.com/dieWehmut/Vorlage/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
 </a>
 </div>
@@ -37,12 +37,12 @@
 
 ---
 
-`diesuwa-starter` is a personal website template built with `Vue 3 + Vite + TypeScript + Element Plus`, with a built-in **Sandkasten code sandbox** and binary infrastructure reachability dashboard. It works for blogs, notes, project showcases, friend links, and ops-style dashboards.
+`Vorlage` is a personal website template built with `Vue 3 + Vite + TypeScript + Element Plus`, with a built-in **Sandkasten code sandbox** and binary infrastructure reachability dashboard. It works for blogs, notes, project showcases, friend links, and ops-style dashboards.
 
 ## Demos
 
 - Example repository: <https://github.com/dieWehmut/dieWehmut.github.io>
-- Template demo: <https://diewehmut.github.io/diesuwa-starter/>
+- Template demo: <https://diewehmut.github.io/Vorlage/>
 - Production demo: <https://diewehmut.github.io/>
 
 If the template demo does not open, check `Settings -> Pages -> Source` and set it to `GitHub Actions`. The deploy workflow automatically sets the Vite base path for project Pages repositories.
@@ -50,7 +50,7 @@ If the template demo does not open, check `Settings -> Pages -> Source` and set 
 ## Quick Start
 
 ```bash
-git clone https://github.com/dieWehmut/diesuwa-starter.git my-site
+git clone https://github.com/dieWehmut/Vorlage.git my-site
 cd my-site
 pnpm install
 pnpm dev

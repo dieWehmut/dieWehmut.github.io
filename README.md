@@ -9,8 +9,8 @@
 <a href="https://diewehmut.github.io/" target="_blank">
   <img src="https://img.shields.io/badge/LIVE-SITE-F9D553?style=flat-square&logo=google-chrome&logoColor=white&labelColor=555555" alt="Live Site">
 </a>
-<a href="https://github.com/dieWehmut/diesuwa-starter" target="_blank">
-  <img src="https://img.shields.io/badge/TEMPLATE-diesuwa--starter-1FC41F?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="Template">
+<a href="https://github.com/dieWehmut/Vorlage" target="_blank">
+  <img src="https://img.shields.io/badge/TEMPLATE-Vorlage-1FC41F?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="Template">
 </a>
 <a href="https://github.com/dieWehmut/sandkasten" target="_blank">
   <img src="https://img.shields.io/badge/BACKEND-Sandkasten-blue?style=flat-square&logo=serverless&logoColor=white&labelColor=555555" alt="Sandkasten">
@@ -26,8 +26,8 @@
 
 站点基于 `Vue 3 + Vite + TypeScript + Element Plus` 构建，内容以 Markdown 撰写、GitHub Actions 自动部署到 GitHub Pages。从本仓库自动提取并维护的模板仓库可供快速搭建同类站点：
 
-- 模板仓库：<https://github.com/dieWehmut/diesuwa-starter>
-- 模板 Demo：<https://diewehmut.github.io/diesuwa-starter/>
+- 模板仓库：<https://github.com/dieWehmut/Vorlage>
+- 模板 Demo：<https://diewehmut.github.io/Vorlage/>
 
 ## 功能特性
 
@@ -90,4 +90,4 @@ VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm dev
 | 文章 | `src/data/docs/posts/*.md` | Markdown + frontmatter |
 | 笔记 | `src/data/docs/notes/*.md` | Markdown + frontmatter |
 
-模板相关说明请看模板仓库：<https://github.com/dieWehmut/diesuwa-starter>
+模板相关说明请看模板仓库：<https://github.com/dieWehmut/Vorlage>

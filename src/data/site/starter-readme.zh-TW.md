@@ -1,13 +1,13 @@
-<h1 align="center">diesuwa-starter</h1>
+<h1 align="center">Vorlage</h1>
 
 <p align="center">
-  <img src="https://count.getloli.com/get/@diesuwa-starter?theme=rule34" alt="Visitors">
+  <img src="https://count.getloli.com/get/@Vorlage?theme=rule34" alt="Visitors">
 </p>
 
 <div align="center">
 
 <div>
-<a href="https://diewehmut.github.io/diesuwa-starter/" target="_blank">
+<a href="https://diewehmut.github.io/Vorlage/" target="_blank">
   <img src="https://img.shields.io/badge/%E6%A8%A1%E6%9D%BF-DEMO-1FC41F?style=flat-square&logo=githubpages&logoColor=white&labelColor=555555" alt="模板 Demo">
 </a>
 <a href="https://diewehmut.github.io/" target="_blank">
@@ -22,7 +22,7 @@
 <a href="https://vite.dev/" target="_blank">
   <img src="https://img.shields.io/badge/VITE-7-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=555555" alt="Vite">
 </a>
-<a href="https://github.com/dieWehmut/diesuwa-starter/blob/main/LICENSE">
+<a href="https://github.com/dieWehmut/Vorlage/blob/main/LICENSE">
   <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=flat-square&logo=github&logoColor=white&labelColor=555555" alt="License">
 </a>
 </div>
@@ -37,12 +37,12 @@
 
 ---
 
-`diesuwa-starter` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，整合了 **Sandkasten 線上程式碼沙箱** 與二值基礎設施連線狀態面板，適合建立部落格、筆記、專案展示、友鏈頁與帶運維儀表板的靜態個人頁。
+`Vorlage` 是一個基於 `Vue 3 + Vite + TypeScript + Element Plus` 的個人網站模板，整合了 **Sandkasten 線上程式碼沙箱** 與二值基礎設施連線狀態面板，適合建立部落格、筆記、專案展示、友鏈頁與帶運維儀表板的靜態個人頁。
 
 ## 示例
 
 - 範例倉庫：<https://github.com/dieWehmut/dieWehmut.github.io>
-- 模板示例：<https://diewehmut.github.io/diesuwa-starter/>
+- 模板示例：<https://diewehmut.github.io/Vorlage/>
 - 成品示例：<https://diewehmut.github.io/>
 
 如果模板示例無法開啟，請確認倉庫 `Settings -> Pages -> Source` 已設定為 `GitHub Actions`。部署工作流程會自動為 GitHub Pages 子路徑設定 Vite `base`。
@@ -50,7 +50,7 @@
 ## 快速開始
 
 ```bash
-git clone https://github.com/dieWehmut/diesuwa-starter.git my-site
+git clone https://github.com/dieWehmut/Vorlage.git my-site
 cd my-site
 pnpm install
 pnpm dev

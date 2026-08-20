@@ -1,4 +1,5 @@
 import type { SiteConfig } from '../../types/content'
+import templateIdentity from './template-identity.json'
 
 // 图标走 `/capture-assets/` 这条构建期公共资源通道（和 InfraView 一样），不让
 // 打包器参与解析：本仓库不追踪任何图片（scripts/sync-assets-repo.mjs 有硬性守卫），
@@ -30,7 +31,7 @@ export const siteConfig: SiteConfig = {
   // --- Identity ---
   githubUser: 'dieWehmut',
   githubRepo: 'dieWehmut.github.io',
-  templateRepoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
+  templateRepoUrl: templateIdentity.repositoryUrl,
   owner: 'dieWehmut',
   displayName: 'diesw',
   email: 'diewehmut@outlook.com',

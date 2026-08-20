@@ -1,4 +1,5 @@
 import type { SiteConfig } from '../../types/content'
+import templateIdentity from './template-identity.json'
 
 /**
  * Site-wide personal configuration.
@@ -26,7 +27,7 @@ export const siteConfig: SiteConfig = {
   githubRepo: 'your-github-username.github.io',
   // Where this code came from. Keep it as-is after forking: your own repository
   // is not the template you forked from.
-  templateRepoUrl: 'https://github.com/dieWehmut/diesuwa-starter',
+  templateRepoUrl: templateIdentity.repositoryUrl,
   owner: 'your-name',
   displayName: 'your-name',
   email: 'you@example.com',
