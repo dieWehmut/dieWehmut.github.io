@@ -2,11 +2,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 
-import fileURLToPath from 'node:url'
-import { execSync } from 'node:child_process'
+import { execFileSync } from 'node:child_process'
 
-const rootDir = process.cwd()
-const docsDir = path.join(rootDir, 'src', 'data', 'docs')
+const rootDir = path.resolve(process.env.PROJECT_ROOT || process.cwd())
+const docsDir = path.resolve(process.env.DOCS_ROOT || path.join(rootDir, 'src', 'data', 'docs'))
+const gitRoot = path.resolve(process.env.GIT_ROOT || rootDir)
+const markerPath = path.join(rootDir, '.template-source.json')
+const templateMarker = fs.existsSync(markerPath)
+  ? JSON.parse(fs.readFileSync(markerPath, 'utf8'))
+  : null
 const generatedPath = path.join(docsDir, 'generated.ts')
 
 function toPosix(value) {
@@ -212,9 +216,25 @@ function getGitLastUpdated(filePath) {
   try {
     // Windows/macOS 文件系统不区分大小写，磁盘上的文件名可能与 git 跟踪路径
     // 大小写不一致；用 :(icase) pathspec 让 git log 仍然能匹配到对应文件。
-    const output = execSync(`git log -1 --format="%ad" --date=format:"%Y/%m/%d %H:%M" -- ":(icase)${filePath}"`, { stdio: 'pipe' }).toString().trim()
+    const relativePath = path.relative(gitRoot, filePath).replaceAll('\\', '/')
+    const output = execFileSync(
+      'git',
+      [
+        '-C',
+        gitRoot,
+        'log',
+        '-1',
+        '--format=%ad',
+        '--date=format:%Y/%m/%d %H:%M',
+        '--',
+        `:(icase)${relativePath}`,
+      ],
+      { stdio: 'pipe' },
+    )
+      .toString()
+      .trim()
     return output || null
-  } catch (e) {
+  } catch {
     return null
   }
 }
@@ -255,7 +275,7 @@ function main() {
       const tags = parseTags(data.tags)
       const trimmedContent = content.trim()
       const wordCount = countReadableUnits(trimmedContent)
-      const updated = getGitLastUpdated(filePath) || ''
+      const updated = templateMarker?.sourceUpdated || getGitLastUpdated(filePath) || ''
 
       return {
         id,
