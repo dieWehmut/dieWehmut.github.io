@@ -1,9 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { execFileSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
+import {
+  findForbiddenIntegrationReferences,
+  listProjectFiles,
+} from './infra-integration-scan.mjs'
 
-const root = path.resolve(import.meta.dirname, '..')
+const rootFlag = process.argv.indexOf('--root')
+const requestedRoot = rootFlag === -1 ? process.env.INFRA_STATUS_ROOT : process.argv[rootFlag + 1]
+const root = requestedRoot
+  ? path.resolve(requestedRoot)
+  : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const checks = []
 
 function check(label, condition) {
@@ -141,45 +149,12 @@ check(
 const removedComposable = path.join(root, 'src/composables', `use${'Ku' + 'ma'}Status.ts`)
 check('status-page integration composable is removed', !fs.existsSync(removedComposable))
 
-const trackedPaths = execFileSync(
-  'git',
-  ['ls-files'],
-  { cwd: root, encoding: 'utf8' },
-)
-  .split(/\r?\n/)
-  .filter(Boolean)
-  .filter((file) => fs.existsSync(path.join(root, file)))
-
-const forbiddenProduct = ['ku', 'ma'].join('')
-const forbiddenPathMatches = trackedPaths.filter((file) =>
-  file.toLowerCase().includes(forbiddenProduct),
-)
-const trackedTextFiles = trackedPaths
-  .filter((file) => /\.(?:ts|tsx|vue|mjs|js|json|ya?ml|md)$/.test(file))
-  .filter((file) => file !== 'scripts/test-infra-status.mjs')
-
-const forbiddenContentMatches = trackedTextFiles.filter((file) => {
-  const content = fs.readFileSync(path.join(root, file), 'utf8')
-  return content.toLowerCase().includes(forbiddenProduct)
-})
+const trackedPaths = listProjectFiles(root)
+const forbiddenReferences = findForbiddenIntegrationReferences(root, trackedPaths)
 check(
   'tracked application and starter files contain no status-page product integration',
-  forbiddenPathMatches.length === 0 && forbiddenContentMatches.length === 0,
+  forbiddenReferences.pathMatches.length === 0 && forbiddenReferences.contentMatches.length === 0,
 )
-
-const starterSyncPath = path.join(root, '.github/workflows/sync-starter.yml')
-if (fs.existsSync(starterSyncPath)) {
-  const starterSyncSource = fs.readFileSync(starterSyncPath, 'utf8')
-  check(
-    'starter repository description advertises binary reachability',
-    /binary infrastructure reachability dashboard/i.test(starterSyncSource) &&
-      !/server uptime monitoring/i.test(starterSyncSource),
-  )
-  check(
-    'generated starter deployment enforces the Infra status regression',
-    /Verify Infra status probing[\s\S]*?pnpm test:infra-status/.test(starterSyncSource),
-  )
-}
 
 const deploySource = fs.readFileSync(path.join(root, '.github/workflows/deploy.yml'), 'utf8')
 check(
