@@ -93,6 +93,20 @@ const ignoredProbe = spawnSync(
   { cwd: root, encoding: 'utf8' },
 )
 
+const validatePath = path.join(root, 'scripts', 'validate-template.mjs')
+if (!fs.existsSync(validatePath)) {
+  console.error('FAIL template validator exists')
+  process.exit(1)
+}
+
+const validation = spawnSync(process.execPath, [validatePath, '--root', output], {
+  cwd: root,
+  encoding: 'utf8',
+})
+process.stdout.write(validation.stdout)
+process.stderr.write(validation.stderr)
+if (validation.status !== 0) process.exit(validation.status || 1)
+
 const checks = [
   ['package is vorlage', packageJson.name === 'vorlage'],
   ['lockfile is vorlage', packageLock.name === 'vorlage' && packageLock.packages?.['']?.name === 'vorlage'],
