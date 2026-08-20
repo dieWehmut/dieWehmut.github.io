@@ -135,25 +135,15 @@ export const siteConfig = {
 
 ### 4. 配置 GitHub Pages 路径
 
-如果仓库名是 `YOUR_USERNAME.github.io`，或者你使用自定义域名，`vite.config.ts` 里的 `base` 保持 `/` 即可。
+仓库自带的 GitHub Actions workflow 会根据 `GITHUB_REPOSITORY` 自动设置 Vite 的 `BASE_PATH`：用户页仓库和自定义域名使用 `/`，项目页仓库使用 `/<仓库名>/`。部署到 GitHub Pages 时不需要手动修改 `vite.config.ts`。
 
-如果部署到项目页仓库，例如 `https://YOUR_USERNAME.github.io/Vorlage/`，请把 `vite.config.ts` 里的：
+本地构建或部署到其他平台时，默认路径是 `/`。如果平台使用子路径，可以通过环境变量覆盖：
 
-```ts
-const base = '/'
+```bash
+BASE_PATH=/my-site/ pnpm build
 ```
 
-改成：
-
-```ts
-const base = '/Vorlage/'
-```
-
-如果你把仓库改名为 `my-site`，这里就写：
-
-```ts
-const base = '/my-site/'
-```
+也可以使用 `VITE_BASE_PATH`，两者都只影响构建产物中的资源路径。
 
 ### 5. 添加内容
 
@@ -206,7 +196,7 @@ pnpm preview
 
 1. 进入 `Settings -> Pages`。
 2. `Source` 选择 `GitHub Actions`。
-3. 如果使用项目页仓库，确认 `vite.config.ts` 的 `base` 与仓库名一致。
+3. 如果使用项目页仓库，workflow 会自动根据仓库名设置资源路径，无需修改 `vite.config.ts`。
 4. 如果使用自定义域名，在 `public/CNAME` 写入域名，并在 DNS 里配置到 GitHub Pages。
 
 部署完成后，GitHub Actions 的 `Deploy to GitHub Pages` 任务会给出最终访问地址。
@@ -221,7 +211,7 @@ pnpm preview
 - Output directory：`dist`
 - Node.js：建议 `20`
 
-如果平台部署在域名根路径，`vite.config.ts` 的 `base` 使用 `/`。如果部署在子路径，需要按平台文档配置子路径并同步修改 `base`。
+如果平台部署在子路径，请按平台文档设置 `BASE_PATH` 或 `VITE_BASE_PATH`，再运行构建命令；不需要改动源码中的 `vite.config.ts`。
 
 ## Giscus 评论
 

@@ -84,6 +84,7 @@ async function guardError(sourceRoot, outputRoot) {
 
 const ancestorGuard = await guardError(guardSource, guardRoot)
 const descendantGuard = await guardError(guardSource, path.join(guardSource, 'output'))
+const exportedScriptText = JSON.stringify(packageJson.scripts || {})
 
 const gitInit = spawnSync('git', ['-C', output, 'init', '--quiet'], { cwd: root, encoding: 'utf8' })
 const ignoredProbe = spawnSync(
@@ -95,6 +96,8 @@ const ignoredProbe = spawnSync(
 const checks = [
   ['package is vorlage', packageJson.name === 'vorlage'],
   ['lockfile is vorlage', packageLock.name === 'vorlage' && packageLock.packages?.['']?.name === 'vorlage'],
+  ['source-only fixture scripts removed', !packageJson.scripts?.['test:markdown-render'] && !packageJson.scripts?.['test:console-avatar'] && !packageJson.scripts?.['test:console'] && !packageJson.scripts?.['runner:smoke:docs']],
+  ['exported scripts do not reference removed fixtures', !exportedScriptText.includes('CurrentAffairsReading') && !exportedScriptText.includes('testSandkasten')],
   ['source-only workflow removed', !fs.existsSync(path.join(output, '.github/workflows/sync-starter.yml'))],
   ['source-only capture workflow removed', !fs.existsSync(path.join(output, '.github/workflows/sync-capture.yml'))],
   ['source-only design docs removed', !fs.existsSync(path.join(output, 'docs/superpowers'))],
@@ -109,10 +112,11 @@ const checks = [
   ['deploy workflow uses real GitHub expressions', deployWorkflow.includes('VITE_CODE_RUNNER_API_URL: ${{ vars.VITE_CODE_RUNNER_API_URL }}') && deployWorkflow.includes('repo_name="${GITHUB_REPOSITORY#*/}"')],
   ['deploy workflow has no escaped shell expressions', !deployWorkflow.includes('\\${') && !deployWorkflow.includes('\\$repo_name')],
   ['template README exported', rootReadme.includes('Vorlage') && rootReadme.includes('https://github.com/dieWehmut/Vorlage')],
+  ['README documents automatic Pages base', rootReadme.includes('GITHUB_REPOSITORY') && rootReadme.includes('BASE_PATH') && !rootReadme.includes("const base = '/Vorlage/'")],
   ['translated READMEs exported', ['README.en.md', 'README.ja.md', 'README.zh-TW.md'].every((file) => fs.existsSync(path.join(output, 'docs', file)))],
   ['starter README sources removed', !walk(path.join(output, 'src/data/site')).some((file) => path.basename(file).startsWith('starter-readme'))],
   ['legacy template identity removed', legacyMatches.length === 0],
-  ['generated template files are not ignored', gitInit.status === 0 && ignoredProbe.status === 1],
+  ['generated template files are not ignored', gitInit.status === 0 && ignoredProbe.status === 1 && ignoredProbe.stdout === '' && ignoredProbe.stderr === ''],
   ['source worktree unchanged', sourceStatusAfter === sourceStatusBefore],
   ['output ancestor is rejected', ancestorGuard === 'Template output must be outside the source repository'],
   ['output descendant is rejected', descendantGuard === 'Template output must be outside the source repository'],

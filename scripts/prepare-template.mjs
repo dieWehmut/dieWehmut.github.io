@@ -99,8 +99,15 @@ function rewritePackageMetadata(outputRoot, templateIdentity) {
   const packagePath = path.join(outputRoot, 'package.json')
   const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'))
   packageJson.name = templateIdentity.packageName
+  const removedScripts = new Set([
+    'test:markdown-render',
+    'test:console-avatar',
+    'test:console',
+    'runner:smoke:docs',
+  ])
   for (const scriptName of Object.keys(packageJson.scripts || {})) {
     if (
+      removedScripts.has(scriptName) ||
       scriptName === 'assets:push' ||
       scriptName === 'template:prepare' ||
       scriptName === 'template:validate' ||
