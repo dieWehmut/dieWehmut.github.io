@@ -158,6 +158,11 @@ jobs:
             echo "Vorlage already matches source ${GITHUB_SHA}."
           else
             git -C "${TARGET_DIR}" commit -m "sync: mirror source ${GITHUB_SHA}"
+            latest_source_sha="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"
+            if [ "${latest_source_sha}" != "${GITHUB_SHA}" ]; then
+              echo "Source main advanced from ${GITHUB_SHA} to ${latest_source_sha}; refusing stale template sync." >&2
+              exit 1
+            fi
             authorization_header="$(printf 'x-access-token:%s' "${STARTER_PUSH_TOKEN}" | base64 -w0)"
             git -C "${TARGET_DIR}" \
               -c http.https://github.com/.extraheader="AUTHORIZATION: basic ${authorization_header}" \

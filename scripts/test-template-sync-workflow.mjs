@@ -54,6 +54,10 @@ const checks = [
   ['metadata errors are not ignored', !/continue-on-error:\s*true/.test(source)],
   ['source freshness is checked again before push', freshnessChecks.length >= 2],
   [
+    'source freshness is checked immediately before push',
+    /git -C "\$\{TARGET_DIR\}" commit[\s\S]*?latest_source_sha[\s\S]*?git -C "\$\{TARGET_DIR\}"[\s\S]*?push/.test(source),
+  ],
+  [
     'transient export paths are excluded from mirror',
     [".git/", 'node_modules/', 'dist/', 'public/capture-assets/'].every((entry) => source.includes(`--exclude='${entry}'`)),
   ],
