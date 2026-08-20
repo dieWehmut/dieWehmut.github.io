@@ -82,68 +82,12 @@ jobs:
           # --- Use the starter-readme.md as the template README ---
           cp src/data/site/starter-readme.md README.md
 
-          # --- Replace config.ts with placeholder values ---
-          cat > src/data/site/config.ts << 'CONFIGEOF'
-          import type { SiteConfig } from '../../types/content'
-
-          type CodeRunnerEnv = {
-            VITE_CODE_RUNNER_MODE?: 'frontend' | 'backend'
-            VITE_CODE_RUNNER_API_URL?: string
-            VITE_CODE_RUNNER_API_TOKEN?: string
-          }
-
-          const viteEnv = (import.meta.env || {}) as CodeRunnerEnv
-          const processEnv = typeof process === 'undefined' ? {} : process.env
-          const configuredRunnerMode = viteEnv.VITE_CODE_RUNNER_MODE || processEnv.VITE_CODE_RUNNER_MODE
-
-          /**
-           * Site-wide personal configuration.
-           * All personal / private data is centralized here.
-           * ⚠️  Modify this file to personalize your site.
-           */
-
-          export const siteConfig: SiteConfig = {
-            // --- Identity ---
-            githubUser: 'your-github-username',
-            githubRepo: 'your-github-username.github.io',
-            owner: 'your-name',
-            displayName: 'your-name',
-            email: 'you@example.com',
-
-            // --- Site Meta ---
-            title: 'my-nexus',
-            subtitle: 'my-nexus',
-            description: 'Hi! This is my personal site.',
-            siteUrl: 'https://your-github-username.github.io/your-repo/',
-            startedAt: '2026-05-01T00:00:00+08:00',
-
-            // --- External Services ---
-            googleAnalyticsId: '',
-
-            // --- ICP Filing (optional, set empty to hide) ---
-            icpNumber: '',
-            icpText: '',
-
-            // --- Feature Flags (set false to hide page & nav entry) ---
-            enableInfra: true,
-            enableProject: true,
-
-            // --- Code Runner ---
-            codeRunner: {
-              mode: configuredRunnerMode === 'backend' ? 'backend' : 'frontend',
-              backendApiUrl: viteEnv.VITE_CODE_RUNNER_API_URL || processEnv.VITE_CODE_RUNNER_API_URL || '',
-              backendToken: viteEnv.VITE_CODE_RUNNER_API_TOKEN || processEnv.VITE_CODE_RUNNER_API_TOKEN || '',
-            },
-
-            // --- Social Links ---
-            links: [
-              { label: 'GitHub', url: 'https://github.com/your-github-username' },
-              { label: 'Website', url: 'https://your-github-username.github.io/your-repo/' },
-            ],
-          }
-
-          export default siteConfig
-          CONFIGEOF
+          # --- Replace config.ts with the placeholder config ---
+          # The placeholder lives in the source tree so that vue-tsc checks it against
+          # SiteConfig; a copy embedded here would drift silently every time the type
+          # gains a required field.
+          cp src/data/site/config.starter.ts src/data/site/config.ts
+          rm -f src/data/site/config.starter.ts
 
           # --- Replace about.md with example ---
           cat > src/data/site/about.md << 'ABOUTEOF'
@@ -387,7 +331,6 @@ jobs:
               runs-on: ubuntu-latest
 
               env:
-                VITE_CODE_RUNNER_MODE: ${{ '${{ vars.VITE_CODE_RUNNER_MODE }}' }}
                 VITE_CODE_RUNNER_API_URL: ${{ '${{ vars.VITE_CODE_RUNNER_API_URL }}' }}
                 VITE_CODE_RUNNER_API_TOKEN: ${{ '${{ vars.VITE_CODE_RUNNER_API_TOKEN }}' }}
 
@@ -424,9 +367,7 @@ jobs:
                     else
                       export BASE_PATH="/${repo_name}/"
                     fi
-                    export VITE_CODE_RUNNER_MODE="${VITE_CODE_RUNNER_MODE:-frontend}"
                     echo "BASE_PATH=$BASE_PATH"
-                    echo "VITE_CODE_RUNNER_MODE=$VITE_CODE_RUNNER_MODE"
                     pnpm run build
 
                 - name: Setup Pages
