@@ -6,7 +6,22 @@
   >
     <div class="scroll-spy__status">
       <div class="scroll-spy__progress">
-        <div class="scroll-spy__bar">
+        <div
+          ref="progressBarRef"
+          class="scroll-spy__bar"
+          role="slider"
+          aria-label="Page reading progress"
+          aria-orientation="vertical"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          :aria-valuenow="progress"
+          tabindex="0"
+          @pointerdown="onProgressPointerDown"
+          @pointermove="onProgressPointerMove"
+          @pointerup="onProgressPointerEnd"
+          @pointercancel="onProgressPointerEnd"
+          @keydown="onProgressKeydown"
+        >
           <span :style="{ height: `${progress}%` }" />
         </div>
         <span class="scroll-spy__percent">{{ displayProgress }}%</span>
@@ -41,6 +56,11 @@ import {
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
 import { useConsoleRowNavigation } from '../../composables/useConsoleRowNavigation'
 import { moveConsoleSelection } from '../../console/selection'
+import {
+  scrollRatioForKey,
+  scrollRatioFromPointer,
+  scrollTopForRatio,
+} from '../../utils/scrollProgress'
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
@@ -58,6 +78,7 @@ const items = ref([])
 const activeId = ref('')
 const progress = ref(0)
 const navRef = ref(null)
+const progressBarRef = ref(null)
 const buttonEls = new Map()
 
 let headings = []
@@ -76,6 +97,7 @@ let handledHash = ''
 let handledRequestHash = ''
 let ignoredRouteHash = ''
 let spyEl = null
+let activeProgressPointerId = null
 /**
  * The heading the row was sent to that the page has no scroll position left to
  * express — see `selectedHeadingIndex`. Any gesture of the reader's own hands the
@@ -121,6 +143,10 @@ function measureTop(el) {
   return el.getBoundingClientRect().top + window.scrollY
 }
 
+function maxScrollY() {
+  return Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+}
+
 function itemPaddingLeft(item) {
   const base = props.mode === 'mobile' ? 8 : 10
   const step = props.mode === 'mobile' ? 8 : 12
@@ -164,7 +190,7 @@ function collectHeadings() {
 
 function updateProgress() {
   if (!isEnabled) return
-  const max = document.documentElement.scrollHeight - window.innerHeight
+  const max = maxScrollY()
   if (max <= 0) {
     if (progress.value !== 0) progress.value = 0
     return
@@ -182,9 +208,9 @@ function updateActive() {
   // Past the end of the scroll range there is no position left to read, so a pin
   // carries the selection the rest of the way.
   const tops = headings.map((item) => item.top)
-  const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+  const maximumScrollY = maxScrollY()
   const pinnedIndex = pinnedId ? headings.findIndex((item) => item.id === pinnedId) : -1
-  const index = selectedHeadingIndex(tops, window.scrollY, maxScrollY, props.offset, pinnedIndex)
+  const index = selectedHeadingIndex(tops, window.scrollY, maximumScrollY, props.offset, pinnedIndex)
   const current = headings[index] || headings[0]
 
   const nextActiveId = current?.id || ''
@@ -295,6 +321,43 @@ function releasePinnedHeading() {
   if (!pinnedId) return
   pinnedId = ''
   updateActive()
+}
+
+function scrollPageToRatio(ratio) {
+  releasePinnedHeading()
+  window.scrollTo({ top: scrollTopForRatio(ratio, maxScrollY()), behavior: 'auto' })
+}
+
+function pointerRatio(event) {
+  const rect = progressBarRef.value?.getBoundingClientRect()
+  return rect ? scrollRatioFromPointer(event.clientY, rect.top, rect.height) : 0
+}
+
+function onProgressPointerDown(event) {
+  if (event.button !== 0) return
+  event.preventDefault()
+  activeProgressPointerId = event.pointerId
+  progressBarRef.value?.setPointerCapture?.(event.pointerId)
+  scrollPageToRatio(pointerRatio(event))
+}
+
+function onProgressPointerMove(event) {
+  if (activeProgressPointerId !== event.pointerId) return
+  event.preventDefault()
+  scrollPageToRatio(pointerRatio(event))
+}
+
+function onProgressPointerEnd(event) {
+  if (activeProgressPointerId !== event.pointerId) return
+  progressBarRef.value?.releasePointerCapture?.(event.pointerId)
+  activeProgressPointerId = null
+}
+
+function onProgressKeydown(event) {
+  const nextRatio = scrollRatioForKey(event.key, progress.value / 100)
+  if (nextRatio === null) return
+  event.preventDefault()
+  scrollPageToRatio(nextRatio)
 }
 
 /**
@@ -530,9 +593,12 @@ onBeforeUnmount(() => {
   color: var(--site-muted);
   font-size: 14px;
   min-width: 0;
-  scrollbar-color:
-    color-mix(in srgb, var(--site-accent) 58%, transparent)
-    color-mix(in srgb, var(--site-accent) 10%, transparent);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-spy::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 900px) {
@@ -562,16 +628,22 @@ onBeforeUnmount(() => {
   position: relative;
   width: 4px;
   height: 90px;
+  padding-inline: 7px;
+  margin-inline: -7px;
+  box-sizing: content-box;
   border-radius: 999px;
   background: color-mix(in srgb, var(--site-accent) 10%, transparent);
+  background-clip: content-box;
   overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
 }
 
 .scroll-spy__bar span {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 7px;
+  right: 7px;
+  top: 0;
   border-radius: 999px;
   background: var(--site-accent);
   transition: height 90ms linear;

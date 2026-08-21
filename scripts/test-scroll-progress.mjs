@@ -4,10 +4,15 @@ import ts from 'typescript'
 
 const root = path.resolve(import.meta.dirname, '..')
 const helperPath = path.join(root, 'src/utils/scrollProgress.ts')
+const sidebarPath = path.join(root, 'src/components/system/ScrollSpySidebar.vue')
+const mobileLayoutPath = path.join(root, 'src/layouts/MobileDrawerLayout.vue')
 const failures = []
 const nearlyEqual = (actual, expected, epsilon = 1e-9) => (
   Number.isFinite(actual) && Math.abs(actual - expected) <= epsilon
 )
+const check = (message, condition) => {
+  if (!condition) failures.push(message)
+}
 
 if (!fs.existsSync(helperPath)) {
   failures.push('scroll progress helper is missing')
@@ -93,6 +98,59 @@ if (!fs.existsSync(helperPath)) {
     failures.push('unhandled key returns null')
   }
 }
+
+const sidebar = fs.readFileSync(sidebarPath, 'utf8')
+const mobileLayout = fs.readFileSync(mobileLayoutPath, 'utf8')
+
+check('rail exposes vertical slider semantics',
+  /ref="progressBarRef"/.test(sidebar) &&
+  /role="slider"/.test(sidebar) &&
+  /aria-label="Page reading progress"/.test(sidebar) &&
+  /aria-orientation="vertical"/.test(sidebar) &&
+  /aria-valuemin="0"/.test(sidebar) &&
+  /aria-valuemax="100"/.test(sidebar) &&
+  /:aria-valuenow="progress"/.test(sidebar) &&
+  /tabindex="0"/.test(sidebar))
+check('rail handles pointer drag with capture',
+  /@pointerdown="onProgressPointerDown"/.test(sidebar) &&
+  /@pointermove="onProgressPointerMove"/.test(sidebar) &&
+  /@pointerup="onProgressPointerEnd"/.test(sidebar) &&
+  /@pointercancel="onProgressPointerEnd"/.test(sidebar) &&
+  /event\.button !== 0/.test(sidebar) &&
+  /activeProgressPointerId = event\.pointerId/.test(sidebar) &&
+  /setPointerCapture/.test(sidebar) &&
+  /releasePointerCapture/.test(sidebar) &&
+  /activeProgressPointerId = null/.test(sidebar))
+check('rail handles keyboard progress',
+  /@keydown="onProgressKeydown"/.test(sidebar) &&
+  /scrollRatioForKey\(event\.key, progress\.value \/ 100\)/.test(sidebar))
+check('rail uses shared progress calculations',
+  /from ['"]\.\.\/\.\.\/utils\/scrollProgress['"]/.test(sidebar) &&
+  /scrollRatioFromPointer/.test(sidebar) &&
+  /scrollTopForRatio/.test(sidebar) &&
+  /scrollRatioForKey/.test(sidebar))
+check('progress fill grows from the top',
+  /\.scroll-spy__bar span\s*\{[^}]*top:\s*0/.test(sidebar) &&
+  !/\.scroll-spy__bar span\s*\{[^}]*bottom:\s*0/.test(sidebar))
+check('progress rail widens its hit target without widening layout',
+  /\.scroll-spy__bar\s*\{[\s\S]*padding-inline:\s*7px/.test(sidebar) &&
+  /\.scroll-spy__bar\s*\{[\s\S]*margin-inline:\s*-7px/.test(sidebar) &&
+  /\.scroll-spy__bar\s*\{[\s\S]*box-sizing:\s*content-box/.test(sidebar) &&
+  /\.scroll-spy__bar\s*\{[\s\S]*touch-action:\s*none/.test(sidebar))
+check('desktop sidebar native scrollbar is hidden',
+  /\.scroll-spy\s*\{[\s\S]*overflow-y:\s*auto/.test(sidebar) &&
+  /\.scroll-spy\s*\{[\s\S]*scrollbar-width:\s*none/.test(sidebar) &&
+  /\.scroll-spy\s*\{[\s\S]*-ms-overflow-style:\s*none/.test(sidebar) &&
+  /\.scroll-spy::-webkit-scrollbar/.test(sidebar))
+check('mobile drawer native scrollbar is hidden',
+  /\.mobile-layout__toc-drawer\s*\{[\s\S]*overflow-y:\s*auto/.test(mobileLayout) &&
+  /\.mobile-layout__toc-drawer\s*\{[\s\S]*scrollbar-width:\s*none/.test(mobileLayout) &&
+  /\.mobile-layout__toc-drawer\s*\{[\s\S]*-ms-overflow-style:\s*none/.test(mobileLayout) &&
+  /\.mobile-layout__toc-drawer::-webkit-scrollbar/.test(mobileLayout))
+check('progress input releases pinned heading',
+  /function scrollPageToRatio[\s\S]*releasePinnedHeading\(\)/.test(sidebar))
+check('console progress bar remains hidden',
+  /\.scroll-spy--console \.scroll-spy__bar\s*\{[\s\S]*display:\s*none/.test(sidebar))
 
 if (failures.length) {
   failures.forEach((failure) => console.log(`FAIL ${failure}`))

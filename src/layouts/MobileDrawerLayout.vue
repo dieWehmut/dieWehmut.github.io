@@ -191,9 +191,15 @@ onBeforeUnmount(() => {
   background: var(--site-sidebar-bg);
   border-left: 1px solid var(--site-border);
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   transform: translateX(100%);
   transition: transform 260ms cubic-bezier(.2, .9, .2, 1);
   will-change: transform;
+}
+
+.mobile-layout__toc-drawer::-webkit-scrollbar {
+  display: none;
 }
 
 .mobile-layout__toc-drawer.is-open {
