@@ -21,12 +21,11 @@ export async function probeDirectUrl(
   signal?: AbortSignal,
 ): Promise<BinaryUrlStatus> {
   try {
-    await fetchImpl(url, {
-      mode: 'no-cors',
+    const response = await fetchImpl(url, {
       cache: 'no-store',
       signal,
     })
-    return 'online'
+    return response.status === 200 ? 'online' : 'offline'
   } catch {
     return 'offline'
   }

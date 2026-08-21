@@ -345,11 +345,11 @@ function pingProxy(): Plugin {
         const ctrl = new AbortController()
         const timer = setTimeout(() => ctrl.abort(), 4000)
         try {
-          await fetch(url, {
+          const upstream = await fetch(url, {
             signal: ctrl.signal,
             redirect: 'follow',
           })
-          writeJson(res, { online: true })
+          writeJson(res, { online: upstream.status === 200 })
         } catch {
           writeJson(res, { online: false })
         } finally {
