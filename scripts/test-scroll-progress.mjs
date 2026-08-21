@@ -149,6 +149,8 @@ check('mobile drawer native scrollbar is hidden',
   /\.mobile-layout__toc-drawer::-webkit-scrollbar/.test(mobileLayout))
 check('progress input releases pinned heading',
   /function scrollPageToRatio[\s\S]*releasePinnedHeading\(\)/.test(sidebar))
+check('progress input bypasses global smooth scrolling',
+  /function scrollPageToRatio[\s\S]*behavior:\s*['"]instant['"]/.test(sidebar))
 check('console progress bar remains hidden',
   /\.scroll-spy--console \.scroll-spy__bar\s*\{[\s\S]*display:\s*none/.test(sidebar))
 

@@ -325,7 +325,7 @@ function releasePinnedHeading() {
 
 function scrollPageToRatio(ratio) {
   releasePinnedHeading()
-  window.scrollTo({ top: scrollTopForRatio(ratio, maxScrollY()), behavior: 'auto' })
+  window.scrollTo({ top: scrollTopForRatio(ratio, maxScrollY()), behavior: 'instant' })
 }
 
 function pointerRatio(event) {
