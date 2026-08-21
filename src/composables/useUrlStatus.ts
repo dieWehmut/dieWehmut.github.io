@@ -37,6 +37,7 @@ export function useUrlStatus() {
     try {
       const status = await probeUrl(url, {
         isDev: import.meta.env.DEV,
+        proxyBase: import.meta.env.VITE_INFRA_PROBE_URL,
         fetchImpl: fetch,
         signal: controller.signal,
       })

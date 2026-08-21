@@ -78,19 +78,19 @@ if (probe) {
 
   const proxyOnline = await probe.probeProxyUrl(
     'https://service.example/a?b=1',
-    async () => ({ ok: true, json: async () => ({ online: true }) }),
+    async () => ({ ok: true, status: 200, json: async () => ({ online: true }) }),
   )
   check('positive local proxy result is online', proxyOnline === 'online')
 
   const proxyNonOk = await probe.probeProxyUrl(
     'https://service.example/status/503',
-    async () => ({ ok: true, json: async () => ({ online: false }) }),
+    async () => ({ ok: true, status: 200, json: async () => ({ online: false }) }),
   )
   check('local proxy marks a non-200 upstream response offline', proxyNonOk === 'offline')
 
   const proxyOffline = await probe.probeProxyUrl(
     'https://service.example',
-    async () => ({ ok: true, json: async () => ({ online: false }) }),
+    async () => ({ ok: true, status: 200, json: async () => ({ online: false }) }),
   )
   check('negative local proxy result is offline', proxyOffline === 'offline')
 
@@ -101,6 +101,44 @@ if (probe) {
     },
   )
   check('failed local proxy request is offline', proxyFailure === 'offline')
+
+  const remoteProxyCalls = []
+  const remoteProxyOnline = await probe.probeRemoteProxyUrl(
+    'https://service.example/a?b=1',
+    '  https://probe.example///  ',
+    async (input, init) => {
+      remoteProxyCalls.push([input, init])
+      return { ok: true, status: 200, json: async () => ({ online: true }) }
+    },
+  )
+  check(
+    'remote proxy normalizes its base URL',
+    remoteProxyOnline === 'online' &&
+      remoteProxyCalls.length === 1 &&
+      remoteProxyCalls[0][0] === 'https://probe.example/api/ping?url=' + encodeURIComponent('https://service.example/a?b=1'),
+  )
+
+  const remoteProxyStatuses = [201, 204, 301, 400, 404, 500, 503]
+  const remoteProxyNonOkResults = await Promise.all(
+    remoteProxyStatuses.map((status) =>
+      probe.probeRemoteProxyUrl(
+        `https://service.example/status/${status}`,
+        'https://probe.example',
+        async () => ({ ok: true, status, json: async () => ({ online: true }) }),
+      ),
+    ),
+  )
+  check(
+    'remote proxy requires exact HTTP 200',
+    remoteProxyNonOkResults.every((status) => status === 'offline'),
+  )
+
+  const emptyRemoteProxy = await probe.probeRemoteProxyUrl(
+    'https://service.example',
+    '   ',
+    async () => ({ ok: true, status: 200, json: async () => ({ online: true }) }),
+  )
+  check('empty remote proxy base is offline', emptyRemoteProxy === 'offline')
 
   check(
     'probe results contain only online and offline',
@@ -133,6 +171,22 @@ if (probe) {
     })
     check('production dispatcher marks HTTP 503 offline', productionFailureStatus === 'offline')
 
+    const productionProxyCalls = []
+    const productionProxyStatus = await probe.probeUrl('https://production.example', {
+      isDev: false,
+      proxyBase: 'https://probe.example///',
+      fetchImpl: async (input, init) => {
+        productionProxyCalls.push([input, init])
+        return { ok: true, status: 200, json: async () => ({ online: true }) }
+      },
+    })
+    check(
+      'production dispatcher selects the configured remote proxy',
+      productionProxyStatus === 'online' &&
+        productionProxyCalls.length === 1 &&
+        productionProxyCalls[0][0] === 'https://probe.example/api/ping?url=' + encodeURIComponent('https://production.example'),
+    )
+
     const developmentCalls = []
     await probe.probeUrl('https://development.example', {
       isDev: true,
@@ -162,6 +216,12 @@ check(
     binaryTypeLine?.trim() === "export type BinaryUrlStatus = 'online' | 'offline'" &&
     !/checking|latency|httpStatus/.test(`${composableSource}\n${probeSource}`),
 )
+check(
+  'status composable passes the production proxy setting',
+  /proxyBase:\s*import\.meta\.env\.VITE_INFRA_PROBE_URL/.test(composableSource),
+)
+const envSource = fs.readFileSync(path.join(root, 'src/vite-env.d.ts'), 'utf8')
+check('Vite env declares the Infra proxy setting', /VITE_INFRA_PROBE_URL\?:\s*string/.test(envSource))
 
 const infraViewSource = fs.readFileSync(path.join(root, 'src/views/InfraView.vue'), 'utf8')
 check('Infra view never renders unknown', !/unknown/i.test(infraViewSource))

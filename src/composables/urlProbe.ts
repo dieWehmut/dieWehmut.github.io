@@ -2,17 +2,18 @@ export type BinaryUrlStatus = 'online' | 'offline'
 
 interface ProbeUrlOptions {
   isDev: boolean
+  proxyBase?: string
   fetchImpl?: typeof fetch
   signal?: AbortSignal
 }
 
 export function probeUrl(
   url: string,
-  { isDev, fetchImpl = fetch, signal }: ProbeUrlOptions,
+  { isDev, proxyBase, fetchImpl = fetch, signal }: ProbeUrlOptions,
 ): Promise<BinaryUrlStatus> {
-  return isDev
-    ? probeProxyUrl(url, fetchImpl, signal)
-    : probeDirectUrl(url, fetchImpl, signal)
+  if (isDev) return probeProxyUrl(url, fetchImpl, signal)
+  if (proxyBase?.trim()) return probeRemoteProxyUrl(url, proxyBase, fetchImpl, signal)
+  return probeDirectUrl(url, fetchImpl, signal)
 }
 
 export async function probeDirectUrl(
@@ -36,12 +37,35 @@ export async function probeProxyUrl(
   fetchImpl: typeof fetch = fetch,
   signal?: AbortSignal,
 ): Promise<BinaryUrlStatus> {
+  return probeProxyEndpoint('/api/ping?url=' + encodeURIComponent(url), fetchImpl, signal)
+}
+
+export async function probeRemoteProxyUrl(
+  url: string,
+  proxyBase: string,
+  fetchImpl: typeof fetch = fetch,
+  signal?: AbortSignal,
+): Promise<BinaryUrlStatus> {
+  const base = proxyBase.trim().replace(/\/+$/, '')
+  if (!base) return 'offline'
+  return probeProxyEndpoint(
+    base + '/api/ping?url=' + encodeURIComponent(url),
+    fetchImpl,
+    signal,
+  )
+}
+
+async function probeProxyEndpoint(
+  endpoint: string,
+  fetchImpl: typeof fetch,
+  signal?: AbortSignal,
+): Promise<BinaryUrlStatus> {
   try {
-    const response = await fetchImpl('/api/ping?url=' + encodeURIComponent(url), {
+    const response = await fetchImpl(endpoint, {
       cache: 'no-store',
       signal,
     })
-    if (!response.ok) return 'offline'
+    if (response.status !== 200) return 'offline'
 
     const data = (await response.json()) as { online?: unknown }
     return data.online === true ? 'online' : 'offline'
