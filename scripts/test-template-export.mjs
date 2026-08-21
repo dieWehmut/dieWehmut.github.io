@@ -69,6 +69,8 @@ const legacyMatches = walk(output).filter((file) => {
   return content.includes(legacyRepository) || content.includes(legacyBadge)
 })
 const rootReadme = fs.readFileSync(path.join(output, 'README.md'), 'utf8')
+const translatedReadmeSources = ['README.en.md', 'README.ja.md', 'README.zh-TW.md']
+  .map((file) => fs.readFileSync(path.join(output, 'docs', file), 'utf8'))
 const developmentLog = fs.readFileSync(path.join(docsRoot, 'posts/development-log.md'), 'utf8')
 const deployWorkflow = fs.readFileSync(path.join(output, '.github/workflows/deploy.yml'), 'utf8')
 const { prepareTemplate } = await import(prepareModuleUrl)
@@ -141,11 +143,12 @@ const checks = [
   ['development log records source SHA', developmentLog.includes(sourceSha)],
   ['template title exported', fs.readFileSync(path.join(output, 'index.html'), 'utf8').includes('<title>Vorlage</title>')],
   ['missing root favicon removed', !exportedIndex.includes('href="/favicon.png"') && !exportedIndex.includes("href='/favicon.png'")],
-  ['deploy workflow uses real GitHub expressions', deployWorkflow.includes('VITE_CODE_RUNNER_API_URL: ${{ vars.VITE_CODE_RUNNER_API_URL }}') && deployWorkflow.includes('repo_name="${GITHUB_REPOSITORY#*/}"')],
+  ['deploy workflow uses real GitHub expressions', deployWorkflow.includes('VITE_CODE_RUNNER_API_URL: ${{ vars.VITE_CODE_RUNNER_API_URL }}') && deployWorkflow.includes('VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}') && deployWorkflow.includes('repo_name="${GITHUB_REPOSITORY#*/}"')],
   ['deploy workflow has no escaped shell expressions', !deployWorkflow.includes('\\${') && !deployWorkflow.includes('\\$repo_name')],
   ['template README exported', rootReadme.includes('Vorlage') && rootReadme.includes('https://github.com/dieWehmut/Vorlage')],
-  ['README documents automatic Pages base', rootReadme.includes('GITHUB_REPOSITORY') && rootReadme.includes('BASE_PATH') && !rootReadme.includes("const base = '/Vorlage/'")],
+  ['README documents automatic Pages base and Infra probe', rootReadme.includes('GITHUB_REPOSITORY') && rootReadme.includes('BASE_PATH') && rootReadme.includes('VITE_INFRA_PROBE_URL') && rootReadme.includes('HTTP') && rootReadme.includes('`200`') && rootReadme.includes('SSRF') && !rootReadme.includes("const base = '/Vorlage/'")],
   ['translated READMEs exported', ['README.en.md', 'README.ja.md', 'README.zh-TW.md'].every((file) => fs.existsSync(path.join(output, 'docs', file)))],
+  ['translated READMEs document Infra probe', translatedReadmeSources.every((source) => source.includes('VITE_INFRA_PROBE_URL') && source.includes('HTTP') && source.includes('`200`') && source.includes('SSRF'))],
   ['starter README sources removed', !walk(path.join(output, 'src/data/site')).some((file) => path.basename(file).startsWith('starter-readme'))],
   ['legacy template identity removed', legacyMatches.length === 0],
   ['generated template files are not ignored', gitInit.status === 0 && ignoredProbe.status === 1 && ignoredProbe.stdout === '' && ignoredProbe.stderr === ''],

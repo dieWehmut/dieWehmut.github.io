@@ -33,6 +33,7 @@ jobs:
       VITE_GISCUS_LANG: ${{ vars.VITE_GISCUS_LANG }}
       VITE_CODE_RUNNER_API_URL: ${{ vars.VITE_CODE_RUNNER_API_URL }}
       VITE_CODE_RUNNER_API_TOKEN: ${{ vars.VITE_CODE_RUNNER_API_TOKEN }}
+      VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
 
     environment:
       name: github-pages

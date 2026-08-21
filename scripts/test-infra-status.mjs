@@ -188,18 +188,35 @@ if (probe) {
     )
 
     const developmentCalls = []
-    await probe.probeUrl('https://development.example', {
+    const developmentStatus = await probe.probeUrl('https://development.example', {
       isDev: true,
       fetchImpl: async (input, init) => {
         developmentCalls.push([input, init])
-        return { ok: true, json: async () => ({ online: true }) }
+        return { ok: true, status: 200, json: async () => ({ online: true }) }
       },
     })
     check(
       'development dispatcher selects the same-origin proxy',
-      developmentCalls.length === 1 &&
+      developmentStatus === 'online' &&
+        developmentCalls.length === 1 &&
         String(developmentCalls[0][0]).startsWith('/api/ping?url=') &&
         developmentCalls[0][1]?.mode === undefined,
+    )
+
+    const whitespaceProxyCalls = []
+    const whitespaceProxyStatus = await probe.probeUrl('https://production.example/direct', {
+      isDev: false,
+      proxyBase: '   ',
+      fetchImpl: async (input, init) => {
+        whitespaceProxyCalls.push([input, init])
+        return { ok: true, status: 200 }
+      },
+    })
+    check(
+      'blank production proxy setting falls back to direct probing',
+      whitespaceProxyStatus === 'online' &&
+        whitespaceProxyCalls.length === 1 &&
+        whitespaceProxyCalls[0][0] === 'https://production.example/direct',
     )
   }
 }
@@ -246,6 +263,29 @@ const deploySource = fs.readFileSync(path.join(root, '.github/workflows/deploy.y
 check(
   'GitHub Pages deployment enforces the Infra status regression',
   /pnpm (?:run )?test:infra-status/.test(deploySource),
+)
+check(
+  'GitHub Pages deployment injects the Infra proxy setting',
+  /VITE_INFRA_PROBE_URL:\s*\$\{\{ vars\.VITE_INFRA_PROBE_URL \|\| secrets\.API_PROXY_BASE \}\}/.test(deploySource),
+)
+
+const infraReadmePaths = [
+  'README.md',
+  'src/data/site/starter-readme.md',
+  'src/data/site/starter-readme.en.md',
+  'src/data/site/starter-readme.ja.md',
+  'src/data/site/starter-readme.zh-TW.md',
+]
+check(
+  'source and template READMEs document the Infra probe contract',
+  infraReadmePaths.every((relative) => {
+    const source = fs.readFileSync(path.join(root, relative), 'utf8')
+    return source.includes('VITE_INFRA_PROBE_URL') &&
+      source.includes('HTTP') &&
+      source.includes('`200`') &&
+      source.includes('CORS') &&
+      source.includes('SSRF')
+  }),
 )
 
 const pingProxySource = fs

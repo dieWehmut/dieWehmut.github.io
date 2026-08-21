@@ -79,6 +79,18 @@ VITE_CODE_RUNNER_API_TOKEN=
 
 Vite embeds these values in public JavaScript, so `VITE_CODE_RUNNER_API_TOKEN` must not contain a private server token.
 
+## Infra status probing
+
+The Infra page reports a service as online only when the upstream's final HTTP status is exactly `200`. Statuses such as `201`, `204`, redirects, errors, and network failures are offline.
+
+For production endpoints that do not expose browser-readable CORS headers, configure a public probe proxy in the Pages workflow:
+
+```yaml
+VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
+```
+
+The proxy must expose `GET /api/ping?url=<encoded-target>` and return HTTP `200` with `{ "online": true }` only when the upstream's final response is HTTP `200`. It must allow credential-free CORS from the deployed site and enforce an upstream hostname allowlist to prevent an SSRF/open-proxy service. `VITE_INFRA_PROBE_URL` is embedded in public browser JavaScript and must not contain credentials. Without it, the app falls back to a direct browser probe; CORS-blocked targets remain offline in that fallback mode.
+
 ## Commands
 
 ```bash

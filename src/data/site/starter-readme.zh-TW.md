@@ -79,6 +79,18 @@ VITE_CODE_RUNNER_API_TOKEN=
 
 Vite 會把這些值寫進公開的前端 JavaScript，`VITE_CODE_RUNNER_API_TOKEN` 不應放私密服務端 token。
 
+## Infra 狀態探測
+
+Infra 頁面只有在上游最終 HTTP 狀態精確為 `200` 時才顯示 online；`201`、`204`、重新導向、錯誤狀態與網路失敗都會顯示 offline。
+
+若生產服務沒有提供瀏覽器可讀的 CORS 標頭，請在 Pages 工作流程中設定公開探測代理：
+
+```yaml
+VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
+```
+
+代理必須提供 `GET /api/ping?url=<encoded-target>`，只有在上游最終回應為 HTTP `200` 時才回傳 HTTP `200` 與 `{ "online": true }`。代理必須允許部署網站的無憑證 CORS，並限制上游主機白名單，避免成為 SSRF/open proxy。`VITE_INFRA_PROBE_URL` 會嵌入公開的瀏覽器 JavaScript，不可放入憑證。未設定代理時會退回瀏覽器直連；不支援 CORS 的目標在此模式下會顯示 offline。
+
 ## 常用命令
 
 ```bash

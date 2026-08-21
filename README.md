@@ -91,3 +91,15 @@ VITE_CODE_RUNNER_API_URL=http://127.0.0.1:8080 pnpm dev
 | 笔记 | `src/data/docs/notes/*.md` | Markdown + frontmatter |
 
 模板相关说明请看模板仓库：<https://github.com/dieWehmut/Vorlage>
+
+## Infra 页面探测
+
+Infra 页面只把最终 HTTP 状态精确为 `200` 的服务显示为 online；`201`、`204`、重定向、错误状态和网络异常全部显示为 offline。
+
+生产环境如果目标服务没有允许 GitHub Pages 来源的 CORS 响应，请配置公开的探测代理：
+
+```yaml
+VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
+```
+
+代理需要提供 `GET /api/ping?url=<encoded-target>`，仅在上游最终状态为 `200` 时返回 HTTP `200` 和 `{ "online": true }`。代理必须允许部署站点的无凭据跨域请求，并限制上游主机白名单，避免变成 SSRF/open proxy。`VITE_INFRA_PROBE_URL` 会被嵌入公开的前端构建产物，不能放置密钥。未配置代理时会回退到浏览器直连；不支持 CORS 的目标在该模式下会显示 offline。

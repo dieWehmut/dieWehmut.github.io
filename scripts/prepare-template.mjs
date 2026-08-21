@@ -403,6 +403,7 @@ function writeTemplateDeployWorkflow(outputRoot) {
     '    env:',
     '      VITE_CODE_RUNNER_API_URL: ${{ vars.VITE_CODE_RUNNER_API_URL }}',
     '      VITE_CODE_RUNNER_API_TOKEN: ${{ vars.VITE_CODE_RUNNER_API_TOKEN }}',
+    '      VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}',
     '    environment:',
     '      name: github-pages',
     '    steps:',
