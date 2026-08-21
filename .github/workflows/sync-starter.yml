@@ -118,6 +118,7 @@ jobs:
             https://github.com/dieWehmut/Vorlage.git \
             "${TARGET_DIR}"
           target_sha="$(git -C "${TARGET_DIR}" rev-parse refs/remotes/origin/main)"
+          echo "Vorlage target SHA: ${target_sha}"
           printf '%s\n' "${target_sha}" > "${RUNNER_TEMP}/vorlage-target-sha"
 
       - name: Mirror validated export and push

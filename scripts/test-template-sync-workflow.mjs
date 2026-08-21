@@ -34,6 +34,7 @@ const checks = [
   ['built export is validated', /--dist "?\$EXPORT_DIR\/dist"?/.test(source)],
   ['canonical target is cloned', /github\.com\/dieWehmut\/Vorlage\.git/.test(source)],
   ['target clone preserves full main history', /git clone --branch main --single-branch/.test(source) && !/git clone[^\n]*--depth/.test(source)],
+  ['target SHA is recorded in the workflow log', /Vorlage target SHA: \$\{target_sha\}/.test(source)],
   [
     'source freshness is checked',
     /git ls-remote[\s\S]*?refs\/heads\/main[\s\S]*?GITHUB_SHA/.test(source),
