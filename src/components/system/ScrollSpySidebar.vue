@@ -336,6 +336,7 @@ function pointerRatio(event) {
 function onProgressPointerDown(event) {
   if (event.button !== 0) return
   event.preventDefault()
+  progressBarRef.value?.focus({ preventScroll: true })
   activeProgressPointerId = event.pointerId
   progressBarRef.value?.setPointerCapture?.(event.pointerId)
   scrollPageToRatio(pointerRatio(event))
@@ -646,7 +647,6 @@ onBeforeUnmount(() => {
   top: 0;
   border-radius: 999px;
   background: var(--site-accent);
-  transition: height 90ms linear;
 }
 
 .scroll-spy__percent {

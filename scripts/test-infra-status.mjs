@@ -275,17 +275,27 @@ check(
   /VITE_INFRA_PROBE_URL:\s*\$\{\{ vars\.VITE_INFRA_PROBE_URL \|\| secrets\.API_PROXY_BASE \}\}/.test(deploySource),
 )
 
-const infraReadmePaths = [
-  'README.md',
-  'src/data/site/starter-readme.md',
-  'src/data/site/starter-readme.en.md',
-  'src/data/site/starter-readme.ja.md',
-  'src/data/site/starter-readme.zh-TW.md',
-]
+const sourceStarterReadmePath = 'src/data/site/starter-readme.md'
+const infraReadmePaths = fs.existsSync(path.join(root, sourceStarterReadmePath))
+  ? [
+      'README.md',
+      sourceStarterReadmePath,
+      'src/data/site/starter-readme.en.md',
+      'src/data/site/starter-readme.ja.md',
+      'src/data/site/starter-readme.zh-TW.md',
+    ]
+  : [
+      'README.md',
+      'docs/README.en.md',
+      'docs/README.ja.md',
+      'docs/README.zh-TW.md',
+    ]
 check(
   'source and template READMEs document the Infra probe contract',
   infraReadmePaths.every((relative) => {
-    const source = fs.readFileSync(path.join(root, relative), 'utf8')
+    const readmePath = path.join(root, relative)
+    if (!fs.existsSync(readmePath)) return false
+    const source = fs.readFileSync(readmePath, 'utf8')
     return source.includes('VITE_INFRA_PROBE_URL') &&
       source.includes('HTTP') &&
       source.includes('`200`') &&

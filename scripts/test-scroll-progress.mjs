@@ -121,6 +121,8 @@ check('rail handles pointer drag with capture',
   /setPointerCapture/.test(sidebar) &&
   /releasePointerCapture/.test(sidebar) &&
   /activeProgressPointerId = null/.test(sidebar))
+check('pointer interaction keeps the rail keyboard-accessible',
+  /event\.preventDefault\(\)[\s\S]*progressBarRef\.value\?\.focus\(\{\s*preventScroll:\s*true\s*\}\)/.test(sidebar))
 check('rail handles keyboard progress',
   /@keydown="onProgressKeydown"/.test(sidebar) &&
   /scrollRatioForKey\(event\.key, progress\.value \/ 100\)/.test(sidebar))
@@ -132,6 +134,8 @@ check('rail uses shared progress calculations',
 check('progress fill grows from the top',
   /\.scroll-spy__bar span\s*\{[^}]*top:\s*0/.test(sidebar) &&
   !/\.scroll-spy__bar span\s*\{[^}]*bottom:\s*0/.test(sidebar))
+check('progress fill tracks pointer movement without transition lag',
+  !/\.scroll-spy__bar span\s*\{[^}]*transition:/.test(sidebar))
 check('progress rail widens its hit target without widening layout',
   /\.scroll-spy__bar\s*\{[\s\S]*padding-inline:\s*7px/.test(sidebar) &&
   /\.scroll-spy__bar\s*\{[\s\S]*margin-inline:\s*-7px/.test(sidebar) &&
