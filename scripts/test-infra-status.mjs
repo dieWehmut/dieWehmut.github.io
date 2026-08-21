@@ -88,6 +88,12 @@ if (probe) {
   )
   check('local proxy marks a non-200 upstream response offline', proxyNonOk === 'offline')
 
+  const proxyHttpNonOk = await probe.probeProxyUrl(
+    'https://service.example/status/201',
+    async () => ({ ok: true, status: 201, json: async () => ({ online: true }) }),
+  )
+  check('local proxy requires exact HTTP 200', proxyHttpNonOk === 'offline')
+
   const proxyOffline = await probe.probeProxyUrl(
     'https://service.example',
     async () => ({ ok: true, status: 200, json: async () => ({ online: false }) }),
@@ -142,7 +148,7 @@ if (probe) {
 
   check(
     'probe results contain only online and offline',
-    [directOnline, ...nonOkResults, directOffline, proxyOnline, proxyNonOk, proxyOffline, proxyFailure].every((status) =>
+    [directOnline, ...nonOkResults, directOffline, proxyOnline, proxyNonOk, proxyHttpNonOk, proxyOffline, proxyFailure].every((status) =>
       ['online', 'offline'].includes(status),
     ),
   )
