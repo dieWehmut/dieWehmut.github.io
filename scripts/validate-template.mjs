@@ -170,7 +170,14 @@ export function validateTemplate({ root, distRoot } = {}) {
     check(`translated README exists: ${relative}`, Boolean(source))
     check(`translated README uses canonical repository: ${relative}`, source.includes(canonicalIdentity.repositoryUrl))
     check(`translated README uses canonical Pages URL: ${relative}`, source.includes(canonicalIdentity.pagesUrl))
-    check(`translated README documents Infra probe: ${relative}`, source.includes('VITE_INFRA_PROBE_URL') && source.includes('HTTP') && source.includes('`200`') && source.includes('SSRF'))
+    check(
+      `translated README documents Infra probe: ${relative}`,
+      source.includes('VITE_INFRA_PROBE_URL') &&
+        source.includes('HTTP') &&
+        source.includes('`200`') &&
+        source.includes('SSRF') &&
+        source.includes('infra-status.json'),
+    )
   }
 
   const docsRoot = path.join(projectRoot, 'src', 'data', 'docs')
@@ -206,6 +213,8 @@ export function validateTemplate({ root, distRoot } = {}) {
   const deploySource = readText(projectRoot, '.github/workflows/deploy.yml')
   check('deploy workflow runs Infra status regression', /pnpm (?:run )?test:infra-status/.test(deploySource))
   check('deploy workflow exposes the Infra probe setting', /VITE_INFRA_PROBE_URL:\s*\$\{\{ vars\.VITE_INFRA_PROBE_URL \|\| secrets\.API_PROXY_BASE \}\}/.test(deploySource))
+  check('deploy workflow refreshes the Infra snapshot', /schedule:\s*\r?\n\s*- cron:/.test(deploySource))
+  check('template package generates the Infra snapshot', packageJson.scripts?.['infra:status:sync'] === 'node scripts/generate-infra-status.mjs' && /infra:status:sync/.test(packageJson.scripts?.build || ''))
   check(
     'deploy workflow derives BASE_PATH from repository',
     /repo_name="\$\{GITHUB_REPOSITORY#\*\/\}"/.test(deploySource) &&
@@ -217,7 +226,16 @@ export function validateTemplate({ root, distRoot } = {}) {
 
   const indexSource = readText(projectRoot, 'index.html')
   check('template index title is Vorlage', /<title>Vorlage<\/title>/i.test(indexSource))
-  check('README documents automatic Pages base and Infra probe', readText(projectRoot, 'README.md').includes('GITHUB_REPOSITORY') && readText(projectRoot, 'README.md').includes('VITE_INFRA_PROBE_URL') && readText(projectRoot, 'README.md').includes('HTTP') && readText(projectRoot, 'README.md').includes('`200`') && readText(projectRoot, 'README.md').includes('SSRF') && !readText(projectRoot, 'README.md').includes("const base = '/Vorlage/'"))
+  check(
+    'README documents automatic Pages base and Infra probe',
+    readText(projectRoot, 'README.md').includes('GITHUB_REPOSITORY') &&
+      readText(projectRoot, 'README.md').includes('VITE_INFRA_PROBE_URL') &&
+      readText(projectRoot, 'README.md').includes('HTTP') &&
+      readText(projectRoot, 'README.md').includes('`200`') &&
+      readText(projectRoot, 'README.md').includes('SSRF') &&
+      readText(projectRoot, 'README.md').includes('infra-status.json') &&
+      !readText(projectRoot, 'README.md').includes("const base = '/Vorlage/'"),
+  )
 
   checkDistAssets(distRoot && path.resolve(distRoot), canonicalIdentity.pagesBase, check)
 

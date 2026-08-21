@@ -131,12 +131,14 @@ jobs:
           rm -rf \
             "${TARGET_DIR}/node_modules" \
             "${TARGET_DIR}/dist" \
-            "${TARGET_DIR}/public/capture-assets"
+            "${TARGET_DIR}/public/capture-assets" \
+            "${TARGET_DIR}/public/infra-status.json"
           rsync -a --delete \
             --exclude='.git/' \
             --exclude='node_modules/' \
             --exclude='dist/' \
             --exclude='public/capture-assets/' \
+            --exclude='public/infra-status.json' \
             "${EXPORT_DIR}/" "${TARGET_DIR}/"
 
           latest_source_sha="$(git ls-remote "https://github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)"

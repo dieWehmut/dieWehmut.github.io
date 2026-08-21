@@ -12,6 +12,7 @@ dist-ssr
 *.local
 .vscode/
 public/capture-assets/*
+public/infra-status.json
 *.png
 *.jpg
 *.jpeg

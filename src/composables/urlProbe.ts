@@ -7,12 +7,15 @@ interface ProbeUrlOptions {
   signal?: AbortSignal
 }
 
-export function probeUrl(
+export async function probeUrl(
   url: string,
   { isDev, proxyBase, fetchImpl = fetch, signal }: ProbeUrlOptions,
 ): Promise<BinaryUrlStatus> {
   if (isDev) return probeProxyUrl(url, fetchImpl, signal)
-  if (proxyBase?.trim()) return probeRemoteProxyUrl(url, proxyBase, fetchImpl, signal)
+  if (proxyBase?.trim()) {
+    const proxyStatus = await probeRemoteProxyUrl(url, proxyBase, fetchImpl, signal)
+    if (proxyStatus === 'online') return proxyStatus
+  }
   return probeDirectUrl(url, fetchImpl, signal)
 }
 
@@ -24,9 +27,16 @@ export async function probeDirectUrl(
   try {
     const response = await fetchImpl(url, {
       cache: 'no-store',
+      redirect: 'manual',
       signal,
     })
-    return response.status === 200 ? 'online' : 'offline'
+    const status = response.status === 200 ? 'online' : 'offline'
+    try {
+      await response.body?.cancel()
+    } catch {
+      // The HTTP status is authoritative even if body cleanup fails.
+    }
+    return status
   } catch {
     return 'offline'
   }
@@ -63,6 +73,7 @@ async function probeProxyEndpoint(
   try {
     const response = await fetchImpl(endpoint, {
       cache: 'no-store',
+      redirect: 'manual',
       signal,
     })
     if (response.status !== 200) return 'offline'

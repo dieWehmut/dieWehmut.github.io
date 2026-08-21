@@ -89,7 +89,9 @@ Infra 頁面只有在上游最終 HTTP 狀態精確為 `200` 時才顯示 online
 VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
 ```
 
-代理必須提供 `GET /api/ping?url=<encoded-target>`，只有在上游最終回應為 HTTP `200` 時才回傳 HTTP `200` 與 `{ "online": true }`。代理必須允許部署網站的無憑證 CORS，並限制上游主機白名單，避免成為 SSRF/open proxy。`VITE_INFRA_PROBE_URL` 會嵌入公開的瀏覽器 JavaScript，不可放入憑證。未設定代理時會退回瀏覽器直連；不支援 CORS 的目標在此模式下會顯示 offline。
+代理必須提供 `GET /api/ping?url=<encoded-target>`，只有在上游最終回應為 HTTP `200` 時才回傳 HTTP `200` 與 `{ "online": true }`。代理必須允許部署網站的無憑證 CORS，並限制上游主機白名單，避免成為 SSRF/open proxy。`VITE_INFRA_PROBE_URL` 會嵌入公開的瀏覽器 JavaScript，不可放入憑證。
+
+Pages 建置也會從 `src/data/site/infra.ts` 產生 `public/infra-status.json`：GitHub Actions 在伺服器端依上游最終 HTTP 狀態探測並寫入快照，瀏覽器優先讀取同源快照，再回退到代理或瀏覽器直連。工作流程每 15 分鐘執行一次；可執行 `pnpm infra:status:sync` 手動更新。沒有可用快照或代理且被 CORS 阻擋的目標仍會顯示 offline。
 
 ## 常用命令
 

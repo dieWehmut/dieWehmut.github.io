@@ -347,9 +347,15 @@ function pingProxy(): Plugin {
         try {
           const upstream = await fetch(url, {
             signal: ctrl.signal,
-            redirect: 'follow',
+            redirect: 'manual',
           })
-          writeJson(res, { online: upstream.status === 200 })
+          const online = upstream.status === 200
+          try {
+            await upstream.body?.cancel()
+          } catch {
+            // The status code is still valid if response body cleanup fails.
+          }
+          writeJson(res, { online })
         } catch {
           writeJson(res, { online: false })
         } finally {

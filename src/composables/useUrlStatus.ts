@@ -3,6 +3,7 @@ import {
   probeUrl,
   type BinaryUrlStatus,
 } from './urlProbe'
+import { fetchInfraStatusSnapshot } from './infraStatusSnapshot'
 
 export type StatusKind = BinaryUrlStatus
 
@@ -14,10 +15,32 @@ interface CheckOptions {
   force?: boolean
 }
 
+const SNAPSHOT_TTL_MS = 60_000
+const SNAPSHOT_TIMEOUT_MS = 2_000
+let sharedSnapshotPromise: Promise<Record<string, BinaryUrlStatus> | null> | null = null
+let sharedSnapshotStartedAt = 0
+
+function loadSharedSnapshot() {
+  if (import.meta.env.DEV) return Promise.resolve(null)
+
+  const now = Date.now()
+  if (sharedSnapshotPromise && now - sharedSnapshotStartedAt < SNAPSHOT_TTL_MS) {
+    return sharedSnapshotPromise
+  }
+
+  sharedSnapshotStartedAt = now
+  sharedSnapshotPromise = fetchInfraStatusSnapshot(fetch, undefined, SNAPSHOT_TIMEOUT_MS)
+  return sharedSnapshotPromise
+}
+
 export function useUrlStatus() {
   const statusMap = reactive<Record<string, UrlStatus>>({})
   const pending = new Map<string, AbortController>()
   const batchTimers = new Set<ReturnType<typeof setTimeout>>()
+
+  function loadSnapshot() {
+    return loadSharedSnapshot()
+  }
 
   async function checkUrl(url: string, options: CheckOptions = {}) {
     if (!url || url === '#') return
@@ -35,7 +58,9 @@ export function useUrlStatus() {
     const timeoutId = setTimeout(() => controller.abort(), import.meta.env.DEV ? 6000 : 5000)
 
     try {
-      const status = await probeUrl(url, {
+      const snapshot = await loadSnapshot()
+      const snapshotStatus = snapshot?.[url]
+      const status = snapshotStatus ?? await probeUrl(url, {
         isDev: import.meta.env.DEV,
         proxyBase: import.meta.env.VITE_INFRA_PROBE_URL,
         fetchImpl: fetch,

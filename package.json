@@ -39,7 +39,8 @@
     "test:template-sync-workflow": "node scripts/test-template-sync-workflow.mjs",
     "test:console": "pnpm test:console-command && pnpm test:console-state && pnpm test:console-selection && pnpm test:console-timeline && pnpm test:console-registry && pnpm test:console-suggestions && pnpm test:console-target && pnpm test:console-display-mode && pnpm test:console-comment && pnpm test:console-avatar && pnpm test:console-i18n && pnpm test:site-overview && pnpm test:console-layout && pnpm test:console-route-parity && pnpm test:heading-navigation && pnpm test:scroll-progress && pnpm test:scroll-hash-navigation && pnpm test:color-scheme && pnpm test:scoped-styles",
     "typecheck": "vue-tsc --noEmit",
-    "build": "pnpm run content:sync && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
+    "infra:status:sync": "node scripts/generate-infra-status.mjs",
+    "build": "pnpm run content:sync && pnpm run infra:status:sync && node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
     "preview": "vite preview",
     "runner:smoke:docs": "node scripts/smoke-sandkasten-doc.mjs"
   },

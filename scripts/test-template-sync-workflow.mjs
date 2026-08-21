@@ -60,11 +60,11 @@ const checks = [
   ],
   [
     'transient export paths are excluded from mirror',
-    [".git/", 'node_modules/', 'dist/', 'public/capture-assets/'].every((entry) => source.includes(`--exclude='${entry}'`)),
+    [".git/", 'node_modules/', 'dist/', 'public/capture-assets/', 'public/infra-status.json'].every((entry) => source.includes(`--exclude='${entry}'`)),
   ],
   [
     'stale target build paths are removed before staging',
-    ['${TARGET_DIR}/node_modules', '${TARGET_DIR}/dist', '${TARGET_DIR}/public/capture-assets'].every((entry) => source.includes(entry)),
+    ['${TARGET_DIR}/node_modules', '${TARGET_DIR}/dist', '${TARGET_DIR}/public/capture-assets', '${TARGET_DIR}/public/infra-status.json'].every((entry) => source.includes(entry)),
   ],
   [
     'runner temp roots are not recursively deleted',

@@ -98,7 +98,9 @@ Infra ページは、上流の最終 HTTP ステータスが正確に `200` の�
 VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
 ```
 
-プロキシは `GET /api/ping?url=<encoded-target>` を提供し、上流の最終応答が HTTP `200` の場合だけ HTTP `200` と `{ "online": true }` を返す必要があります。デプロイ先からの認証なし CORS を許可し、SSRF/open proxy にならないよう上流ホストの許可リストを適用してください。`VITE_INFRA_PROBE_URL` は公開ブラウザー JavaScript に埋め込まれるため、認証情報を含めてはいけません。未設定時はブラウザーから直接確認し、CORS で遮断される対象は offline になります。
+プロキシは `GET /api/ping?url=<encoded-target>` を提供し、上流の最終応答が HTTP `200` の場合だけ HTTP `200` と `{ "online": true }` を返す必要があります。デプロイ先からの認証なし CORS を許可し、SSRF/open proxy にならないよう上流ホストの許可リストを適用してください。`VITE_INFRA_PROBE_URL` は公開ブラウザー JavaScript に埋め込まれるため、認証情報を含めてはいけません。
+
+Pages ビルドは `src/data/site/infra.ts` から `public/infra-status.json` も生成します。GitHub Actions が上流の最終 HTTP ステータスをサーバー側で確認してスナップショットを書き込み、ブラウザーは同一オリジンのスナップショットを優先してからプロキシまたは直接確認へフォールバックします。ワークフローは 15 分ごとに実行され、`pnpm infra:status:sync` で手動更新できます。利用可能なスナップショットやプロキシがなく CORS で遮断された対象は offline のままです。
 
 ## License
 

@@ -324,7 +324,9 @@ Infra 页面只把最终 HTTP 状态精确为 `200` 的服务显示为 online；
 VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
 ```
 
-代理需要提供 `GET /api/ping?url=<encoded-target>`，仅在上游最终状态为 `200` 时返回 HTTP `200` 和 `{ "online": true }`。代理必须允许部署站点的无凭据跨域请求，并限制上游主机白名单，避免变成 SSRF/open proxy。`VITE_INFRA_PROBE_URL` 会被嵌入公开的前端构建产物，不能放置密钥。未配置代理时会回退到浏览器直连；不支持 CORS 的目标在该模式下会显示 offline。
+代理需要提供 `GET /api/ping?url=<encoded-target>`，仅在上游最终状态为 `200` 时返回 HTTP `200` 和 `{ "online": true }`。代理必须允许部署站点的无凭据跨域请求，并限制上游主机白名单，避免变成 SSRF/open proxy。`VITE_INFRA_PROBE_URL` 会被嵌入公开的前端构建产物，不能放置密钥。
+
+Pages 构建会从 `src/data/site/infra.ts` 生成 `public/infra-status.json`。GitHub Actions 服务端按最终 HTTP 状态探测并写入快照，前端优先读取同源快照，代理不可用时再回退到代理或浏览器直连。工作流每 15 分钟运行一次；手动运行 `pnpm infra:status:sync` 可刷新快照。不支持 CORS 且没有可用快照或代理的目标仍会显示 offline。
 
 ## 自定义建议
 

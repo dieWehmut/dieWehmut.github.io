@@ -89,7 +89,9 @@ For production endpoints that do not expose browser-readable CORS headers, confi
 VITE_INFRA_PROBE_URL: ${{ vars.VITE_INFRA_PROBE_URL || secrets.API_PROXY_BASE }}
 ```
 
-The proxy must expose `GET /api/ping?url=<encoded-target>` and return HTTP `200` with `{ "online": true }` only when the upstream's final response is HTTP `200`. It must allow credential-free CORS from the deployed site and enforce an upstream hostname allowlist to prevent an SSRF/open-proxy service. `VITE_INFRA_PROBE_URL` is embedded in public browser JavaScript and must not contain credentials. Without it, the app falls back to a direct browser probe; CORS-blocked targets remain offline in that fallback mode.
+The proxy must expose `GET /api/ping?url=<encoded-target>` and return HTTP `200` with `{ "online": true }` only when the upstream's final response is HTTP `200`. It must allow credential-free CORS from the deployed site and enforce an upstream hostname allowlist to prevent an SSRF/open-proxy service. `VITE_INFRA_PROBE_URL` is embedded in public browser JavaScript and must not contain credentials.
+
+The Pages build also generates `public/infra-status.json` from `src/data/site/infra.ts`: GitHub Actions probes each URL server-side using the final HTTP status, and the browser prefers this same-origin snapshot before falling back to the proxy or a direct browser probe. The workflow runs every 15 minutes; run `pnpm infra:status:sync` to refresh it manually. CORS-blocked targets without a usable snapshot or proxy remain offline.
 
 ## Commands
 

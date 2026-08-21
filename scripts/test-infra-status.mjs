@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
 import {
@@ -16,6 +17,103 @@ const checks = []
 
 function check(label, condition) {
   checks.push([label, Boolean(condition)])
+}
+
+let snapshotTools = null
+try {
+  snapshotTools = await import('./infra-status-snapshot.mjs')
+} catch {
+  snapshotTools = null
+}
+
+check('build-time Infra snapshot module exists', Boolean(snapshotTools))
+if (snapshotTools) {
+  const extractedUrls = snapshotTools.extractInfraUrls(`
+    const initialInfra = [
+      { name: 'Online', url: 'https://online.example' },
+      { name: 'Duplicate', url: 'https://online.example' },
+      { name: 'Offline' },
+      { name: 'Created', url: \`https://created.example\` },
+    ]
+  `)
+  check(
+    'snapshot parser extracts unique literal Infra URLs',
+    JSON.stringify(extractedUrls) === JSON.stringify([
+      'https://online.example',
+      'https://created.example',
+    ]),
+  )
+
+  const probeResponses = new Map([
+    ['https://online.example', 200],
+    ['https://created.example', 201],
+    ['https://redirect.example', 301],
+  ])
+  const snapshot = await snapshotTools.createInfraStatusSnapshot(
+    [...probeResponses.keys(), 'https://failure.example'],
+    {
+      generatedAt: new Date('2026-08-21T00:00:00.000Z'),
+      timeoutMs: 100,
+      fetchImpl: async (url) => {
+        if (url === 'https://failure.example') throw new TypeError('network failure')
+        return { status: probeResponses.get(url), body: { cancel: async () => {} } }
+      },
+    },
+  )
+  check(
+    'build-time snapshot marks only exact HTTP 200 online',
+    snapshot.version === 1 &&
+      snapshot.generatedAt === '2026-08-21T00:00:00.000Z' &&
+      snapshot.statuses['https://online.example'] === 'online' &&
+      snapshot.statuses['https://created.example'] === 'offline' &&
+      snapshot.statuses['https://redirect.example'] === 'offline' &&
+      snapshot.statuses['https://failure.example'] === 'offline',
+  )
+
+  const safeProbeCalls = []
+  const guardedSnapshot = await snapshotTools.createInfraStatusSnapshot(
+    ['https://public.example', 'http://127.0.0.1:8080/metadata'],
+    {
+      fetchImpl: async (url) => {
+        safeProbeCalls.push(url)
+        return { status: 200, body: { cancel: async () => {} } }
+      },
+    },
+  )
+  check(
+    'build-time snapshot blocks private probe targets',
+    guardedSnapshot.statuses['https://public.example'] === 'online' &&
+      guardedSnapshot.statuses['http://127.0.0.1:8080/metadata'] === 'offline' &&
+      JSON.stringify(safeProbeCalls) === JSON.stringify(['https://public.example']),
+  )
+
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'infra-status-test-'))
+  try {
+    const infraPath = path.join(tempRoot, 'infra.ts')
+    fs.writeFileSync(
+      infraPath,
+      "const initialInfra = [{ url: 'https://from-file.example' }]\n",
+      'utf8',
+    )
+    check(
+      'snapshot reader extracts URLs from an Infra source file',
+      JSON.stringify(snapshotTools.readInfraUrls(infraPath)) ===
+        JSON.stringify(['https://from-file.example']),
+    )
+    const multilinePath = path.join(tempRoot, 'multiline-infra.ts')
+    fs.writeFileSync(
+      multilinePath,
+      "const initialInfra = [{ url: `https://multiline.example` }]\n",
+      'utf8',
+    )
+    check(
+      'snapshot reader accepts template literal URLs',
+      JSON.stringify(snapshotTools.readInfraUrls(multilinePath)) ===
+        JSON.stringify(['https://multiline.example']),
+    )
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true })
+  }
 }
 
 async function loadTypeScriptModule(relativePath) {
@@ -35,6 +133,55 @@ async function loadTypeScriptModule(relativePath) {
 const probe = await loadTypeScriptModule('src/composables/urlProbe.ts')
 check('pure binary URL probe module exists', Boolean(probe))
 
+const snapshotLoader = await loadTypeScriptModule('src/composables/infraStatusSnapshot.ts')
+check('runtime Infra snapshot loader exists', Boolean(snapshotLoader))
+if (snapshotLoader) {
+  const freshGeneratedAt = new Date(Date.now() - 1000).toISOString()
+  const freshSnapshot = await snapshotLoader.fetchInfraStatusSnapshot(
+    async () => ({
+      status: 200,
+      json: async () => ({
+        version: 1,
+        generatedAt: freshGeneratedAt,
+        statuses: {
+          'https://online.example': 'online',
+          'https://offline.example': 'offline',
+          'https://invalid.example': 'unknown',
+        },
+      }),
+    }),
+    undefined,
+    100,
+  )
+  check(
+    'runtime snapshot loader accepts fresh binary statuses',
+    freshSnapshot?.['https://online.example'] === 'online' &&
+      freshSnapshot?.['https://offline.example'] === 'offline' &&
+      !freshSnapshot?.['https://invalid.example'],
+  )
+
+  const staleSnapshot = await snapshotLoader.fetchInfraStatusSnapshot(
+    async () => ({
+      status: 200,
+      json: async () => ({
+        version: 1,
+        generatedAt: new Date(Date.now() - 60 * 60_000).toISOString(),
+        statuses: { 'https://stale.example': 'online' },
+      }),
+    }),
+    undefined,
+    100,
+  )
+  check('runtime snapshot loader rejects stale snapshots', staleSnapshot === null)
+
+  const nonOkSnapshot = await snapshotLoader.fetchInfraStatusSnapshot(
+    async () => ({ status: 304, json: async () => ({}) }),
+    undefined,
+    100,
+  )
+  check('runtime snapshot loader requires exact HTTP 200', nonOkSnapshot === null)
+}
+
 if (probe) {
   const directCalls = []
   const directOnline = await probe.probeDirectUrl(
@@ -47,7 +194,9 @@ if (probe) {
   check('HTTP 200 response is online', directOnline === 'online')
   check(
     'production request reads the HTTP status',
-    directCalls.length === 1 && directCalls[0][1]?.mode === undefined,
+    directCalls.length === 1 &&
+      directCalls[0][1]?.mode === undefined &&
+      directCalls[0][1]?.redirect === 'manual',
   )
   check(
     'production request bypasses cached reachability',
@@ -230,6 +379,9 @@ if (probe) {
 const composablePath = path.join(root, 'src/composables/useUrlStatus.ts')
 const composableSource = fs.readFileSync(composablePath, 'utf8')
 const probeSource = fs.readFileSync(path.join(root, 'src/composables/urlProbe.ts'), 'utf8')
+const snapshotSource = fs.existsSync(path.join(root, 'src/composables/infraStatusSnapshot.ts'))
+  ? fs.readFileSync(path.join(root, 'src/composables/infraStatusSnapshot.ts'), 'utf8')
+  : ''
 const binaryTypeLine = probeSource
   .split(/\r?\n/)
   .find((line) => line.includes('export type BinaryUrlStatus'))
@@ -245,6 +397,18 @@ check(
 )
 const envSource = fs.readFileSync(path.join(root, 'src/vite-env.d.ts'), 'utf8')
 check('Vite env declares the Infra proxy setting', /VITE_INFRA_PROBE_URL\?:\s*string/.test(envSource))
+check(
+  'production status checks prefer the same-origin snapshot before runtime probing',
+  /infra-status\.json/.test(snapshotSource) &&
+    /fetchInfraStatusSnapshot/.test(composableSource) &&
+    /snapshotStatus/.test(composableSource) &&
+    /snapshotStatus\s*\?\?\s*await probeUrl/.test(composableSource),
+)
+check(
+  'snapshot loader validates the binary status schema',
+  /response\.status\s*!==\s*200/.test(snapshotSource) &&
+    /status\s*===\s*['"]online['"]\s*\|\|\s*status\s*===\s*['"]offline['"]/.test(snapshotSource),
+)
 
 const infraViewSource = fs.readFileSync(path.join(root, 'src/views/InfraView.vue'), 'utf8')
 check('Infra view never renders unknown', !/unknown/i.test(infraViewSource))
@@ -266,6 +430,7 @@ check(
 )
 
 const deploySource = fs.readFileSync(path.join(root, '.github/workflows/deploy.yml'), 'utf8')
+const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 check(
   'GitHub Pages deployment enforces the Infra status regression',
   /pnpm (?:run )?test:infra-status/.test(deploySource),
@@ -273,6 +438,15 @@ check(
 check(
   'GitHub Pages deployment injects the Infra proxy setting',
   /VITE_INFRA_PROBE_URL:\s*\$\{\{ vars\.VITE_INFRA_PROBE_URL \|\| secrets\.API_PROXY_BASE \}\}/.test(deploySource),
+)
+check(
+  'production build generates the strict Infra snapshot',
+  packageJson.scripts?.['infra:status:sync'] === 'node scripts/generate-infra-status.mjs' &&
+    /infra:status:sync/.test(packageJson.scripts?.build || ''),
+)
+check(
+  'GitHub Pages refreshes the Infra snapshot on a schedule',
+  /schedule:\s*\r?\n\s*- cron:\s*['"]?[^'"\r\n]+/.test(deploySource),
 )
 
 const sourceStarterReadmePath = 'src/data/site/starter-readme.md'
@@ -310,7 +484,7 @@ const pingProxySource = fs
 check(
   'local ping proxy reports online only for upstream HTTP 200',
   Boolean(pingProxySource) &&
-    /online:\s*upstream\.status\s*===\s*200/.test(pingProxySource) &&
+    /(?:online\s*=\s*|online:\s*)upstream\.status\s*===\s*200/.test(pingProxySource) &&
     !/latency|status:\s*upstream/.test(pingProxySource),
 )
 
