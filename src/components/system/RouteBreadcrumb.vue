@@ -177,6 +177,17 @@ const crumbs = computed<Crumb[]>(() => {
   font-weight: 760;
   pointer-events: none;
   animation: routePathSlide 220ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  /* The crumb is fixed, so collapsing the sidebar would snap it left while the
+     column it belongs to glides. Ride the layout's own swap timing instead. */
+  transition:
+    left var(--sidebar-swap-duration, 420ms) var(--sidebar-swap-ease, ease),
+    max-width var(--sidebar-swap-duration, 420ms) var(--sidebar-swap-ease, ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-breadcrumb {
+    transition: none;
+  }
 }
 
 .route-breadcrumb__item {

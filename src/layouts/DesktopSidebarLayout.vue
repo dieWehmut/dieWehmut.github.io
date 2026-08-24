@@ -4,7 +4,9 @@
     :class="{ 'desktop-layout--console': isConsole }"
     :data-console-mode="isConsole ? 'on' : 'off'"
   >
-    <SiteSidebar v-if="!isConsole" class="desktop-layout__sidebar" />
+    <Transition name="sidebar-slide">
+      <SiteSidebar v-if="!isConsole && !sidebarCollapsed" class="desktop-layout__sidebar" />
+    </Transition>
     <div class="desktop-layout__content">
       <RouteBreadcrumb v-if="!isConsole" />
       <ConsoleOverviewHeader v-if="isConsole" />
@@ -59,8 +61,10 @@ import RouteBreadcrumb from '../components/system/RouteBreadcrumb.vue'
 import { useConsoleCommentSession } from '../composables/useConsoleCommentSession'
 import { useConsoleOutputReveal } from '../composables/useConsoleOutputReveal'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
+import { useSidebarPreference } from '../composables/useSidebarPreference'
 
 const { isConsole } = useDisplayModePreference()
+const { sidebarCollapsed } = useSidebarPreference()
 const { target: commentTarget } = useConsoleCommentSession()
 const { revealRequest } = useConsoleOutputReveal()
 const route = useRoute()
@@ -168,6 +172,10 @@ watch(isConsole, (enabled) => {
   position: relative;
   z-index: 2;
   min-height: 100vh;
+  /* One duration and one curve for the whole column swap, so the sidebar's slide,
+     the content's reflow and the breadcrumb's shift read as a single gesture. */
+  --sidebar-swap-duration: 420ms;
+  --sidebar-swap-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .desktop-layout__result {
@@ -180,6 +188,59 @@ watch(isConsole, (enabled) => {
   z-index: 10;
 }
 
+/* The sidebar is taken out of flow, so it can slide clear of the viewport while
+   the content widens underneath it instead of fighting it for the same pixels. */
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  will-change: transform, opacity;
+  transition:
+    transform var(--sidebar-swap-duration) var(--sidebar-swap-ease),
+    opacity calc(var(--sidebar-swap-duration) * 0.6) ease;
+}
+
+.sidebar-slide-leave-active {
+  pointer-events: none;
+}
+
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* Expanding deals the sidebar's own rows back in one after another. The rows ride
+   their own keyframes rather than the container transition, so the stagger keeps
+   running while the panel itself is still travelling. */
+.sidebar-slide-enter-active :deep(.site-sidebar__avatar-link),
+.sidebar-slide-enter-active :deep(.site-sidebar__identity),
+.sidebar-slide-enter-active :deep(.nav-menu__item) {
+  animation: sidebar-row-in 320ms var(--sidebar-swap-ease) backwards;
+}
+
+.sidebar-slide-enter-active :deep(.site-sidebar__avatar-link) { animation-delay: 120ms; }
+.sidebar-slide-enter-active :deep(.site-sidebar__identity) { animation-delay: 160ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(1)) { animation-delay: 200ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(2)) { animation-delay: 226ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(3)) { animation-delay: 252ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(4)) { animation-delay: 278ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(5)) { animation-delay: 304ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(6)) { animation-delay: 330ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(7)) { animation-delay: 356ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(8)) { animation-delay: 382ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(9)) { animation-delay: 408ms; }
+.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(10)) { animation-delay: 434ms; }
+
+@keyframes sidebar-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .desktop-layout__content {
   position: relative;
   min-width: 0;
@@ -188,6 +249,10 @@ watch(isConsole, (enabled) => {
   display: flex;
   flex-direction: column;
   isolation: isolate;
+  /* `margin-left` resolves to a plain length even though it comes from a custom
+     property, so the browser interpolates it on its own — the token can flip to 0
+     instantly and the column still glides. No `@property` registration needed. */
+  transition: margin-left var(--sidebar-swap-duration) var(--sidebar-swap-ease);
   background:
     var(--site-mesh-line-row),
     var(--site-mesh-line-column),
@@ -245,6 +310,9 @@ html[data-theme='light'] .desktop-layout--console {
   background: var(--console-bg);
   background-attachment: initial;
   background-image: none;
+  /* The console swap is a shell change, not a column change: it lands at once,
+     the way its page transitions already do. */
+  transition: none;
 }
 
 .desktop-layout--console .desktop-layout__result {
@@ -338,6 +406,7 @@ html[data-theme='light'] .desktop-layout--console {
   );
   margin: 0 auto 0 var(--site-desktop-content-gutter);
   padding: 46px 0 54px;
+  transition: width var(--sidebar-swap-duration) var(--sidebar-swap-ease);
 }
 
 .page-fade-enter-active {
@@ -360,6 +429,21 @@ html[data-theme='light'] .desktop-layout--console {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .desktop-layout {
+    --sidebar-swap-duration: 1ms;
+  }
+
+  .desktop-layout__content,
+  .desktop-layout__main {
+    transition: none;
+  }
+
+  .sidebar-slide-enter-active :deep(.site-sidebar__avatar-link),
+  .sidebar-slide-enter-active :deep(.site-sidebar__identity),
+  .sidebar-slide-enter-active :deep(.nav-menu__item) {
+    animation: none;
+  }
+
   .page-fade-enter-active,
   .page-fade-leave-active {
     transition-duration: 1ms;

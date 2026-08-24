@@ -81,6 +81,16 @@ a:hover {
   }
 }
 
+/* Collapsing the classic shell to a single column is one token: every consumer
+   (content margin, main width, breadcrumb offset, footer, comments, right rail)
+   already derives its own geometry from it. Desktop only — below 901px this same
+   token is the slide-in drawer's width, and a drawer with no width cannot open. */
+@media (min-width: 901px) {
+  html.sidebar-collapsed {
+    --site-sidebar-width: 0px;
+  }
+}
+
 @media (max-width: 900px) {
   :root {
     --site-sidebar-width: min(82vw, 320px);
