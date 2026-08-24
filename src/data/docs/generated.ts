@@ -14,6 +14,22 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "GoRust",
+    "type": "post",
+    "title": "Go Rust",
+    "date": "2026/08/24",
+    "tags": [
+      "Rust",
+      "Code"
+    ],
+    "summary": "严肃学习Rust圣经\n2026-08-24 | Monday\n无gc 安全 \"用Rust重写\"\nCargo.toml 描述文件\nCargo.lock 依赖",
+    "wordCount": 37,
+    "readingMinutes": 1,
+    "updated": "",
+    "codeRunner": true,
+    "path": "./posts/GoRust.md"
+  },
+  {
     "id": "CurrentAffairsReading",
     "type": "note",
     "title": "英语时文阅读笔记",
@@ -30,7 +46,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "path": "./notes/CurrentAffairsReading.md"
   },
   {
-    "id": "Harness",
+    "id": "HarnessEvolution",
     "type": "post",
     "title": "Harness自进化初探",
     "date": "2026-07-14",
@@ -43,8 +59,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "前置知识\nAgent\nagent自拉丁语agere(做，行动)->能够感知环境，并采取行动实现目标,类似于以前说的机器人啥的,这几年llm强大起来之后大家的讨论基本上转向了软件工程界(前几年对ai的认知还是对话机器)，即编程界\n从Re...",
     "wordCount": 710,
     "readingMinutes": 2,
-    "updated": "2026/07/15 21:35",
-    "path": "./posts/Harness.md"
+    "updated": "",
+    "path": "./posts/HarnessEvolution.md"
   },
   {
     "id": "Tauri",
@@ -152,13 +168,13 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Anthropic"
     ],
     "summary": "Claude Code配置目录\nCodex配置目录\nOpencode配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\nProxy\nAgentRouter\nDeepseek\n自建中转\nSub2api\nCodexManager",
-    "wordCount": 573,
+    "wordCount": 577,
     "readingMinutes": 2,
-    "updated": "2026/07/07 22:40",
+    "updated": "2026/08/14 21:46",
     "path": "./posts/AgentSettings.md"
   },
   {
-    "id": "GoLearning",
+    "id": "GoGolang",
     "type": "post",
     "title": "Go Golang",
     "date": "2026/01/20 - 2026/03/02",
@@ -169,9 +185,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "2026-01-20 | Tuesday\n好几个月前就配了环境，也ai写了点调ai的api的代码测试，今天开始系统了解和学习go语言\n**初步认识:**\ngo像cpp那样有{}，又像python那样没有\";\"\n大小写就能区分publi...",
     "wordCount": 5527,
     "readingMinutes": 14,
-    "updated": "2026/06/16 10:35",
+    "updated": "",
     "codeRunner": true,
-    "path": "./posts/GoLearning.md"
+    "path": "./posts/GoGolang.md"
   },
   {
     "id": "Calculus",
