@@ -23,6 +23,9 @@ const whaleMetaEnd = note.indexOf('## 十、人生下半场', whaleMetaStart)
 const whaleMeta = note.slice(whaleMetaStart, whaleMetaEnd < 0 ? undefined : whaleMetaEnd)
 const vocabularyLinePattern = /^\s*[-*+]\s+\*\*[^*]+\*\*\s+英\s+\[[^\]]+\]\s*\/\s*美\s+\[[^\]]+\].*$/gmu
 const vocabularyLines = note.match(vocabularyLinePattern) || []
+const editableToolbar = markdown.match(/function renderEditableToolbar\([\s\S]*?\n\}/)?.[0] || ''
+const toolbarOrder = ['run', 'fullscreen', 'edit'].map((action) => editableToolbar.indexOf(`data-md-action="${action}"`))
+const narrowStyles = styles.slice(styles.indexOf('@media (max-width: 900px)'), styles.indexOf('@media (max-width: 640px)'))
 
 const checks = [
   ['sanitizer keeps u', /['"]u['"]/.test(allowedTags)],
@@ -49,6 +52,11 @@ const checks = [
   ['progressive render shares heading registry', /headingIds/.test(markdownContent) && /headingIds/.test(markdown)],
   ['router defers hash scrolling', !/return\s+\{\s*el:\s*to\.hash/.test(router) && /to\.hash/.test(router)],
   ['sidebar retries route hashes', /route\.hash/.test(scrollSpy) && /MutationObserver/.test(scrollSpy) && /resolveHeading/.test(scrollSpy)],
+  ['fullscreen sits between run and edit', toolbarOrder.every((index) => index >= 0) && toolbarOrder[0] < toolbarOrder[1] && toolbarOrder[1] < toolbarOrder[2]],
+  ['fullscreen action is delegated', /action\s*===\s*['"]fullscreen['"]/.test(markdown) && /is-fullscreen/.test(markdown)],
+  ['fullscreen releases the page it locked', /body\.style\.overflow/.test(markdown) && /removeEventListener\(['"]keydown['"], onFullscreenKeydown\)/.test(markdown) && /cleanupHandlers\.push\(releaseFullscreen\)/.test(markdown)],
+  ['fullscreen overrides the editor height clamp', /\.md-editable-block\.is-fullscreen[\s\S]*?height:\s*auto\s*!important/.test(styles) && /\.md-editable-block\.is-fullscreen \.md-code-preview\s*\{\s*max-height:\s*none/.test(styles)],
+  ['fullscreen button is desktop only but never traps', /\.md-editable-action--fullscreen\s*\{\s*display:\s*none/.test(narrowStyles) && /\.is-fullscreen \.md-editable-action--fullscreen\s*\{\s*display:\s*inline-flex/.test(narrowStyles)],
 ]
 
 const failures = checks.filter(([, ok]) => !ok)

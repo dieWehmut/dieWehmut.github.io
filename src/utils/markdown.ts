@@ -1035,6 +1035,7 @@ function renderEditableToolbar(kind: EditableBlockKind, label: string, runner: s
     '<div class="md-editable-actions">',
     '<button class="md-editable-action md-editable-action--restore" type="button" data-md-action="restore" hidden>复原</button>',
     runButton,
+    '<button class="md-editable-action md-editable-action--fullscreen" type="button" data-md-action="fullscreen" aria-pressed="false" aria-label="全屏编辑">全屏</button>',
     '<button class="md-editable-action" type="button" data-md-action="edit" aria-expanded="false">修改</button>',
     sourceButton,
     '<button class="md-editable-action md-editable-action--collapse" type="button" data-md-action="collapse" aria-expanded="true" aria-label="折叠代码">收起</button>',
@@ -1283,6 +1284,9 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
   let toastTimer: number | null = null
   let activeSpeech: SpeechSynthesisUtterance | null = null
   let activeSpeechButton: HTMLElement | null = null
+  let fullscreenBlock: HTMLElement | null = null
+  let bodyOverflowBeforeFullscreen = ''
+  let scrollYBeforeFullscreen = 0
   const ownerDocument = root instanceof Document ? root : root.ownerDocument
 
   if (ownerDocument) {
@@ -1652,6 +1656,85 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       if (editButton) editButton.setAttribute('aria-busy', 'false')
     }
   }
+
+  const setCollapsed = (block: HTMLElement, collapsed: boolean) => {
+    block.classList.toggle('is-collapsed', collapsed)
+    const button = block.querySelector<HTMLButtonElement>('[data-md-action="collapse"]')
+    if (!button) return
+    button.textContent = collapsed ? '展开' : '收起'
+    button.setAttribute('aria-expanded', collapsed ? 'false' : 'true')
+    button.setAttribute('aria-label', collapsed ? '展开代码' : '折叠代码')
+  }
+
+  /**
+   * Undo only what fullscreen did to the page, leaving the block itself alone.
+   * Both a reader leaving fullscreen and the whole view being torn down have to
+   * hand the document's scrolling back, but only the reader is still around to
+   * care where the page was.
+   */
+  const releaseFullscreen = () => {
+    if (!fullscreenBlock) return
+    fullscreenBlock = null
+    ownerDocument?.removeEventListener('keydown', onFullscreenKeydown)
+    const body = ownerDocument?.body
+    if (body) body.style.overflow = bodyOverflowBeforeFullscreen
+  }
+
+  /**
+   * Fullscreen is a class on the block rather than the platform Fullscreen API,
+   * so the element never moves in the DOM and the Monaco instance inside it keeps
+   * its model, undo history and scroll position across the switch. Only one block
+   * can hold the viewport, so taking it releases whoever held it before.
+   */
+  const setFullscreen = (block: HTMLElement, fullscreen: boolean) => {
+    if (block.classList.contains('is-fullscreen') === fullscreen) return
+    if (fullscreen && fullscreenBlock && fullscreenBlock !== block) {
+      setFullscreen(fullscreenBlock, false)
+    }
+
+    const view = ownerDocument?.defaultView
+    block.classList.toggle('is-fullscreen', fullscreen)
+
+    const button = block.querySelector<HTMLButtonElement>('[data-md-action="fullscreen"]')
+    if (button) {
+      button.textContent = fullscreen ? '退出全屏' : '全屏'
+      button.setAttribute('aria-pressed', fullscreen ? 'true' : 'false')
+      button.setAttribute('aria-label', fullscreen ? '退出全屏' : '全屏编辑')
+    }
+
+    if (fullscreen) {
+      // Asking for the whole viewport means asking to see the code, so a collapsed
+      // block opens rather than filling the screen with an empty sheet.
+      setCollapsed(block, false)
+      scrollYBeforeFullscreen = view?.scrollY ?? 0
+      const body = ownerDocument?.body
+      if (body) {
+        bodyOverflowBeforeFullscreen = body.style.overflow
+        body.style.overflow = 'hidden'
+      }
+      fullscreenBlock = block
+      ownerDocument?.addEventListener('keydown', onFullscreenKeydown)
+    } else {
+      releaseFullscreen()
+      // The block was lifted out of the flow while fullscreen, so the document was
+      // shorter and the browser clamped the scroll offset to fit. Put it back.
+      view?.scrollTo({ top: scrollYBeforeFullscreen, behavior: 'auto' })
+    }
+
+    monacoEditors.get(block)?.layout()
+  }
+
+  /**
+   * Bubble phase on purpose: Monaco stops the keys it consumes, so an Escape that
+   * merely closes its suggestion popup never reaches this handler and only a
+   * genuinely unhandled Escape leaves fullscreen.
+   */
+  function onFullscreenKeydown(event: KeyboardEvent) {
+    if (event.key !== 'Escape' || event.defaultPrevented || !fullscreenBlock) return
+    setFullscreen(fullscreenBlock, false)
+  }
+
+  cleanupHandlers.push(releaseFullscreen)
 
   const restoreBlock = (block: HTMLElement) => {
     const originalSource = getOriginalSource(block)
@@ -2089,12 +2172,13 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
       return
     }
 
+    if (action === 'fullscreen') {
+      setFullscreen(block, !block.classList.contains('is-fullscreen'))
+      return
+    }
+
     if (action === 'collapse') {
-      const collapsed = !block.classList.contains('is-collapsed')
-      block.classList.toggle('is-collapsed', collapsed)
-      actionButton.textContent = collapsed ? '展开' : '收起'
-      actionButton.setAttribute('aria-expanded', collapsed ? 'false' : 'true')
-      actionButton.setAttribute('aria-label', collapsed ? '展开代码' : '折叠代码')
+      setCollapsed(block, !block.classList.contains('is-collapsed'))
     }
   }
 

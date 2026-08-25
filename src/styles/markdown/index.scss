@@ -596,6 +596,46 @@
   display: none !important;
 }
 
+/* Fullscreen is a class rather than the platform Fullscreen API, so the block
+   never moves in the DOM and the editor inside it survives the switch intact. */
+.md-editable-block.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  /* Opaque on purpose: the block now covers the article it came from, and a math
+     block's own background is only a translucent wash over the page. */
+  background: var(--site-bg);
+}
+
+/* Height is normally an inline pixel value the editor clamps at 620px so a long
+   block cannot run away with the page. Fullscreen wants the opposite, so the flex
+   column takes the sizing over — `flex-basis: 0` is what keeps the resolved height
+   from depending on the very content it is meant to contain. */
+.md-editable-block.is-fullscreen .md-editable-editor,
+.md-editable-block.is-fullscreen .md-editable-content {
+  flex: 1 1 0%;
+  height: auto !important;
+  min-height: 0;
+}
+
+.md-editable-block.is-fullscreen .md-editable-content {
+  overflow: auto;
+}
+
+.md-editable-block.is-fullscreen .md-code-preview {
+  max-height: none;
+}
+
+.md-editable-block.is-fullscreen .md-editable-textarea {
+  height: 100% !important;
+  max-height: none;
+}
+
 .md-math-content {
   overflow-x: auto;
   overflow-y: hidden;
@@ -643,6 +683,19 @@
 .md-copy-toast--failed {
   border-color: rgba(255, 120, 120, 0.3);
   background: rgba(92, 24, 28, 0.96);
+}
+
+@media (max-width: 900px) {
+  /* Fullscreen is a desktop affordance — the phone layout is already one column
+     wide. The button stays reachable while a block holds the viewport, so a reader
+     who narrows the window mid-fullscreen still has a way out. */
+  .md-editable-action--fullscreen {
+    display: none;
+  }
+
+  .md-editable-block.is-fullscreen .md-editable-action--fullscreen {
+    display: inline-flex;
+  }
 }
 
 @media (max-width: 640px) {
