@@ -252,11 +252,6 @@ function selectColorScheme(scheme) {
 }
 
 function scrollToTop() {
-  const container = activeScrollContainer()
-  if (container) {
-    container.scrollTo({ top: 0, behavior: 'auto' })
-    return
-  }
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 

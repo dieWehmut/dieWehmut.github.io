@@ -82,6 +82,15 @@ check(
     && desktopLayout.includes('window.scrollY + anchor.getBoundingClientRect().top'),
 )
 check(
+  // The float button reads and writes the same scroller. It kept calling a helper
+  // that had been deleted along with the inner viewport, so back-to-top threw
+  // instead of scrolling — plain-JS SFCs are outside vue-tsc, so nothing caught it.
+  'the float button scrolls the same scroller it watches',
+  floatButton.includes('atTop.value = window.scrollY < 60')
+    && floatButton.includes('window.scrollTo({ top: 0')
+    && !floatButton.includes('activeScrollContainer'),
+)
+check(
   'Console route output can always reach the top of the page',
   // The reserve belongs to the output block as a whole. Held on the route output
   // alone it would have spent its slack between that output and its comments,
