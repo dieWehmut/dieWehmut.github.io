@@ -180,8 +180,8 @@ const crumbs = computed<Crumb[]>(() => {
   /* The crumb is fixed, so collapsing the sidebar would snap it left while the
      column it belongs to glides. Ride the layout's own swap timing instead. */
   transition:
-    left var(--sidebar-swap-duration, 420ms) var(--sidebar-swap-ease, ease),
-    max-width var(--sidebar-swap-duration, 420ms) var(--sidebar-swap-ease, ease);
+    left var(--sidebar-swap-duration, 340ms) var(--sidebar-swap-ease, ease),
+    max-width var(--sidebar-swap-duration, 340ms) var(--sidebar-swap-ease, ease);
 }
 
 @media (prefers-reduced-motion: reduce) {

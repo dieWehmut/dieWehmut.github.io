@@ -80,6 +80,15 @@ a:focus-visible {
       calc(100vw - var(--site-sidebar-width) - var(--site-desktop-content-gutter) - var(--site-desktop-content-end-gutter))
     );
     margin: 0 auto 0 var(--site-desktop-content-gutter);
+    /* Same formula as the main column, so it has to ride the same timing — without
+       this the footer snaps to its new width while the column above it glides. */
+    transition: width var(--sidebar-swap-duration, 340ms) var(--sidebar-swap-ease, ease);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer {
+    transition: none;
   }
 }
 </style>

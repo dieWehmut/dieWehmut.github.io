@@ -4,9 +4,7 @@
     :class="{ 'desktop-layout--console': isConsole }"
     :data-console-mode="isConsole ? 'on' : 'off'"
   >
-    <Transition name="sidebar-slide">
-      <SiteSidebar v-if="!isConsole && !sidebarCollapsed" class="desktop-layout__sidebar" />
-    </Transition>
+    <SiteSidebar v-if="!isConsole" class="desktop-layout__sidebar" :inert="sidebarCollapsed" />
     <div class="desktop-layout__content">
       <RouteBreadcrumb v-if="!isConsole" />
       <ConsoleOverviewHeader v-if="isConsole" />
@@ -174,8 +172,9 @@ watch(isConsole, (enabled) => {
   min-height: 100vh;
   /* One duration and one curve for the whole column swap, so the sidebar's slide,
      the content's reflow and the breadcrumb's shift read as a single gesture. */
-  --sidebar-swap-duration: 420ms;
+  --sidebar-swap-duration: 340ms;
   --sidebar-swap-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --sidebar-row-duration: 220ms;
 }
 
 .desktop-layout__result {
@@ -186,60 +185,55 @@ watch(isConsole, (enabled) => {
   position: fixed;
   inset: 0 auto 0 0;
   z-index: 10;
-}
-
-/* The sidebar is taken out of flow, so it can slide clear of the viewport while
-   the content widens underneath it instead of fighting it for the same pixels. */
-.sidebar-slide-enter-active,
-.sidebar-slide-leave-active {
-  will-change: transform, opacity;
+  /* The panel stays mounted and simply travels: nothing to build on the way in,
+     and the browser can keep the whole slide on the compositor. `visibility`
+     switches with no duration so it only takes effect once the panel has left,
+     which is what keeps the offscreen links out of the tab order. */
   transition:
     transform var(--sidebar-swap-duration) var(--sidebar-swap-ease),
-    opacity calc(var(--sidebar-swap-duration) * 0.6) ease;
+    visibility 0s linear 0s;
 }
 
-.sidebar-slide-leave-active {
-  pointer-events: none;
-}
-
-.sidebar-slide-enter-from,
-.sidebar-slide-leave-to {
+html.sidebar-collapsed .desktop-layout__sidebar {
   transform: translateX(-100%);
+  visibility: hidden;
+  transition:
+    transform var(--sidebar-swap-duration) var(--sidebar-swap-ease),
+    visibility 0s linear var(--sidebar-swap-duration);
+}
+
+/* Expanding deals the panel's own rows back in one after another. They ride a
+   transition rather than keyframes so nothing animates on first paint, and the
+   stagger is spent only on the way in — collapsing takes them out with the panel
+   instead of unwinding the queue backwards. */
+.desktop-layout__sidebar :deep(.site-sidebar__avatar-link),
+.desktop-layout__sidebar :deep(.site-sidebar__identity),
+.desktop-layout__sidebar :deep(.nav-menu__item) {
+  transition:
+    opacity var(--sidebar-row-duration) var(--sidebar-swap-ease) var(--sidebar-row-delay, 0ms),
+    transform var(--sidebar-row-duration) var(--sidebar-swap-ease) var(--sidebar-row-delay, 0ms);
+}
+
+html.sidebar-collapsed .desktop-layout__sidebar :deep(.site-sidebar__avatar-link),
+html.sidebar-collapsed .desktop-layout__sidebar :deep(.site-sidebar__identity),
+html.sidebar-collapsed .desktop-layout__sidebar :deep(.nav-menu__item) {
   opacity: 0;
+  transform: translateX(-14px);
+  transition-delay: 0ms;
 }
 
-/* Expanding deals the sidebar's own rows back in one after another. The rows ride
-   their own keyframes rather than the container transition, so the stagger keeps
-   running while the panel itself is still travelling. */
-.sidebar-slide-enter-active :deep(.site-sidebar__avatar-link),
-.sidebar-slide-enter-active :deep(.site-sidebar__identity),
-.sidebar-slide-enter-active :deep(.nav-menu__item) {
-  animation: sidebar-row-in 320ms var(--sidebar-swap-ease) backwards;
-}
-
-.sidebar-slide-enter-active :deep(.site-sidebar__avatar-link) { animation-delay: 120ms; }
-.sidebar-slide-enter-active :deep(.site-sidebar__identity) { animation-delay: 160ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(1)) { animation-delay: 200ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(2)) { animation-delay: 226ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(3)) { animation-delay: 252ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(4)) { animation-delay: 278ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(5)) { animation-delay: 304ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(6)) { animation-delay: 330ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(7)) { animation-delay: 356ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(8)) { animation-delay: 382ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(9)) { animation-delay: 408ms; }
-.sidebar-slide-enter-active :deep(.nav-menu__item:nth-child(10)) { animation-delay: 434ms; }
-
-@keyframes sidebar-row-in {
-  from {
-    opacity: 0;
-    transform: translateX(-14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+.desktop-layout__sidebar :deep(.site-sidebar__avatar-link) { --sidebar-row-delay: 40ms; }
+.desktop-layout__sidebar :deep(.site-sidebar__identity) { --sidebar-row-delay: 70ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(1)) { --sidebar-row-delay: 100ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(2)) { --sidebar-row-delay: 118ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(3)) { --sidebar-row-delay: 136ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(4)) { --sidebar-row-delay: 154ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(5)) { --sidebar-row-delay: 172ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(6)) { --sidebar-row-delay: 190ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(7)) { --sidebar-row-delay: 208ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(8)) { --sidebar-row-delay: 226ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(9)) { --sidebar-row-delay: 244ms; }
+.desktop-layout__sidebar :deep(.nav-menu__item:nth-child(10)) { --sidebar-row-delay: 262ms; }
 
 .desktop-layout__content {
   position: relative;
@@ -431,6 +425,7 @@ html[data-theme='light'] .desktop-layout--console {
 @media (prefers-reduced-motion: reduce) {
   .desktop-layout {
     --sidebar-swap-duration: 1ms;
+    --sidebar-row-duration: 1ms;
   }
 
   .desktop-layout__content,
@@ -438,10 +433,11 @@ html[data-theme='light'] .desktop-layout--console {
     transition: none;
   }
 
-  .sidebar-slide-enter-active :deep(.site-sidebar__avatar-link),
-  .sidebar-slide-enter-active :deep(.site-sidebar__identity),
-  .sidebar-slide-enter-active :deep(.nav-menu__item) {
-    animation: none;
+  .desktop-layout__sidebar :deep(.site-sidebar__avatar-link),
+  .desktop-layout__sidebar :deep(.site-sidebar__identity),
+  .desktop-layout__sidebar :deep(.nav-menu__item) {
+    transition: none;
+    --sidebar-row-delay: 0ms;
   }
 
   .page-fade-enter-active,

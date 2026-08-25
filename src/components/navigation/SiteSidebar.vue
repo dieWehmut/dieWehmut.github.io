@@ -28,7 +28,7 @@ const { avatarUrl } = useProfile()
   position: relative;
   display: flex;
   flex-direction: column;
-  width: var(--site-sidebar-width);
+  width: var(--site-sidebar-panel-width);
   min-height: 100vh;
   padding: 16px 18px 24px;
   isolation: isolate;

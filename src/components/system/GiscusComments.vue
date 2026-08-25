@@ -294,6 +294,15 @@ watch([currentTheme, currentColorScheme], () => {
   margin: 0 auto 0 var(--site-desktop-content-gutter);
   padding: 0 0 24px;
   color: var(--site-text);
+  /* Same formula as the main column, so it has to ride the same timing — without
+     this the comment block snaps to its new width while the column above glides. */
+  transition: width var(--sidebar-swap-duration, 340ms) var(--sidebar-swap-ease, ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .giscus-comments {
+    transition: none;
+  }
 }
 
 .giscus-comments__header {

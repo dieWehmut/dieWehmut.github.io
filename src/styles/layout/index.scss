@@ -1,6 +1,12 @@
 :root {
   color-scheme: dark;
-  --site-sidebar-width: 230px;
+  /* How wide the sidebar panel itself is drawn. Kept apart from the width below
+     because a panel that slides away still needs a width to slide out of: if the
+     two collapsed together the panel would shrink to nothing in place instead of
+     travelling, and `translateX(-100%)` of a zero-width box moves nowhere. */
+  --site-sidebar-panel-width: 230px;
+  /* How much room the content column yields to the sidebar. */
+  --site-sidebar-width: var(--site-sidebar-panel-width);
   --site-mobile-header-height: 62px;
   --site-content-width: 1120px;
   --site-desktop-content-gutter: clamp(30px, 2.6vw, 40px);
@@ -77,7 +83,7 @@ a:hover {
 
 @media (max-width: 1180px) {
   :root {
-    --site-sidebar-width: 220px;
+    --site-sidebar-panel-width: 220px;
   }
 }
 
@@ -93,7 +99,7 @@ a:hover {
 
 @media (max-width: 900px) {
   :root {
-    --site-sidebar-width: min(82vw, 320px);
+    --site-sidebar-panel-width: min(82vw, 320px);
   }
 
   body {
