@@ -29,6 +29,7 @@
     "test:scroll-hash-navigation": "node scripts/test-scroll-hash-navigation.mjs",
     "test:color-scheme": "node scripts/test-color-scheme.mjs",
     "test:scoped-styles": "node scripts/test-scoped-styles.mjs",
+    "test:cursor-comments": "node scripts/test-cursor-comments.mjs",
     "test:site-overview": "node scripts/test-site-overview.mjs",
     "test:infra-status": "node scripts/test-infra-status.mjs",
     "test:infra-integration-scan": "node scripts/test-infra-integration-scan.mjs",

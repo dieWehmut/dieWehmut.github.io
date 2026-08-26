@@ -348,11 +348,16 @@ function onMouseLeave() {
   document.documentElement.classList.remove('heart-bounce-active')
 }
 
+function onWindowBlur() {
+  onMouseLeave()
+}
+
 function bindEvents() {
   if (eventsBound || !pointerEffectsEnabled.value) return
   window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('mouseover', onMouseOver, { passive: true })
   window.addEventListener('mouseleave', onMouseLeave, { passive: true })
+  window.addEventListener('blur', onWindowBlur, { passive: true })
   eventsBound = true
 }
 
@@ -361,6 +366,7 @@ function unbindEvents() {
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('mouseover', onMouseOver)
   window.removeEventListener('mouseleave', onMouseLeave)
+  window.removeEventListener('blur', onWindowBlur)
   eventsBound = false
 }
 
@@ -488,6 +494,10 @@ onBeforeUnmount(() => {
 :global(html.heart-bounce-active),
 :global(html.heart-bounce-active *) {
   cursor: none !important;
+}
+
+:global(iframe.giscus-frame) {
+  cursor: auto !important;
 }
 
 /* 文本输入区恢复原生光标，方便编辑；内嵌框架（如 giscus 评论）同理 —— 框架内部
