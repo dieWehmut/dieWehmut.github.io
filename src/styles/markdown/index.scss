@@ -1372,6 +1372,60 @@
   text-transform: uppercase;
 }
 
+.markdown-body .md-mermaid__canvas {
+  display: grid;
+  min-height: 120px;
+  place-items: center;
+  overflow-x: auto;
+  color: var(--md-blockquote-text);
+  text-align: center;
+}
+
+.markdown-body .md-mermaid__status {
+  padding: 24px 12px;
+  font-size: 13px;
+}
+
+.markdown-body .md-mermaid__svg {
+  display: flex;
+  width: 100%;
+  min-width: max-content;
+  justify-content: center;
+}
+
+.markdown-body .md-mermaid__svg > svg {
+  display: block;
+  width: auto;
+  min-width: min(100%, 520px);
+  max-width: none;
+  height: auto;
+  margin: 0 auto;
+}
+
+.markdown-body .md-mermaid__source {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--md-table-border);
+}
+
+.markdown-body .md-mermaid__source > summary {
+  color: var(--md-blockquote-text);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.markdown-body .md-mermaid__source pre {
+  margin: 10px 0 0;
+  text-align: left;
+}
+
+.markdown-body .md-mermaid--error .md-mermaid__canvas {
+  min-height: 0;
+  padding: 12px;
+  border: 1px dashed var(--md-del-color);
+  color: var(--md-del-color);
+}
+
 .markdown-body .md-mindmap ul {
   position: relative;
   margin: 0;

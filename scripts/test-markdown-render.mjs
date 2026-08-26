@@ -17,6 +17,7 @@ const headingNavigation = fs.existsSync(path.join(root, 'src/utils/headingNaviga
 const router = read('src/router.ts')
 const scrollSpy = read('src/components/system/ScrollSpySidebar.vue')
 const markdownContent = read('src/components/content/MarkdownContent.vue')
+const cognitiveScience = read('src/data/docs/notes/CognitiveScience.md')
 const allowedTags = markdown.match(/const ALLOWED_TAGS = new Set\(\[[\s\S]*?\n\]\)/)?.[0] || ''
 const whaleMetaStart = note.indexOf('## 九、准确率超90%！AI能翻译鲸鱼的语言了')
 const whaleMetaEnd = note.indexOf('## 十、人生下半场', whaleMetaStart)
@@ -57,6 +58,13 @@ const checks = [
   ['fullscreen releases the page it locked', /body\.style\.overflow/.test(markdown) && /removeEventListener\(['"]keydown['"], onFullscreenKeydown\)/.test(markdown) && /cleanupHandlers\.push\(releaseFullscreen\)/.test(markdown)],
   ['fullscreen overrides the editor height clamp', /\.md-editable-block\.is-fullscreen[\s\S]*?height:\s*auto\s*!important/.test(styles) && /\.md-editable-block\.is-fullscreen \.md-code-preview\s*\{\s*max-height:\s*none/.test(styles)],
   ['fullscreen button is desktop only but never traps', /\.md-editable-action--fullscreen\s*\{\s*display:\s*none/.test(narrowStyles) && /\.is-fullscreen \.md-editable-action--fullscreen\s*\{\s*display:\s*inline-flex/.test(narrowStyles)],
+  ['mermaid fences emit async hydration placeholders', /data-md-mermaid-source/.test(markdown) && /ensureMermaidRendered/.test(markdown) && /import\(['"]mermaid['"]\)/.test(markdown)],
+  ['mermaid graphs are rendered by the Mermaid runtime', /mermaid\.render/.test(markdown) && /md-mermaid__svg/.test(styles)],
+  ['cognitive science fixture contains graph diagrams for the renderer', /```mermaid\s*\r?\ngraph\s+(?:LR|TD)/.test(cognitiveScience)],
+  ['math delimiters are protected before Marked parses markdown', /protectMathDelimiters/.test(markdown) && /restoreMathDelimiters/.test(markdown)],
+  ['all supported display and inline delimiters are registered', /\\\[/.test(markdown) && /\\\]/.test(markdown) && /\\\(/.test(markdown) && /\\\)/.test(markdown) && /\$\$/.test(markdown)],
+  ['cognitive science fixture contains display and inline latex', /\$\$[\s\S]+?\$\$/.test(cognitiveScience) && /\$[^$\r\n]+\$/.test(cognitiveScience)],
+  ['mermaid hydration preserves an explicit source fallback', /md-mermaid__source/.test(markdown) && /md-mermaid--error/.test(markdown)],
 ]
 
 const failures = checks.filter(([, ok]) => !ok)

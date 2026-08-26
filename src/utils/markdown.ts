@@ -492,7 +492,19 @@ function renderMermaidDiagram(text: string): string {
   }
 
   const escaped = escapeHtml(text)
-  return `<figure class="md-diagram"><figcaption>Mermaid diagram</figcaption><pre><code>${escaped}</code></pre></figure>`
+  const encodedSource = escapeHtml(encodeSource(text))
+  return [
+    `<figure class="md-diagram md-mermaid" data-md-mermaid-source="${encodedSource}">`,
+    '<figcaption>Mermaid diagram</figcaption>',
+    '<div class="md-mermaid__canvas" role="img" aria-label="Mermaid diagram">',
+    '<span class="md-mermaid__status">Rendering diagram...</span>',
+    '</div>',
+    '<details class="md-mermaid__source">',
+    '<summary>Mermaid source</summary>',
+    `<pre><code>${escaped}</code></pre>`,
+    '</details>',
+    '</figure>',
+  ].join('')
 }
 
 type EditableBlockKind = 'code' | 'math'
@@ -1088,20 +1100,181 @@ function normalizeMarkdownMetadataBreaks(source: string): string {
     .join('')
 }
 
-function preprocessMarkdownMath(source: string): string {
-  const codeFencePattern = /(```[\s\S]*?```|~~~[\s\S]*?~~~)/g
+type MathReplacement = {
+  html: string
+  placeholder: string
+}
 
-  return source
-    .split(codeFencePattern)
-    .map((part) => {
-      if (part.startsWith('```') || part.startsWith('~~~')) return part
+type ProtectedMath = {
+  replacements: MathReplacement[]
+  source: string
+}
 
-      return part
-        .replace(/\\\[([\s\S]+?)\\\]/g, (_match, formula: string) => renderDisplayLatexBlock(formula))
-        .replace(/\$\$([\s\S]+?)\$\$/g, (_match, formula: string) => renderDisplayLatexBlock(formula))
-        .replace(/\\\(([\s\S]+?)\\\)/g, (_match, formula: string) => renderInlineLatex(formula))
-    })
+type ProtectMathOptions = {
+  displayAsInline?: boolean
+}
+
+type MarkdownSegment = {
+  fenced: boolean
+  value: string
+}
+
+function splitMarkdownCodeFences(source: string): MarkdownSegment[] {
+  const lines = source.match(/[^\n]*(?:\n|$)/g)?.filter(Boolean) || []
+  const segments: MarkdownSegment[] = []
+  let buffer = ''
+  let fenced = false
+  let fenceCharacter = ''
+  let fenceLength = 0
+
+  const flush = () => {
+    if (!buffer) return
+    segments.push({ fenced, value: buffer })
+    buffer = ''
+  }
+
+  for (const line of lines) {
+    const lineWithoutBreak = line.replace(/\n$/, '').replace(/\r$/, '')
+    const trimmedStart = lineWithoutBreak.replace(/^ {0,3}/, '')
+    const marker = trimmedStart.match(/^(`+|~+)/)?.[0] || ''
+
+    if (!fenced && marker.length >= 3) {
+      flush()
+      fenced = true
+      fenceCharacter = marker[0]
+      fenceLength = marker.length
+      buffer = line
+      continue
+    }
+
+    if (fenced) {
+      buffer += line
+      const isClosingFence = marker[0] === fenceCharacter &&
+        marker.length >= fenceLength &&
+        trimmedStart.slice(marker.length).trim() === ''
+      if (isClosingFence) {
+        flush()
+        fenced = false
+        fenceCharacter = ''
+        fenceLength = 0
+      }
+      continue
+    }
+
+    buffer += line
+  }
+
+  flush()
+  return segments
+}
+
+function isEscapedAt(source: string, index: number): boolean {
+  let precedingBackslashes = 0
+  for (let cursor = index - 1; cursor >= 0 && source[cursor] === '\\'; cursor -= 1) {
+    precedingBackslashes += 1
+  }
+  return precedingBackslashes % 2 === 1
+}
+
+function findClosingMathDelimiter(source: string, delimiter: string, start: number): number {
+  let cursor = source.indexOf(delimiter, start)
+  while (cursor !== -1) {
+    if (!isEscapedAt(source, cursor)) return cursor
+    cursor = source.indexOf(delimiter, cursor + delimiter.length)
+  }
+  return -1
+}
+
+function protectMathText(
+  source: string,
+  replacements: MathReplacement[],
+  options: ProtectMathOptions,
+): string {
+  let result = ''
+  let cursor = 0
+
+  const storeReplacement = (formula: string, displayMode: boolean) => {
+    const tag = displayMode && !options.displayAsInline ? 'div' : 'span'
+    const placeholder = `<${tag} data-md-math-placeholder="${replacements.length}"></${tag}>`
+    const html = displayMode && !options.displayAsInline
+      ? renderDisplayLatexBlock(formula)
+      : renderInlineLatex(formula)
+    replacements.push({ html, placeholder })
+    return tag === 'div' ? `\n\n${placeholder}\n\n` : placeholder
+  }
+
+  while (cursor < source.length) {
+    if (source[cursor] === '`') {
+      const marker = source.slice(cursor).match(/^`+/)?.[0] || '`'
+      const end = source.indexOf(marker, cursor + marker.length)
+      if (end === -1) {
+        result += source.slice(cursor)
+        break
+      }
+      result += source.slice(cursor, end + marker.length)
+      cursor = end + marker.length
+      continue
+    }
+
+    let opening = ''
+    let closing = ''
+    let displayMode = false
+    if (source.startsWith('$$', cursor) && !isEscapedAt(source, cursor)) {
+      opening = '$$'
+      closing = '$$'
+      displayMode = true
+    } else if (source.startsWith('\\[', cursor) && !isEscapedAt(source, cursor)) {
+      opening = '\\['
+      closing = '\\]'
+      displayMode = true
+    } else if (source.startsWith('\\(', cursor) && !isEscapedAt(source, cursor)) {
+      opening = '\\('
+      closing = '\\)'
+    }
+
+    if (!opening) {
+      result += source[cursor]
+      cursor += 1
+      continue
+    }
+
+    const end = findClosingMathDelimiter(source, closing, cursor + opening.length)
+    if (end === -1) {
+      result += opening
+      cursor += opening.length
+      continue
+    }
+
+    const formula = source.slice(cursor + opening.length, end)
+    if (!formula.trim()) {
+      result += source.slice(cursor, end + closing.length)
+      cursor = end + closing.length
+      continue
+    }
+
+    result += storeReplacement(formula, displayMode)
+    cursor = end + closing.length
+  }
+
+  return result
+}
+
+function protectMathDelimiters(source: string, options: ProtectMathOptions = {}): ProtectedMath {
+  const replacements: MathReplacement[] = []
+  const protectedSource = splitMarkdownCodeFences(source)
+    .map((segment) => segment.fenced
+      ? segment.value
+      : protectMathText(segment.value, replacements, options))
     .join('')
+
+  return { replacements, source: protectedSource }
+}
+
+function restoreMathDelimiters(html: string, replacements: MathReplacement[]): string {
+  return replacements.reduce(
+    (restored, replacement) => restored.split(replacement.placeholder).join(replacement.html),
+    html,
+  )
 }
 
 const marked = new Marked({
@@ -1164,8 +1337,79 @@ let currentMarkdownRenderOptions: Required<RenderMarkdownOptions> = {
   docId: '',
   headingIds: new Map(),
 }
+type MermaidRuntime = typeof import('mermaid')['default']
+
+let mermaidRuntimePromise: Promise<MermaidRuntime> | null = null
+let mermaidRenderSequence = 0
+const mermaidRenderTasks = new WeakMap<HTMLElement, Promise<void>>()
 let markdownMonacoEditorModulePromise: Promise<typeof import('./monacoMarkdownEditor')> | null = null
 const markdownMonacoWarmups = new Map<string, Promise<void>>()
+
+function loadMermaidRuntime(): Promise<MermaidRuntime> {
+  mermaidRuntimePromise ||= import('mermaid').then(({ default: mermaid }) => {
+    mermaid.initialize({
+      securityLevel: 'strict',
+      startOnLoad: false,
+      theme: 'base',
+      flowchart: {
+        htmlLabels: false,
+      },
+    })
+    return mermaid
+  })
+  return mermaidRuntimePromise
+}
+
+async function hydrateMermaidFigure(figure: HTMLElement): Promise<void> {
+  if (figure.dataset.mdMermaidState === 'rendered') return
+
+  const existingTask = mermaidRenderTasks.get(figure)
+  if (existingTask) return existingTask
+
+  const task = (async () => {
+    const source = decodeSource(figure.dataset.mdMermaidSource)
+    const canvas = figure.querySelector<HTMLElement>('.md-mermaid__canvas')
+    const sourceFallback = figure.querySelector<HTMLDetailsElement>('.md-mermaid__source')
+    if (!source || !canvas) return
+
+    figure.dataset.mdMermaidState = 'rendering'
+    try {
+      const mermaid = await loadMermaidRuntime()
+      mermaidRenderSequence += 1
+      const id = `nexus-mermaid-${mermaidRenderSequence}`
+      const { svg, bindFunctions } = await mermaid.render(id, source)
+      canvas.innerHTML = `<div class="md-mermaid__svg">${svg}</div>`
+      bindFunctions?.(canvas)
+      figure.dataset.mdMermaidState = 'rendered'
+      figure.classList.remove('md-mermaid--error')
+    } catch (error) {
+      figure.dataset.mdMermaidState = 'error'
+      figure.classList.add('md-mermaid--error')
+      canvas.textContent = 'Diagram rendering failed. Mermaid source is available below.'
+      if (sourceFallback) sourceFallback.open = true
+      console.warn('Unable to render Mermaid diagram', error)
+    }
+  })().finally(() => {
+    mermaidRenderTasks.delete(figure)
+  })
+
+  mermaidRenderTasks.set(figure, task)
+  return task
+}
+
+export async function ensureMermaidRendered(root: ParentNode | null | undefined): Promise<void> {
+  if (!root || typeof Element === 'undefined') return
+
+  const figures: HTMLElement[] = []
+  if (root instanceof HTMLElement && root.matches('.md-mermaid[data-md-mermaid-source]')) {
+    figures.push(root)
+  }
+  root.querySelectorAll<HTMLElement>('.md-mermaid[data-md-mermaid-source]').forEach((figure) => {
+    figures.push(figure)
+  })
+
+  await Promise.all(figures.map(hydrateMermaidFigure))
+}
 
 function loadMarkdownMonacoEditorModule() {
   markdownMonacoEditorModulePromise ||= import('./monacoMarkdownEditor')
@@ -1207,11 +1451,12 @@ export function renderMarkdown(source: string, options: RenderMarkdownOptions = 
     if (cached !== undefined) return cached
   }
 
-  const rendered = withMarkdownRenderOptions(options, () => (
-    deferClosedSourcePageImages(
-      sanitizeHtml(marked.parse(preprocessMarkdownMath(normalizeMarkdownMetadataBreaks(source))) as string)
-    )
-  ))
+  const rendered = withMarkdownRenderOptions(options, () => {
+    const protectedMath = protectMathDelimiters(normalizeMarkdownMetadataBreaks(source))
+    const parsed = marked.parse(protectedMath.source) as string
+    const restored = restoreMathDelimiters(parsed, protectedMath.replacements)
+    return deferClosedSourcePageImages(sanitizeHtml(restored))
+  })
   if (!hasHeadingRegistry) renderedMarkdownCache.set(cacheKey, rendered)
 
   if (renderedMarkdownCache.size > MARKDOWN_CACHE_LIMIT) {
@@ -1251,8 +1496,6 @@ function normalizeMarkdownPreviewSource(source: string): string {
     .replace(/^\s{0,3}(?:[-*+]|\d+[.)])\s+/gm, '')
     .replace(/^\s*[>|]\s?/gm, '')
     .replace(/`([^`]*)`/g, '$1')
-    .replace(/\\\[([\s\S]+?)\\\]/g, '\\($1\\)')
-    .replace(/\$\$([\s\S]+?)\$\$/g, '\\($1\\)')
     .replace(/\r\n?/g, '\n')
     .replace(/[ \t\f\v]+/g, ' ')
     .replace(/[ \t]*\n[ \t]*/g, '\n')
@@ -1268,11 +1511,13 @@ export function renderMarkdownPreview(source: string): string {
   const cached = renderedMarkdownPreviewCache.get(normalized)
   if (cached !== undefined) return cached
 
-  const lines = normalized.split('\n')
+  const protectedMath = protectMathDelimiters(normalized, { displayAsInline: true })
+  const lines = protectedMath.source.split('\n')
   const renderedLines = lines.map((line) =>
-    line ? sanitizeHtml(marked.parseInline(preprocessMarkdownMath(line)) as string) : ''
+    line ? marked.parseInline(line) as string : ''
   )
-  const rendered = renderedLines.join('<br>')
+  const restored = restoreMathDelimiters(renderedLines.join('<br>'), protectedMath.replacements)
+  const rendered = sanitizeHtml(restored)
   return rememberCached(renderedMarkdownPreviewCache, normalized, rendered, MARKDOWN_PREVIEW_CACHE_LIMIT)
 }
 
@@ -1354,6 +1599,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
 
     scope.querySelectorAll<HTMLImageElement>('img').forEach(bindImage)
     scope.querySelectorAll<HTMLDetailsElement>('details.md-source-page').forEach(bindSourcePage)
+    void ensureMermaidRendered(scope)
   }
 
   bindStaticMarkdownNodes(root)

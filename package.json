@@ -53,6 +53,7 @@
     "katex": "^0.17.0",
     "marked": "^18.0.4",
     "marked-katex-extension": "^5.1.10",
+    "mermaid": "11.17.2",
     "monaco-editor": "^0.55.1",
     "pdfmake": "^0.3.11",
     "tailwindcss": "^4.2.1",
