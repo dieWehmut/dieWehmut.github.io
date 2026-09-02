@@ -1,12 +1,17 @@
-import pdfMake from 'pdfmake/build/pdfmake'
-import pdfFonts from 'pdfmake/build/vfs_fonts'
-import type { Content, TDocumentDefinitions } from 'pdfmake/interfaces'
-import lxgwFontUrl from '../assets/fonts/LXGWWenKai-Regular.ttf'
+import type { Content, ContentText, TDocumentDefinitions } from 'pdfmake/interfaces'
 import { siteConfig } from '../data/site/config'
+import { ensureMermaidRendered } from './markdown'
+import { generatePdfInWorker, PdfWorkerUnavailableError } from './pdfWorkerClient'
+import type { PdfWorkerPayload } from './pdfWorkerProtocol'
 
 export type PdfExportSource = {
   title: string
   element: HTMLElement
+}
+
+export type PdfGenerationOptions = {
+  mode?: 'download' | 'preview'
+  targetWindow?: Window | null
 }
 
 const ACCENT_COLOR_FALLBACK = '#9b3dff'
@@ -23,16 +28,22 @@ type PdfPalette = {
   underline: string
 }
 
-let pdfFontsReady: Promise<void> | null = null
-
-function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer)
-  let binary = ''
-  const chunkSize = 0x8000
-  for (let index = 0; index < bytes.length; index += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize))
+type PdfMathMarker = {
+  nexusMath: {
+    formula: string
+    display: boolean
   }
-  return btoa(binary)
+  style?: string
+  margin?: unknown
+  alignment?: 'left' | 'center' | 'right'
+  font?: string
+  fit?: [number, number]
+}
+
+type PdfInlineMathSegment = {
+  kind: 'math'
+  formula: string
+  svg: null
 }
 
 function blobToDataUrl(blob: Blob): Promise<string> {
@@ -48,6 +59,23 @@ function decodeHtml(value: string): string {
   const textarea = document.createElement('textarea')
   textarea.innerHTML = value
   return textarea.value
+}
+
+function decodeDataSource(value: string): string {
+  const htmlDecoded = decodeHtml(value)
+  try {
+    return decodeURIComponent(htmlDecoded)
+  } catch {
+    return htmlDecoded
+  }
+}
+
+function normalizePdfSvg(svg: string): string {
+  return svg
+    .replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/\s+on[a-z-]+=(['"]).*?\1/gi, '')
+    .replace(/font-family=(['"])(?:serif|sans-serif|monospace)\1/gi, 'font-family="LXGW"')
 }
 
 function readPdfPalette(): PdfPalette {
@@ -93,70 +121,21 @@ export function sanitizeFilename(name: string): string {
   return cleaned || 'article'
 }
 
-async function ensurePdfFonts(): Promise<void> {
-  pdfFontsReady ||= (async () => {
-    try {
-      pdfMake.addVirtualFileSystem(pdfFonts)
-    } catch {
-      ;(pdfMake as unknown as { vfs?: Record<string, string> }).vfs = pdfFonts
-    }
-
-    const response = await fetch(lxgwFontUrl)
-    if (!response.ok) throw new Error(`Font load failed: ${response.status}`)
-    const base64 = arrayBufferToBase64(await response.arrayBuffer())
-    pdfMake.addVirtualFileSystem({ 'LXGWWenKai-Regular.ttf': base64 })
-
-    pdfMake.fonts = {
-      ...(pdfMake.fonts || {}),
-      LXGW: {
-        normal: 'LXGWWenKai-Regular.ttf',
-        bold: 'LXGWWenKai-Regular.ttf',
-        italics: 'LXGWWenKai-Regular.ttf',
-        bolditalics: 'LXGWWenKai-Regular.ttf',
-      },
-    }
-  })()
-  await pdfFontsReady
-}
-
 function extractInlineLatex(node: HTMLElement): string {
   const annotation = node.querySelector('annotation')
   return annotation?.textContent?.trim() || ''
 }
 
-function inlineContent(node: Node, palette: PdfPalette): Content {
-  if (node.nodeType === Node.TEXT_NODE) {
-    const text = node.textContent || ''
-    return text.trim() ? { text } : ''
-  }
+type PdfInlineTextSegment = {
+  kind: 'text'
+  content: Content
+  raw: string
+}
 
-  if (!(node instanceof HTMLElement)) return { text: node.textContent || '' }
+type PdfInlineSegment = PdfInlineTextSegment | PdfInlineMathSegment
 
+function inlineElementStyle(node: HTMLElement, palette: PdfPalette): Record<string, unknown> {
   const tag = node.tagName.toLowerCase()
-  if (tag === 'br') return { text: '\n' }
-  if (tag === 'input') {
-    return { text: (node as HTMLInputElement).checked ? '☑' : '☐' }
-  }
-  if (tag === 'img') {
-    const alt = (node as HTMLImageElement).alt
-    return alt ? { text: `[${alt}]` } : ''
-  }
-  if (node.classList.contains('katex')) {
-    const formula = extractInlineLatex(node)
-    return formula
-      ? { text: formula, italics: true, color: '#555' }
-      : { text: node.textContent?.trim() || ' ' }
-  }
-
-  const children = Array.from(node.childNodes)
-    .map((child) => inlineContent(child, palette))
-    .filter(Boolean)
-  if (!children.length) return ''
-
-  let base: Content
-  if (children.length === 1) base = children[0] as Content
-  else base = { text: children }
-
   const style: Record<string, unknown> = {}
   if (tag === 'strong' || tag === 'b') {
     style.bold = true
@@ -199,12 +178,169 @@ function inlineContent(node: Node, palette: PdfPalette): Content {
     style.decoration = 'lineThrough'
     style.decorationColor = '#b42318'
   }
+  return style
+}
 
+function applyInlineStyle(base: Content, style: Record<string, unknown>): Content {
   if (!Object.keys(style).length) return base
-  if (typeof base === 'object' && base !== null && 'text' in base) {
+  if (typeof base === 'object' && base !== null && !Array.isArray(base) && 'text' in base) {
     return { ...base, ...style } as Content
   }
   return { text: [base], ...style } as Content
+}
+
+function asTextContent(value: Content): ContentText | null {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return null
+  return 'text' in value ? value as ContentText : null
+}
+
+function inlineContent(node: Node, palette: PdfPalette): Content {
+  if (node.nodeType === Node.TEXT_NODE) {
+    const text = node.textContent || ''
+    return text.trim() ? { text } : ''
+  }
+
+  if (!(node instanceof HTMLElement)) return { text: node.textContent || '' }
+
+  const tag = node.tagName.toLowerCase()
+  if (tag === 'br') return { text: '\n' }
+  if (tag === 'input') {
+    return { text: (node as HTMLInputElement).checked ? '☑' : '☐' }
+  }
+  if (tag === 'img') {
+    const alt = (node as HTMLImageElement).alt
+    return alt ? { text: `[${alt}]` } : ''
+  }
+  if (node.classList.contains('katex')) {
+    const formula = extractInlineLatex(node)
+    return formula
+      ? { text: formula, italics: true, color: '#555' }
+      : { text: node.textContent?.trim() || ' ' }
+  }
+
+  const children = Array.from(node.childNodes)
+    .map((child) => inlineContent(child, palette))
+    .filter(Boolean)
+  if (!children.length) return ''
+
+  let base: Content
+  if (children.length === 1) base = children[0] as Content
+  else base = { text: children }
+
+  return applyInlineStyle(base, inlineElementStyle(node, palette))
+}
+
+function collectInlineSegments(node: Node, palette: PdfPalette): PdfInlineSegment[] {
+  if (node.nodeType === Node.TEXT_NODE) {
+    const raw = node.textContent || ''
+    return raw ? [{ kind: 'text', content: { text: raw }, raw }] : []
+  }
+
+  if (!(node instanceof HTMLElement)) {
+    const raw = node.textContent || ''
+    return raw ? [{ kind: 'text', content: { text: raw }, raw }] : []
+  }
+
+  const tag = node.tagName.toLowerCase()
+  if (tag === 'br') return [{ kind: 'text', content: { text: '\n' }, raw: '\n' }]
+  if (tag === 'input') {
+    const raw = (node as HTMLInputElement).checked ? '[x]' : '[ ]'
+    return [{ kind: 'text', content: { text: raw }, raw }]
+  }
+  if (tag === 'img') {
+    const alt = (node as HTMLImageElement).alt
+    const raw = alt ? `[${alt}]` : ''
+    return raw ? [{ kind: 'text', content: { text: raw }, raw }] : []
+  }
+  if (node.classList.contains('katex')) {
+    const formula = extractInlineLatex(node)
+    if (!formula) {
+      const raw = node.textContent?.trim() || ''
+      return raw ? [{ kind: 'text', content: { text: raw }, raw }] : []
+    }
+    return [{ kind: 'math', formula, svg: null }]
+  }
+
+  const children = Array.from(node.childNodes)
+    .flatMap((child) => collectInlineSegments(child, palette))
+  if (!children.length) return []
+
+  const style = inlineElementStyle(node, palette)
+  if (!Object.keys(style).length) return children
+
+  const styled: PdfInlineSegment[] = []
+  let pending: PdfInlineTextSegment[] = []
+  const flushText = () => {
+    if (!pending.length) return
+    const raw = pending.map((segment) => segment.raw).join('')
+    const base = pending.length === 1
+      ? pending[0].content
+      : { text: pending.map((segment) => segment.content) } as Content
+    styled.push({ kind: 'text', content: applyInlineStyle(base, style), raw })
+    pending = []
+  }
+
+  children.forEach((segment) => {
+    if (segment.kind === 'text') {
+      pending.push(segment)
+      return
+    }
+    flushText()
+    styled.push(segment)
+  })
+  flushText()
+  return styled
+}
+
+function inlineMathFit(svg: string): [number, number] {
+  const viewBox = svg.match(/\bviewBox=(['"])([^'"]+)\1/i)?.[2]
+    ?.trim()
+    .split(/[\s,]+/)
+    .map(Number)
+  const ratio = viewBox?.length === 4 && viewBox[2] > 0 && viewBox[3] > 0
+    ? viewBox[2] / viewBox[3]
+    : 4
+  const height = 14
+  return [Math.min(IMAGE_MAX_WIDTH_PT, Math.max(height, ratio * height)), height]
+}
+
+function inlineNodesToContent(
+  nodes: Iterable<Node>,
+  palette: PdfPalette,
+  style?: string,
+): Content {
+  const inlineSegments = Array.from(nodes)
+    .flatMap((node) => collectInlineSegments(node, palette))
+  const hasMath = inlineSegments.some((segment) => segment.kind === 'math')
+  if (!hasMath) {
+    const text = Array.from(nodes)
+      .map((node) => inlineContent(node, palette))
+      .filter(Boolean)
+    return { text, ...(style ? { style } : {}) } as Content
+  }
+
+  const segments: Content[] = inlineSegments.flatMap((segment) => {
+    if (segment.kind === 'text') {
+      if (!segment.raw.trim()) return []
+      const text = asTextContent(segment.content)
+      return [text ? { ...text, margin: [0, 0, 0, 0] } : { text: segment.raw }]
+    }
+    const math: PdfMathMarker = {
+      nexusMath: {
+        formula: segment.formula,
+        display: false,
+      },
+      font: 'LXGW',
+      alignment: 'left',
+      margin: [0, 2, 0, 2],
+    }
+    return [math as unknown as Content]
+  })
+
+  return {
+    stack: segments.length ? segments : [{ text: '' }],
+    ...(style ? { style } : {}),
+  } as Content
 }
 
 function vocabularyListItemToContent(item: Element, palette: PdfPalette): Content {
@@ -283,23 +419,28 @@ function listItems(list: Element, palette: PdfPalette): Content[] {
       const directNodes = Array.from(item.childNodes).filter(
         (child) => !(child instanceof Element) || !nestedLists.includes(child)
       )
-      const text = directNodes
-        .map((child) => inlineContent(child, palette))
-        .filter(Boolean)
+      const inline = inlineNodesToContent(directNodes, palette)
       const nested = nestedLists.map((list) => ({
         [list.tagName.toLowerCase() === 'ul' ? 'ul' : 'ol']: listItems(list, palette),
       }))
-      return { text, ...(nested.length ? { ul: nested } : {}) } as Content
+      const itemContent = typeof inline === 'object' && inline !== null && 'stack' in inline
+        ? { stack: [inline] }
+        : { text: asTextContent(inline)?.text || '' }
+      return { ...itemContent, ...(nested.length ? { ul: nested } : {}) } as Content
     })
 }
 
 function tableToContent(table: HTMLTableElement, palette: PdfPalette): Content {
   const rows = Array.from(table.querySelectorAll('tr'))
   const body = rows.map((row) =>
-    Array.from(row.children).map((cell) => ({
-      text: inlineContent(cell, palette),
-      style: cell.tagName.toLowerCase() === 'th' ? 'tableHeader' : 'tableCell',
-    }))
+    Array.from(row.children).map((cell) => {
+      const cellContent = inlineNodesToContent(Array.from(cell.childNodes), palette)
+      const cellStyle = cell.tagName.toLowerCase() === 'th' ? 'tableHeader' : 'tableCell'
+      if (typeof cellContent === 'object' && cellContent !== null && 'stack' in cellContent) {
+        return { stack: [cellContent], style: cellStyle }
+      }
+      return { text: asTextContent(cellContent)?.text || '', style: cellStyle }
+    })
   )
   const columnCount = Math.max(...body.map((row) => row.length), 1)
   return {
@@ -327,19 +468,62 @@ function imageToContent(image: HTMLImageElement): Content {
   }
 }
 
+function mermaidToBlocks(figure: Element, palette: PdfPalette): Content[] {
+  const caption = cleanText(
+    figure.querySelector('figcaption')?.textContent || 'Mermaid diagram'
+  )
+  const renderedSvg = figure.querySelector<SVGSVGElement>('svg')
+  if (renderedSvg) {
+    return [
+      {
+        svg: normalizePdfSvg(renderedSvg.outerHTML),
+        fit: [IMAGE_MAX_WIDTH_PT, 320],
+        font: 'LXGW',
+        alignment: 'center',
+        margin: [0, 6, 0, 2],
+      },
+      ...(caption
+        ? [{ text: caption, style: 'figcaption' } as Content]
+        : []),
+    ]
+  }
+
+  const encodedSource = figure.getAttribute('data-md-mermaid-source') || ''
+  const diagramFallback = decodeDataSource(encodedSource)
+    || figure.querySelector('.md-mermaid__source code')?.textContent?.trim()
+    || ''
+  return diagramFallback
+    ? [
+        { text: caption, style: 'codeHeader', color: palette.accent },
+        {
+          text: diagramFallback,
+          style: 'codeBlock',
+          preserveLeadingSpaces: true,
+        },
+      ]
+    : []
+}
+
 function editableBlockToBlocks(block: HTMLElement, palette: PdfPalette): Content[] {
   const kind = block.dataset.mdKind
   const raw = block.dataset.mdOriginal || block.dataset.mdCurrent || ''
   const pre = block.querySelector('pre')
 
   if (kind === 'math') {
-    const formula = raw ? decodeHtml(raw) : block.textContent?.trim() || ''
-    return formula
-      ? [
-          { text: 'LaTeX', style: 'codeHeader', color: palette.accent },
-          { text: formula, style: 'mathBlock', preserveLeadingSpaces: true },
-        ]
-      : []
+    const formula = raw ? decodeDataSource(raw) : block.textContent?.trim() || ''
+    if (!formula) return []
+
+    const math: PdfMathMarker = {
+      nexusMath: {
+        formula,
+        display: true,
+      },
+      fit: [IMAGE_MAX_WIDTH_PT, 160],
+      font: 'LXGW',
+      alignment: 'center',
+      margin: [0, 7, 0, 9],
+    }
+    return [math as unknown as Content]
   }
   if (pre) {
     const lang = block.dataset.mdLang || ''
@@ -446,6 +630,10 @@ function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
     return articleMetaToBlocks(element as HTMLElement, palette)
   }
 
+  if (classes.contains('md-mermaid')) {
+    return mermaidToBlocks(element, palette)
+  }
+
   if (
     classes.contains('markdown-body') ||
     classes.contains('markdown-content__chunk') ||
@@ -472,7 +660,7 @@ function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
     case 'h5':
     case 'h6':
       {
-        const heading: Content = { text: inlineContent(element, palette), style: tag }
+        const heading: Content = inlineNodesToContent(Array.from(element.childNodes), palette, tag)
         if (element.closest('.markdown-body')) {
           const tocId = `pdf-toc-${tocEntries.length + 1}`
           ;(heading as Content & { id: string }).id = tocId
@@ -485,7 +673,7 @@ function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
         return [heading]
       }
     case 'p':
-      return [{ text: inlineContent(element, palette), style: 'paragraph' }]
+      return [inlineNodesToContent(Array.from(element.childNodes), palette, 'paragraph')]
     case 'ul':
       return [{ ul: listItems(element, palette), style: 'list' }]
     case 'ol':
@@ -552,14 +740,9 @@ function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
     case 'img':
       return [imageToContent(element as HTMLImageElement)]
     case 'figcaption':
-      return [
-        {
-          text: cleanText(element.textContent || ''),
-          style: 'figcaption',
-        },
-      ]
+      return [inlineNodesToContent(Array.from(element.childNodes), palette, 'figcaption')]
     default:
-      return [{ text: inlineContent(element, palette), style: 'paragraph' }]
+      return [inlineNodesToContent(Array.from(element.childNodes), palette, 'paragraph')]
   }
 }
 
@@ -762,11 +945,75 @@ function buildDocumentDefinition(
   }
 }
 
+function serializableDefinition(definition: TDocumentDefinitions): TDocumentDefinitions {
+  const { header: _header, footer: _footer, ...rest } = definition
+  return rest
+}
+
+function blobFromPdfBytes(bytes: ArrayBuffer): Blob {
+  return new Blob([bytes], { type: 'application/pdf' })
+}
+
+function schedulePdfUrlRevoke(url: string, targetWindow?: Window | null): void {
+  let revoked = false
+  const revoke = () => {
+    if (revoked) return
+    revoked = true
+    URL.revokeObjectURL(url)
+  }
+
+  // The PDF viewer owns the URL after navigation. Revoke it when that viewer
+  // is closed, with a bounded timeout for browsers that do not expose its
+  // lifecycle events through WindowProxy.
+  if (targetWindow) {
+    try {
+      targetWindow.addEventListener('load', () => {
+        targetWindow.addEventListener('pagehide', revoke, { once: true })
+      }, { once: true })
+    } catch {
+      // Cross-origin PDF viewers may reject event listeners; the timeout below
+      // still bounds the retained Blob.
+    }
+  }
+  window.setTimeout(revoke, targetWindow ? 5 * 60_000 : 60_000)
+}
+
+function deliverPdfBlob(blob: Blob, title: string, options: PdfGenerationOptions): void {
+  const url = URL.createObjectURL(blob)
+  if (options.mode === 'preview') {
+    if (!options.targetWindow || options.targetWindow.closed) {
+      URL.revokeObjectURL(url)
+      throw new Error('PDF preview window is unavailable.')
+    }
+    try {
+      schedulePdfUrlRevoke(url, options.targetWindow)
+      options.targetWindow.location.href = url
+    } catch (error) {
+      URL.revokeObjectURL(url)
+      throw error
+    }
+    return
+  }
+
+  try {
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `${sanitizeFilename(title)}.pdf`
+    anchor.rel = 'noopener'
+    anchor.click()
+    schedulePdfUrlRevoke(url)
+  } catch (error) {
+    URL.revokeObjectURL(url)
+    throw error
+  }
+}
+
 export async function generateArticlePdf(
   source: PdfExportSource,
-  siteTitle = 'Nexus'
+  siteTitle = 'Nexus',
+  options: PdfGenerationOptions = {},
 ): Promise<void> {
-  await ensurePdfFonts()
+  await ensureMermaidRendered(source.element)
   await embedImages(source.element)
 
   const palette = readPdfPalette()
@@ -782,5 +1029,30 @@ export async function generateArticlePdf(
     siteTitle
   )
 
-  pdfMake.createPdf(definition).download(`${sanitizeFilename(source.title)}.pdf`)
+  const workerPayload: PdfWorkerPayload = {
+    definition: serializableDefinition(definition),
+    title: source.title,
+    siteTitle,
+    palette,
+  }
+
+  if (typeof Worker !== 'undefined') {
+    try {
+      const bytes = await generatePdfInWorker(workerPayload, {
+        targetWindow: options.mode === 'preview' ? options.targetWindow : null,
+      })
+      deliverPdfBlob(blobFromPdfBytes(bytes), source.title, options)
+      return
+    } catch (error) {
+      if (!(error instanceof PdfWorkerUnavailableError)) throw error
+      // CSP-restricted or legacy browsers may expose Worker but reject its
+      // construction/message. Load the synchronous compatibility path only in
+      // that case; normal browsers never pay for the heavy fallback chunk.
+    }
+  }
+
+  // Older browsers without Worker support retain the original synchronous
+  // implementation as a lazy compatibility path.
+  const { generatePdfOnMain } = await import('./pdfMainFallback')
+  await generatePdfOnMain(definition, sanitizeFilename(source.title), options)
 }
