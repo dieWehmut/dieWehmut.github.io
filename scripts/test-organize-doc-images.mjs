@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
-import { organizeDocImage } from './organize-doc-images.mjs'
+import { migrateCaptureAssetImage, organizeDocImage } from './organize-doc-images.mjs'
 
 function writeFixture(filePath, content = '') {
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
@@ -206,4 +206,59 @@ runTest('ignores lazy-loading attributes and resolves the real HTML src', ({ doc
   assert.equal(result.status, 'unreferenced')
   assert.equal(fs.existsSync(imagePath), true)
   assert.equal(fs.readFileSync(markdownPath, 'utf8'), '<img alt="image.png" data-src="image.png" src="real.png">\n')
+})
+
+runTest('migrates a stale generated capture URL without changing metadata', () => {
+  const sourceImage = '/capture-assets/docs/notes/image.png'
+  const destinationImage = '/capture-assets/docs/notes/DigitalSignalProcessing/image.png'
+  const assets = [
+    {
+      id: 'legacy-image',
+      image: sourceImage,
+      title: 'Handwritten title',
+      tags: ['Notes'],
+      sourceRefs: [{ type: 'note', id: 'DigitalSignalProcessing' }],
+    },
+  ]
+
+  const migrated = migrateCaptureAssetImage(assets, sourceImage, destinationImage)
+
+  assert.notEqual(migrated, assets)
+  assert.equal(migrated.length, 1)
+  assert.equal(migrated[0].image, destinationImage)
+  assert.equal(migrated[0].id, 'legacy-image')
+  assert.equal(migrated[0].title, 'Handwritten title')
+  assert.deepEqual(migrated[0].tags, ['Notes'])
+})
+
+runTest('drops a stale duplicate when the destination capture asset already exists', () => {
+  const sourceImage = '/capture-assets/docs/notes/image.png'
+  const destinationImage = '/capture-assets/docs/notes/DigitalSignalProcessing/image.png'
+  const currentAsset = { id: 'current-image', image: destinationImage, title: 'Current' }
+  const assets = [
+    { id: 'legacy-image', image: sourceImage, title: 'Legacy' },
+    currentAsset,
+  ]
+
+  const migrated = migrateCaptureAssetImage(assets, sourceImage, destinationImage)
+
+  assert.equal(migrated.length, 1)
+  assert.equal(migrated[0], currentAsset)
+  assert.equal(migrated[0].image, destinationImage)
+})
+
+runTest('wires generated capture migration into the dev image watcher', () => {
+  const viteConfig = fs.readFileSync(path.resolve(import.meta.dirname, '..', 'vite.config.ts'), 'utf8')
+
+  assert.match(viteConfig, /migrateCaptureAssetImage\(migrated, sourceImage, destinationImage\)/)
+  assert.match(viteConfig, /captureDocAssetUrls\(docsRoot, result\.sourcePath\)/)
+  assert.match(viteConfig, /map\(\(part\) => encodeURIComponent\(part\)\)/)
+  assert.match(viteConfig, /writeGeneratedCaptureAssets\(migrated\)/)
+})
+
+runTest('refreshes capture metadata through the local polling API', () => {
+  const captureView = fs.readFileSync(path.resolve(import.meta.dirname, '..', 'src', 'views', 'CaptureView.vue'), 'utf8')
+
+  assert.match(captureView, /fetch\(`\/api\/capture\/assets\?t=\$\{Date\.now\(\)\}`/)
+  assert.match(captureView, /setInterval\(refreshCaptureAssets, 1500\)/)
 })

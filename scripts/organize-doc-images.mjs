@@ -37,6 +37,40 @@ export function isSupportedImage(filePath) {
   return SUPPORTED_IMAGE_EXTENSION_SET.has(path.extname(filePath).toLowerCase())
 }
 
+/**
+ * Migrate generated capture metadata after a referenced document image moves.
+ * If the destination is already represented, remove the stale source entry;
+ * otherwise preserve the existing metadata and replace only its image URL.
+ */
+export function migrateCaptureAssetImage(assets, sourceImage, destinationImage) {
+  if (!Array.isArray(assets)) return assets
+
+  const source = String(sourceImage || '').trim()
+  const destination = String(destinationImage || '').trim()
+  if (!source || !destination || source === destination) return assets
+
+  const destinationExists = assets.some(
+    (asset) => String(asset?.image || '').trim() === destination,
+  )
+  let changed = false
+  let replacementKept = false
+  const migrated = []
+
+  for (const asset of assets) {
+    if (String(asset?.image || '').trim() !== source) {
+      migrated.push(asset)
+      continue
+    }
+
+    changed = true
+    if (destinationExists || replacementKept) continue
+    migrated.push({ ...asset, image: destination })
+    replacementKept = true
+  }
+
+  return changed ? migrated : assets
+}
+
 function isMarkdown(filePath) {
   return filePath.toLowerCase().endsWith('.md')
 }

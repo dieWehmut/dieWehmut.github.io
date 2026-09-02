@@ -10,6 +10,7 @@ import {
   collectMarkdownImageReferences,
   isSupportedImage,
   isWithin,
+  migrateCaptureAssetImage,
   organizeDocImage,
 } from './scripts/organize-doc-images.mjs'
 
@@ -70,6 +71,19 @@ function writeGeneratedCaptureAssets(assets: any[]): void {
   const serialized = JSON.stringify(assets, null, 2)
   const moduleText = `import type { CaptureAsset } from '../../types/content'\n\nexport const generatedCaptureAssets: CaptureAsset[] = ${serialized} as CaptureAsset[]\n\nexport default generatedCaptureAssets\n`
   fs.writeFileSync(generatedCapturePath, moduleText, 'utf8')
+}
+
+function captureDocAssetUrls(docsRoot: string, filePath: string): string[] {
+  const relativePath = path.relative(docsRoot, filePath)
+  if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) return []
+
+  const posixPath = relativePath.replace(/\\/g, '/')
+  const rawUrl = `${captureUrlPrefix}docs/${posixPath}`
+  const encodedUrl = `${captureUrlPrefix}docs/${posixPath
+    .split('/')
+    .map((part) => encodeURIComponent(part))
+    .join('/')}`
+  return rawUrl === encodedUrl ? [rawUrl] : [rawUrl, encodedUrl]
 }
 
 function sanitizeFilePart(value: string): string {
@@ -334,12 +348,51 @@ function markdownHotReloadPlugin(): Plugin {
           )
           try {
             // The renderer resolves local Markdown images through public capture assets.
-            // Copy only this file so generated metadata and unrelated dirty files stay intact.
+            // Copy only this file; the matching generated metadata entry is migrated below.
             removeMovedImageFromPublic(result.sourcePath)
             if (result.destinationPath) copyMovedImageToPublic(result.destinationPath)
+
+            // Keep the capture gallery's generated metadata aligned with the
+            // Markdown URL while the dev server is running. The generated file
+            // is intentionally ignored by Vite's watcher, so this update must
+            // happen in the same move transaction.
+            if (result.destinationPath) {
+              const sourceImages = captureDocAssetUrls(docsRoot, result.sourcePath)
+              const destinationImages = captureDocAssetUrls(docsRoot, result.destinationPath)
+              if (sourceImages.length && destinationImages.length) {
+                const assets = readGeneratedCaptureAssets()
+                let migrated = assets
+                let migratedSource = ''
+                let migratedDestination = ''
+
+                // Match the representation emitted by the generator (raw or
+                // percent-encoded) and keep that representation for the move.
+                for (let index = 0; index < sourceImages.length; index += 1) {
+                  const sourceImage = sourceImages[index]
+                  if (!migrated.some((asset) => String(asset?.image || '').trim() === sourceImage)) continue
+                  const existingDestination = destinationImages.find((candidate) =>
+                    migrated.some((asset) => String(asset?.image || '').trim() === candidate),
+                  )
+                  const destinationImage = existingDestination || destinationImages[index] || destinationImages[0]
+                  const next = migrateCaptureAssetImage(migrated, sourceImage, destinationImage)
+                  if (next !== migrated) {
+                    migrated = next
+                    migratedSource = sourceImage
+                    migratedDestination = destinationImage
+                  }
+                }
+
+                if (migrated !== assets) {
+                  writeGeneratedCaptureAssets(migrated)
+                  server.config.logger.info(
+                    `[doc-images] updated generated capture metadata ${migratedSource} -> ${migratedDestination}`,
+                  )
+                }
+              }
+            }
           } catch (error) {
             server.config.logger.error(
-              `[doc-images] public image copy failed: ${error instanceof Error ? error.message : String(error)}`,
+              `[doc-images] public image/metadata sync failed: ${error instanceof Error ? error.message : String(error)}`,
             )
           }
           if (result.markdownPath) {
