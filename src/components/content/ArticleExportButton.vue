@@ -3,20 +3,20 @@
     class="article-export-button"
     type="button"
     :disabled="exporting"
-    :title="exporting ? 'Generating PDF...' : 'Export article as PDF'"
-    aria-label="Export article as PDF"
-    @click="exportArticlePdf"
+    :title="exporting ? 'Preparing PDF preview...' : 'Preview article as PDF'"
+    aria-label="Preview article as PDF"
+    @click="previewArticlePdf"
   >
-    <el-icon aria-hidden="true"><Download /></el-icon>
-    <span>{{ exporting ? 'PDF...' : 'PDF' }}</span>
+    <el-icon aria-hidden="true"><View /></el-icon>
+    <span>{{ exporting ? 'PDF...' : 'PDF Preview' }}</span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { Download } from '@element-plus/icons-vue'
+import { View } from '@element-plus/icons-vue'
 import { useArticlePdfExport } from '../../composables/useArticlePdfExport'
 
-const { exporting, exportArticlePdf } = useArticlePdfExport()
+const { exporting, previewArticlePdf } = useArticlePdfExport()
 </script>
 
 <style scoped>

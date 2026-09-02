@@ -13,6 +13,7 @@
     "test:markdown-render": "node scripts/test-markdown-render.mjs",
     "test:pdf-rendering": "node scripts/test-pdf-rendering.mjs",
     "test:pdf-worker": "node scripts/test-pdf-worker.mjs",
+    "test:pdf-preview": "node scripts/test-pdf-preview.mjs",
     "test:console-command": "node scripts/test-console-command.mjs",
     "test:console-state": "node scripts/test-console-state.mjs",
     "test:console-selection": "node scripts/test-console-selection.mjs",

@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { siteProfile } from '../data'
+import { resetPointerEffects } from '../utils/pointerEffects'
 
 /**
  * The article PDF export, shared by the classic breadcrumb button and the
@@ -53,6 +54,60 @@ function buildPdfSource(fallbackTitle: string) {
 export function useArticlePdfExport() {
   const route = useRoute()
 
+  async function previewArticlePdf(): Promise<boolean> {
+    if (exporting.value) return false
+
+    // Clear the custom cursor while the click still belongs to this document.
+    resetPointerEffects()
+    const previewWindow = typeof window === 'undefined'
+      ? null
+      : window.open('', '_blank')
+    if (!previewWindow) return false
+
+    // Detach the PDF viewer from this page. Chromium can otherwise place the
+    // opener and its built-in PDF extension in one renderer process, making a
+    // large preview temporarily starve pointer events in the article tab.
+    try {
+      previewWindow.opener = null
+    } catch {
+      // A browser may expose a read-only WindowProxy; generation still works.
+    }
+
+    try {
+      previewWindow.document.title = 'PDF Preview'
+      previewWindow.document.body.innerHTML = '<p style="font: 14px sans-serif; padding: 24px">Preparing PDF preview...</p>'
+    } catch {
+      // A newly opened blank window should be same-origin, but generation does
+      // not depend on the temporary status message being writable.
+    }
+
+    exporting.value = true
+    try {
+      // Let the click event finish before cloning the DOM or loading MathJax,
+      // Mermaid and fonts. This keeps the document's pointer/click pipeline
+      // responsive while the preview is prepared.
+      await new Promise<void>((resolve) => window.setTimeout(resolve, 0))
+      const source = buildPdfSource(route.path)
+      if (!source) {
+        previewWindow.close()
+        return false
+      }
+
+      const { generateArticlePdf } = await import('../utils/exportPdf')
+      await generateArticlePdf(source, siteProfile.title || 'Nexus', {
+        mode: 'preview',
+        targetWindow: previewWindow,
+      })
+      return true
+    } catch (error) {
+      console.error('PDF preview failed:', error)
+      if (!previewWindow.closed) previewWindow.close()
+      return false
+    } finally {
+      exporting.value = false
+    }
+  }
+
   async function exportArticlePdf(): Promise<boolean> {
     if (exporting.value) return false
     const source = buildPdfSource(route.path)
@@ -74,5 +129,6 @@ export function useArticlePdfExport() {
   return {
     exporting: computed(() => exporting.value),
     exportArticlePdf,
+    previewArticlePdf,
   }
 }

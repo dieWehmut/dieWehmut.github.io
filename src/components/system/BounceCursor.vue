@@ -25,6 +25,7 @@ import { useColorSchemePreference } from '../../composables/useColorSchemePrefer
 import { useThemePreference } from '../../composables/useThemePreference'
 import { useBackgroundPreference } from '../../composables/useBackgroundPreference'
 import { useDisplayModePreference } from '../../composables/useDisplayModePreference'
+import { POINTER_EFFECTS_RESET_EVENT } from '../../utils/pointerEffects'
 
 const cursorRef = ref(null)
 const dotsCanvasRef = ref(null)
@@ -352,12 +353,17 @@ function onWindowBlur() {
   onMouseLeave()
 }
 
+function onPointerEffectsReset() {
+  onMouseLeave()
+}
+
 function bindEvents() {
   if (eventsBound || !pointerEffectsEnabled.value) return
   window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('mouseover', onMouseOver, { passive: true })
   window.addEventListener('mouseleave', onMouseLeave, { passive: true })
   window.addEventListener('blur', onWindowBlur, { passive: true })
+  window.addEventListener(POINTER_EFFECTS_RESET_EVENT, onPointerEffectsReset, { passive: true })
   eventsBound = true
 }
 
@@ -367,6 +373,7 @@ function unbindEvents() {
   window.removeEventListener('mouseover', onMouseOver)
   window.removeEventListener('mouseleave', onMouseLeave)
   window.removeEventListener('blur', onWindowBlur)
+  window.removeEventListener(POINTER_EFFECTS_RESET_EVENT, onPointerEffectsReset)
   eventsBound = false
 }
 
