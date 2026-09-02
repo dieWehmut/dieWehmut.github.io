@@ -50,6 +50,7 @@ import yaml from 'highlight.js/lib/languages/yaml'
 import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
+import { normalizeMermaidSource } from './mermaidSource.mjs'
 import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetImage } from './publicAssets'
 import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
 import { ensureGiscusLogin, getGiscusAuthState } from './giscusAuth'
@@ -1367,7 +1368,7 @@ async function hydrateMermaidFigure(figure: HTMLElement): Promise<void> {
   if (existingTask) return existingTask
 
   const task = (async () => {
-    const source = decodeSource(figure.dataset.mdMermaidSource)
+    const source = normalizeMermaidSource(decodeSource(figure.dataset.mdMermaidSource))
     const canvas = figure.querySelector<HTMLElement>('.md-mermaid__canvas')
     const sourceFallback = figure.querySelector<HTMLDetailsElement>('.md-mermaid__source')
     if (!source || !canvas) return
