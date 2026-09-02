@@ -11,6 +11,7 @@
     "assets:push": "node scripts/sync-assets-repo.mjs",
     "runner:smoke": "node scripts/smoke-code-runner.mjs",
     "test:markdown-render": "node scripts/test-markdown-render.mjs",
+    "test:organize-doc-images": "node scripts/test-organize-doc-images.mjs",
     "test:pdf-rendering": "node scripts/test-pdf-rendering.mjs",
     "test:pdf-worker": "node scripts/test-pdf-worker.mjs",
     "test:pdf-preview": "node scripts/test-pdf-preview.mjs",

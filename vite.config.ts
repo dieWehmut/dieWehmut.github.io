@@ -6,6 +6,12 @@ import { defineConfig, type Plugin, type PreviewServer, type ViteDevServer } fro
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import { siteConfig } from './src/data/site/config'
+import {
+  collectMarkdownImageReferences,
+  isSupportedImage,
+  isWithin,
+  organizeDocImage,
+} from './scripts/organize-doc-images.mjs'
 
 function normalizeBasePath(value?: string): string {
   const trimmed = value?.trim()
@@ -280,27 +286,187 @@ function markdownHotReloadPlugin(): Plugin {
   const generateDocsScript = path.resolve(__dirname, 'scripts', 'generate-docs-data.mjs')
   let pending: NodeJS.Timeout | null = null
   let pendingPath: string | null = null
+  let pendingShouldGenerate = false
+  let pendingGenerationPath: string | null = null
+  const pendingImages = new Map<string, NodeJS.Timeout>()
+  const organizingImages = new Set<string>()
+  const suppressGenerationUntil = new Map<string, number>()
+
+  function watchPathKey(filePath: string): string {
+    const normalized = path.resolve(filePath)
+    return process.platform === 'win32' ? normalized.toLowerCase() : normalized
+  }
 
   function isWatchedMarkdown(filePath: string): boolean {
     if (!filePath.toLowerCase().endsWith('.md')) return false
     const normalized = path.resolve(filePath)
-    return normalized.startsWith(docsRoot + path.sep) || normalized.startsWith(siteRoot + path.sep)
+    return isWithin(docsRoot, normalized) || isWithin(siteRoot, normalized)
+  }
+
+  function isWatchedImage(filePath: string): boolean {
+    const normalized = path.resolve(filePath)
+    return isSupportedImage(normalized) && isWithin(docsRoot, normalized)
   }
 
   return {
     name: 'vite-markdown-hot-reload',
     apply: 'serve',
     configureServer(server: ViteDevServer) {
-      const triggerReload = (filePath: string): void => {
+      const copyMovedImageToPublic = (destinationPath: string): void => {
+        const relativePath = path.relative(docsRoot, destinationPath)
+        if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) return
+        const publicPath = path.join(publicCaptureDir, 'docs', relativePath)
+        fs.mkdirSync(path.dirname(publicPath), { recursive: true })
+        fs.copyFileSync(destinationPath, publicPath)
+      }
+
+      const removeMovedImageFromPublic = (sourcePath: string): void => {
+        const relativePath = path.relative(docsRoot, sourcePath)
+        if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) return
+        const publicPath = path.join(publicCaptureDir, 'docs', relativePath)
+        if (fs.existsSync(publicPath)) fs.rmSync(publicPath, { force: true })
+      }
+
+      const reportImageResult = (result: ReturnType<typeof organizeDocImage>): void => {
+        if (result.status === 'moved') {
+          server.config.logger.info(
+            `[doc-images] moved ${path.relative(__dirname, result.sourcePath)} -> ${path.relative(__dirname, result.destinationPath || '')}; updated ${path.relative(__dirname, result.markdownPath || '')}`,
+          )
+          try {
+            // The renderer resolves local Markdown images through public capture assets.
+            // Copy only this file so generated metadata and unrelated dirty files stay intact.
+            removeMovedImageFromPublic(result.sourcePath)
+            if (result.destinationPath) copyMovedImageToPublic(result.destinationPath)
+          } catch (error) {
+            server.config.logger.error(
+              `[doc-images] public image copy failed: ${error instanceof Error ? error.message : String(error)}`,
+            )
+          }
+          if (result.markdownPath) {
+            // The organizer already wrote this Markdown file. Suppress the generator for
+            // the resulting watcher event while still notifying the running app.
+            suppressGenerationUntil.set(watchPathKey(result.markdownPath), Date.now() + 1500)
+            triggerReload(result.markdownPath, { generate: false })
+          }
+          return
+        }
+        if (result.status === 'ambiguous' || result.status === 'unreferenced') {
+          server.config.logger.warn(
+            `[doc-images] ${result.status === 'ambiguous' ? 'multiple references' : 'no Markdown reference'}; left ${path.relative(__dirname, result.sourcePath)} in place`,
+          )
+        }
+      }
+
+      const organizeImage = (filePath: string): void => {
+        const normalized = path.resolve(filePath)
+        const imageKey = watchPathKey(normalized)
+        if (!isWatchedImage(normalized) || organizingImages.has(imageKey)) return
+        if (!fs.existsSync(normalized)) return
+
+        organizingImages.add(imageKey)
+        try {
+          const result = organizeDocImage(normalized, { docsRoot })
+          reportImageResult(result)
+          if (result.status === 'changed-during-scan') scheduleImageOrganization(normalized)
+        } catch (error) {
+          server.config.logger.error(
+            `[doc-images] failed for ${path.relative(__dirname, normalized)}: ${error instanceof Error ? error.message : String(error)}`,
+          )
+        } finally {
+          organizingImages.delete(imageKey)
+        }
+      }
+
+      const scheduleImageOrganization = (filePath: string): void => {
+        const normalized = path.resolve(filePath)
+        if (!isWatchedImage(normalized)) return
+        const imageKey = watchPathKey(normalized)
+        const previous = pendingImages.get(imageKey)
+        if (previous) clearTimeout(previous)
+        let initialSnapshot: fs.Stats
+        try {
+          initialSnapshot = fs.statSync(normalized)
+        } catch {
+          return
+        }
+        const timer = setTimeout(() => {
+          pendingImages.delete(imageKey)
+          try {
+            const latestSnapshot = fs.statSync(normalized)
+            if (
+              latestSnapshot.size !== initialSnapshot.size ||
+              latestSnapshot.mtimeMs !== initialSnapshot.mtimeMs
+            ) {
+              scheduleImageOrganization(normalized)
+              return
+            }
+          } catch {
+            return
+          }
+          organizeImage(normalized)
+        }, 250)
+        pendingImages.set(imageKey, timer)
+      }
+
+      const organizeImagesReferencedByMarkdown = (markdownPath: string): void => {
+        if (!markdownPath.toLowerCase().endsWith('.md') || !isWithin(docsRoot, markdownPath)) return
+        let content: string
+        try {
+          content = fs.readFileSync(markdownPath, 'utf8')
+        } catch {
+          return
+        }
+        for (const reference of collectMarkdownImageReferences(markdownPath, content)) {
+          if (!reference.resolvedPath || !isWatchedImage(reference.resolvedPath)) continue
+          scheduleImageOrganization(reference.resolvedPath)
+        }
+      }
+
+      const queueExistingReferencedImages = (): void => {
+        const pendingDirectories = [docsRoot]
+        while (pendingDirectories.length) {
+          const directoryPath = pendingDirectories.pop()
+          if (!directoryPath) continue
+          let entries: fs.Dirent[]
+          try {
+            entries = fs.readdirSync(directoryPath, { withFileTypes: true })
+          } catch {
+            continue
+          }
+          for (const entry of entries) {
+            const filePath = path.join(directoryPath, entry.name)
+            if (entry.isDirectory()) {
+              pendingDirectories.push(filePath)
+            } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) {
+              organizeImagesReferencedByMarkdown(filePath)
+            }
+          }
+        }
+      }
+
+      const triggerReload = (filePath: string, options: { generate?: boolean } = {}): void => {
         if (!isWatchedMarkdown(filePath)) return
-        pendingPath = path.resolve(filePath)
+        const normalizedPath = path.resolve(filePath)
+        const suppressionKey = watchPathKey(normalizedPath)
+        const suppressionExpiry = suppressGenerationUntil.get(suppressionKey) || 0
+        const suppressed = suppressionExpiry > Date.now()
+        if (suppressionExpiry && !suppressed) suppressGenerationUntil.delete(suppressionKey)
+        if (options.generate !== false && !suppressed) {
+          pendingShouldGenerate = true
+          pendingGenerationPath = normalizedPath
+        }
+        pendingPath = normalizedPath
         if (pending) clearTimeout(pending)
         pending = setTimeout(() => {
           pending = null
           const changedPath = pendingPath
           pendingPath = null
-          const isDocsMd = changedPath ? changedPath.startsWith(docsRoot + path.sep) : false
-          if (isDocsMd) {
+          const shouldGenerate = pendingShouldGenerate && pendingGenerationPath === changedPath
+          pendingShouldGenerate = false
+          pendingGenerationPath = null
+          const isDocsMd = changedPath ? isWithin(docsRoot, changedPath) : false
+          if (isDocsMd && shouldGenerate) {
+            if (changedPath) organizeImagesReferencedByMarkdown(changedPath)
             try {
               execFileSync(process.execPath, [generateDocsScript], {
                 stdio: 'inherit',
@@ -321,9 +487,24 @@ function markdownHotReloadPlugin(): Plugin {
         }, 200)
       }
 
-      server.watcher.on('add', triggerReload)
-      server.watcher.on('change', triggerReload)
-      server.watcher.on('unlink', triggerReload)
+      const handleWatcherEvent = (filePath: string): void => {
+        if (isWatchedImage(filePath)) {
+          scheduleImageOrganization(filePath)
+          return
+        }
+        triggerReload(filePath)
+      }
+
+      server.watcher.on('add', handleWatcherEvent)
+      server.watcher.on('change', handleWatcherEvent)
+      server.watcher.on('unlink', handleWatcherEvent)
+      server.httpServer?.once('close', () => {
+        for (const timer of pendingImages.values()) clearTimeout(timer)
+        pendingImages.clear()
+      })
+      // Chokidar may finish its initial scan before plugin listeners are attached.
+      // Queue existing local references once so a pasted image is handled after restart too.
+      setTimeout(queueExistingReferencedImages, 0)
     },
   }
 }
