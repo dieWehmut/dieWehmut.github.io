@@ -16,12 +16,15 @@ import { initThemePreference } from "./composables/useThemePreference";
 import { initDisplayModePreference } from "./composables/useDisplayModePreference";
 import { siteConfig } from "./data/site/config";
 import { getGitHubAvatarUrl } from "./utils/githubAvatar";
+import { installMarkdownReloadScrollRestore } from "./utils/markdownScrollRestore.mjs";
 
 // 先定配色（无手动偏好时随机选定 green/purple/pink），再定明暗主题。
 // 顺序很重要：主题初始化会套用当前配色，若颠倒则配色会被默认值覆盖，随机失效。
 initColorSchemePreference();
 initThemePreference();
 initDisplayModePreference();
+
+if (import.meta.env.DEV) installMarkdownReloadScrollRestore(import.meta.env.BASE_URL);
 
 document.title = siteConfig.title;
 const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');

@@ -19,7 +19,7 @@ const check = (label, condition) => checks.push([label, Boolean(condition)])
 
 check(
   'main installs markdown scroll restoration during development',
-  /installMarkdownReloadScrollRestore\(\)/.test(mainSource),
+  /installMarkdownReloadScrollRestore\(import\.meta\.env\.BASE_URL\)/.test(mainSource),
 )
 
 const location = {
@@ -70,6 +70,26 @@ check(
     'reload',
     2000,
   ),
+)
+
+check(
+  'markdown route detection accepts a Vite base path',
+  scrollRestore.isMarkdownDocumentPath('/Nexus/note/DigitalSignalProcessing', '/Nexus/'),
+)
+
+const baseLocation = {
+  pathname: '/Nexus/note/DigitalSignalProcessing',
+  search: '?mode=reading',
+  hash: '',
+}
+const baseSnapshot = scrollRestore.createMarkdownScrollSnapshot(
+  baseLocation,
+  { scrollX: 12, scrollY: 840 },
+  1000,
+)
+check(
+  'reload restoration accepts a Vite base path',
+  scrollRestore.shouldRestoreMarkdownScroll(baseSnapshot, baseLocation, 'reload', 2000, 30_000, '/Nexus/'),
 )
 
 const failures = checks.filter(([, ok]) => !ok)

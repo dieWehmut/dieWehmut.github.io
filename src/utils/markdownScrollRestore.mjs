@@ -7,9 +7,17 @@ export const MARKDOWN_SCROLL_STORAGE_KEY = 'md-reload-scroll'
 /**
  * Keep reload state limited to views whose primary content is Markdown.
  * @param {string} pathname
+ * @param {string} [basePath]
  */
-export function isMarkdownDocumentPath(pathname) {
-  return /^\/(?:note|post)(?:\/|$)/.test(String(pathname || ''))
+export function isMarkdownDocumentPath(pathname, basePath = '/') {
+  let normalizedPath = String(pathname || '')
+  let normalizedBase = String(basePath || '/').trim()
+  if (!normalizedBase.startsWith('/')) normalizedBase = `/${normalizedBase}`
+  if (!normalizedBase.endsWith('/')) normalizedBase += '/'
+  if (normalizedBase !== '/' && normalizedPath.startsWith(normalizedBase)) {
+    normalizedPath = `/${normalizedPath.slice(normalizedBase.length)}`
+  }
+  return /^\/(?:note|post)(?:\/|$)/.test(normalizedPath)
 }
 
 /**
@@ -41,6 +49,7 @@ export function createMarkdownScrollSnapshot(location, view, savedAt = Date.now(
  * @param {string} navigationType
  * @param {number} [now]
  * @param {number} [maxAgeMs]
+ * @param {string} [basePath]
  */
 export function shouldRestoreMarkdownScroll(
   snapshot,
@@ -48,9 +57,10 @@ export function shouldRestoreMarkdownScroll(
   navigationType,
   now = Date.now(),
   maxAgeMs = DEFAULT_MAX_AGE_MS,
+  basePath = '/',
 ) {
   if (navigationType !== 'reload' || !snapshot) return false
-  if (!isMarkdownDocumentPath(location?.pathname)) return false
+  if (!isMarkdownDocumentPath(location?.pathname, basePath)) return false
   if (location?.hash) return false
   if (snapshot.key !== markdownLocationKey(location)) return false
   if (!Number.isFinite(snapshot.y) || snapshot.y < 0) return false
@@ -159,12 +169,12 @@ function restoreSnapshot(view, doc, snapshot) {
  * Install reload-only position persistence for Markdown document views.
  * The returned cleanup function is useful for tests and isolated embeds.
  */
-export function installMarkdownReloadScrollRestore() {
+export function installMarkdownReloadScrollRestore(basePath = '/') {
   if (typeof window === 'undefined' || typeof document === 'undefined') return () => {}
 
   const view = window
   const location = view.location
-  if (!isMarkdownDocumentPath(location.pathname)) return () => {}
+  if (!isMarkdownDocumentPath(location.pathname, basePath)) return () => {}
 
   // Vue Router has its own savedPosition handling for back/forward entries;
   // manual mode prevents the browser's automatic restore from racing this
@@ -188,7 +198,14 @@ export function installMarkdownReloadScrollRestore() {
   view.addEventListener('beforeunload', save, { capture: true })
 
   const snapshot = readSnapshot(view)
-  const restore = shouldRestoreMarkdownScroll(snapshot, location, navigationType(view))
+  const restore = shouldRestoreMarkdownScroll(
+    snapshot,
+    location,
+    navigationType(view),
+    Date.now(),
+    DEFAULT_MAX_AGE_MS,
+    basePath,
+  )
   const finishRestore = restore ? restoreSnapshot(view, document, snapshot) : null
   if (!restore && snapshot?.key === markdownLocationKey(location)) clearSnapshot(view)
 
