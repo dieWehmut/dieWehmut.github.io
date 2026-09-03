@@ -5,13 +5,7 @@ date: 2026-05-18
 tags: [APIKey, Codex, Claude, Opencode,Hermes,Deepseek, AgentRouter, OpenAI,Anthropic]
 ---
 
-## Claude Code配置目录
-
-```bash
-~/.claude/settings.json
-```
-
-## Codex配置目录
+## Codex
 
 ```bash
 ~/.codex/auth.json
@@ -21,13 +15,92 @@ tags: [APIKey, Codex, Claude, Opencode,Hermes,Deepseek, AgentRouter, OpenAI,Anth
 ~/.codex/config.toml
 ```
 
-## Opencode配置目录
+```config.toml
+model_provider = "deepseek"
+model = "deepseek-v4-flash"
+review_model = "deepseek-v4-flash"
+model_reasoning_effort = "max"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+approvals_reviewer = "user"
+plan_mode_reasoning_effort = "ultra"
+service_tier = "default"
+model_catalog_json = "~/.codex/models.json"
+preferred_auth_method = "apikey"
+forced_login_method = "api"
+
+[model_providers.deepseek]
+name = "deepseek"
+base_url = "https://api.example.com/v1"
+wire_api = "responses"
+requires_openai_auth = true
+experimental_bearer_token = "sk-xx"
+
+[features]
+goals = true
+
+[tui]
+status_line = ["current-dir", "model",  "reasoning", "permissions", "fast-mode","task-progress"]
+status_line_use_colors = false
+
+[tui.model_availability_nux]
+"gpt-5.6-sol" = 4
+
+[windows]
+sandbox = "elevated"
+
+[notice]
+hide_full_access_warning = true
+hide_rate_limit_model_nudge = true
+```
+
+## Claude
+
+```bash
+~/.claude/settings.json
+```
+
+```settings.json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.example.com",
+    "ANTHROPIC_API_KEY": "sk-xx"
+  },
+  "model": "claude-opus-5",
+  "effortLevel": "max"
+}
+```
+
+## Opencode
 
 ```bash
 ~/.config/opencode/opencode.jsonc
 ```
 
-## 安装
+```opencode.jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "agentrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "AgentRouter (OpenAI Compatible)",
+      "options": {
+        "baseURL": "https://api.example.com/v1",
+        "apiKey": "sk-xx"
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "gpt5.5"
+        }
+      }
+    }
+  },
+  "model": "agentrouter/gpt5.5"
+}
+```
+
+## Agent安装
 
 ### 一键安装
 
@@ -75,195 +148,4 @@ npm install -g @anthropic-ai/claude-code@latest
 
 ```bash
 npm install -g opencode-ai
-```
-
-## Proxy
-
-### AgentRouter
-
-```config.toml
-model_provider = "deepseek"
-model = "deepseek-v4-flash"
-review_model = "deepseek-v4-flash"
-model_reasoning_effort = "max"
-disable_response_storage = true
-network_access = "enabled"
-windows_wsl_setup_acknowledged = true
-approvals_reviewer = "user"
-plan_mode_reasoning_effort = "ultra"
-service_tier = "default"
-model_catalog_json = "~/.codex/models.json"
-preferred_auth_method = "apikey"
-forced_login_method = "api"
-
-[model_providers.deepseek]
-name = "deepseek"
-base_url = "https://agentrouter.org/v1"
-wire_api = "responses"
-requires_openai_auth = true
-experimental_bearer_token = "sk-xx"
-
-[features]
-goals = true
-
-
-[tui]
-status_line = ["current-dir", "model",  "reasoning", "permissions", "fast-mode","task-progress"]
-status_line_use_colors = false
-
-[tui.model_availability_nux]
-"gpt-5.6-sol" = 4
-
-[windows]
-sandbox = "elevated"
-
-[notice]
-hide_full_access_warning = true
-hide_rate_limit_model_nudge = true
-```
-
-```settings.json
-{
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://agentrouter.org",
-    "ANTHROPIC_API_KEY": "sk-xx"
-  },
-  "model": "claude-opus-4-6",
-  "effortLevel": "max"
-}
-```
-
-```opencode.jsonc
-{
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "agentrouter": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "AgentRouter (OpenAI Compatible)",
-      "options": {
-        "baseURL": "https://agentrouter.org/v1",
-        "apiKey": "sk-xx"
-      },
-      "models": {
-        "gpt-5.5": {
-          "name": "gpt5.5"
-        }
-      }
-    }
-  },
-  "model": "agentrouter/gpt5.5"
-}
-```
-
-### Deepseek
-
-```settings.json
-{
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
-    "ANTHROPIC_API_KEY": "sk-xx",
-    "ANTHROPIC_CODE_EFFORT_LEVEL": "max"
-  },
-  "model": "deepseek-v4-pro[1m]",
-  "effortLevel": "xhigh"
-}
-```
-
-```config.toml
-model_provider = "deepseek"
-model = "deepseek-v4-flash"
-review_model = "deepseek-v4-flash"
-model_reasoning_effort = "max"
-disable_response_storage = true
-network_access = "enabled"
-windows_wsl_setup_acknowledged = true
-approvals_reviewer = "user"
-plan_mode_reasoning_effort = "ultra"
-service_tier = "default"
-model_catalog_json = "~/.codex/models.json"
-preferred_auth_method = "apikey"
-forced_login_method = "api"
-
-[model_providers.deepseek]
-name = "deepseek"
-base_url = "https://api.deepseek.com/"
-wire_api = "responses"
-experimental_bearer_token = "sk-xx"
-
-[features]
-goals = true
-
-
-[tui]
-status_line = ["current-dir", "model",  "reasoning", "permissions", "fast-mode","task-progress"]
-status_line_use_colors = false
-
-[tui.model_availability_nux]
-"gpt-5.6-sol" = 4
-
-[windows]
-sandbox = "elevated"
-
-[notice]
-hide_full_access_warning = true
-hide_rate_limit_model_nudge = true
-
-```
-
-### 自建中转
-
-```json
-{
-  "OPENAI_API_KEY": "sk-xx",
-}
-```
-
-#### Sub2api
-
-```toml
-model_provider = "OpenAI"
-model = "gpt-5.5"
-review_model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
-disable_response_storage = true
-network_access = "enabled"
-windows_wsl_setup_acknowledged = true
-
-[model_providers.OpenAI]
-name = "OpenAI"
-base_url = "https://your-api.example.com"
-wire_api = "responses"
-requires_openai_auth = true
-
-[features]
-goals = true
-```
-
-#### CodexManager
-
-```toml
-model = "gpt-5.5"
-model_provider = "cm"
-review_model = "gpt-5.5"
-personality = "none"
-model_reasoning_effort = "xhigh"
-plan_mode_reasoning_effort = "xhigh"
-model_reasoning_summary = "detailed"
-model_verbosity = "high"
-model_supports_reasoning_summaries = true
-allow_login_shell = true
-sandbox_mode = "workspace-write"
-cli_auth_credentials_store = "file"
-chatgpt_base_url = "https://chatgpt.com/backend-api/"
-mcp_oauth_credentials_store = "auto"
-check_for_update_on_startup = true
-web_search = "live"
-approvals_reviewer = "user"
-[model_providers.cm]
-approval_policy = "on-request"
-web_search = "live"
-name = "OpenAI"
-base_url = "https://your-api.example.com"
-wire_api = "responses"
-
 ```

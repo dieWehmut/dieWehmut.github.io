@@ -2,6 +2,46 @@ import type { CaptureAsset } from '../../types/content'
 
 export const generatedCaptureAssets: CaptureAsset[] = [
   {
+    "id": "docs-notes-DigitalSignalProcessing-image",
+    "image": "/capture-assets/docs/notes/DigitalSignalProcessing/image.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-notes-DigitalSignalProcessing-image-2",
+    "image": "/capture-assets/docs/notes/DigitalSignalProcessing/image-2.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "docs-cm-cm1",
     "image": "/capture-assets/docs/cm/cm1.jpg",
     "title": "Computing Method 考试小抄第 1 张",

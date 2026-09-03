@@ -14,6 +14,51 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "ComputerNetwork",
+    "type": "note",
+    "title": "Computer Network Notes",
+    "date": "2026-08-28",
+    "tags": [
+      "ComputerNetwork",
+      "Notes"
+    ],
+    "summary": "",
+    "wordCount": 0,
+    "readingMinutes": 0,
+    "updated": "",
+    "path": "./notes/ComputerNetwork.md"
+  },
+  {
+    "id": "DigitalSignalProcessing",
+    "type": "note",
+    "title": "Digital Signal Processing",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "or 数字信号处理 信号与系统\n导论\n信号\n反映信息的物理量,系统直接进行加工、变换以实现通信的对象，一般是随时间变化的有限的实值函数\n连续->模拟 离散->数字\n确定信号 随机信号\nalt text\n时域:以时间为自变量描述信号和系...",
+    "wordCount": 927,
+    "readingMinutes": 3,
+    "updated": "",
+    "path": "./notes/DigitalSignalProcessing.md"
+  },
+  {
+    "id": "Neuroscience",
+    "type": "note",
+    "title": "Neuroscience Notes",
+    "date": "2026-08-27",
+    "tags": [
+      "Neuroscience",
+      "Notes"
+    ],
+    "summary": "##",
+    "wordCount": 0,
+    "readingMinutes": 0,
+    "updated": "",
+    "path": "./notes/Neuroscience.md"
+  },
+  {
     "id": "GoRust",
     "type": "post",
     "title": "Go Rust",
@@ -22,9 +67,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Rust",
       "Code"
     ],
-    "summary": "严肃学习Rust圣经\n2026-08-24 | Monday\n无gc 安全 \"用Rust重写\"\nCargo.toml 描述文件\nCargo.lock 依赖",
-    "wordCount": 37,
-    "readingMinutes": 1,
+    "summary": "严肃学习Rust圣经\n2026-08-24 | Monday\n无gc 安全 \"用Rust重写\"\nCargo.toml 描述文件\nCargo.lock 依赖\n2026-08-25 | Tuesday\n变量绑定\nstruct Struct...",
+    "wordCount": 1470,
+    "readingMinutes": 4,
     "updated": "",
     "codeRunner": true,
     "path": "./posts/GoRust.md"
@@ -167,9 +212,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "OpenAI",
       "Anthropic"
     ],
-    "summary": "Claude Code配置目录\nCodex配置目录\nOpencode配置目录\n安装\n一键安装\n无法连接外网的情况\nnpm\nProxy\nAgentRouter\nDeepseek\n自建中转\nSub2api\nCodexManager",
-    "wordCount": 577,
-    "readingMinutes": 2,
+    "summary": "Codex\nClaude\nOpencode\nAgent安装\n一键安装\n无法连接外网的情况\nnpm",
+    "wordCount": 283,
+    "readingMinutes": 1,
     "updated": "2026/08/14 21:46",
     "path": "./posts/AgentSettings.md"
   },
@@ -228,9 +273,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "CognitiveScience",
       "Notes"
     ],
-    "summary": "认知科学 (Cognitive Science) 手写笔记原图存档。\n1 (1).png\n1 (2).png\n1 (3).png\n1 (4).png\n1 (5).png\n1 (6).png\n1 (7).png\n1 (8).png\n1...",
-    "wordCount": 214,
-    "readingMinutes": 1,
+    "summary": "一、认知心理学与认知神经科学导论\n认知心理学概述\n**学科定义**：认知心理学是对**思维与头脑（Mind）**的科学研究。\n**研究核心**：关注信息如何从外部世界获取、在内部储存、加工转换，并用于解决问题、驱动思维以及生成言语。...",
+    "wordCount": 11450,
+    "readingMinutes": 29,
     "updated": "2026/07/09 16:28",
     "path": "./notes/CognitiveScience.md"
   },
@@ -278,6 +323,18 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "readingMinutes": 49,
     "updated": "2026/06/16 10:35",
     "path": "./notes/HighSchoolMaths.md"
+  },
+  {
+    "id": "DeepLearning",
+    "type": "note",
+    "title": "DeepLearning",
+    "date": "",
+    "tags": [],
+    "summary": "",
+    "wordCount": 0,
+    "readingMinutes": 0,
+    "updated": "",
+    "path": "./notes/DeepLearning.md"
   }
 ] as GeneratedDocMeta[]
 

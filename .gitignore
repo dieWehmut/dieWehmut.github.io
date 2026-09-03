@@ -46,5 +46,6 @@ prompt/
 sample/
 backend
 .playwright-mcp
-docs
+docs/superpowers
+src/data/docs/.obsidian
 .claude/worktrees
