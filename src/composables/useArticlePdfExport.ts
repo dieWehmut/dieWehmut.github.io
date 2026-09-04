@@ -11,14 +11,90 @@ import { resetPointerEffects } from '../utils/pointerEffects'
  * anything about the route.
  */
 const ARTICLE_BODY_SELECTOR = '.post-view__body.markdown-body, .note-view__body.markdown-body, .markdown-body'
+const MARKDOWN_RENDER_WAIT_TIMEOUT = 30_000
 
 /** One export at a time, whichever surface started it. */
 const exporting = ref(false)
 
-function findArticleBody(): HTMLElement | null {
+function findArticleBodyElement(): HTMLElement | null {
   if (typeof document === 'undefined') return null
-  const body = document.querySelector<HTMLElement>(ARTICLE_BODY_SELECTOR)
+  return document.querySelector<HTMLElement>(ARTICLE_BODY_SELECTOR)
+}
+
+function findArticleBody(): HTMLElement | null {
+  const body = findArticleBodyElement()
   return body && body.textContent?.trim() ? body : null
+}
+
+function waitForArticleBody(): Promise<HTMLElement> {
+  const existing = findArticleBodyElement()
+  if (existing) return Promise.resolve(existing)
+
+  return new Promise((resolve, reject) => {
+    let observer: MutationObserver | null = null
+    let timeout = 0
+    let settled = false
+
+    const finish = (body?: HTMLElement, error?: Error) => {
+      if (settled) return
+      settled = true
+      observer?.disconnect()
+      window.clearTimeout(timeout)
+      if (error) reject(error)
+      else if (body) resolve(body)
+      else reject(new Error('Article body is unavailable.'))
+    }
+
+    const check = () => {
+      const body = findArticleBodyElement()
+      if (body) finish(body)
+    }
+
+    observer = new MutationObserver(check)
+    observer.observe(document.documentElement, { childList: true, subtree: true })
+    timeout = window.setTimeout(() => {
+      finish(undefined, new Error('Timed out waiting for the article body.'))
+    }, MARKDOWN_RENDER_WAIT_TIMEOUT)
+    check()
+  })
+}
+
+function waitForMarkdownRenderComplete(body: HTMLElement): Promise<void> {
+  const state = body.dataset.mdRenderState
+  // Consumers outside MarkdownContent may provide a static markdown body. Keep
+  // those callers compatible while waiting for the progressive renderer used by
+  // article and note views.
+  if (!state || state === 'complete') return Promise.resolve()
+
+  return new Promise((resolve, reject) => {
+    let observer: MutationObserver | null = null
+    let timeout = 0
+    let settled = false
+
+    const finish = (error?: Error) => {
+      if (settled) return
+      settled = true
+      observer?.disconnect()
+      window.clearTimeout(timeout)
+      if (error) reject(error)
+      else resolve()
+    }
+
+    const check = () => {
+      const nextState = body.dataset.mdRenderState
+      if (!nextState || nextState === 'complete') finish()
+    }
+
+    observer = new MutationObserver(check)
+    observer.observe(body, {
+      attributes: true,
+      attributeFilter: ['data-md-render-state'],
+    })
+    timeout = window.setTimeout(() => {
+      finish(new Error('Timed out waiting for Markdown rendering to complete.'))
+    }, MARKDOWN_RENDER_WAIT_TIMEOUT)
+    check()
+  })
 }
 
 export function hasExportableArticle(): boolean {
@@ -87,6 +163,8 @@ export function useArticlePdfExport() {
       // Mermaid and fonts. This keeps the document's pointer/click pipeline
       // responsive while the preview is prepared.
       await new Promise<void>((resolve) => window.setTimeout(resolve, 0))
+      const body = await waitForArticleBody()
+      await waitForMarkdownRenderComplete(body)
       const source = buildPdfSource(route.path)
       if (!source) {
         previewWindow.close()
@@ -110,11 +188,13 @@ export function useArticlePdfExport() {
 
   async function exportArticlePdf(): Promise<boolean> {
     if (exporting.value) return false
-    const source = buildPdfSource(route.path)
-    if (!source) return false
 
     exporting.value = true
     try {
+      const body = await waitForArticleBody()
+      await waitForMarkdownRenderComplete(body)
+      const source = buildPdfSource(route.path)
+      if (!source) return false
       const { generateArticlePdf } = await import('../utils/exportPdf')
       await generateArticlePdf(source, siteProfile.title || 'Nexus')
       return true

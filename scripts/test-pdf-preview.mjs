@@ -14,12 +14,16 @@ const pdf = read('src/utils/exportPdf.ts')
 const fallback = readOptional('src/utils/pdfMainFallback.ts')
 const cursor = read('src/components/system/BounceCursor.vue')
 const pointerEffects = readOptional('src/utils/pointerEffects.ts')
+const markdownContent = read('src/components/content/MarkdownContent.vue')
 
 const previewStart = hook.indexOf('async function previewArticlePdf()')
 const exportStart = hook.indexOf('  async function exportArticlePdf()', previewStart)
 const previewFunction = previewStart >= 0
   ? hook.slice(previewStart, exportStart >= 0 ? exportStart : hook.length)
   : ''
+const exportFunction = exportStart >= 0 ? hook.slice(exportStart) : ''
+const mermaidAwaitIndex = markdownContent.indexOf('await ensureMermaidRendered')
+const completeAfterMermaidIndex = markdownContent.indexOf("renderState.value = 'complete'", mermaidAwaitIndex)
 const openIndex = previewFunction.indexOf("window.open('', '_blank')")
 const firstAwaitIndex = previewFunction.indexOf('await ')
 const resetIndex = previewFunction.indexOf('resetPointerEffects()')
@@ -76,6 +80,35 @@ const checks = [
     !forbiddenPageLocks.test(previewFunction)
       && !forbiddenPageLocks.test(button)
       && !forbiddenPageLocks.test(pointerEffects),
+  ],
+  [
+    'MarkdownContent exposes a completion state after all progressive chunks',
+    /data-md-render-state/.test(markdownContent)
+      && /renderState/.test(markdownContent)
+      && /complete/.test(markdownContent),
+  ],
+  [
+    'Markdown completion waits for Mermaid hydration',
+    /ensureMermaidRendered/.test(markdownContent)
+      && /await\s+ensureMermaidRendered/.test(markdownContent)
+      && mermaidAwaitIndex >= 0
+      && completeAfterMermaidIndex > mermaidAwaitIndex,
+  ],
+  [
+    'PDF preview waits for complete Markdown rendering before cloning',
+    /waitForMarkdownRenderComplete/.test(hook)
+      && /await\s+waitForMarkdownRenderComplete\(body\)/.test(previewFunction),
+  ],
+  [
+    'PDF download marks the export busy before waiting for Markdown rendering',
+    exportFunction.indexOf('exporting.value = true') >= 0
+      && exportFunction.indexOf('await waitForMarkdownRenderComplete(body)') >= 0
+      && exportFunction.indexOf('exporting.value = true') < exportFunction.indexOf('await waitForMarkdownRenderComplete(body)'),
+  ],
+  [
+    'PDF preview waits for the article body to mount before cloning',
+    /waitForArticleBody/.test(hook)
+      && /await\s+waitForArticleBody\(\)/.test(previewFunction),
   ],
 ]
 

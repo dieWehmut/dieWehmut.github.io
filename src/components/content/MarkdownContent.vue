@@ -1,5 +1,9 @@
 <template>
-  <div ref="containerRef" class="markdown-content" />
+  <div
+    ref="containerRef"
+    class="markdown-content"
+    :data-md-render-state="renderState"
+  />
 </template>
 
 <script setup lang="ts">
@@ -14,6 +18,7 @@ const props = defineProps<{
 const emit = defineEmits(['ready'])
 
 const containerRef = ref<HTMLElement | null>(null)
+const renderState = ref<'idle' | 'rendering' | 'complete'>('idle')
 
 let cleanup: (() => void) | null = null
 let renderToken = 0
@@ -21,12 +26,22 @@ let readyEmitted = false
 let markdownModulePromise: Promise<typeof import('../../utils/markdown')> | null = null
 const scheduledHandles = new Set<number>()
 
-function bindInteractions(token: number) {
+async function bindInteractions(token: number): Promise<void> {
   cleanup?.()
-  loadMarkdownModule().then(({ bindMarkdownInteractions }) => {
-    if (token !== renderToken) return
-    cleanup = bindMarkdownInteractions(containerRef.value)
-  })
+  const { bindMarkdownInteractions, ensureMermaidRendered } = await loadMarkdownModule()
+  if (token !== renderToken) return
+
+  // The first chunk is allowed to announce `ready` for the reader, but PDF
+  // export waits for `complete`. Mermaid figures must be hydrated before that
+  // final signal, otherwise the exporter can clone source placeholders.
+  try {
+    await ensureMermaidRendered(containerRef.value)
+  } catch {
+    // Individual diagrams already expose a source fallback. A failed optional
+    // hydration must not leave the document permanently stuck in rendering.
+  }
+  if (token !== renderToken) return
+  cleanup = bindMarkdownInteractions(containerRef.value)
 }
 
 function loadMarkdownModule() {
@@ -194,6 +209,7 @@ watch(
   () => [props.source, props.docId, props.codeRunner] as const,
   ([source]) => {
     const token = ++renderToken
+    renderState.value = 'rendering'
     readyEmitted = false
     cleanup?.()
     cleanup = null
@@ -204,6 +220,7 @@ watch(
 
     if (!source) {
       setRenderedHtml('')
+      renderState.value = 'complete'
       return
     }
 
@@ -227,8 +244,11 @@ watch(
           readyEmitted = true
           emit('ready')
         }
-        bindInteractions(token)
-        bumpHmrSettle()
+        void bindInteractions(token).then(() => {
+          if (token !== renderToken) return
+          renderState.value = 'complete'
+          bumpHmrSettle()
+        })
         return
       }
 
@@ -237,7 +257,10 @@ watch(
       // main thread, so big articles appear much sooner.
       setRenderedHtml('')
       renderRemainingChunks(chunks, 0, token, renderMarkdown, headingIds, () => {
-        bindInteractions(token)
+        void bindInteractions(token).then(() => {
+          if (token !== renderToken) return
+          renderState.value = 'complete'
+        })
       })
     })()
   },
