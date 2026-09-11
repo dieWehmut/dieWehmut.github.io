@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { siteProfile } from '../data'
 import { resetPointerEffects } from '../utils/pointerEffects'
@@ -15,6 +15,129 @@ const MARKDOWN_RENDER_WAIT_TIMEOUT = 30_000
 
 /** One export at a time, whichever surface started it. */
 const exporting = ref(false)
+let pdfWarmupScheduledFor = ''
+let pdfWarmupTimer: number | null = null
+
+type PreparedPdfCache = {
+  key: string
+  title: string
+  bytes: ArrayBuffer
+}
+
+let preparedPdfCache: PreparedPdfCache | null = null
+let preparedPdfPromise: { key: string; promise: Promise<ArrayBuffer> } | null = null
+
+function hashPdfFingerprint(value: string): string {
+  let hash = 2166136261
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index)
+    hash = Math.imul(hash, 16777619)
+  }
+  return (hash >>> 0).toString(16)
+}
+
+function pdfSourceFingerprint(source: { title: string; element: HTMLElement }, siteTitle: string): string {
+  const root = typeof document === 'undefined' ? null : document.documentElement
+  const theme = root
+    // Ignore transient cursor/hover/fullscreen classes. They are changed by
+    // the click handler itself and would otherwise invalidate an idle-prepared
+    // PDF immediately before the user tries to open it.
+    ? `${root.dataset.theme || ''}|${root.dataset.colorScheme || ''}`
+    : ''
+  return hashPdfFingerprint(`${siteTitle}\n${source.title}\n${theme}\n${source.element.innerHTML}`)
+}
+
+function isPdfWorkerUnavailable(error: unknown): boolean {
+  return error instanceof Error && error.name === 'PdfWorkerUnavailableError'
+}
+
+function cancelPdfWarmup(): void {
+  if (pdfWarmupTimer === null || typeof window === 'undefined') return
+  window.clearTimeout(pdfWarmupTimer)
+  pdfWarmupTimer = null
+  pdfWarmupScheduledFor = ''
+}
+
+async function prepareCachedPdf(
+  source: { title: string; element: HTMLElement },
+  siteTitle: string,
+  key: string,
+): Promise<ArrayBuffer> {
+  if (preparedPdfCache?.key === key) return preparedPdfCache.bytes
+  if (preparedPdfPromise?.key === key) return preparedPdfPromise.promise
+
+  const promise = (async () => {
+    const { prepareArticlePdf } = await import('../utils/exportPdf')
+    const bytes = await prepareArticlePdf(source, siteTitle)
+    preparedPdfCache = { key, title: source.title, bytes }
+    return bytes
+  })()
+  preparedPdfPromise = { key, promise }
+  // Attach both fulfillment and rejection handlers to the cleanup chain. A
+  // bare `finally()` creates a second Promise that can surface an unhandled
+  // rejection when the Worker fails during idle pre-rendering.
+  void promise.then(
+    () => {
+      if (preparedPdfPromise?.promise === promise) preparedPdfPromise = null
+    },
+    () => {
+      if (preparedPdfPromise?.promise === promise) preparedPdfPromise = null
+    },
+  )
+  return promise
+}
+
+function schedulePdfWorkerWarmup(routePath: string, siteTitle: string): void {
+  if (pdfWarmupScheduledFor === routePath || typeof window === 'undefined') return
+  pdfWarmupScheduledFor = routePath
+
+  const warm = () => {
+    pdfWarmupTimer = null
+    pdfWarmupScheduledFor = ''
+    // A click may arrive while the delayed timer is firing. Export state is
+    // set synchronously by both public entry points, so skip optional work
+    // before it can enter the Worker queue ahead of the user's request.
+    if (exporting.value) return
+    void (async () => {
+      // Font loading and Worker startup can overlap progressive Markdown
+      // rendering. Keep this request deliberately lightweight: the complete
+      // document generation below warms formulas and images while also
+      // producing the bytes the user actually needs.
+      const workerWarmup = import('../utils/pdfWorkerClient')
+        .then(({ warmPdfWorker }) => warmPdfWorker())
+        .catch(() => undefined)
+      const body = await waitForArticleBody()
+      await waitForMarkdownRenderComplete(body)
+      if (exporting.value) return
+      await workerWarmup
+      try {
+        if (exporting.value) return
+
+        // Generate the complete document while the reader is idle. Preview and
+        // download clicks can then only create a Blob URL and navigate, instead
+        // of making the user wait through image decoding and pdfmake layout.
+        if (window.location.pathname === routePath) {
+          const source = buildPdfSource(routePath)
+          if (source) {
+            const key = pdfSourceFingerprint(source, siteTitle)
+            await prepareCachedPdf(source, siteTitle, key)
+          }
+        }
+      } catch {
+        // A page may leave the route before its body finishes mounting; the
+        // font/context warm-up above is still useful for the next export.
+      }
+    })().catch(() => {
+      // Worker construction is optional; the export path still falls back to
+      // the main-thread renderer when CSP or an older browser rejects it.
+    })
+  }
+
+  // Yield the initial paint, then overlap Worker startup with progressive
+  // Markdown rendering. The complete PDF is cached as soon as the article is
+  // ready instead of waiting an arbitrary 15 seconds before doing useful work.
+  pdfWarmupTimer = window.setTimeout(warm, 50)
+}
 
 function findArticleBodyElement(): HTMLElement | null {
   if (typeof document === 'undefined') return null
@@ -130,8 +253,16 @@ function buildPdfSource(fallbackTitle: string) {
 export function useArticlePdfExport() {
   const route = useRoute()
 
+  onMounted(() => {
+    const routeName = String(route.name || '')
+    if (routeName === 'post-detail' || routeName === 'note-detail') {
+      schedulePdfWorkerWarmup(route.path, siteProfile.title || 'Nexus')
+    }
+  })
+
   async function previewArticlePdf(): Promise<boolean> {
     if (exporting.value) return false
+    cancelPdfWarmup()
 
     // Clear the custom cursor while the click still belongs to this document.
     resetPointerEffects()
@@ -171,11 +302,22 @@ export function useArticlePdfExport() {
         return false
       }
 
-      const { generateArticlePdf } = await import('../utils/exportPdf')
-      await generateArticlePdf(source, siteProfile.title || 'Nexus', {
-        mode: 'preview',
-        targetWindow: previewWindow,
-      })
+      const siteTitle = siteProfile.title || 'Nexus'
+      const key = pdfSourceFingerprint(source, siteTitle)
+      const { deliverArticlePdfBytes, generateArticlePdf } = await import('../utils/exportPdf')
+      try {
+        const bytes = await prepareCachedPdf(source, siteTitle, key)
+        deliverArticlePdfBytes(bytes, source.title, {
+          mode: 'preview',
+          targetWindow: previewWindow,
+        })
+      } catch (error) {
+        if (!isPdfWorkerUnavailable(error)) throw error
+        await generateArticlePdf(source, siteTitle, {
+          mode: 'preview',
+          targetWindow: previewWindow,
+        })
+      }
       return true
     } catch (error) {
       console.error('PDF preview failed:', error)
@@ -188,6 +330,7 @@ export function useArticlePdfExport() {
 
   async function exportArticlePdf(): Promise<boolean> {
     if (exporting.value) return false
+    cancelPdfWarmup()
 
     exporting.value = true
     try {
@@ -195,8 +338,16 @@ export function useArticlePdfExport() {
       await waitForMarkdownRenderComplete(body)
       const source = buildPdfSource(route.path)
       if (!source) return false
-      const { generateArticlePdf } = await import('../utils/exportPdf')
-      await generateArticlePdf(source, siteProfile.title || 'Nexus')
+      const siteTitle = siteProfile.title || 'Nexus'
+      const key = pdfSourceFingerprint(source, siteTitle)
+      const { deliverArticlePdfBytes, generateArticlePdf } = await import('../utils/exportPdf')
+      try {
+        const bytes = await prepareCachedPdf(source, siteTitle, key)
+        deliverArticlePdfBytes(bytes, source.title)
+      } catch (error) {
+        if (!isPdfWorkerUnavailable(error)) throw error
+        await generateArticlePdf(source, siteTitle)
+      }
       return true
     } catch (error) {
       console.error('PDF export failed:', error)

@@ -7,6 +7,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8')
 const pdf = read('src/utils/exportPdf.ts')
 const fallback = read('src/utils/pdfMainFallback.ts')
 const worker = read('src/workers/articlePdf.worker.ts')
+const markdown = read('src/utils/markdown.ts')
 const packageJson = JSON.parse(read('package.json'))
 const cognitiveScience = read('src/data/docs/notes/CognitiveScience.md')
 
@@ -28,6 +29,23 @@ const checks = [
     /classList\.contains\(['"]katex['"]\)[\s\S]*?svg:\s*null/.test(pdf)
       && /display:\s*false/.test(pdf)
       && /inlineMathFit\(svg\)/.test(worker),
+  ],
+  [
+    'inline LaTeX source survives sanitization for PDF export',
+    /data-md-latex/.test(markdown)
+      && /dataset\.mdLatex/.test(pdf)
+      && /querySelector\(['"]annotation['"]\)/.test(pdf),
+  ],
+  [
+    'marked single-dollar formulas receive a durable source marker',
+    /markedKatexExtension|katexExtension/.test(markdown)
+      && /inlineKatex/.test(markdown)
+      && /renderLatex\(.*displayMode/.test(markdown),
+  ],
+  [
+    'sanitizer keeps the formula source marker on KaTeX spans',
+    /isAllowedAttribute/.test(markdown)
+      && /data-md-/.test(markdown),
   ],
   [
     'inline formula SVG is emitted as standalone stack content',

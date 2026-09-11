@@ -2,7 +2,11 @@ import type { Content, ContentText, TDocumentDefinitions } from 'pdfmake/interfa
 import { siteConfig } from '../data/site/config'
 import { ensureMermaidRendered } from './markdown'
 import { generatePdfInWorker, PdfWorkerUnavailableError } from './pdfWorkerClient'
-import type { PdfWorkerPayload } from './pdfWorkerProtocol'
+import type {
+  PdfWorkerImageSources,
+  PdfWorkerMathWarmup,
+  PdfWorkerPayload,
+} from './pdfWorkerProtocol'
 
 export type PdfExportSource = {
   title: string
@@ -40,10 +44,24 @@ type PdfMathMarker = {
   fit?: [number, number]
 }
 
+type PdfImageAsset = {
+  dataUrl: string
+  width: number
+}
+
+const PDF_IMAGE_CACHE_LIMIT = 24
+const pdfImageAssetCache = new Map<string, Promise<PdfImageAsset | null>>()
+
 type PdfInlineMathSegment = {
   kind: 'math'
   formula: string
   svg: null
+}
+
+type PdfInlineImageSegment = {
+  kind: 'image'
+  content: Content
+  raw: string
 }
 
 function blobToDataUrl(blob: Blob): Promise<string> {
@@ -122,8 +140,67 @@ export function sanitizeFilename(name: string): string {
 }
 
 function extractInlineLatex(node: HTMLElement): string {
+  const source = node.dataset.mdLatex?.trim()
+  if (source) return source
   const annotation = node.querySelector('annotation')
   return annotation?.textContent?.trim() || ''
+}
+
+/** Collect formulas from the rendered article for idle Worker pre-warming. */
+export function collectArticlePdfMathFormulas(root: ParentNode): PdfWorkerMathWarmup[] {
+  const result: PdfWorkerMathWarmup[] = []
+  const seen = new Set<string>()
+  const add = (formula: string, display: boolean) => {
+    const normalized = formula.trim()
+    if (!normalized) return
+    const key = `${display ? 'display' : 'inline'}:${normalized}`
+    if (seen.has(key)) return
+    seen.add(key)
+    result.push({ formula: normalized, display })
+  }
+
+  const blocks: HTMLElement[] = []
+  if (root instanceof HTMLElement && root.matches('.md-editable-block[data-md-kind="math"]')) {
+    blocks.push(root)
+  }
+  root.querySelectorAll<HTMLElement>('.md-editable-block[data-md-kind="math"]').forEach((block) => blocks.push(block))
+  blocks.forEach((block) => {
+    const raw = block.dataset.mdOriginal || block.dataset.mdCurrent || ''
+    add(raw ? decodeDataSource(raw) : block.textContent || '', true)
+  })
+
+  const inlineNodes: HTMLElement[] = []
+  if (root instanceof HTMLElement && root.classList.contains('katex')) inlineNodes.push(root)
+  root.querySelectorAll<HTMLElement>('.katex').forEach((node) => inlineNodes.push(node))
+  inlineNodes.forEach((node) => add(extractInlineLatex(node), false))
+
+  return result
+}
+
+/** Collect small image descriptors; binary image work is performed in the Worker. */
+export function collectArticlePdfImageSources(root: ParentNode): PdfWorkerImageSources {
+  const sources: PdfWorkerImageSources = {}
+  const bySource = new Map<string, string>()
+  const images = Array.from(root.querySelectorAll<HTMLImageElement>('img'))
+
+  images.forEach((image) => {
+    delete image.dataset.pdfImageKey
+    delete image.dataset.pdfWidth
+    const source = image.dataset.mdLazySrc || image.currentSrc || image.getAttribute('src') || ''
+    if (!source) return
+
+    let key = bySource.get(source)
+    if (!key) {
+      key = `pdf-image-${bySource.size + 1}`
+      bySource.set(source, key)
+      const naturalWidth = image.naturalWidth > 1 ? image.naturalWidth : undefined
+      sources[key] = { source, ...(naturalWidth ? { width: naturalWidth } : {}) }
+    }
+    image.dataset.pdfImageKey = key
+    image.dataset.pdfWidth = String(image.naturalWidth > 1 ? image.naturalWidth : IMAGE_MAX_WIDTH_PT)
+  })
+
+  return sources
 }
 
 type PdfInlineTextSegment = {
@@ -132,7 +209,7 @@ type PdfInlineTextSegment = {
   raw: string
 }
 
-type PdfInlineSegment = PdfInlineTextSegment | PdfInlineMathSegment
+type PdfInlineSegment = PdfInlineTextSegment | PdfInlineMathSegment | PdfInlineImageSegment
 
 function inlineElementStyle(node: HTMLElement, palette: PdfPalette): Record<string, unknown> {
   const tag = node.tagName.toLowerCase()
@@ -208,8 +285,7 @@ function inlineContent(node: Node, palette: PdfPalette): Content {
     return { text: (node as HTMLInputElement).checked ? '☑' : '☐' }
   }
   if (tag === 'img') {
-    const alt = (node as HTMLImageElement).alt
-    return alt ? { text: `[${alt}]` } : ''
+    return imageToContent(node as HTMLImageElement)
   }
   if (node.classList.contains('katex')) {
     const formula = extractInlineLatex(node)
@@ -249,6 +325,10 @@ function collectInlineSegments(node: Node, palette: PdfPalette): PdfInlineSegmen
   }
   if (tag === 'img') {
     const alt = (node as HTMLImageElement).alt
+    const content = imageToContent(node as HTMLImageElement)
+    if (typeof content === 'object' && content !== null && !Array.isArray(content) && 'nexusImage' in content) {
+      return [{ kind: 'image', content, raw: '' }]
+    }
     const raw = alt ? `[${alt}]` : ''
     return raw ? [{ kind: 'text', content: { text: raw }, raw }] : []
   }
@@ -312,7 +392,8 @@ function inlineNodesToContent(
   const inlineSegments = Array.from(nodes)
     .flatMap((node) => collectInlineSegments(node, palette))
   const hasMath = inlineSegments.some((segment) => segment.kind === 'math')
-  if (!hasMath) {
+  const hasImage = inlineSegments.some((segment) => segment.kind === 'image')
+  if (!hasMath && !hasImage) {
     const text = Array.from(nodes)
       .map((node) => inlineContent(node, palette))
       .filter(Boolean)
@@ -325,6 +406,7 @@ function inlineNodesToContent(
       const text = asTextContent(segment.content)
       return [text ? { ...text, margin: [0, 0, 0, 0] } : { text: segment.raw }]
     }
+    if (segment.kind === 'image') return [segment.content]
     const math: PdfMathMarker = {
       nexusMath: {
         formula: segment.formula,
@@ -455,17 +537,20 @@ function tableToContent(table: HTMLTableElement, palette: PdfPalette): Content {
 }
 
 function imageToContent(image: HTMLImageElement): Content {
-  const dataUrl = image.dataset.pdfImage
-  if (!dataUrl) {
+  const key = image.dataset.pdfImageKey
+  if (!key) {
     return image.alt ? { text: `[${image.alt}]`, style: 'paragraph' } : ''
   }
   const naturalWidth = Number(image.dataset.pdfWidth || 460)
   return {
-    image: dataUrl,
+    nexusImage: {
+      key,
+      ...(image.alt ? { alt: image.alt } : {}),
+    },
     width: Math.min(naturalWidth, IMAGE_MAX_WIDTH_PT),
     alignment: 'center',
     style: 'image',
-  }
+  } as unknown as Content
 }
 
 function mermaidToBlocks(figure: Element, palette: PdfPalette): Content[] {
@@ -746,11 +831,63 @@ function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
   }
 }
 
-async function embedImages(root: HTMLElement): Promise<void> {
+async function loadPdfImageAsset(src: string, image: HTMLImageElement): Promise<PdfImageAsset> {
+  let dataUrl = src
+  if (!src.startsWith('data:')) {
+    const response = await fetch(src)
+    if (!response.ok) throw new Error(`Image load failed: ${response.status}`)
+    dataUrl = await blobToDataUrl(await response.blob())
+  }
+
+  let width = image.naturalWidth || 0
+  if (!width) {
+    const probe = new Image()
+    await new Promise<void>((resolve, reject) => {
+      probe.onload = () => resolve()
+      probe.onerror = () => reject(new Error('Image decode failed'))
+      probe.src = dataUrl
+    })
+    width = probe.naturalWidth || 0
+  }
+
+  return { dataUrl, width: width || 460 }
+}
+
+function cachedPdfImageAsset(src: string, image: HTMLImageElement): Promise<PdfImageAsset | null> {
+  const existing = pdfImageAssetCache.get(src)
+  if (existing) {
+    // Refresh the entry's recency without retaining more than a bounded number
+    // of potentially multi-megabyte data URLs for the lifetime of the page.
+    pdfImageAssetCache.delete(src)
+    pdfImageAssetCache.set(src, existing)
+    return existing
+  }
+
+  const promise = loadPdfImageAsset(src, image).catch(() => {
+    pdfImageAssetCache.delete(src)
+    return null
+  })
+  pdfImageAssetCache.set(src, promise)
+  while (pdfImageAssetCache.size > PDF_IMAGE_CACHE_LIMIT) {
+    const oldest = pdfImageAssetCache.keys().next().value
+    if (oldest === undefined) break
+    pdfImageAssetCache.delete(oldest)
+  }
+  return promise
+}
+
+async function embedImages(root: HTMLElement): Promise<Record<string, string>> {
   const images = Array.from(root.querySelectorAll('img'))
+  const assets: Record<string, string> = {}
+  const bySource = new Map<string, {
+    key: string
+    promise: Promise<PdfImageAsset | null>
+  }>()
+
   await Promise.all(
     images.map(async (image) => {
-      if (image.dataset.pdfImage) return
+      delete image.dataset.pdfImageKey
+      delete image.dataset.pdfWidth
       const src =
         image.dataset.mdLazySrc ||
         image.currentSrc ||
@@ -758,26 +895,23 @@ async function embedImages(root: HTMLElement): Promise<void> {
         ''
       if (!src) return
 
-      try {
-        let dataUrl = src
-        if (!src.startsWith('data:')) {
-          const response = await fetch(src)
-          if (!response.ok) throw new Error(`Image load failed: ${response.status}`)
-          dataUrl = await blobToDataUrl(await response.blob())
-        }
-        const probe = new Image()
-        await new Promise<void>((resolve, reject) => {
-          probe.onload = () => resolve()
-          probe.onerror = () => reject(new Error('Image decode failed'))
-          probe.src = dataUrl
-        })
-        image.dataset.pdfImage = dataUrl
-        image.dataset.pdfWidth = String(probe.naturalWidth || 460)
-      } catch {
-        // Leave the image unembedded; the converter falls back to alt text.
+      let entry = bySource.get(src)
+      if (!entry) {
+        const key = `pdf-image-${bySource.size + 1}`
+        const promise = cachedPdfImageAsset(src, image)
+        entry = { key, promise }
+        bySource.set(src, entry)
       }
+
+      const asset = await entry.promise
+      if (!asset) return
+      assets[entry.key] = asset.dataUrl
+      image.dataset.pdfImageKey = entry.key
+      image.dataset.pdfWidth = String(asset.width)
     })
   )
+
+  return assets
 }
 
 function buildDocumentDefinition(
@@ -1008,13 +1142,27 @@ function deliverPdfBlob(blob: Blob, title: string, options: PdfGenerationOptions
   }
 }
 
-export async function generateArticlePdf(
-  source: PdfExportSource,
-  siteTitle = 'Nexus',
+export function deliverArticlePdfBytes(
+  bytes: ArrayBuffer,
+  title: string,
   options: PdfGenerationOptions = {},
-): Promise<void> {
+): void {
+  deliverPdfBlob(blobFromPdfBytes(bytes), title, options)
+}
+
+type ArticlePdfBuild = {
+  definition: TDocumentDefinitions
+  workerPayload: PdfWorkerPayload
+}
+
+async function buildArticlePdf(
+  source: PdfExportSource,
+  siteTitle: string,
+  embedImageData = false,
+): Promise<ArticlePdfBuild> {
   await ensureMermaidRendered(source.element)
-  await embedImages(source.element)
+  const imageSources = collectArticlePdfImageSources(source.element)
+  const imageAssets = embedImageData ? await embedImages(source.element) : {}
 
   const palette = readPdfPalette()
   tocEntries = []
@@ -1028,20 +1176,45 @@ export async function generateArticlePdf(
     palette,
     siteTitle
   )
+  if (Object.keys(imageAssets).length) definition.images = imageAssets
 
-  const workerPayload: PdfWorkerPayload = {
-    definition: serializableDefinition(definition),
-    title: source.title,
-    siteTitle,
-    palette,
+  return {
+    definition,
+    workerPayload: {
+      definition: serializableDefinition(definition),
+      title: source.title,
+      siteTitle,
+      palette,
+      ...(Object.keys(imageSources).length ? { images: imageSources } : {}),
+    },
   }
+}
+
+/** Build PDF bytes without opening a viewer. Used by idle pre-rendering. */
+export async function prepareArticlePdf(
+  source: PdfExportSource,
+  siteTitle = 'Nexus',
+): Promise<ArrayBuffer> {
+  const { workerPayload } = await buildArticlePdf(source, siteTitle)
+  if (typeof Worker === 'undefined') {
+    throw new PdfWorkerUnavailableError('PDF Worker is unavailable.')
+  }
+  return generatePdfInWorker(workerPayload)
+}
+
+export async function generateArticlePdf(
+  source: PdfExportSource,
+  siteTitle = 'Nexus',
+  options: PdfGenerationOptions = {},
+): Promise<void> {
+  const { workerPayload } = await buildArticlePdf(source, siteTitle)
 
   if (typeof Worker !== 'undefined') {
     try {
       const bytes = await generatePdfInWorker(workerPayload, {
         targetWindow: options.mode === 'preview' ? options.targetWindow : null,
       })
-      deliverPdfBlob(blobFromPdfBytes(bytes), source.title, options)
+      deliverArticlePdfBytes(bytes, source.title, options)
       return
     } catch (error) {
       if (!(error instanceof PdfWorkerUnavailableError)) throw error
@@ -1053,6 +1226,11 @@ export async function generateArticlePdf(
 
   // Older browsers without Worker support retain the original synchronous
   // implementation as a lazy compatibility path.
+  const fallbackBuild = await buildArticlePdf(source, siteTitle, true)
   const { generatePdfOnMain } = await import('./pdfMainFallback')
-  await generatePdfOnMain(definition, sanitizeFilename(source.title), options)
+  await generatePdfOnMain(
+    fallbackBuild.definition,
+    sanitizeFilename(source.title),
+    options,
+  )
 }

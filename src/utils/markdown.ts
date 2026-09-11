@@ -1018,11 +1018,15 @@ function renderLatex(text: string, displayMode: boolean): string {
   if (!formula) return ''
 
   try {
-    return katex.renderToString(formula, {
+    const rendered = katex.renderToString(formula, {
       displayMode,
       throwOnError: false,
       output: 'html',
     })
+    return rendered.replace(
+      '<span class="katex"',
+      `<span class="katex" data-md-latex="${escapeHtml(formula)}"`,
+    )
   } catch {
     return `<span class="katex-error">${escapeHtml(formula)}</span>`
   }
@@ -1327,11 +1331,30 @@ const marked = new Marked({
   },
 })
 
-marked.use(markedKatex({
+const markedKatexExtension = markedKatex({
   nonStandard: true,
   throwOnError: false,
-  output: 'htmlAndMathml',
-}))
+  output: 'html',
+})
+
+// marked-katex normally emits MathML annotations, but the sanitizer removes
+// those semantic nodes. Replace its renderers with the same source-preserving
+// renderer used by protected delimiters so every `$...$` span keeps a stable
+// `data-md-latex` value for PDF export and later DOM edits.
+;(markedKatexExtension.extensions || []).forEach((extension) => {
+  const rendererExtension = extension as unknown as {
+    name: string
+    renderer?: (token: unknown) => string
+  }
+  const extensionName = rendererExtension.name
+  if (extensionName !== 'inlineKatex' && extensionName !== 'blockKatex') return
+  rendererExtension.renderer = (token: unknown) => {
+    const value = token as { text?: string; displayMode?: boolean }
+    const rendered = renderLatex(value.text || '', Boolean(value.displayMode))
+    return extensionName === 'blockKatex' ? `${rendered}\n` : rendered
+  }
+})
+marked.use(markedKatexExtension)
 
 let currentMarkdownRenderOptions: Required<RenderMarkdownOptions> = {
   codeRunner: false,
@@ -1920,6 +1943,8 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
    * care where the page was.
    */
   const releaseFullscreen = () => {
+    const documentElement = ownerDocument?.documentElement
+    documentElement?.classList.remove('markdown-editor-fullscreen-active')
     if (!fullscreenBlock) return
     fullscreenBlock = null
     ownerDocument?.removeEventListener('keydown', onFullscreenKeydown)
@@ -1959,6 +1984,7 @@ export function bindMarkdownInteractions(root: ParentNode | null | undefined): (
         bodyOverflowBeforeFullscreen = body.style.overflow
         body.style.overflow = 'hidden'
       }
+      ownerDocument?.documentElement.classList.add('markdown-editor-fullscreen-active')
       fullscreenBlock = block
       ownerDocument?.addEventListener('keydown', onFullscreenKeydown)
     } else {

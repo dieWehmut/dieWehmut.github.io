@@ -86,11 +86,26 @@ function inlineMathFit(svg: string): [number, number] {
   return [Math.min(IMAGE_MAX_WIDTH_PT, Math.max(height, ratio * height)), height]
 }
 
-function resolveMathMarkers(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map((entry) => resolveMathMarkers(entry))
+function resolveMathMarkers(
+  value: unknown,
+  availableImages: Record<string, string> = {},
+): unknown {
+  if (Array.isArray(value)) return value.map((entry) => resolveMathMarkers(entry, availableImages))
   if (!value || typeof value !== 'object') return value
 
   const record = value as Record<string, unknown>
+  const imageMarker = record.nexusImage as { key?: string; alt?: string } | undefined
+  if (imageMarker?.key) {
+    if (!Object.prototype.hasOwnProperty.call(availableImages, imageMarker.key)) {
+      return imageMarker.alt ? { text: `[${imageMarker.alt}]`, style: 'paragraph' } : ''
+    }
+    const { nexusImage: _marker, ...rest } = record
+    return {
+      ...rest,
+      image: imageMarker.key,
+    }
+  }
+
   const marker = record.nexusMath as PdfMathMarker['nexusMath'] | undefined
   if (marker?.formula) {
     const svg = renderMathSvg(marker.formula, marker.display)
@@ -119,7 +134,7 @@ function resolveMathMarkers(value: unknown): unknown {
   }
 
   return Object.fromEntries(
-    Object.entries(record).map(([key, entry]) => [key, resolveMathMarkers(entry)])
+    Object.entries(record).map(([key, entry]) => [key, resolveMathMarkers(entry, availableImages)])
   )
 }
 
@@ -154,7 +169,10 @@ export async function generatePdfOnMain(
   options: PdfGenerationOptions,
 ): Promise<void> {
   await ensurePdfFonts()
-  const fallbackDefinition = resolveMathMarkers(definition) as TDocumentDefinitions
+  const imageAssets = (definition as TDocumentDefinitions & {
+    images?: Record<string, string>
+  }).images || {}
+  const fallbackDefinition = resolveMathMarkers(definition, imageAssets) as TDocumentDefinitions
   const pdf = pdfMake.createPdf(fallbackDefinition)
   if (options.mode === 'preview') {
     if (!options.targetWindow || options.targetWindow.closed) {

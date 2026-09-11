@@ -72,7 +72,7 @@ const checks = [
   [
     'the console download path remains the default output',
       /async function exportArticlePdf/.test(hook)
-      && /generateArticlePdf\(source, siteProfile\.title \|\| ['"]Nexus['"]\)/.test(hook)
+      && /deliverArticlePdfBytes|generateArticlePdf\(source/.test(hook)
       && /\.download\(/.test(fallback),
   ],
   [
