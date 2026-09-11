@@ -3,7 +3,7 @@ import type { CaptureAsset } from '../../types/content'
 export const generatedCaptureAssets: CaptureAsset[] = [
   {
     "id": "docs-notes-DigitalSignalProcessing-image",
-    "image": "/capture-assets/docs/notes/DigitalSignalProcessing/image.png",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image.png",
     "title": "alt text",
     "date": "2026-08-27",
     "tags": [
@@ -23,7 +23,27 @@ export const generatedCaptureAssets: CaptureAsset[] = [
   },
   {
     "id": "docs-notes-DigitalSignalProcessing-image-2",
-    "image": "/capture-assets/docs/notes/DigitalSignalProcessing/image-2.png",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-2.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-3",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-3.png",
     "title": "alt text",
     "date": "2026-08-27",
     "tags": [
