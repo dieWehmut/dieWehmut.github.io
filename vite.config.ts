@@ -364,13 +364,22 @@ function markdownHotReloadPlugin(): Plugin {
           }))
       }
 
-      const copyMovedImageToPublic = (destinationPath: string): void => {
+      const copyMovedImageToPublic = (destinationPath: string): boolean => {
         const url = captureDocAssetUrls(docsRoot, destinationPath)[0]
-        if (!url) return
+        if (!url) return false
         const relativePath = url.slice(`${captureUrlPrefix}docs/`.length)
         const publicPath = path.join(publicCaptureDir, 'docs', relativePath.replace(/\//g, path.sep))
+        if (fs.existsSync(publicPath)) {
+          const sourceStat = fs.statSync(destinationPath)
+          const publicStat = fs.statSync(publicPath)
+          if (
+            sourceStat.size === publicStat.size
+            && fs.readFileSync(destinationPath).equals(fs.readFileSync(publicPath))
+          ) return false
+        }
         fs.mkdirSync(path.dirname(publicPath), { recursive: true })
         fs.copyFileSync(destinationPath, publicPath)
+        return true
       }
 
       const removeMovedImageFromPublic = (sourcePath: string): void => {
@@ -381,13 +390,18 @@ function markdownHotReloadPlugin(): Plugin {
         }
       }
 
-      const removeLegacyDestinationFromPublic = (destinationPath: string): void => {
+      const removeLegacyDestinationFromPublic = (destinationPath: string): boolean => {
+        let removed = false
         const urls = captureDocAssetUrls(docsRoot, destinationPath)
         for (const url of urls.slice(1)) {
           const relativePath = url.slice(`${captureUrlPrefix}docs/`.length)
           const publicPath = path.join(publicCaptureDir, 'docs', relativePath.replace(/\//g, path.sep))
-          if (fs.existsSync(publicPath)) fs.rmSync(publicPath, { force: true })
+          if (fs.existsSync(publicPath)) {
+            fs.rmSync(publicPath, { force: true })
+            removed = true
+          }
         }
+        return removed
       }
 
       const reportImageResult = (result: ReturnType<typeof organizeDocImage>): void => {
@@ -462,9 +476,10 @@ function markdownHotReloadPlugin(): Plugin {
           return
         }
         if (result.status === 'already-organized') {
+          let contentChanged = false
           if (result.destinationPath) {
-            removeLegacyDestinationFromPublic(result.destinationPath)
-            copyMovedImageToPublic(result.destinationPath)
+            if (removeLegacyDestinationFromPublic(result.destinationPath)) contentChanged = true
+            if (copyMovedImageToPublic(result.destinationPath)) contentChanged = true
           }
           if (result.destinationPath && result.markdownPath) {
             const destinationImages = captureDocAssetUrls(docsRoot, result.destinationPath)
@@ -475,14 +490,19 @@ function markdownHotReloadPlugin(): Plugin {
               for (const sourceImage of destinationImages.slice(1)) {
                 migrated = migrateCaptureAssetImage(migrated, sourceImage, destinationImage)
               }
-              if (migrated !== assets) writeGeneratedCaptureAssets(migrated)
+              if (migrated !== assets) {
+                writeGeneratedCaptureAssets(migrated)
+                contentChanged = true
+              }
             }
             queueRemoteImageSync(result.destinationPath, result.markdownPath)
-            triggerReload(result.markdownPath, {
-              generate: true,
-              fullReload: true,
-              forceGenerate: true,
-            })
+            if (contentChanged) {
+              triggerReload(result.markdownPath, {
+                generate: true,
+                fullReload: true,
+                forceGenerate: true,
+              })
+            }
           }
           return
         }

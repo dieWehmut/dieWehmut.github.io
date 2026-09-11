@@ -264,7 +264,8 @@ runTest('already-organized images migrate legacy metadata and force a full reloa
 
   assert.match(branch, /migrateCaptureAssetImage/)
   assert.match(branch, /writeGeneratedCaptureAssets/)
-  assert.match(branch, /triggerReload\(result\.markdownPath/)
+  assert.match(branch, /let\s+(?:contentChanged|changed)/)
+  assert.match(branch, /if \((?:contentChanged|changed)\)[\s\S]*?triggerReload\(result\.markdownPath/)
   assert.match(branch, /fullReload:\s*true/)
   assert.match(branch, /forceGenerate:\s*true/)
 })
