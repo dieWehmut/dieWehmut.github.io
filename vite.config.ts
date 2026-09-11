@@ -1,13 +1,14 @@
 import fs from 'fs'
 import path from 'path'
 import type { IncomingMessage, ServerResponse } from 'http'
-import { execFileSync } from 'child_process'
+import { execFile, execFileSync } from 'child_process'
 import { defineConfig, type Plugin, type PreviewServer, type ViteDevServer } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import { siteConfig } from './src/data/site/config'
 import {
   collectMarkdownImageReferences,
+  flattenDocumentAssetPath,
   isSupportedImage,
   isWithin,
   migrateCaptureAssetImage,
@@ -24,6 +25,8 @@ const base = normalizeBasePath(process.env.BASE_PATH || process.env.VITE_BASE_PA
 const githubUser = siteConfig.githubUser
 const captureUrlPrefix = '/capture-assets/'
 const generatedCapturePath = path.resolve(__dirname, 'src', 'data', 'capture', 'generated.ts')
+const generateCaptureScript = path.resolve(__dirname, 'scripts', 'generate-capture.mjs')
+const syncDocImageScript = path.resolve(__dirname, 'scripts', 'sync-doc-image.mjs')
 const publicCaptureDir = path.resolve(__dirname, 'public', 'capture-assets')
 const distCaptureDir = path.resolve(__dirname, 'dist', 'capture-assets')
 
@@ -77,13 +80,18 @@ function captureDocAssetUrls(docsRoot: string, filePath: string): string[] {
   const relativePath = path.relative(docsRoot, filePath)
   if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) return []
 
-  const posixPath = relativePath.replace(/\\/g, '/')
-  const rawUrl = `${captureUrlPrefix}docs/${posixPath}`
-  const encodedUrl = `${captureUrlPrefix}docs/${posixPath
-    .split('/')
-    .map((part) => encodeURIComponent(part))
-    .join('/')}`
-  return rawUrl === encodedUrl ? [rawUrl] : [rawUrl, encodedUrl]
+  const paths = [flattenDocumentAssetPath(docsRoot, filePath), relativePath]
+    .filter(Boolean)
+    .map((value) => String(value).replace(/\\/g, '/'))
+    .filter((value, index, values) => values.indexOf(value) === index)
+  return paths.flatMap((posixPath) => {
+    const rawUrl = `${captureUrlPrefix}docs/${posixPath}`
+    const encodedUrl = `${captureUrlPrefix}docs/${posixPath
+      .split('/')
+      .map((part) => encodeURIComponent(part))
+      .join('/')}`
+    return rawUrl === encodedUrl ? [rawUrl] : [rawUrl, encodedUrl]
+  })
 }
 
 function sanitizeFilePart(value: string): string {
@@ -302,9 +310,11 @@ function markdownHotReloadPlugin(): Plugin {
   let pendingPath: string | null = null
   let pendingShouldGenerate = false
   let pendingGenerationPath: string | null = null
+  let pendingFullReload = false
   const pendingImages = new Map<string, NodeJS.Timeout>()
   const organizingImages = new Set<string>()
   const suppressGenerationUntil = new Map<string, number>()
+  let remoteImageSyncQueue = Promise.resolve()
 
   function watchPathKey(filePath: string): string {
     const normalized = path.resolve(filePath)
@@ -326,19 +336,58 @@ function markdownHotReloadPlugin(): Plugin {
     name: 'vite-markdown-hot-reload',
     apply: 'serve',
     configureServer(server: ViteDevServer) {
+      const queueRemoteImageSync = (sourcePath: string, markdownPath: string): void => {
+        remoteImageSyncQueue = remoteImageSyncQueue
+          .catch(() => undefined)
+          .then(() => new Promise<void>((resolve) => {
+            execFile(
+              process.execPath,
+              [
+                syncDocImageScript,
+                `--source=${sourcePath}`,
+                `--markdown=${markdownPath}`,
+                `--docs-root=${docsRoot}`,
+              ],
+              { cwd: __dirname, windowsHide: true },
+              (error, stdout, stderr) => {
+                if (stdout.trim()) server.config.logger.info(`[doc-images] ${stdout.trim()}`)
+                if (error) {
+                  server.config.logger.warn(
+                    `[doc-images] remote sync skipped: ${(stderr || error.message).trim()}`,
+                  )
+                } else if (stderr.trim()) {
+                  server.config.logger.warn(`[doc-images] ${stderr.trim()}`)
+                }
+                resolve()
+              },
+            )
+          }))
+      }
+
       const copyMovedImageToPublic = (destinationPath: string): void => {
-        const relativePath = path.relative(docsRoot, destinationPath)
-        if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) return
-        const publicPath = path.join(publicCaptureDir, 'docs', relativePath)
+        const url = captureDocAssetUrls(docsRoot, destinationPath)[0]
+        if (!url) return
+        const relativePath = url.slice(`${captureUrlPrefix}docs/`.length)
+        const publicPath = path.join(publicCaptureDir, 'docs', relativePath.replace(/\//g, path.sep))
         fs.mkdirSync(path.dirname(publicPath), { recursive: true })
         fs.copyFileSync(destinationPath, publicPath)
       }
 
       const removeMovedImageFromPublic = (sourcePath: string): void => {
-        const relativePath = path.relative(docsRoot, sourcePath)
-        if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) return
-        const publicPath = path.join(publicCaptureDir, 'docs', relativePath)
-        if (fs.existsSync(publicPath)) fs.rmSync(publicPath, { force: true })
+        for (const url of captureDocAssetUrls(docsRoot, sourcePath)) {
+          const relativePath = url.slice(`${captureUrlPrefix}docs/`.length)
+          const publicPath = path.join(publicCaptureDir, 'docs', relativePath.replace(/\//g, path.sep))
+          if (fs.existsSync(publicPath)) fs.rmSync(publicPath, { force: true })
+        }
+      }
+
+      const removeLegacyDestinationFromPublic = (destinationPath: string): void => {
+        const urls = captureDocAssetUrls(docsRoot, destinationPath)
+        for (const url of urls.slice(1)) {
+          const relativePath = url.slice(`${captureUrlPrefix}docs/`.length)
+          const publicPath = path.join(publicCaptureDir, 'docs', relativePath.replace(/\//g, path.sep))
+          if (fs.existsSync(publicPath)) fs.rmSync(publicPath, { force: true })
+        }
       }
 
       const reportImageResult = (result: ReturnType<typeof organizeDocImage>): void => {
@@ -350,7 +399,10 @@ function markdownHotReloadPlugin(): Plugin {
             // The renderer resolves local Markdown images through public capture assets.
             // Copy only this file; the matching generated metadata entry is migrated below.
             removeMovedImageFromPublic(result.sourcePath)
-            if (result.destinationPath) copyMovedImageToPublic(result.destinationPath)
+            if (result.destinationPath) {
+              removeLegacyDestinationFromPublic(result.destinationPath)
+              copyMovedImageToPublic(result.destinationPath)
+            }
 
             // Keep the capture gallery's generated metadata aligned with the
             // Markdown URL while the dev server is running. The generated file
@@ -370,10 +422,9 @@ function markdownHotReloadPlugin(): Plugin {
                 for (let index = 0; index < sourceImages.length; index += 1) {
                   const sourceImage = sourceImages[index]
                   if (!migrated.some((asset) => String(asset?.image || '').trim() === sourceImage)) continue
-                  const existingDestination = destinationImages.find((candidate) =>
-                    migrated.some((asset) => String(asset?.image || '').trim() === candidate),
-                  )
-                  const destinationImage = existingDestination || destinationImages[index] || destinationImages[0]
+                  // Always migrate to the flattened URL. A stale legacy entry
+                  // must not keep the old category path alive.
+                  const destinationImage = destinationImages[0] || destinationImages[index]
                   const next = migrateCaptureAssetImage(migrated, sourceImage, destinationImage)
                   if (next !== migrated) {
                     migrated = next
@@ -396,10 +447,42 @@ function markdownHotReloadPlugin(): Plugin {
             )
           }
           if (result.markdownPath) {
-            // The organizer already wrote this Markdown file. Suppress the generator for
-            // the resulting watcher event while still notifying the running app.
+            if (result.destinationPath) {
+              queueRemoteImageSync(result.destinationPath, result.markdownPath)
+            }
+            // The organizer already wrote this Markdown file. Suppress the duplicate
+            // watcher event, but force a complete rebuild/reload for the new asset URL.
             suppressGenerationUntil.set(watchPathKey(result.markdownPath), Date.now() + 1500)
-            triggerReload(result.markdownPath, { generate: false })
+            triggerReload(result.markdownPath, {
+              generate: true,
+              fullReload: true,
+              forceGenerate: true,
+            })
+          }
+          return
+        }
+        if (result.status === 'already-organized') {
+          if (result.destinationPath) {
+            removeLegacyDestinationFromPublic(result.destinationPath)
+            copyMovedImageToPublic(result.destinationPath)
+          }
+          if (result.destinationPath && result.markdownPath) {
+            const destinationImages = captureDocAssetUrls(docsRoot, result.destinationPath)
+            const destinationImage = destinationImages[0]
+            if (destinationImage) {
+              const assets = readGeneratedCaptureAssets()
+              let migrated = assets
+              for (const sourceImage of destinationImages.slice(1)) {
+                migrated = migrateCaptureAssetImage(migrated, sourceImage, destinationImage)
+              }
+              if (migrated !== assets) writeGeneratedCaptureAssets(migrated)
+            }
+            queueRemoteImageSync(result.destinationPath, result.markdownPath)
+            triggerReload(result.markdownPath, {
+              generate: true,
+              fullReload: true,
+              forceGenerate: true,
+            })
           }
           return
         }
@@ -497,17 +580,22 @@ function markdownHotReloadPlugin(): Plugin {
         }
       }
 
-      const triggerReload = (filePath: string, options: { generate?: boolean } = {}): void => {
+      const triggerReload = (
+        filePath: string,
+        options: { generate?: boolean; fullReload?: boolean; forceGenerate?: boolean } = {},
+      ): void => {
         if (!isWatchedMarkdown(filePath)) return
         const normalizedPath = path.resolve(filePath)
         const suppressionKey = watchPathKey(normalizedPath)
         const suppressionExpiry = suppressGenerationUntil.get(suppressionKey) || 0
-        const suppressed = suppressionExpiry > Date.now()
-        if (suppressionExpiry && !suppressed) suppressGenerationUntil.delete(suppressionKey)
+        const suppressionActive = suppressionExpiry > Date.now()
+        const suppressed = suppressionActive && !options.forceGenerate
+        if (suppressionExpiry && !suppressionActive) suppressGenerationUntil.delete(suppressionKey)
         if (options.generate !== false && !suppressed) {
           pendingShouldGenerate = true
           pendingGenerationPath = normalizedPath
         }
+        if (options.fullReload) pendingFullReload = true
         pendingPath = normalizedPath
         if (pending) clearTimeout(pending)
         pending = setTimeout(() => {
@@ -515,8 +603,10 @@ function markdownHotReloadPlugin(): Plugin {
           const changedPath = pendingPath
           pendingPath = null
           const shouldGenerate = pendingShouldGenerate && pendingGenerationPath === changedPath
+          const shouldFullReload = pendingFullReload
           pendingShouldGenerate = false
           pendingGenerationPath = null
+          pendingFullReload = false
           const isDocsMd = changedPath ? isWithin(docsRoot, changedPath) : false
           if (isDocsMd && shouldGenerate) {
             if (changedPath) organizeImagesReferencedByMarkdown(changedPath)
@@ -525,18 +615,26 @@ function markdownHotReloadPlugin(): Plugin {
                 stdio: 'inherit',
                 cwd: __dirname,
               })
+              execFileSync(process.execPath, [generateCaptureScript], {
+                stdio: 'inherit',
+                cwd: __dirname,
+              })
             } catch (error) {
               server.config.logger.error(
-                `[md-hmr] generate-docs-data failed: ${error instanceof Error ? error.message : String(error)}`
+                `[md-hmr] content generation failed: ${error instanceof Error ? error.message : String(error)}`
               )
             }
           }
           const relative = changedPath ? path.relative(__dirname, changedPath).replace(/\\/g, '/') : ''
-          server.ws.send({
-            type: 'custom',
-            event: 'md-content-update',
-            data: { path: relative },
-          })
+          if (shouldFullReload) {
+            server.ws.send({ type: 'full-reload' })
+          } else {
+            server.ws.send({
+              type: 'custom',
+              event: 'md-content-update',
+              data: { path: relative },
+            })
+          }
         }, 200)
       }
 

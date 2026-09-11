@@ -256,6 +256,19 @@ runTest('wires generated capture migration into the dev image watcher', () => {
   assert.match(viteConfig, /writeGeneratedCaptureAssets\(migrated\)/)
 })
 
+runTest('already-organized images migrate legacy metadata and force a full reload', () => {
+  const viteConfig = fs.readFileSync(path.resolve(import.meta.dirname, '..', 'vite.config.ts'), 'utf8')
+  const branch = viteConfig.match(
+    /if \(result\.status === 'already-organized'\) \{([\s\S]*?)\n\s*return\n\s*\}/,
+  )?.[1] || ''
+
+  assert.match(branch, /migrateCaptureAssetImage/)
+  assert.match(branch, /writeGeneratedCaptureAssets/)
+  assert.match(branch, /triggerReload\(result\.markdownPath/)
+  assert.match(branch, /fullReload:\s*true/)
+  assert.match(branch, /forceGenerate:\s*true/)
+})
+
 runTest('refreshes capture metadata through the local polling API', () => {
   const captureView = fs.readFileSync(path.resolve(import.meta.dirname, '..', 'src', 'views', 'CaptureView.vue'), 'utf8')
 

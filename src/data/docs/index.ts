@@ -72,13 +72,25 @@ function parseFrontmatter(raw: string) {
 }
 
 function normalizeDocAssetPath(docPath: string, assetPath: string) {
-  if (!assetPath || /^(?:[a-z]+:)?\/\//i.test(assetPath) || assetPath.startsWith('data:')) return assetPath
-  if (assetPath.startsWith('/capture-assets/')) return assetPath
-  if (assetPath.startsWith('/')) return assetPath
-
   const normalizedDocPath = docPath.replace(/\\/g, '/').replace(/^\.\//, '')
   const docParts = normalizedDocPath.split('/').filter(Boolean)
   const docDir = docParts.slice(0, -1)
+  const documentName = docParts.at(-1)?.replace(/\.md$/i, '') || ''
+
+  if (!assetPath || /^(?:[a-z]+:)?\/\//i.test(assetPath) || assetPath.startsWith('data:')) return assetPath
+  if (assetPath.startsWith('/capture-assets/')) {
+    const normalizedAssetPath = assetPath.replace(/\\/g, '/')
+    const legacyPrefix = `/capture-assets/docs/${[
+      ...docDir,
+      documentName,
+    ].filter(Boolean).join('/')}/`
+    if (documentName && normalizedAssetPath.startsWith(legacyPrefix)) {
+      return `/capture-assets/docs/${documentName}/${normalizedAssetPath.slice(legacyPrefix.length)}`
+    }
+    return assetPath
+  }
+  if (assetPath.startsWith('/')) return assetPath
+
   const relativeParts = assetPath.replace(/\\/g, '/').split('/')
   const resolved = [...docDir]
 
@@ -92,7 +104,16 @@ function normalizeDocAssetPath(docPath: string, assetPath: string) {
   }
 
   if (!resolved.length) return assetPath
-  return `/capture-assets/docs/${resolved.join('/')}`
+
+  // Published document assets are grouped by the Markdown basename. This keeps
+  // `notes/Foo.md` and `posts/Foo.md` from leaking their source category into
+  // the public asset URL while leaving unrelated legacy folders untouched.
+  const documentIndex = docDir.length
+  const isDocumentFolder = Boolean(documentName) && resolved[documentIndex] === documentName
+  const publishedParts = isDocumentFolder
+    ? [documentName, ...resolved.slice(documentIndex + 1)]
+    : resolved
+  return `/capture-assets/docs/${publishedParts.join('/')}`
 }
 
 function rewriteDocAssetPaths(docPath: string, body: string) {

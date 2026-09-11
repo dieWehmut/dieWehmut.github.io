@@ -1,6 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import {
+  documentAssetSourceCandidates,
+  documentAssetUrl,
+} from './organize-doc-images.mjs'
 
 const rootDir = process.cwd()
 const docsDir = path.join(rootDir, 'src', 'data', 'docs')
@@ -87,12 +91,7 @@ function docIdFromPath(filePath) {
 }
 
 function normalizeDocAssetUrl(docFilePath, assetPath) {
-  if (!assetPath || /^(?:[a-z]+:)?\/\//i.test(assetPath) || assetPath.startsWith('data:')) return assetPath
-  if (assetPath.startsWith(captureUrlPrefix)) return assetPath
-
-  const docsRelativeDir = path.dirname(path.relative(docsDir, docFilePath))
-  const resolved = path.normalize(path.join(docsRelativeDir, assetPath))
-  return `${captureUrlPrefix}docs/${toPosix(resolved)}`
+  return documentAssetUrl(docsDir, docFilePath, assetPath)
 }
 
 function captureAssetRelativePath(src) {
@@ -210,18 +209,48 @@ function assertFileExists(filePath, label) {
 
 function syncDocAsset(assetsDir, docFilePath, imageUrl) {
   const relativeAssetPath = captureAssetRelativePath(imageUrl)
-  const docRelativePath = relativeAssetPath.replace(/^docs\//, '')
-  const localSourcePath = path.join(docsDir, docRelativePath)
-  const assetsSourcePath = path.join(assetsDir, 'docs', docRelativePath)
   const destinationPath = path.join(publicCaptureDir, relativeAssetPath)
-  const publicSourcePath = destinationPath
-  return fs.existsSync(localSourcePath)
-    ? localSourcePath
-    : fs.existsSync(assetsSourcePath)
-      ? assetsSourcePath
-      : fs.existsSync(publicSourcePath)
-        ? publicSourcePath
-        : ''
+  const candidates = documentAssetSourceCandidates(docsDir, assetsDir, docFilePath, imageUrl)
+  candidates.push(destinationPath)
+  return candidates.find((candidate) => fs.existsSync(candidate)) || ''
+}
+
+function legacyDocumentAssetUrl(docFilePath, imageUrl) {
+  const relative = captureAssetRelativePath(imageUrl)
+  if (!relative.startsWith('docs/')) return ''
+  const documentName = docIdFromPath(docFilePath)
+  const publishedParts = relative.slice('docs/'.length).split('/')
+  if (!documentName || publishedParts[0] !== documentName) return ''
+  const category = toPosix(path.relative(docsDir, path.dirname(docFilePath)))
+  if (!category || category === '.') return ''
+  return `${captureUrlPrefix}docs/${category}/${publishedParts.join('/')}`
+}
+
+function migrateLegacyDocumentAsset(byImage, docFilePath, imageUrl) {
+  const legacyUrl = legacyDocumentAssetUrl(docFilePath, imageUrl)
+  if (!legacyUrl || legacyUrl === imageUrl) return
+
+  const legacy = byImage.get(legacyUrl)
+  if (legacy) {
+    if (!byImage.has(imageUrl)) byImage.set(imageUrl, { ...legacy, image: imageUrl })
+    byImage.delete(legacyUrl)
+  }
+
+  const legacyRelative = captureAssetRelativePath(legacyUrl)
+  const legacyPublicPath = path.join(publicCaptureDir, legacyRelative)
+  if (fs.existsSync(legacyPublicPath)) fs.rmSync(legacyPublicPath, { force: true })
+}
+
+function removeLegacyDocumentAssets(byImage, docFilePath) {
+  const documentName = docIdFromPath(docFilePath)
+  const category = toPosix(path.relative(docsDir, path.dirname(docFilePath)))
+  if (!documentName || !category || category === '.') return
+  const prefix = `${captureUrlPrefix}docs/${category}/${documentName}/`
+  for (const image of byImage.keys()) {
+    if (image.startsWith(prefix)) byImage.delete(image)
+  }
+  const legacyPublicDir = path.join(publicCaptureDir, 'docs', category, documentName)
+  if (fs.existsSync(legacyPublicDir)) fs.rmSync(legacyPublicDir, { recursive: true, force: true })
 }
 
 function copyDocAsset(sourcePath, imageUrl) {
@@ -319,6 +348,10 @@ async function main() {
       if (seenInDoc.has(image.src)) continue
       seenInDoc.add(image.src)
 
+      // A document that used to publish under docs/<category>/<name>/ is
+      // canonicalized to docs/<name>/ while retaining its existing metadata.
+      migrateLegacyDocumentAsset(byImage, filePath, image.src)
+
       const relativePath = captureAssetRelativePath(image.src)
       if (!relativePath.startsWith('docs/')) continue
 
@@ -360,6 +393,8 @@ async function main() {
         missingAssetPaths.add(image.src)
       }
     }
+
+    removeLegacyDocumentAssets(byImage, filePath)
   }
 
   const needsStandaloneAssets = manifestEntries.some((entry) => !entry.hidden && String(entry.image || '').trim())

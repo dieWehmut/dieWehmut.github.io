@@ -38,6 +38,14 @@ export const SUPPORTED_IMAGE_EXTENSIONS: readonly string[]
 export function samePath(firstPath: string, secondPath: string): boolean
 export function isWithin(rootPath: string, filePath: string): boolean
 export function isSupportedImage(filePath: string): boolean
+export function flattenDocumentAssetPath(docsRoot: string, filePath: string): string
+export function documentAssetUrl(docsRoot: string, markdownPath: string, assetPath: string): string
+export function documentAssetSourceCandidates(
+  docsRoot: string,
+  assetsDir: string,
+  markdownPath: string,
+  assetUrl: string,
+): string[]
 export function migrateCaptureAssetImage<T extends { image?: unknown }>(
   assets: T[],
   sourceImage: string,

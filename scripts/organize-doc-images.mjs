@@ -37,6 +37,132 @@ export function isSupportedImage(filePath) {
   return SUPPORTED_IMAGE_EXTENSION_SET.has(path.extname(filePath).toLowerCase())
 }
 
+function normalizedRelativePath(rootPath, filePath) {
+  const relative = path.relative(path.resolve(rootPath), path.resolve(filePath))
+  if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) return ''
+  return relative
+}
+
+/**
+ * Return the repository-relative path used for an image belonging to a
+ * document-named folder. A source document may still live under `notes/` or
+ * `posts/`; those category directories are intentionally omitted from the
+ * published assets path.
+ */
+export function flattenDocumentAssetPath(docsRoot, filePath) {
+  const relative = normalizedRelativePath(docsRoot, filePath)
+  if (!relative) return ''
+
+  const parts = relative.split(path.sep)
+  for (let index = 0; index < parts.length - 1; index += 1) {
+    const folderName = parts[index]
+    if (!folderName) continue
+    const markdownPath = path.join(
+      path.resolve(docsRoot),
+      ...parts.slice(0, index),
+      `${folderName}.md`,
+    )
+    if (!fs.existsSync(markdownPath)) continue
+    try {
+      if (!fs.statSync(markdownPath).isFile()) continue
+    } catch {
+      continue
+    }
+    return path.join(folderName, ...parts.slice(index + 1))
+  }
+
+  return relative
+}
+
+function splitAssetSuffix(value) {
+  const match = String(value || '').match(/^([^?#]*)([?#].*)?$/)
+  return {
+    pathname: match?.[1] || '',
+    suffix: match?.[2] || '',
+  }
+}
+
+/**
+ * Resolve a Markdown image reference to its runtime capture URL. References
+ * already using a capture URL, data URL, or external URL are left untouched.
+ */
+export function documentAssetUrl(docsRoot, markdownPath, assetPath) {
+  const value = String(assetPath || '').trim()
+  if (!value || /^(?:[a-z]+:)?\/\//i.test(value) || /^data:/i.test(value)) return value
+
+  const { pathname, suffix } = splitAssetSuffix(value)
+  const normalizedMarkdownPath = path.resolve(markdownPath)
+  const documentName = path.basename(normalizedMarkdownPath, path.extname(normalizedMarkdownPath))
+  const category = path.relative(path.resolve(docsRoot), path.dirname(normalizedMarkdownPath)).replace(/\\/g, '/')
+  const legacyPrefix = [category, documentName]
+    .filter((part) => part && part !== '.')
+    .join('/')
+  if (/^\/capture-assets\/docs\//i.test(pathname)) {
+    const relativePublishedPath = pathname.replace(/^\/capture-assets\/docs\//i, '')
+    if (documentName && relativePublishedPath.startsWith(`${legacyPrefix}/`)) {
+      return `/capture-assets/docs/${documentName}/${relativePublishedPath.slice(legacyPrefix.length + 1)}${suffix}`
+    }
+    return value
+  }
+  if (value.startsWith('/')) return value
+
+  let decodedPath = pathname
+  try {
+    decodedPath = decodeURIComponent(pathname)
+  } catch {
+    // Keep malformed escapes literal so the original reference remains usable.
+  }
+  const resolvedPath = path.resolve(path.dirname(markdownPath), decodedPath.replace(/[\\/]+/g, path.sep))
+  const flattened = flattenDocumentAssetPath(docsRoot, resolvedPath)
+  if (!flattened) return value
+  return `/capture-assets/docs/${flattened.replace(/\\/g, '/')}${suffix}`
+}
+
+/**
+ * Return likely local/remote source paths for a generated document asset URL.
+ * The first candidate is the new flattened layout; the category-preserving
+ * path is retained as a compatibility fallback for existing checkouts.
+ */
+export function documentAssetSourceCandidates(docsRoot, assetsDir, markdownPath, assetUrl) {
+  const value = String(assetUrl || '').trim()
+  const { pathname } = splitAssetSuffix(value)
+  const relativeUrl = pathname.replace(/^\/capture-assets\/docs\//, '')
+  if (!relativeUrl || relativeUrl === pathname) return []
+
+  const parts = relativeUrl
+    .split('/')
+    .filter(Boolean)
+    .map((part) => {
+      try {
+        return decodeURIComponent(part)
+      } catch {
+        return part
+      }
+    })
+  const candidates = []
+  const pushUnique = (candidate) => {
+    if (!candidate) return
+    const normalized = path.resolve(candidate)
+    if (!candidates.some((entry) => path.resolve(entry) === normalized)) candidates.push(candidate)
+  }
+
+  const directRelative = parts.join(path.sep)
+  pushUnique(path.join(docsRoot, directRelative))
+  pushUnique(path.join(assetsDir, 'docs', directRelative))
+
+  const documentFolder = path.join(path.dirname(markdownPath), path.basename(markdownPath, path.extname(markdownPath)))
+  const fileRelative = parts.length > 1 ? parts.slice(1).join(path.sep) : parts[0]
+  pushUnique(path.join(documentFolder, fileRelative))
+
+  const categoryRelative = path.relative(docsRoot, path.dirname(markdownPath))
+  if (categoryRelative && categoryRelative !== '.') {
+    pushUnique(path.join(docsRoot, categoryRelative, directRelative))
+    pushUnique(path.join(assetsDir, 'docs', categoryRelative, directRelative))
+  }
+
+  return candidates
+}
+
 /**
  * Migrate generated capture metadata after a referenced document image moves.
  * If the destination is already represented, remove the stale source entry;
