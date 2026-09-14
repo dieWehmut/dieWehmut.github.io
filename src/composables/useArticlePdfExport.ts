@@ -1,4 +1,4 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { siteProfile } from '../data'
 import { resetPointerEffects } from '../utils/pointerEffects'
@@ -17,6 +17,7 @@ const MARKDOWN_RENDER_WAIT_TIMEOUT = 30_000
 const exporting = ref(false)
 let pdfWarmupScheduledFor = ''
 let pdfWarmupTimer: number | null = null
+let pdfWarmupScheduleToken = 0
 
 type PreparedPdfCache = {
   key: string
@@ -52,8 +53,9 @@ function isPdfWorkerUnavailable(error: unknown): boolean {
 }
 
 function cancelPdfWarmup(): void {
-  if (pdfWarmupTimer === null || typeof window === 'undefined') return
-  window.clearTimeout(pdfWarmupTimer)
+  pdfWarmupScheduleToken += 1
+  if (typeof window === 'undefined') return
+  if (pdfWarmupTimer !== null) window.clearTimeout(pdfWarmupTimer)
   pdfWarmupTimer = null
   pdfWarmupScheduledFor = ''
 }
@@ -88,8 +90,11 @@ async function prepareCachedPdf(
 }
 
 function schedulePdfWorkerWarmup(routePath: string, siteTitle: string): void {
-  if (pdfWarmupScheduledFor === routePath || typeof window === 'undefined') return
+  if (typeof window === 'undefined') return
+  if (pdfWarmupScheduledFor === routePath && pdfWarmupTimer !== null) return
+  if (pdfWarmupTimer !== null) window.clearTimeout(pdfWarmupTimer)
   pdfWarmupScheduledFor = routePath
+  const scheduleToken = ++pdfWarmupScheduleToken
 
   const warm = () => {
     pdfWarmupTimer = null
@@ -97,7 +102,7 @@ function schedulePdfWorkerWarmup(routePath: string, siteTitle: string): void {
     // A click may arrive while the delayed timer is firing. Export state is
     // set synchronously by both public entry points, so skip optional work
     // before it can enter the Worker queue ahead of the user's request.
-    if (exporting.value) return
+    if (exporting.value || scheduleToken !== pdfWarmupScheduleToken) return
     void (async () => {
       // Font loading and Worker startup can overlap progressive Markdown
       // rendering. Keep this request deliberately lightweight: the complete
@@ -108,14 +113,16 @@ function schedulePdfWorkerWarmup(routePath: string, siteTitle: string): void {
         .catch(() => undefined)
       const body = await waitForArticleBody()
       await waitForMarkdownRenderComplete(body)
-      if (exporting.value) return
-      await workerWarmup
+      if (exporting.value || scheduleToken !== pdfWarmupScheduleToken) return
       try {
-        if (exporting.value) return
+        if (exporting.value || scheduleToken !== pdfWarmupScheduleToken) return
 
         // Generate the complete document while the reader is idle. Preview and
         // download clicks can then only create a Blob URL and navigate, instead
         // of making the user wait through image decoding and pdfmake layout.
+        // Do not wait for the lightweight Worker warm-up here: DOM conversion
+        // can overlap it, and the Worker queue will serialize generation after
+        // any still-active warm request.
         if (window.location.pathname === routePath) {
           const source = buildPdfSource(routePath)
           if (source) {
@@ -123,6 +130,7 @@ function schedulePdfWorkerWarmup(routePath: string, siteTitle: string): void {
             await prepareCachedPdf(source, siteTitle, key)
           }
         }
+        await workerWarmup
       } catch {
         // A page may leave the route before its body finishes mounting; the
         // font/context warm-up above is still useful for the next export.
@@ -253,12 +261,17 @@ function buildPdfSource(fallbackTitle: string) {
 export function useArticlePdfExport() {
   const route = useRoute()
 
-  onMounted(() => {
-    const routeName = String(route.name || '')
-    if (routeName === 'post-detail' || routeName === 'note-detail') {
-      schedulePdfWorkerWarmup(route.path, siteProfile.title || 'Nexus')
-    }
-  })
+  watch(
+    () => [String(route.name || ''), route.path] as const,
+    ([routeName, routePath]) => {
+      if (routeName === 'post-detail' || routeName === 'note-detail') {
+        schedulePdfWorkerWarmup(routePath, siteProfile.title || 'Nexus')
+      } else {
+        cancelPdfWarmup()
+      }
+    },
+    { immediate: true },
+  )
 
   async function previewArticlePdf(): Promise<boolean> {
     if (exporting.value) return false

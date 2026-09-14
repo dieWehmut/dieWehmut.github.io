@@ -26,6 +26,16 @@ const checks = [
       && /setTimeout\(warm,\s*(?:[0-9_]{1,3})\)/.test(hook),
   ],
   [
+    'every article route schedules its own PDF preparation',
+    /watch\([\s\S]*?route\.name[\s\S]*?route\.path[\s\S]*?schedulePdfWorkerWarmup[\s\S]*?immediate:\s*true/.test(hook),
+  ],
+  [
+    'a new route replaces an obsolete pending warm-up timer',
+    /schedulePdfWorkerWarmup[\s\S]*?pdfWarmupScheduledFor === routePath/.test(hook)
+      && /schedulePdfWorkerWarmup[\s\S]*?if \(pdfWarmupTimer !== null\)[\s\S]*?clearTimeout\(pdfWarmupTimer\)[\s\S]*?pdfWarmupScheduledFor = routePath/.test(hook)
+      && /pdfWarmupScheduleToken/.test(hook),
+  ],
+  [
     'cached bytes are invalidated by a source fingerprint',
     /fingerprint|cacheKey/i.test(hook)
       && /innerHTML/.test(hook),
@@ -49,6 +59,10 @@ const checks = [
   [
     'idle preparation does not duplicate formula and image warm-up before generation',
     !/collectArticlePdfImageSources|collectArticlePdfMathFormulas/.test(hook),
+  ],
+  [
+    'document preparation can overlap worker startup',
+    !/await\s+workerWarmup[\s\S]{0,800}?prepareCachedPdf/.test(hook),
   ],
 ]
 
