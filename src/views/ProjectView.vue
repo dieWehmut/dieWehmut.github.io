@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Connection, VideoPlay, Iphone, Setting, Collection } from '@element-plus/icons-vue'
+import { Connection, VideoPlay, Iphone, Cpu, Setting, Collection } from '@element-plus/icons-vue'
 import ProjectListItem from '../components/project/ProjectListItem.vue'
 import ScrollSpySidebar from '../components/system/ScrollSpySidebar.vue'
 import { getProjectEntries } from '../data'
@@ -79,11 +79,12 @@ import { useDisplayModePreference } from '../composables/useDisplayModePreferenc
 const { t } = useI18n()
 const { isConsole } = useDisplayModePreference()
 
-const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'tools', 'templates']
+const order: Array<ProjectEntry['category']> = ['websites', 'games', 'apps', 'agents', 'tools', 'templates']
 const labelKeys: Record<ProjectEntry['category'], string> = {
   websites: 'project.categories.websites',
   games: 'project.categories.games',
   apps: 'project.categories.apps',
+  agents: 'project.categories.agents',
   tools: 'project.categories.tools',
   templates: 'project.categories.templates',
 }
@@ -91,6 +92,7 @@ const categoryIcons: Record<ProjectEntry['category'], unknown> = {
   websites: Connection,
   games: VideoPlay,
   apps: Iphone,
+  agents: Cpu,
   tools: Setting,
   templates: Collection,
 }

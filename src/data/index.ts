@@ -13,6 +13,7 @@ import type {
 import { pages } from './site/page'
 import { games } from './site/game'
 import { apps } from './site/app'
+import { agents } from './site/agent'
 import { tools } from './site/tool'
 import { templates } from './site/template'
 import { infra } from './site/infra'
@@ -89,6 +90,20 @@ export function getProjectEntries(): ProjectEntry[] {
     }))
   )
 
+  const agentEntries: ProjectEntry[] = (agents.value || []).flatMap((group) =>
+    (group.manualItems || []).map((item: SiteProjectItem, index: number) => ({
+      id: `agent:${item.name || index}`,
+      name: item.name || `Agent ${index + 1}`,
+      category: 'agents',
+      categoryLabel: 'Agents',
+      date: item.lastModified || item.date,
+      url: item.html_url || item.url,
+      repoUrl: item.repo_url || item.repoUrl,
+      description: 'Agent project',
+      actionLabel: 'Repo',
+    }))
+  )
+
   const toolEntries: ProjectEntry[] = (tools.value || []).flatMap((group) =>
     (group.manualItems || []).map((item: SiteProjectItem, index: number) => ({
       id: `tool:${item.name || index}`,
@@ -117,7 +132,14 @@ export function getProjectEntries(): ProjectEntry[] {
     }))
   )
 
-  return sortByDate([...websiteEntries, ...gameEntries, ...appEntries, ...toolEntries, ...templateEntries])
+  return sortByDate([
+    ...websiteEntries,
+    ...gameEntries,
+    ...appEntries,
+    ...agentEntries,
+    ...toolEntries,
+    ...templateEntries,
+  ])
 }
 
 export function getTagGroups(): TagGroup[] {

@@ -21,6 +21,7 @@ const sourceOnlyPaths = [
   'scripts/prepare-template.mjs',
   'scripts/validate-template.mjs',
   'scripts/test-infra-integration-scan.mjs',
+  'scripts/test-project-data.mjs',
   'scripts/test-markdown-render.mjs',
   'scripts/test-vocabulary-audio.mjs',
   'scripts/test-console-avatar.mjs',
@@ -106,6 +107,7 @@ function rewritePackageMetadata(outputRoot, templateIdentity) {
   const removedScripts = new Set([
     'test:markdown-render',
     'test:console-avatar',
+    'test:project-data',
     'test:console',
     'runner:smoke:docs',
   ])
@@ -206,6 +208,7 @@ export const friends: FriendLink[] = [
 export default friends`,
   )
   for (const [relative, exportName, label] of [
+    ['agent.ts', 'agents', 'Agents'],
     ['app.ts', 'apps', 'Apps'],
     ['game.ts', 'games', 'Games'],
   ]) {

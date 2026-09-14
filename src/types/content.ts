@@ -1,5 +1,5 @@
 export type ContentKind = 'post' | 'note' | 'capture' | 'friend' | 'project' | 'infra'
-export type ProjectCategory = 'websites' | 'games' | 'apps' | 'tools' | 'templates'
+export type ProjectCategory = 'websites' | 'games' | 'apps' | 'agents' | 'tools' | 'templates'
 export type CaptureSourceKind = 'post' | 'note'
 export type SiteColorScheme = 'green' | 'purple' | 'pink' | 'white' | 'black'
 

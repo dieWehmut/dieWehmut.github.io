@@ -39,6 +39,7 @@ const exportedIndex = fs.readFileSync(path.join(output, 'index.html'), 'utf8')
 const packageJson = JSON.parse(fs.readFileSync(path.join(output, 'package.json'), 'utf8'))
 const packageLock = JSON.parse(fs.readFileSync(path.join(output, 'package-lock.json'), 'utf8'))
 const generatedDocs = fs.readFileSync(path.join(output, 'src/data/docs/generated.ts'), 'utf8')
+const exportedAgent = fs.readFileSync(path.join(output, 'src/data/site/agent.ts'), 'utf8')
 const sourceMarker = JSON.parse(fs.readFileSync(path.join(output, '.template-source.json'), 'utf8'))
 const markdownFiles = ['posts/hello-world.md', 'posts/development-log.md', 'notes/sample-note.md']
 const sourceStatusAfter = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=no'], {
@@ -129,12 +130,13 @@ if (validation.status !== 0) process.exit(validation.status || 1)
 const checks = [
   ['package is vorlage', packageJson.name === 'vorlage'],
   ['lockfile is vorlage', packageLock.name === 'vorlage' && packageLock.packages?.['']?.name === 'vorlage'],
-  ['source-only fixture scripts removed', !packageJson.scripts?.['test:markdown-render'] && !packageJson.scripts?.['test:console-avatar'] && !packageJson.scripts?.['test:console'] && !packageJson.scripts?.['runner:smoke:docs']],
+  ['source-only fixture scripts removed', !packageJson.scripts?.['test:markdown-render'] && !packageJson.scripts?.['test:console-avatar'] && !packageJson.scripts?.['test:project-data'] && !packageJson.scripts?.['test:console'] && !packageJson.scripts?.['runner:smoke:docs']],
   ['exported scripts do not reference removed fixtures', !exportedScriptText.includes('CurrentAffairsReading') && !exportedScriptText.includes('testSandkasten')],
   ['source-only workflow removed', !fs.existsSync(path.join(output, '.github/workflows/sync-starter.yml'))],
   ['source-only capture workflow removed', !fs.existsSync(path.join(output, '.github/workflows/sync-capture.yml'))],
   ['source-only design docs removed', !fs.existsSync(path.join(output, 'docs/superpowers'))],
   ['starter config promoted', fs.existsSync(path.join(output, 'src/data/site/config.ts')) && !fs.existsSync(path.join(output, 'src/data/site/config.starter.ts'))],
+  ['sample agent data is empty', /export const agents[\s\S]*?manualItems:\s*\[\]/.test(exportedAgent) && !exportedAgent.includes('Orchester')],
   ['three sample docs exported', markdownFiles.every((file) => fs.existsSync(path.join(output, 'src/data/docs', file)))],
   ['only sample docs exported', JSON.stringify(exportedMarkdown) === JSON.stringify(expectedMarkdown)],
   ['sample docs indexed', markdownFiles.every((file) => generatedDocs.includes(`./${file}`))],

@@ -41,6 +41,7 @@
     "test:scoped-styles": "node scripts/test-scoped-styles.mjs",
     "test:cursor-comments": "node scripts/test-cursor-comments.mjs",
     "test:site-overview": "node scripts/test-site-overview.mjs",
+    "test:project-data": "node scripts/test-project-data.mjs",
     "test:infra-status": "node scripts/test-infra-status.mjs",
     "test:infra-integration-scan": "node scripts/test-infra-integration-scan.mjs",
     "test:template-identity": "node scripts/test-template-identity.mjs",
