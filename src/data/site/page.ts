@@ -58,6 +58,34 @@ export const pages = ref<WebsiteEntry[]>([
     date: '2025-11-13',
     url: 'https://music-converter.hc-dsw-nexus.me',
   },
+  {
+    name: 'Orchester',
+    displayName: 'Orchester',
+    repoUrl: 'https://github.com/dieWehmut/Orchester',
+    date: '2026-09-11',
+    url: 'https://diewehmut.github.io/Orchester/',
+  },
+  {
+    name: 'Sandkasten',
+    displayName: 'Sandkasten',
+    repoUrl: 'https://github.com/dieWehmut/Sandkasten',
+    date: '2026-09-11',
+    url: 'https://diewehmut.github.io/Sandkasten/',
+  },
+  {
+    name: 'Selbstlauf',
+    displayName: 'Selbstlauf',
+    repoUrl: 'https://github.com/dieWehmut/Selbstlauf',
+    date: '2026-09-11',
+    url: 'https://diewehmut.github.io/Selbstlauf/',
+  },
+  {
+    name: 'Vorlage',
+    displayName: 'Vorlage',
+    repoUrl: 'https://github.com/dieWehmut/Vorlage',
+    date: '2026-09-11',
+    url: 'https://diewehmut.github.io/Vorlage/',
+  },
 ])
 
 export default pages
