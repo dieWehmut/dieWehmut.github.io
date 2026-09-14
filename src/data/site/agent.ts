@@ -13,7 +13,7 @@ export const agents = ref<SiteProjectGroup[]>([
         showDownload: false,
         downloadToast: false,
         downloadToastMessage: 'Open the repository',
-        lastModified: '2026-09-11',
+        lastModified: '2026-07-09',
       },
     ],
   },
