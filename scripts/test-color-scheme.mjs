@@ -300,7 +300,7 @@ function captureAppliedProperties(scheme, mode) {
   return written
 }
 
-const CURSOR_KEYS = ['--cursor-heart', '--cursor-pointer', '--cursor-sakura-hover']
+const CURSOR_KEYS = ['--cursor-heart', '--cursor-heart-pointer', '--cursor-sakura-hover']
 
 // 断言一律走这个读取器：漏写一个变量时才会得到干净的 FAIL，而不是 TypeError
 // 把整条 test:console 链后面的输出一起带走。
@@ -347,7 +347,7 @@ check(
     const written = captureAppliedProperties('purple', 'dark')
     return (
       cursorValue(written, '--cursor-heart').endsWith(' 12 21, auto') &&
-      cursorValue(written, '--cursor-pointer').endsWith(' 12 21, pointer') &&
+      cursorValue(written, '--cursor-heart-pointer').endsWith(' 12 21, pointer') &&
       cursorValue(written, '--cursor-sakura-hover').endsWith(' 12 21, auto')
     )
   })(),
