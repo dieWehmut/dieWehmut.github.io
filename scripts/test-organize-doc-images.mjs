@@ -259,7 +259,7 @@ runTest('wires generated capture migration into the dev image watcher', () => {
 runTest('already-organized images migrate legacy metadata and force a full reload', () => {
   const viteConfig = fs.readFileSync(path.resolve(import.meta.dirname, '..', 'vite.config.ts'), 'utf8')
   const branch = viteConfig.match(
-    /if \(result\.status === 'already-organized'\) \{([\s\S]*?)\n\s*return\n\s*\}/,
+    /if \(result\.status === 'already-organized'\) \{([\s\S]*?)\r?\n\s*return\r?\n\s*\}/,
   )?.[1] || ''
 
   assert.match(branch, /migrateCaptureAssetImage/)
