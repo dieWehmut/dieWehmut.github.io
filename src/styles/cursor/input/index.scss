@@ -8,11 +8,11 @@ input, textarea, [contenteditable="true"] {
 }
 
 /* Ensure text cursor is kept even during sakura states */
-html.sakura-grabbing input,
-html.sakura-grabbing textarea,
-html.sakura-grabbing [contenteditable="true"],
-html.sakura-hover input,
-html.sakura-hover textarea,
-html.sakura-hover [contenteditable="true"] {
+html.dynamic-background-enabled.sakura-grabbing input,
+html.dynamic-background-enabled.sakura-grabbing textarea,
+html.dynamic-background-enabled.sakura-grabbing [contenteditable="true"],
+html.dynamic-background-enabled.sakura-hover input,
+html.dynamic-background-enabled.sakura-hover textarea,
+html.dynamic-background-enabled.sakura-hover [contenteditable="true"] {
   cursor: var(--cursor-text) !important;
 }

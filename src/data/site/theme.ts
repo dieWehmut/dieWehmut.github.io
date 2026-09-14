@@ -219,6 +219,6 @@ export function applySiteColorScheme(scheme: SiteColorScheme, mode: SiteThemeMod
   // 三个原生爱心光标（默认 / 可点击 / 樱花悬停）跟着 accent 换色，
   // 覆盖 SCSS 里写死的粉色默认值。樱花「抓取」光标是插画，不参与配色。
   root.style.setProperty('--cursor-heart', heartCursorValue(tokens.accent, 'auto'))
-  root.style.setProperty('--cursor-pointer', heartCursorValue(tokens.accent, 'pointer'))
+  root.style.setProperty('--cursor-heart-pointer', heartCursorValue(tokens.accent, 'pointer'))
   root.style.setProperty('--cursor-sakura-hover', heartCursorValue(tokens.accent, 'auto'))
 }

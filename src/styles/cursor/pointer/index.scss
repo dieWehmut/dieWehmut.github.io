@@ -1,6 +1,10 @@
-/* Heart cursor for clickable elements (same heart shape) */
 :root {
-  --cursor-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ff69b4'/%3E%3C/svg%3E") 12 21, pointer;
+  --cursor-heart-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ff69b4'/%3E%3C/svg%3E") 12 21, pointer;
+  --cursor-pointer: pointer;
+}
+
+html.dynamic-background-enabled {
+  --cursor-pointer: var(--cursor-heart-pointer);
 }
 
 button, a, a[href], input[type="button"], input[type="submit"], .clickable,
@@ -8,13 +12,29 @@ button, a, a[href], input[type="button"], input[type="submit"], .clickable,
   cursor: var(--cursor-pointer);
 }
 
-/* ensure the heart cursor stays during active/click state */
+/* Component-scoped styles often declare `cursor: pointer` with greater
+   specificity. Dynamic mode owns the native pointer too, so keep the heart on
+   every ordinary click target without affecting text-editing controls. */
+html.dynamic-background-enabled button,
+html.dynamic-background-enabled a,
+html.dynamic-background-enabled a[href],
+html.dynamic-background-enabled input[type="button"],
+html.dynamic-background-enabled input[type="submit"],
+html.dynamic-background-enabled .clickable,
+html.dynamic-background-enabled [role="button"],
+html.dynamic-background-enabled label,
+html.dynamic-background-enabled select,
+html.dynamic-background-enabled summary {
+  cursor: var(--cursor-pointer) !important;
+}
+
+/* Keep the configured pointer cursor during active/click state. */
 button:active, a:active, a[href]:active, input[type="button"]:active, input[type="submit"]:active,
 .clickable:active, [role="button"]:active, label:active, select:active, summary:active {
   cursor: var(--cursor-pointer) !important;
 }
 
-/* Keep heart cursor on hoverable list items and all their descendants */
+/* Keep the configured default cursor on hoverable list items and descendants. */
 .note-item,
 .archive-post,
 .feed-entry-card,

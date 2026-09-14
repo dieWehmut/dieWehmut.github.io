@@ -21,48 +21,48 @@
 }
 
 /* Cursor: heart when hovering near a petal */
-html.sakura-hover {
+html.dynamic-background-enabled.sakura-hover {
   cursor: var(--cursor-sakura-hover);
 }
 
 /* While holding petals: hand cursor with petals around it */
-html.sakura-grabbing {
+html.dynamic-background-enabled.sakura-grabbing {
   cursor: var(--cursor-sakura-grabbing);
 }
-html.sakura-hover a,
-html.sakura-hover button,
-html.sakura-hover [role="button"],
-html.sakura-hover label,
-html.sakura-hover select,
-html.sakura-hover summary,
-html.sakura-hover input[type="button"],
-html.sakura-hover input[type="submit"],
-html.sakura-hover .clickable,
-html.sakura-hover .action-btn,
-html.sakura-hover .repo-link,
-html.sakura-hover .repo-button,
-html.sakura-hover .link-button,
-html.sakura-hover .copy-btn,
-html.sakura-hover .nav-btn,
-html.sakura-hover .github-btn,
-html.sakura-hover .tool-row,
-html.sakura-grabbing a,
-html.sakura-grabbing button,
-html.sakura-grabbing [role="button"],
-html.sakura-grabbing label,
-html.sakura-grabbing select,
-html.sakura-grabbing summary,
-html.sakura-grabbing input[type="button"],
-html.sakura-grabbing input[type="submit"],
-html.sakura-grabbing .clickable,
-html.sakura-grabbing .action-btn,
-html.sakura-grabbing .repo-link,
-html.sakura-grabbing .repo-button,
-html.sakura-grabbing .link-button,
-html.sakura-grabbing .copy-btn,
-html.sakura-grabbing .nav-btn,
-html.sakura-grabbing .github-btn,
-html.sakura-grabbing .tool-row {
+html.dynamic-background-enabled.sakura-hover a,
+html.dynamic-background-enabled.sakura-hover button,
+html.dynamic-background-enabled.sakura-hover [role="button"],
+html.dynamic-background-enabled.sakura-hover label,
+html.dynamic-background-enabled.sakura-hover select,
+html.dynamic-background-enabled.sakura-hover summary,
+html.dynamic-background-enabled.sakura-hover input[type="button"],
+html.dynamic-background-enabled.sakura-hover input[type="submit"],
+html.dynamic-background-enabled.sakura-hover .clickable,
+html.dynamic-background-enabled.sakura-hover .action-btn,
+html.dynamic-background-enabled.sakura-hover .repo-link,
+html.dynamic-background-enabled.sakura-hover .repo-button,
+html.dynamic-background-enabled.sakura-hover .link-button,
+html.dynamic-background-enabled.sakura-hover .copy-btn,
+html.dynamic-background-enabled.sakura-hover .nav-btn,
+html.dynamic-background-enabled.sakura-hover .github-btn,
+html.dynamic-background-enabled.sakura-hover .tool-row,
+html.dynamic-background-enabled.sakura-grabbing a,
+html.dynamic-background-enabled.sakura-grabbing button,
+html.dynamic-background-enabled.sakura-grabbing [role="button"],
+html.dynamic-background-enabled.sakura-grabbing label,
+html.dynamic-background-enabled.sakura-grabbing select,
+html.dynamic-background-enabled.sakura-grabbing summary,
+html.dynamic-background-enabled.sakura-grabbing input[type="button"],
+html.dynamic-background-enabled.sakura-grabbing input[type="submit"],
+html.dynamic-background-enabled.sakura-grabbing .clickable,
+html.dynamic-background-enabled.sakura-grabbing .action-btn,
+html.dynamic-background-enabled.sakura-grabbing .repo-link,
+html.dynamic-background-enabled.sakura-grabbing .repo-button,
+html.dynamic-background-enabled.sakura-grabbing .link-button,
+html.dynamic-background-enabled.sakura-grabbing .copy-btn,
+html.dynamic-background-enabled.sakura-grabbing .nav-btn,
+html.dynamic-background-enabled.sakura-grabbing .github-btn,
+html.dynamic-background-enabled.sakura-grabbing .tool-row {
   cursor: var(--cursor-pointer, pointer) !important;
 }
 

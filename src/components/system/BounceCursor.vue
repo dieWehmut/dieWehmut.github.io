@@ -36,9 +36,11 @@ const { theme } = useThemePreference()
 const { dynamicBackgroundEnabled } = useBackgroundPreference()
 const { isConsole } = useDisplayModePreference()
 
-const pointerEffectsEnabled = computed(() => canUsePointerEffects.value && !isConsole.value)
+const pointerEffectsEnabled = computed(
+  () => canUsePointerEffects.value && dynamicBackgroundEnabled.value && !isConsole.value,
+)
 
-// 点环与流线只属于「动态背景」这一档效果，关掉后只剩爱心本体
+// 点环、流线与爱心指针都只属于「动态背景」这一档效果。
 const ringVisible = computed(
   () => visible.value && canUsePointerEffects.value && dynamicBackgroundEnabled.value && !isConsole.value,
 )

@@ -35,7 +35,7 @@ const { exporting, previewArticlePdf } = useArticlePdfExport()
   font-weight: 800;
   line-height: 1;
   pointer-events: auto;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition:
     background-color 160ms ease,
     border-color 160ms ease,

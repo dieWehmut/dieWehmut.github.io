@@ -601,6 +601,10 @@
 .md-editable-block.is-fullscreen {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
   z-index: 1100;
   display: flex;
   flex-direction: column;
@@ -610,6 +614,29 @@
   /* Opaque on purpose: the block now covers the article it came from, and a math
      block's own background is only a translucent wash over the page. */
   background: var(--site-bg);
+}
+
+/* The editor owns the viewport while fullscreen. Keep shell overlays from
+   covering its toolbar or stealing the lower-right editing area. */
+html.markdown-editor-fullscreen-active .route-breadcrumb,
+html.markdown-editor-fullscreen-active .float-controls,
+html.markdown-editor-fullscreen-active .page-scroll-progress,
+html.markdown-editor-fullscreen-active .copy-toast {
+  display: none !important;
+}
+
+html.markdown-editor-fullscreen-active,
+html.markdown-editor-fullscreen-active body {
+  overflow: hidden;
+}
+
+/* `content-visibility: auto` creates layout/paint containment for progressive
+   chunks. A fixed descendant would otherwise be fixed to that article chunk
+   instead of to the viewport. Temporarily remove the containment while one of
+   its editors owns the screen. */
+html.markdown-editor-fullscreen-active .markdown-body .markdown-content__chunk {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
 }
 
 /* Height is normally an inline pixel value the editor clamps at 620px so a long
