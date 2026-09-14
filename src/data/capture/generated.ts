@@ -62,6 +62,26 @@ export const generatedCaptureAssets: CaptureAsset[] = [
     "standalone": false
   },
   {
+    "id": "docs-DigitalSignalProcessing-image-4",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-4.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "docs-cm-cm1",
     "image": "/capture-assets/docs/cm/cm1.jpg",
     "title": "Computing Method 考试小抄第 1 张",
