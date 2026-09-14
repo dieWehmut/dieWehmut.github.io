@@ -25,7 +25,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "",
     "wordCount": 0,
     "readingMinutes": 0,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "path": "./notes/ComputerNetwork.md"
   },
   {
@@ -38,9 +38,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Notes"
     ],
     "summary": "or 数字信号处理 信号与系统\n导论\n信号\n反映信息的物理量,系统直接进行加工、变换以实现通信的对象，一般是随时间变化的有限的实值函数\n连续->模拟 离散->数字\n确定信号 随机信号\nalt text\n时域:以时间为自变量描述信号和系...",
-    "wordCount": 927,
+    "wordCount": 974,
     "readingMinutes": 3,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "path": "./notes/DigitalSignalProcessing.md"
   },
   {
@@ -55,7 +55,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "##",
     "wordCount": 0,
     "readingMinutes": 0,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "path": "./notes/Neuroscience.md"
   },
   {
@@ -68,9 +68,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "Code"
     ],
     "summary": "严肃学习Rust圣经\n2026-08-24 | Monday\n无gc 安全 \"用Rust重写\"\nCargo.toml 描述文件\nCargo.lock 依赖\n2026-08-25 | Tuesday\n变量绑定\nstruct Struct...",
-    "wordCount": 1470,
+    "wordCount": 1513,
     "readingMinutes": 4,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "codeRunner": true,
     "path": "./posts/GoRust.md"
   },
@@ -104,7 +104,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "前置知识\nAgent\nagent自拉丁语agere(做，行动)->能够感知环境，并采取行动实现目标,类似于以前说的机器人啥的,这几年llm强大起来之后大家的讨论基本上转向了软件工程界(前几年对ai的认知还是对话机器)，即编程界\n从Re...",
     "wordCount": 710,
     "readingMinutes": 2,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "path": "./posts/HarnessEvolution.md"
   },
   {
@@ -215,7 +215,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "Codex\nClaude\nOpencode\nAgent安装\n一键安装\n无法连接外网的情况\nnpm",
     "wordCount": 283,
     "readingMinutes": 1,
-    "updated": "2026/08/14 21:46",
+    "updated": "2026/09/03 10:57",
     "path": "./posts/AgentSettings.md"
   },
   {
@@ -230,7 +230,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "2026-01-20 | Tuesday\n好几个月前就配了环境，也ai写了点调ai的api的代码测试，今天开始系统了解和学习go语言\n**初步认识:**\ngo像cpp那样有{}，又像python那样没有\";\"\n大小写就能区分publi...",
     "wordCount": 5527,
     "readingMinutes": 14,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "codeRunner": true,
     "path": "./posts/GoGolang.md"
   },
@@ -276,7 +276,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "一、认知心理学与认知神经科学导论\n认知心理学概述\n**学科定义**：认知心理学是对**思维与头脑（Mind）**的科学研究。\n**研究核心**：关注信息如何从外部世界获取、在内部储存、加工转换，并用于解决问题、驱动思维以及生成言语。...",
     "wordCount": 11450,
     "readingMinutes": 29,
-    "updated": "2026/07/09 16:28",
+    "updated": "2026/09/03 10:57",
     "path": "./notes/CognitiveScience.md"
   },
   {
@@ -333,7 +333,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "",
     "wordCount": 0,
     "readingMinutes": 0,
-    "updated": "",
+    "updated": "2026/09/03 10:57",
     "path": "./notes/DeepLearning.md"
   }
 ] as GeneratedDocMeta[]

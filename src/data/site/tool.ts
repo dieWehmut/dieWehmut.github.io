@@ -19,7 +19,18 @@ export const tools = ref<SiteProjectGroup[]>([
         downloadToastMessage: 'Open the repository',
         lastModified: '2025-10-26',
       },
+      {
+        name: 'Selbstlauf',
+        html_url: 'https://github.com/dieWehmut/Selbstlauf',
+        repo_url: 'https://github.com/dieWehmut/Selbstlauf',
+        showDownload: false,
+        downloadToast: false,
+        downloadToastMessage: 'Open the repository',
+        lastModified: '2026-7-9',
+      },
     ],
+
+    
   },
 ])
 

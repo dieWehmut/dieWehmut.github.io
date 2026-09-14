@@ -108,9 +108,40 @@ $e^{j\omega_0 N} = 1$
 | 任何 $\omega_0$ 信号均为周期信号 | 满足 $\omega_0 N = m2\pi$ 才是周期信号 |
 | 基波周期：$\begin{cases} \omega_0 = 0, \text{无定义} \\ \omega_0 ≠ 0, T_0 = 2\pi/\omega_0 \end{cases}$ | 基波周期：$\begin{cases} \omega_0 = 0, \text{无定义} \\ \omega_0 ≠ 0, N = 2\pi m/\omega_0 \end{cases}$ |
 
-### 离散时间单位脉冲
+### 离散时间单位脉冲与单位阶跃
 
-* 单位脉冲 (unit impulse) 序列
+![alt text](DigitalSignalProcessing/image-5.png)
 
-$\delta[n] = \begin{cases} 1, n = 0 \\ 0, n \neq 0 \end{cases}$
-![alt text](DigitalSignalProcessing/image-4.png)
+![alt text](DigitalSignalProcessing/image-6.png)
+
+>相互表示
+![alt text](DigitalSignalProcessing/image-7.png)> 
+
+### 其他基本离散时间序列
+
+![alt text](DigitalSignalProcessing/image-8.png)
+
+### 离散信号的差分和求和
+
+![alt text](DigitalSignalProcessing/image-9.png)
+
+### 奇异信号
+
+![alt text](DigitalSignalProcessing/image-10.png)
+
+### 单位阶跃信号
+
+![alt text](DigitalSignalProcessing/image-11.png)
+
+### 冲激信号
+
+![alt text](DigitalSignalProcessing/image-12.png)
+
+![alt text](DigitalSignalProcessing/image-13.png)
+
+![alt text](DigitalSignalProcessing/image-14.png)
+
+![alt text](DigitalSignalProcessing/image-15.png)
+
+### 信号的微分
+

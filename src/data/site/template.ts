@@ -20,9 +20,9 @@ export const templates = ref<SiteProjectGroup[]>([
         lastModified: '2026-05-28',
       },
       {
-        name: 'sandkasten',
-        html_url: 'https://github.com/dieWehmut/sandkasten',
-        repo_url: 'https://github.com/dieWehmut/sandkasten',
+        name: 'Sandkasten',
+        html_url: 'https://github.com/dieWehmut/Sandkasten',
+        repo_url: 'https://github.com/dieWehmut/Sandkasten',
         showDownload: false,
         downloadToast: false,
         downloadToastMessage: 'Open the repository',

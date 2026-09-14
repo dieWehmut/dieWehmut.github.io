@@ -82,6 +82,226 @@ export const generatedCaptureAssets: CaptureAsset[] = [
     "standalone": false
   },
   {
+    "id": "docs-DigitalSignalProcessing-image-5",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-5.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-6",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-6.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-7",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-7.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-8",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-8.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-9",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-9.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-10",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-10.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-11",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-11.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-12",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-12.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-13",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-13.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-14",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-14.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-image-15",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/image-15.png",
+    "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "docs-cm-cm1",
     "image": "/capture-assets/docs/cm/cm1.jpg",
     "title": "Computing Method 考试小抄第 1 张",
