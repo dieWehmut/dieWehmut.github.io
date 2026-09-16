@@ -68,7 +68,9 @@ function renderMathSvg(formula: string, display: boolean): string | null {
     context.document.reset()
     const converted = context.document.convert(normalized, { display })
     const svg = context.adaptor.tags(converted, 'svg')[0]
-    return svg ? normalizePdfSvg(context.adaptor.outerHTML(svg)) : null
+    const hasMathError = context.adaptor.tags(converted, 'g')
+      .some((node) => context.adaptor.getAttribute(node, 'data-mml-node') === 'merror')
+    return svg && !hasMathError ? normalizePdfSvg(context.adaptor.outerHTML(svg)) : null
   } catch {
     return null
   }

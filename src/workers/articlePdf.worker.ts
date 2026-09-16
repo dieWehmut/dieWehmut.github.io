@@ -163,7 +163,12 @@ function renderMathSvg(formula: string, display: boolean): string | null {
     context.document.reset()
     const converted = context.document.convert(normalized, { display })
     const svg = context.adaptor.tags(converted, 'svg')[0]
-    result = svg ? normalizePdfSvg(context.adaptor.outerHTML(svg)) : null
+    // MathJax reports TeX errors as merror nodes instead of throwing. Their
+    // diagnostic SVG can contain unescaped XML (for example "Misplaced &").
+    // Keep the original formula through the existing text fallback.
+    const hasMathError = context.adaptor.tags(converted, 'g')
+      .some((node) => context.adaptor.getAttribute(node, 'data-mml-node') === 'merror')
+    result = svg && !hasMathError ? normalizePdfSvg(context.adaptor.outerHTML(svg)) : null
   } catch {
     result = null
   }

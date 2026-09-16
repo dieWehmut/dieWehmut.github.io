@@ -51,6 +51,10 @@ import katex from 'katex'
 import markedKatex from 'marked-katex-extension'
 import { openImagePreviewGallery } from './imagePreview'
 import { normalizeMermaidSource } from './mermaidSource.mjs'
+import {
+  isDisplayMathClosingBoundary,
+  isDisplayMathOpeningBoundary,
+} from './mathDelimiters.mjs'
 import { getPublicAssetUrlCandidates, resolvePublicAssetUrl, retryPublicAssetImage } from './publicAssets'
 import { runCode, type RunProgressStatus, type RunResult, type RunStatus } from './codeRunner'
 import { ensureGiscusLogin, getGiscusAuthState } from './giscusAuth'
@@ -343,15 +347,28 @@ function countMatches(value: string, pattern: RegExp): number {
   return value.match(pattern)?.length || 0
 }
 
-function countUnescapedDisplayDollars(value: string): number {
-  let count = 0
-  for (let index = 0; index < value.length - 1; index += 1) {
-    if (value[index] !== '$' || value[index + 1] !== '$') continue
-    if (value[index - 1] === '\\') continue
-    count += 1
+/**
+ * Track display math across lines using the same boundaries as the renderer.
+ *
+ * Toggling on every `$$` desynced as soon as a stray delimiter appeared in
+ * prose: every later chunk boundary was then considered unstable, so chunks
+ * were split straight through real formulas and the rendered page contained
+ * malformed math blocks.
+ */
+function updateDollarMathState(line: string, state: MarkdownSplitState): void {
+  for (let index = 0; index < line.length - 1; index += 1) {
+    if (line[index] !== '$' || line[index + 1] !== '$') continue
+    if (isEscapedAt(line, index)) {
+      index += 1
+      continue
+    }
+    if (state.inDollarMath) {
+      if (isDisplayMathClosingBoundary(line, index)) state.inDollarMath = false
+    } else if (isDisplayMathOpeningBoundary(line, index)) {
+      state.inDollarMath = true
+    }
     index += 1
   }
-  return count
 }
 
 function isChunkBoundaryStable(state: MarkdownSplitState): boolean {
@@ -378,9 +395,7 @@ function updateMarkdownSplitState(line: string, state: MarkdownSplitState) {
   state.detailsDepth -= countMatches(lowerLine, /<\/details>/g)
   state.detailsDepth = Math.max(0, state.detailsDepth)
 
-  if (countUnescapedDisplayDollars(line) % 2 === 1) {
-    state.inDollarMath = !state.inDollarMath
-  }
+  updateDollarMathState(line, state)
 
   const bracketOpenCount = countMatches(line, /\\\[/g)
   const bracketCloseCount = countMatches(line, /\\\]/g)
@@ -1190,6 +1205,25 @@ function findClosingMathDelimiter(source: string, delimiter: string, start: numb
   return -1
 }
 
+/**
+ * Locate the closing delimiter of a display-math block.
+ *
+ * Display math is a standalone block, so a candidate closer is only accepted
+ * when nothing but trailing whitespace (or a blockquote marker) follows it on
+ * its line. Accepting the first delimiter instead let a single stray `$$`
+ * inside prose re-pair with the next one and swallow every following
+ * paragraph into one enormous block, which corrupted the rendered page and
+ * fed prose to MathJax during PDF export.
+ */
+function findDisplayMathClosingDelimiter(source: string, start: number): number {
+  let cursor = findClosingMathDelimiter(source, '$$', start)
+  while (cursor !== -1) {
+    if (isDisplayMathClosingBoundary(source, cursor)) return cursor
+    cursor = findClosingMathDelimiter(source, '$$', cursor + 2)
+  }
+  return -1
+}
+
 function protectMathText(
   source: string,
   replacements: MathReplacement[],
@@ -1198,14 +1232,14 @@ function protectMathText(
   let result = ''
   let cursor = 0
 
-  const storeReplacement = (formula: string, displayMode: boolean) => {
+  const storeReplacement = (formula: string, displayMode: boolean, standalone = false) => {
     const tag = displayMode && !options.displayAsInline ? 'div' : 'span'
     const placeholder = `<${tag} data-md-math-placeholder="${replacements.length}"></${tag}>`
     const html = displayMode && !options.displayAsInline
       ? renderDisplayLatexBlock(formula)
       : renderInlineLatex(formula)
     replacements.push({ html, placeholder })
-    return tag === 'div' ? `\n\n${placeholder}\n\n` : placeholder
+    return tag === 'div' && !standalone ? `\n\n${placeholder}\n\n` : placeholder
   }
 
   while (cursor < source.length) {
@@ -1225,9 +1259,18 @@ function protectMathText(
     let closing = ''
     let displayMode = false
     if (source.startsWith('$$', cursor) && !isEscapedAt(source, cursor)) {
-      opening = '$$'
-      closing = '$$'
-      displayMode = true
+      // A stray `$$` inside prose must not open a block: it would re-pair with
+      // the next delimiter and consume the paragraphs in between.
+      if (isDisplayMathOpeningBoundary(source, cursor)) {
+        opening = '$$'
+        closing = '$$'
+        displayMode = true
+      } else {
+        // Keep rejected delimiters literal through the Marked KaTeX fallback.
+        result += '&#36;&#36;'
+        cursor += 2
+        continue
+      }
     } else if (source.startsWith('\\[', cursor) && !isEscapedAt(source, cursor)) {
       opening = '\\['
       closing = '\\]'
@@ -1243,21 +1286,33 @@ function protectMathText(
       continue
     }
 
-    const end = findClosingMathDelimiter(source, closing, cursor + opening.length)
+    const end = displayMode && opening === '$$'
+      ? findDisplayMathClosingDelimiter(source, cursor + opening.length)
+      : findClosingMathDelimiter(source, closing, cursor + opening.length)
     if (end === -1) {
-      result += opening
+      result += opening === '$$' ? '&#36;&#36;' : opening
       cursor += opening.length
       continue
     }
 
-    const formula = source.slice(cursor + opening.length, end)
+    let formula = source.slice(cursor + opening.length, end)
+    if (opening === '$$') {
+      const lineStart = source.lastIndexOf('\n', cursor - 1) + 1
+      const prefix = source.slice(lineStart, cursor)
+      const quoteDepth = (prefix.match(/>/g) || []).length
+      if (quoteDepth) {
+        // Markdown quote markers belong to the container, not to the TeX.
+        const quotePrefix = new RegExp(`(^|\\n)[ \\t]*(?:>[ \\t]?){${quoteDepth}}`, 'g')
+        formula = formula.replace(quotePrefix, '$1')
+      }
+    }
     if (!formula.trim()) {
       result += source.slice(cursor, end + closing.length)
       cursor = end + closing.length
       continue
     }
 
-    result += storeReplacement(formula, displayMode)
+    result += storeReplacement(formula, displayMode, opening === '$$')
     cursor = end + closing.length
   }
 
