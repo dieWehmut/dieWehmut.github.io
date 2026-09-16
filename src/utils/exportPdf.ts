@@ -1,6 +1,7 @@
 import type { Content, ContentText, TDocumentDefinitions } from 'pdfmake/interfaces'
 import { siteConfig } from '../data/site/config'
 import { ensureMermaidRendered } from './markdown'
+import { attachHeadingAnchor } from './pdfHeadingAnchor.mjs'
 import { generatePdfInWorker, PdfWorkerUnavailableError } from './pdfWorkerClient'
 import type {
   PdfWorkerImageSources,
@@ -388,6 +389,7 @@ function inlineNodesToContent(
   nodes: Iterable<Node>,
   palette: PdfPalette,
   style?: string,
+  anchorId?: string,
 ): Content {
   const inlineSegments = Array.from(nodes)
     .flatMap((node) => collectInlineSegments(node, palette))
@@ -397,10 +399,10 @@ function inlineNodesToContent(
     const text = Array.from(nodes)
       .map((node) => inlineContent(node, palette))
       .filter(Boolean)
-    return { text, ...(style ? { style } : {}) } as Content
+    return { text, ...(style ? { style } : {}), ...(anchorId ? { id: anchorId } : {}) } as Content
   }
 
-  const segments: Content[] = inlineSegments.flatMap((segment) => {
+  let segments: Content[] = inlineSegments.flatMap((segment) => {
     if (segment.kind === 'text') {
       if (!segment.raw.trim()) return []
       const text = asTextContent(segment.content)
@@ -418,6 +420,10 @@ function inlineNodesToContent(
     }
     return [math as unknown as Content]
   })
+
+  // A contents-page anchor is only honored on a text node, never on the stack
+  // itself; see pdfHeadingAnchor.mjs for the full pdfmake constraint.
+  if (anchorId) segments = attachHeadingAnchor(segments, anchorId)
 
   return {
     stack: segments.length ? segments : [{ text: '' }],
@@ -745,17 +751,17 @@ function elementToBlocks(element: Element, palette: PdfPalette): Content[] {
     case 'h5':
     case 'h6':
       {
-        const heading: Content = inlineNodesToContent(Array.from(element.childNodes), palette, tag)
-        if (element.closest('.markdown-body')) {
-          const tocId = `pdf-toc-${tocEntries.length + 1}`
-          ;(heading as Content & { id: string }).id = tocId
-          tocEntries.push({
-            id: tocId,
-            title: cleanText(element.textContent || ''),
-            level: Number(tag.slice(1)) || 2,
-          })
+        const nodes = Array.from(element.childNodes)
+        if (!element.closest('.markdown-body')) {
+          return [inlineNodesToContent(nodes, palette, tag)]
         }
-        return [heading]
+        const tocId = `pdf-toc-${tocEntries.length + 1}`
+        tocEntries.push({
+          id: tocId,
+          title: cleanText(element.textContent || ''),
+          level: Number(tag.slice(1)) || 2,
+        })
+        return [inlineNodesToContent(nodes, palette, tag, tocId)]
       }
     case 'p':
       return [inlineNodesToContent(Array.from(element.childNodes), palette, 'paragraph')]

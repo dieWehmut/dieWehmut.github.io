@@ -19,6 +19,7 @@
     "test:cursor-mode": "node scripts/test-cursor-mode.mjs",
     "test:pdf-rendering": "node scripts/test-pdf-rendering.mjs",
     "test:pdf-math-errors": "node scripts/test-pdf-math-errors.mjs",
+    "test:pdf-toc-anchor": "node scripts/test-pdf-toc-anchor.mjs",
     "test:pdf-images": "node scripts/test-pdf-images.mjs",
     "test:pdf-cache": "node scripts/test-pdf-cache.mjs",
     "test:pdf-worker": "node scripts/test-pdf-worker.mjs",
