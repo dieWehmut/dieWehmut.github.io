@@ -14,6 +14,20 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "yjango",
+    "type": "post",
+    "title": "yjango学习观批判性学习",
+    "date": "2026-09-21",
+    "tags": [
+      "learning"
+    ],
+    "summary": "**## 2026-09-21 | Monday**\n**### 知其人**\n计算机科学 → 机器学习 → 深度学习 → 多模态信息融合 → 人类行为建模\n与\"教育学 → 学习心理学 → 学习方法\"不一样\n早期重点是AI 从知乎短视频...",
+    "wordCount": 930,
+    "readingMinutes": 3,
+    "updated": "",
+    "path": "./posts/yjango.md"
+  },
+  {
     "id": "ComputerNetwork",
     "type": "note",
     "title": "Computer Network Notes",
@@ -40,7 +54,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "or 数字信号处理 信号与系统\n导论\n信号\n反映信息的物理量,系统直接进行加工、变换以实现通信的对象，一般是随时间变化的有限的实值函数\n连续->模拟 离散->数字\n确定信号 随机信号\nalt text\n时域:以时间为自变量描述信号和系...",
     "wordCount": 974,
     "readingMinutes": 3,
-    "updated": "2026/09/03 10:57",
+    "updated": "2026/09/14 21:51",
     "path": "./notes/DigitalSignalProcessing.md"
   },
   {
@@ -70,7 +84,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "summary": "严肃学习Rust圣经\n2026-08-24 | Monday\n无gc 安全 \"用Rust重写\"\nCargo.toml 描述文件\nCargo.lock 依赖\n2026-08-25 | Tuesday\n变量绑定\nstruct Struct...",
     "wordCount": 1513,
     "readingMinutes": 4,
-    "updated": "2026/09/03 10:57",
+    "updated": "2026/09/14 21:51",
     "codeRunner": true,
     "path": "./posts/GoRust.md"
   },
