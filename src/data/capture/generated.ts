@@ -2,6 +2,101 @@ import type { CaptureAsset } from '../../types/content'
 
 export const generatedCaptureAssets: CaptureAsset[] = [
   {
+    "id": "docs-posts-image",
+    "image": "/capture-assets/docs/yjango/image.png",
+    "title": "alt text",
+    "date": "2026-09-21",
+    "tags": [
+      "learning"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "yjango",
+        "title": "yjango学习观批判性学习",
+        "url": "/post/yjango"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-posts-image",
+    "image": "/capture-assets/docs/yjango/image-2.png",
+    "title": "alt text",
+    "date": "2026-09-21",
+    "tags": [
+      "learning"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "yjango",
+        "title": "yjango学习观批判性学习",
+        "url": "/post/yjango"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-posts-image",
+    "image": "/capture-assets/docs/yjango/image-3.png",
+    "title": "alt text",
+    "date": "2026-09-21",
+    "tags": [
+      "learning"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "yjango",
+        "title": "yjango学习观批判性学习",
+        "url": "/post/yjango"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-posts-image",
+    "image": "/capture-assets/docs/yjango/image-4.png",
+    "title": "alt text",
+    "date": "2026-09-21",
+    "tags": [
+      "learning"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "yjango",
+        "title": "yjango学习观批判性学习",
+        "url": "/post/yjango"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-posts-image",
+    "image": "/capture-assets/docs/posts/image.png",
+    "title": "alt text",
+    "date": "2026-09-21",
+    "tags": [
+      "learning"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "post",
+        "id": "yjango",
+        "title": "yjango学习观批判性学习",
+        "url": "/post/yjango"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "docs-notes-DigitalSignalProcessing-image",
     "image": "/capture-assets/docs/DigitalSignalProcessing/image.png",
     "title": "alt text",
