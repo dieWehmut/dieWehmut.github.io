@@ -63,13 +63,14 @@ const bareIcon = registry.resolveConsoleCommand(command(['icon']))
 check('bare icon opens its picker', bareIcon.kind === 'panel' && bareIcon.panel === 'icon' && bareIcon.value === undefined)
 check(
   'every icon form the plate cycles is also reachable by name',
-  ['grayscale', 'whiten', 'original', 'pixelated'].every((form) => {
-    const resolution = registry.resolveConsoleCommand(command(['icon', form]))
-    return resolution.kind === 'panel' && resolution.panel === 'icon' && resolution.value === form
-  }),
+  ['pink', 'silver', 'green', 'blue', 'purple', 'yellow', 'orange', 'rose', 'cyan', 'midnight', 'grayscale', 'whiten']
+    .every((form) => {
+      const resolution = registry.resolveConsoleCommand(command(['icon', form]))
+      return resolution.kind === 'panel' && resolution.panel === 'icon' && resolution.value === form
+    }),
 )
 check('icon rejects unknown forms', registry.resolveConsoleCommand(command(['icon', 'sepia'])).kind === 'silent')
-check('icon rejects extra segments', registry.resolveConsoleCommand(command(['icon', 'original', 'extra'])).kind === 'silent')
+check('icon rejects extra segments', registry.resolveConsoleCommand(command(['icon', 'pink', 'extra'])).kind === 'silent')
 check('command reference includes the icon form picker', registry.listConsoleCommands().some((item) => item.input === '/icon'))
 check('command reference includes About', registry.listConsoleCommands().some((item) => item.input === '/about'))
 check('command reference includes Friends', registry.listConsoleCommands().some((item) => item.input === '/friends'))

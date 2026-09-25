@@ -15,6 +15,7 @@
     "test:math-delimiters": "node scripts/test-math-delimiters.mjs",
     "test:organize-doc-images": "node scripts/test-organize-doc-images.mjs",
     "test:doc-asset-layout": "node scripts/test-doc-asset-layout.mjs",
+    "test:capture-gallery": "node scripts/test-capture-gallery.mjs",
     "test:markdown-fullscreen": "node scripts/test-markdown-fullscreen.mjs",
     "test:cursor-mode": "node scripts/test-cursor-mode.mjs",
     "test:pdf-rendering": "node scripts/test-pdf-rendering.mjs",

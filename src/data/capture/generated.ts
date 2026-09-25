@@ -78,8 +78,8 @@ export const generatedCaptureAssets: CaptureAsset[] = [
     "standalone": false
   },
   {
-    "id": "docs-posts-image",
-    "image": "/capture-assets/docs/posts/image.png",
+    "id": "docs-yjango-image-5",
+    "image": "/capture-assets/docs/yjango/image-5.png",
     "title": "alt text",
     "date": "2026-09-21",
     "tags": [

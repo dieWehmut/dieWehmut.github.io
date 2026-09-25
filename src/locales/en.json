@@ -171,10 +171,18 @@
         "classic": "Standard sidebar layout"
       },
       "icon": {
+        "pink": "Swap the icon to pink",
+        "silver": "Swap the icon to silver",
+        "green": "Swap the icon to green",
+        "blue": "Swap the icon to blue",
+        "purple": "Swap the icon to purple",
+        "yellow": "Swap the icon to yellow",
+        "orange": "Swap the icon to orange",
+        "rose": "Swap the icon to rose",
+        "cyan": "Swap the icon to cyan",
+        "midnight": "Swap the icon to midnight",
         "grayscale": "Drain the icon to gray",
-        "whiten": "Flatten the icon to a silhouette",
-        "original": "Leave the icon as authored",
-        "pixelated": "Resample the icon into coarse pixels"
+        "whiten": "Flatten the icon to a silhouette"
       },
       "color": {
         "green": "Green",

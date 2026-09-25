@@ -171,10 +171,18 @@
         "classic": "标准侧栏布局"
       },
       "icon": {
+        "pink": "把图标换成粉色",
+        "silver": "把图标换成银白",
+        "green": "把图标换成绿色",
+        "blue": "把图标换成蓝色",
+        "purple": "把图标换成紫色",
+        "yellow": "把图标换成黄色",
+        "orange": "把图标换成橙色",
+        "rose": "把图标换成玫红",
+        "cyan": "把图标换成青色",
+        "midnight": "把图标换成墨黑",
         "grayscale": "把图标褪成灰度",
-        "whiten": "把图标压成剪影",
-        "original": "保留图标原样",
-        "pixelated": "把图标重采样成粗像素"
+        "whiten": "把图标压成剪影"
       },
       "color": {
         "green": "绿",

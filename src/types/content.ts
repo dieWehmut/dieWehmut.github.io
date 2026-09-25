@@ -94,14 +94,52 @@ export interface SiteLink {
 }
 
 /**
- * How the console portrait is drawn. It used to apply in the dark theme only,
- * which is why it was once named for it; now that a click cycles it, every form
- * has to answer in either theme, so the name no longer mentions one.
+ * A portrait the console can wear, named for the colourway it is drawn in. The
+ * ids are the console's own vocabulary: `/icon/<id>` accepts them, the picker
+ * lists them, and the plate cycles them, so one word reaches the command line,
+ * the screen reader and the status line alike.
+ *
+ * `grayscale` and `whiten` are not colourways but finishes: the first drains the
+ * portrait the reader was last looking at, the second flattens it to a silhouette.
  */
-export type ConsoleIconForm = 'grayscale' | 'whiten' | 'original' | 'pixelated'
+export type ConsolePortraitId =
+  | 'pink'
+  | 'silver'
+  | 'green'
+  | 'blue'
+  | 'purple'
+  | 'yellow'
+  | 'orange'
+  | 'rose'
+  | 'cyan'
+  | 'midnight'
+  | 'grayscale'
+  | 'whiten'
+
+/** How the console portrait is drawn; the gallery ids and the two finishes. */
+export type ConsoleIconForm = ConsolePortraitId
+
+export interface ConsolePortrait {
+  id: ConsolePortraitId
+  /** A runtime `/capture-assets/...` path; this repository tracks no images. */
+  src: string
+}
 
 export interface ConsoleSiteConfig {
+  /** Drawn when no gallery is configured, or when the reader asks for no artwork. */
   icon?: string
+  /**
+   * The colourways the console can wear, in the order the plate and the picker
+   * walk them. A fork that ships no artwork leaves this empty and the console
+   * falls back to `icon`.
+   */
+  portraits?: ConsolePortrait[]
+  /**
+   * The one-colour cutout the `whiten` finish draws. The colourways are opaque
+   * squares, so painting one flat would only ever white out its background; a
+   * silhouette has to be its own transparent artwork.
+   */
+  silhouette?: string
   /** The starting form. A reader's own choice is remembered over it. */
   iconForm?: ConsoleIconForm
 }

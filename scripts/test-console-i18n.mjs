@@ -32,6 +32,7 @@ const panelView = read('src/components/console/ConsolePanelView.vue')
 const shell = read('src/components/console/ConsoleShell.vue')
 const overview = read('src/components/console/ConsoleOverviewHeader.vue')
 const iconPreference = read('src/composables/useConsoleIconPreference.ts')
+const siteConfig = read('src/data/site/config.ts')
 const themePreference = read('src/composables/useThemePreference.ts')
 
 const checks = []
@@ -151,9 +152,16 @@ check(
   ))),
 )
 
-const iconForms = [...literalBlock(iconPreference, 'export const consoleIconForms').matchAll(/'(\w+)'/g)]
-  .map(([, form]) => form)
-check('the icon form ring was found', iconForms.length === 4)
+// The ring is composed rather than written out: the gallery comes from the site
+// config and the finishes from the composable, so both halves are read here and
+// the wording is checked against the sum. Reading only the composition would
+// check nothing, since it names no form.
+const galleryIds = [...literalBlock(siteConfig, 'portraits:').matchAll(/id: '([\w-]+)'/g)]
+  .map(([, id]) => id)
+const finishIds = [...literalBlock(iconPreference, 'export const consoleIconFinishes').matchAll(/'([\w-]+)'/g)]
+  .map(([, id]) => id)
+const iconForms = [...galleryIds, ...finishIds]
+check('the icon form ring was found', galleryIds.length === 10 && finishIds.length === 2)
 check(
   'every icon form the ring cycles has wording in every locale',
   LOCALES.every((id) => iconForms.every((form) => (

@@ -10,7 +10,7 @@
       <img
         class="console-overview__avatar"
         :class="`console-overview__avatar--${iconForm}`"
-        :src="avatarUrl"
+        :src="portraitSrc"
         :alt="`${config.owner} Console icon`"
         decoding="async"
       />
@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSiteOverview } from '../../composables/useSiteOverview'
@@ -79,9 +80,17 @@ const {
   templateRepoUrl,
 } = useSiteOverview()
 const { setDisplayMode } = useDisplayModePreference()
-const { iconForm, cycleIconForm } = useConsoleIconPreference()
+const { iconForm, portrait, cycleIconForm } = useConsoleIconPreference()
 const configuredIcon = String(config.console?.icon || '').trim()
-const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?size=1024`
+/**
+ * The artwork the current form draws. A finish wears the portrait the reader was
+ * looking at last; with no gallery configured both fall back to the single icon
+ * named in the config, and failing that to the GitHub avatar, so a fork that
+ * ships no artwork at all still shows something of its own.
+ */
+const portraitSrc = computed(() => portrait.value?.src
+  || configuredIcon
+  || `${getGitHubAvatarUrl(config.githubUser)}?size=1024`)
 </script>
 
 <style scoped>
@@ -139,10 +148,9 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
 }
 
 .console-overview__avatar {
-  /* The inset of the artwork inside its plate, and the pixel size the coarse form
-     resamples to. Two numbers, so a fork retunes both from here. */
+  /* The inset of the artwork inside its plate. One number, so a fork retunes it
+     from here and both axes follow. */
   --console-icon-inset: 94%;
-  --console-icon-pixel: 14;
   display: block;
   /*
    * The plate is sized by the banner row; only the artwork inside it is inset.
@@ -158,16 +166,13 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
 }
 
 /*
- * The four forms `/icon` and the plate itself cycle. They answer in either theme,
- * so none of them may depend on one — which the silhouette does, and resolves by
- * inverting per theme rather than by switching itself off.
+ * The forms `/icon` and the plate itself cycle. Twelve now: ten colourways, and
+ * the two finishes that draw whichever of them the reader looked at last. Each
+ * answers in either theme, so none may depend on one — which the silhouette does,
+ * and resolves by inverting per theme rather than by switching itself off.
  */
 .console-overview__avatar--grayscale {
   filter: grayscale(1);
-}
-
-.console-overview__avatar--original {
-  filter: none;
 }
 
 /* Flat ink, drawn in whichever direction the page background is not. */
@@ -183,18 +188,6 @@ const avatarUrl = configuredIcon || `${getGitHubAvatarUrl(config.githubUser)}?si
   filter: brightness(0);
 }
 
-/*
- * Pixelation has no CSS primitive. The artwork is laid out at a fraction of its
- * footprint so the browser downsamples it, then scaled back to full size with
- * nearest-neighbour sampling — the divisor is therefore the pixel size. The plate
- * centres the box, so scaling from the centre lands it back where it started.
- */
-.console-overview__avatar--pixelated {
-  width: calc(var(--console-icon-inset) / var(--console-icon-pixel));
-  height: calc(var(--console-icon-inset) / var(--console-icon-pixel));
-  transform: scale(var(--console-icon-pixel));
-  image-rendering: pixelated;
-}
 
 .console-overview__dashboard {
   display: flex;

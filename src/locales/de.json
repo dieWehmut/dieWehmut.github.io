@@ -174,10 +174,18 @@
         "classic": "Standardlayout mit Seitenleiste"
       },
       "icon": {
+        "pink": "Symbol in Rosa zeigen",
+        "silver": "Symbol in Silber zeigen",
+        "green": "Symbol in Grün zeigen",
+        "blue": "Symbol in Blau zeigen",
+        "purple": "Symbol in Violett zeigen",
+        "yellow": "Symbol in Gelb zeigen",
+        "orange": "Symbol in Orange zeigen",
+        "rose": "Symbol in Rosarot zeigen",
+        "cyan": "Symbol in Türkis zeigen",
+        "midnight": "Symbol in Mitternachtsgrau zeigen",
         "grayscale": "Symbol auf Graustufen reduzieren",
-        "whiten": "Symbol zur Silhouette verflachen",
-        "original": "Symbol unverändert lassen",
-        "pixelated": "Symbol auf grobe Pixel heruntersetzen"
+        "whiten": "Symbol zur Silhouette verflachen"
       },
       "color": {
         "green": "Grün",
