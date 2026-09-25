@@ -21,9 +21,16 @@ const checks = [
   ['the build copies that folder out of the private assets repository', /publicAssetFolders = \[[^\]]*'site'/.test(captureGenerator)
     && /for \(const folder of publicAssetFolders\) syncPublicAssetFolder\(/.test(captureGenerator)],
   ['site config supports a custom console icon', types.includes('ConsoleIconForm') && config.includes('icon: consoleIcon')],
-  ['site config seeds a starting icon form', /iconForm:\s*'(grayscale|whiten|original|pixelated)'/.test(config)],
+  ['site config seeds a starting icon form', /iconForm:\s*'(pink|silver|green|blue|purple|yellow|orange|rose|cyan|midnight|grayscale|whiten)'/.test(config)],
   ['header falls back to GitHub avatar when no icon is configured', header.includes('config.console?.icon') && header.includes('getGitHubAvatarUrl(config.githubUser)')],
-  ['all four icon forms are drawn', ['grayscale', 'whiten', 'original', 'pixelated'].every((form) => header.includes(`avatar--${form}`))],
+  // The gallery is the config's, not the header's: the component asks for the
+  // portrait named by the current form and draws whatever it is handed. A fork
+  // adding artwork therefore touches config.ts alone.
+  ['the colourway gallery is declared in the site config', (/portraits:\s*\[/.test(config))
+    && (/src: '\/capture-assets\/site\/portrait-/.test(config))
+    && /export const consolePortraits/.test(iconPreference)
+    && /siteConfig\.console\?\.portraits/.test(iconPreference)],
+  ['the two finishes are drawn wherever a portrait is', ['grayscale', 'whiten'].every((form) => header.includes(`avatar--${form}`))],
   // Every form has to answer in either theme now that a click cycles them, so
   // none may switch itself off in one. Only the silhouette is theme-dependent,
   // and it resolves by inverting rather than by disappearing. The light override
@@ -32,8 +39,6 @@ const checks = [
   // image, landing the filter on <html> — see test-scoped-styles.mjs.
   ['the silhouette inverts per theme instead of switching off', /\.console-overview__avatar--whiten\s*\{\s*filter:\s*brightness\(0\)\s*invert\(1\)/.test(header)
     && /\[data-theme="light"\]\s+\.console-overview__avatar--whiten\s*\{\s*filter:\s*brightness\(0\)/.test(header)],
-  ['the coarse form resamples with nearest-neighbour sampling', /--pixelated\s*\{[\s\S]*?image-rendering:\s*pixelated/.test(header)
-    && /--pixelated\s*\{[\s\S]*?transform:\s*scale\(var\(--console-icon-pixel\)\)/.test(header)],
   ['the portrait plate is a button that cycles the form', /<button[\s\S]{0,200}class="console-overview__portrait"[\s\S]*?@click="cycleIconForm\(\)"/.test(header)],
   // The plate is a third of the banner. Tinting it under a passing cursor was a
   // third of the page changing colour to report a pointer position. Keyboard focus
@@ -42,9 +47,20 @@ const checks = [
     && !/\.console-overview__portrait:hover/.test(header)],
   // The click ring and the /icon picker read the same ordered list, so the two
   // can never disagree about what comes next.
-  ['the cycle order is declared once, in order', /grayscale[\s\S]*?whiten[\s\S]*?original[\s\S]*?pixelated/.test(iconPreference)],
+  ['the cycle order is declared as the gallery followed by the finishes', /export const consoleIconForms: readonly ConsoleIconForm\[\] = \[\n  \.\.\.consolePortraits\.map\(\(portrait\) => portrait\.id\),\n  \.\.\.consoleIconFinishes,\n\]/.test(iconPreference)],
   ['cycling wraps back to the first form', /function cycleConsoleIconForm[\s\S]*?%/.test(iconPreference)],
-  ['a chosen form outlives the page', iconPreference.includes('localStorage.setItem(CONSOLE_ICON_FORM_STORAGE_KEY')],
+  ['a chosen form outlives the page', /persist\(CONSOLE_ICON_FORM_STORAGE_KEY, parsed\)/.test(iconPreference)
+    && /localStorage\.setItem\(key, value\)/.test(iconPreference)],
+  // A finish wears the colourway the reader looked at last, so the two travel
+  // together through storage: reloading on `grayscale` must not repaint it with
+  // whichever portrait happens to be first in the gallery.
+  ['a finish remembers the portrait it was chosen over', iconPreference.includes('CONSOLE_ICON_BASE_STORAGE_KEY')
+    && /if \(isPortrait\(parsed\)\) \{[\s\S]*?basePortrait\.value = parsed/.test(iconPreference)],
+  // The colourways are opaque illustrations. Flattening one to a single ink would
+  // turn its background into the ink and its figure into a hole, so the finish
+  // that does that draws a transparent cutout instead.
+  ['the silhouette form draws the transparent cutout, not a portrait', /form === 'whiten' && consoleSilhouetteSrc/.test(iconPreference)
+    && /silhouette: '\/capture-assets\/site\/portrait-silhouette\.webp'/.test(config)],
   ['the runtime panel drops the started timestamp', !header.includes('<dt>started</dt>') && !header.includes('config.startedAt')],
   // The status line under the prompt already reads back the theme and the colour
   // scheme, and it reads them back in the words `/theme` and `/color` accept. The

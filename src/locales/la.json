@@ -174,10 +174,18 @@
         "classic": "Forma usitata cum margine laterali"
       },
       "icon": {
+        "pink": "Imaginem in roseum verte",
+        "silver": "Imaginem in argenteum verte",
+        "green": "Imaginem in viridem verte",
+        "blue": "Imaginem in caeruleum verte",
+        "purple": "Imaginem in purpureum verte",
+        "yellow": "Imaginem in flavum verte",
+        "orange": "Imaginem in aurantiacum verte",
+        "rose": "Imaginem in puniceum verte",
+        "cyan": "Imaginem in cyaneum verte",
+        "midnight": "Imaginem in atrum verte",
         "grayscale": "In cinereum remitte",
-        "whiten": "In umbram planam redige",
-        "original": "Imaginem ut auctor fecit relinque",
-        "pixelated": "In crassa quadratula iterum finge"
+        "whiten": "In umbram planam redige"
       },
       "color": {
         "green": "Viridis",

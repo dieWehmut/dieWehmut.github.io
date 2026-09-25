@@ -61,8 +61,24 @@ const PANEL_VALUES: Record<string, { panel: ConsolePanel; values: Set<string> }>
   color: { panel: 'color', values: new Set(['green', 'purple', 'pink', 'white', 'black']) },
   background: { panel: 'background', values: new Set(['on', 'off']) },
   // 与 src/composables/useConsoleIconPreference.ts 的 consoleIconForms 手工同步，
-  // 原因同上：本模块不得有相对 import。
-  icon: { panel: 'icon', values: new Set(['grayscale', 'whiten', 'original', 'pixelated']) },
+  // 原因同上：本模块不得有相对 import。十种配色加两种收尾。
+  icon: {
+    panel: 'icon',
+    values: new Set([
+      'pink',
+      'silver',
+      'green',
+      'blue',
+      'purple',
+      'yellow',
+      'orange',
+      'rose',
+      'cyan',
+      'midnight',
+      'grayscale',
+      'whiten',
+    ]),
+  },
   language: { panel: 'language', values: new Set(['zh', 'zh_tw', 'en', 'ja', 'de', 'la']) },
 }
 

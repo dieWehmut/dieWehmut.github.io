@@ -45,7 +45,25 @@ export const siteConfig: SiteConfig = {
   colorScheme: 'purple',
   console: {
     icon: consoleIcon,
-    iconForm: 'grayscale',
+    // The console portrait gallery: ten colourways of one drawing, shipped as
+    // runtime paths for the same reason icon is one — see the note above. The
+    // order is the cycle order, so the plate walks them in the order written here.
+    portraits: [
+      { id: 'pink', src: '/capture-assets/site/portrait-pink.webp' },
+      { id: 'silver', src: '/capture-assets/site/portrait-silver.webp' },
+      { id: 'green', src: '/capture-assets/site/portrait-green.webp' },
+      { id: 'blue', src: '/capture-assets/site/portrait-blue.webp' },
+      { id: 'purple', src: '/capture-assets/site/portrait-purple.webp' },
+      { id: 'yellow', src: '/capture-assets/site/portrait-yellow.webp' },
+      { id: 'orange', src: '/capture-assets/site/portrait-orange.webp' },
+      { id: 'rose', src: '/capture-assets/site/portrait-rose.webp' },
+      { id: 'cyan', src: '/capture-assets/site/portrait-cyan.webp' },
+      { id: 'midnight', src: '/capture-assets/site/portrait-midnight.webp' },
+    ],
+    // The cutout behind the `whiten` form: transparent inside and out, so the
+    // finish can draw the figure in whichever ink the theme asks for.
+    silhouette: '/capture-assets/site/portrait-silhouette.webp',
+    iconForm: 'pink',
   },
 
   // --- External Services ---

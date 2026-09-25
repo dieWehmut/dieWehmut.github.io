@@ -174,10 +174,18 @@
         "classic": "標準側欄版面"
       },
       "icon": {
+        "pink": "把圖示換成粉紅",
+        "silver": "把圖示換成銀白",
+        "green": "把圖示換成綠色",
+        "blue": "把圖示換成藍色",
+        "purple": "把圖示換成紫色",
+        "yellow": "把圖示換成黃色",
+        "orange": "把圖示換成橙色",
+        "rose": "把圖示換成玫紅",
+        "cyan": "把圖示換成青色",
+        "midnight": "把圖示換成墨黑",
         "grayscale": "把圖示褪成灰階",
-        "whiten": "把圖示壓成剪影",
-        "original": "保留圖示原樣",
-        "pixelated": "把圖示重新取樣成粗像素"
+        "whiten": "把圖示壓成剪影"
       },
       "color": {
         "green": "綠",
