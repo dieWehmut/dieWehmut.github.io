@@ -45,6 +45,48 @@ const editableToolbar = markdown.match(/function renderEditableToolbar\([\s\S]*?
 const toolbarOrder = ['run', 'fullscreen', 'edit'].map((action) => editableToolbar.indexOf(`data-md-action="${action}"`))
 const narrowStyles = styles.slice(styles.indexOf('@media (max-width: 900px)'), styles.indexOf('@media (max-width: 640px)'))
 
+// A heading the reader cannot tell apart from the paragraph under it has, for
+// that reader, not been rendered: the article views pinned the ladder down to
+// h4 and let h5/h6 fall through to the shared scale, where 0.875em measured
+// *below* the body size. Both surfaces must keep every level above the prose
+// and strictly descending, so the check reads the declared numbers rather than
+// trusting one stylesheet to stay in step with the other.
+function articleHeadingLadder(source, label) {
+  const ladder = {}
+  for (const match of source.matchAll(/:deep\(h([1-6])\) \{ font-size: (\d+(?:\.\d+)?)px; \}/g)) {
+    ladder[Number(match[1])] = Number(match[2])
+  }
+  const bodySize = Number(source.match(/__(?:body|view__body) \{[^}]*font-size: (\d+(?:\.\d+)?)px/)?.[1])
+  if (!bodySize || Object.keys(ladder).length !== 6) {
+    return [`${label} declares all six heading sizes`]
+  }
+  const failures = []
+  for (const level of [1, 2, 3, 4, 5, 6]) {
+    if (!(ladder[level] > bodySize)) failures.push(`${label} h${level} rises above the body size`)
+    if (level > 1 && !(ladder[level] < ladder[level - 1])) failures.push(`${label} h${level} stays under h${level - 1}`)
+  }
+  return failures
+}
+
+function sharedHeadingScale(source) {
+  const scale = {}
+  for (const match of source.matchAll(/\.markdown-body h([4-6]) \{[^}]*font-size: (\d+(?:\.\d+)?)em; \}/g)) {
+    scale[Number(match[1])] = Number(match[2])
+  }
+  const failures = []
+  for (const level of [4, 5, 6]) {
+    if (!(scale[level] > 1)) failures.push(`shared h${level} rises above the prose it sits in`)
+    if (level > 4 && !(scale[level] < scale[level - 1])) failures.push(`shared h${level} stays under h${level - 1}`)
+  }
+  return failures
+}
+
+const headingLadderFailures = [
+  ...articleHeadingLadder(postView, 'post view'),
+  ...articleHeadingLadder(noteView, 'note view'),
+  ...sharedHeadingScale(styles),
+]
+
 const checks = [
   ['sanitizer keeps u', /['"]u['"]/.test(allowedTags)],
   ['dark underline is white', /--md-underline-color:\s*#fff\b/i.test(styles)],
@@ -54,6 +96,9 @@ const checks = [
   ['pdf maps underline', /tag\s*===\s*['"]u['"][\s\S]*decoration\s*=\s*['"]underline['"]/i.test(pdf)],
   ['pdf underline is black', /PDF_UNDERLINE_COLOR\s*=\s*['"]#000['"]/i.test(pdf)],
   ['scoped views keep underline styling', /:deep\(u\)[\s\S]*?md-underline-color/.test(postView) && /:deep\(u\)[\s\S]*?md-underline-color/.test(noteView) && /:deep\(u\)[\s\S]*?md-underline-color/.test(noteCard)],
+  [`levels 4-6 render above the prose in every markdown surface${
+    headingLadderFailures.length ? `\n       ${headingLadderFailures.join('\n       ')}` : ''
+  }`, headingLadderFailures.length === 0],
   ['metadata breaks are normalized', /function normalizeMarkdownMetadataBreaks\([\s\S]*?metadataLinePattern/.test(markdown) && /split\(codeFencePattern\)/.test(markdown) && /normalizeMarkdownMetadataBreaks\(source\)/.test(markdown)],
   ['whale metadata remains structured', /原文标题[^\r\n]*\r?\n\*\*作者[^\r\n]*\r?\n\*\*发布日期/.test(whaleMeta)],
   ['all vocabulary lines are recognized', vocabularyLines.length === 164],

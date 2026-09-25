@@ -207,7 +207,9 @@ watch(
 .note-view__body :deep(h1),
 .note-view__body :deep(h2),
 .note-view__body :deep(h3),
-.note-view__body :deep(h4) {
+.note-view__body :deep(h4),
+.note-view__body :deep(h5),
+.note-view__body :deep(h6) {
   margin: 24px 0 12px;
   font-weight: 700;
   line-height: 1.4;
@@ -217,10 +219,14 @@ watch(
 .note-view__body :deep(h2) { color: var(--md-color-secondary); }
 .note-view__body :deep(h3) { color: var(--md-color-tertiary); }
 .note-view__body :deep(h4) { color: var(--md-color-primary); }
+.note-view__body :deep(h5) { color: var(--md-color-secondary); }
+.note-view__body :deep(h6) { color: var(--md-color-tertiary); }
 .note-view__body :deep(h1) { font-size: 22px; }
-.note-view__body :deep(h2) { font-size: 19px; }
-.note-view__body :deep(h3) { font-size: 16px; }
-.note-view__body :deep(h4) { font-size: 15px; }
+.note-view__body :deep(h2) { font-size: 20px; }
+.note-view__body :deep(h3) { font-size: 19px; }
+.note-view__body :deep(h4) { font-size: 18px; }
+.note-view__body :deep(h5) { font-size: 17px; }
+.note-view__body :deep(h6) { font-size: 16px; }
 
 .note-view__body :deep(ul),
 .note-view__body :deep(ol) {

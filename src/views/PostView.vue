@@ -230,7 +230,9 @@ watch(
 .post-view__body :deep(h1),
 .post-view__body :deep(h2),
 .post-view__body :deep(h3),
-.post-view__body :deep(h4) {
+.post-view__body :deep(h4),
+.post-view__body :deep(h5),
+.post-view__body :deep(h6) {
   margin: 24px 0 12px;
   font-weight: 700;
   line-height: 1.4;
@@ -240,10 +242,14 @@ watch(
 .post-view__body :deep(h2) { color: var(--md-color-secondary); }
 .post-view__body :deep(h3) { color: var(--md-color-tertiary); }
 .post-view__body :deep(h4) { color: var(--md-color-primary); }
+.post-view__body :deep(h5) { color: var(--md-color-secondary); }
+.post-view__body :deep(h6) { color: var(--md-color-tertiary); }
 .post-view__body :deep(h1) { font-size: 22px; }
-.post-view__body :deep(h2) { font-size: 19px; }
-.post-view__body :deep(h3) { font-size: 16px; }
-.post-view__body :deep(h4) { font-size: 15px; }
+.post-view__body :deep(h2) { font-size: 20px; }
+.post-view__body :deep(h3) { font-size: 19px; }
+.post-view__body :deep(h4) { font-size: 18px; }
+.post-view__body :deep(h5) { font-size: 17px; }
+.post-view__body :deep(h6) { font-size: 16px; }
 
 .post-view__body :deep(ul),
 .post-view__body :deep(ol) {

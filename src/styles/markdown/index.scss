@@ -947,9 +947,11 @@ html.markdown-editor-fullscreen-active .markdown-body .markdown-content__chunk {
 }
 
 .markdown-body h3 { color: var(--md-color-tertiary); font-size: 1.25em; }
-.markdown-body h4 { color: var(--md-color-primary); font-size: 1em; }
-.markdown-body h5 { color: var(--md-color-secondary); font-size: 0.875em; }
-.markdown-body h6 { color: var(--md-color-tertiary); font-size: 0.85em; }
+/* Levels 4-6 stay above the surrounding prose: a heading that measures the same
+   as body text, or smaller, reads as ordinary text instead of a heading. */
+.markdown-body h4 { color: var(--md-color-primary); font-size: 1.15em; }
+.markdown-body h5 { color: var(--md-color-secondary); font-size: 1.1em; }
+.markdown-body h6 { color: var(--md-color-tertiary); font-size: 1.05em; }
 
 .markdown-body p {
   margin-top: 0;
