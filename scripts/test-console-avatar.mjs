@@ -47,7 +47,7 @@ const checks = [
     && !/\.console-overview__portrait:hover/.test(header)],
   // The click ring and the /icon picker read the same ordered list, so the two
   // can never disagree about what comes next.
-  ['the cycle order is declared as the gallery followed by the finishes', /export const consoleIconForms: readonly ConsoleIconForm\[\] = \[\n  \.\.\.consolePortraits\.map\(\(portrait\) => portrait\.id\),\n  \.\.\.consoleIconFinishes,\n\]/.test(iconPreference)],
+  ['the cycle order is declared as the gallery followed by the finishes', /export const consoleIconForms: readonly ConsoleIconForm\[\] = \[\r?\n  \.\.\.consolePortraits\.map\(\(portrait\) => portrait\.id\),\r?\n  \.\.\.consoleIconFinishes,\r?\n\]/.test(iconPreference)],
   ['cycling wraps back to the first form', /function cycleConsoleIconForm[\s\S]*?%/.test(iconPreference)],
   ['a chosen form outlives the page', /persist\(CONSOLE_ICON_FORM_STORAGE_KEY, parsed\)/.test(iconPreference)
     && /localStorage\.setItem\(key, value\)/.test(iconPreference)],
