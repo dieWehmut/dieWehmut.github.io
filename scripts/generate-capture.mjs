@@ -261,6 +261,37 @@ function copyDocAsset(sourcePath, imageUrl) {
   fs.copyFileSync(sourcePath, destinationPath)
 }
 
+/**
+ * The source a docs entry still has somewhere, whether or not a Markdown file
+ * still points at it. Entries outlive the reference that created them: a note
+ * that swapped one page for another, or a screenshot inserted and then
+ * rewritten, leaves the entry behind while its file stays in the assets
+ * repository. Without this the gallery keeps advertising the entry and serving
+ * nothing, since the copy above only runs for references found in Markdown.
+ */
+function existingDocAssetSource(assetsDir, imageUrl) {
+  const relativeAssetPath = captureAssetRelativePath(imageUrl)
+  if (!relativeAssetPath.startsWith('docs/')) return ''
+  const assetsPath = path.join(assetsDir, relativeAssetPath)
+  if (fs.existsSync(assetsPath)) return assetsPath
+  const publicPath = path.join(publicCaptureDir, relativeAssetPath)
+  if (fs.existsSync(publicPath)) return publicPath
+  return ''
+}
+
+/**
+ * Whether the private assets repository holds this entry's image, which is the
+ * only source a deployed build can reach: public/ is a local cache and is never
+ * committed. An entry no document references and the repository cannot serve
+ * would render as a broken tile wherever it is deployed, so it is dropped
+ * rather than advertised.
+ */
+function assetsRepoDocAssetExists(assetsDir, imageUrl) {
+  const relativeAssetPath = captureAssetRelativePath(imageUrl)
+  if (!relativeAssetPath.startsWith('docs/')) return false
+  return fs.existsSync(path.join(assetsDir, relativeAssetPath))
+}
+
 function copyStandaloneAsset(assetsDir, imageUrl) {
   const relativeAssetPath = captureAssetRelativePath(imageUrl)
   const standaloneRelative = relativeAssetPath.replace(/^standalone\//, '')
@@ -317,6 +348,7 @@ async function main() {
   const byImage = new Map()
   const markdownFiles = getMarkdownFiles(docsDir)
   const missingAssetPaths = new Set()
+  const referencedImages = new Set()
 
   for (const asset of existingCaptureAssets) {
     const normalized = normalizeExistingCaptureAsset(asset)
@@ -347,6 +379,7 @@ async function main() {
       if (!isCaptureAssetUrl(image.src)) continue
       if (seenInDoc.has(image.src)) continue
       seenInDoc.add(image.src)
+      referencedImages.add(image.src)
 
       // A document that used to publish under docs/<category>/<name>/ is
       // canonicalized to docs/<name>/ while retaining its existing metadata.
@@ -395,6 +428,33 @@ async function main() {
     }
 
     removeLegacyDocumentAssets(byImage, filePath)
+  }
+
+  // Every docs entry ships its image, not only the ones a Markdown file still
+  // names. A document that swapped one page for another leaves the old entry
+  // behind in the data while its file stays in the assets repository, and a
+  // tile whose file never reaches public/ is a card that renders as nothing.
+  //
+  // An entry no document references any more, and the assets repository cannot
+  // serve either, is dropped: every deployed build reads that repository and
+  // nothing else, so the entry could only ever render as a broken tile. An
+  // entry a document does still reference keeps its place either way, since
+  // the asset push mirrors referenced local images into that repository before
+  // the deployed build ever runs.
+  for (const asset of Array.from(byImage.values())) {
+    const image = String(asset?.image || '')
+    const relativePath = captureAssetRelativePath(image)
+    if (!relativePath.startsWith('docs/')) continue
+    if (!referencedImages.has(image) && !assetsRepoDocAssetExists(assetsDir, image)) {
+      byImage.delete(image)
+      continue
+    }
+    const sourcePath = existingDocAssetSource(assetsDir, image)
+    if (!sourcePath) continue
+    const destinationPath = path.join(publicCaptureDir, relativePath)
+    if (path.resolve(sourcePath) === path.resolve(destinationPath)) continue
+    ensureDir(path.dirname(destinationPath))
+    fs.copyFileSync(sourcePath, destinationPath)
   }
 
   const needsStandaloneAssets = manifestEntries.some((entry) => !entry.hidden && String(entry.image || '').trim())
