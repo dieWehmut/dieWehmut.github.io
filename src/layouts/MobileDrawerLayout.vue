@@ -59,7 +59,10 @@ const tocHeadingSelector = computed(() => {
   if (['root', 'home', 'archive', 'notes', 'tag-detail'].includes(String(route.name || ''))) {
     return '.content-time-heading'
   }
-  return 'h1, h2, h3'
+  // The drawer is the outline for whatever page is open, and an article nests
+  // its sections four and five deep; listing only the top three left the deep
+  // halves of pages like /post/yjango off the drawer entirely.
+  return 'h1, h2, h3, h4, h5, h6'
 })
 let previousBodyOverflow = ''
 

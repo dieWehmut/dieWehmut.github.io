@@ -64,7 +64,12 @@ import {
 
 const props = defineProps({
   rootSelector: { type: String, default: 'body' },
-  headingSelector: { type: String, default: 'h2, h3' },
+  // The whole ladder, because this rail stands in for the article's table of
+  // contents: an article opens at h2 and nests h4 and h5 under its sections, so
+  // stopping at h3 drew 19 rows for a page that holds 45 headings. Callers that
+  // list something other than prose headings — month strips, capture timelines,
+  // the help page — pass their own selector and keep the rail as short as it is.
+  headingSelector: { type: String, default: 'h1, h2, h3, h4, h5, h6' },
   offset: { type: Number, default: 120 },
   mode: { type: String, default: 'desktop' },
 })

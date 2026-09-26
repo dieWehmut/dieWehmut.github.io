@@ -34,6 +34,27 @@ const checks = [
   ['desktop view key ignores hash', /routeViewKey/.test(desktop) && !/:key="route\.fullPath"/.test(desktop)],
   ['mobile view and toc keys ignore hash', /routeViewKey/.test(mobile) && !/:key="route\.fullPath"/.test(mobile)],
   ['desktop and mobile offsets remain distinct', /default:\s*120/.test(sidebar) && /:offset="72"/.test(mobile)],
+  // The rail is the article's table of contents, and the body renders the whole
+  // ladder. Measured on /post/yjango: 5 h2 + 14 h3 + 23 h4 + 3 h5 = 45 headings
+  // in the DOM, but the pre-fix selector `h2, h3` listed 19 rows, and the mobile
+  // drawer's `h1, h2, h3` added only the page title. Both surfaces now ask for
+  // the same six levels `headingNavigation` resolves hashes against, so the rows
+  // a reader sees can no longer be a subset of the headings a URL can reach.
+  [
+    'the desktop rail lists every heading level the article renders',
+    ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].every((level) =>
+      new RegExp(`\\b${level}\\b`).test(sidebar.match(/headingSelector:\s*\{[^}]*default:\s*'([^']*)'/)?.[1] || '')),
+  ],
+  [
+    'the mobile drawer lists the same levels as the desktop rail',
+    ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].every((level) =>
+      new RegExp(`\\b${level}\\b`).test(
+        (mobile.match(/tocHeadingSelector = computed\(\(\) => \{[\s\S]*?\n\}\)/)?.[0] || '')
+          .match(/return '([^']*)'/g)
+          ?.at(-1)
+          ?.match(/'([^']*)'/)?.[1] || '',
+      )),
+  ],
 ]
 
 const failures = checks.filter(([, ok]) => !ok)
