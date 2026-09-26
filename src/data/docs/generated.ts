@@ -22,8 +22,8 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "learning"
     ],
     "summary": "2026-09-21 | Monday\n知其人\n计算机科学 → 机器学习 → 深度学习 → 多模态信息融合 → 人类行为建模\n与\"教育学 → 学习心理学 → 学习方法\"不一样\n早期重点是AI 从知乎短视频到《学习观》2020年后精力转...",
-    "wordCount": 6167,
-    "readingMinutes": 16,
+    "wordCount": 6678,
+    "readingMinutes": 17,
     "updated": "2026/09/25 17:22",
     "path": "./posts/yjango.md"
   },
