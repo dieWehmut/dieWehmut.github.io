@@ -247,6 +247,14 @@ check(
 )
 check('shared article PDF export remains in standard mode', routeBreadcrumb.includes('ArticleExportButton'))
 check(
+  // The rail now lists the article title as its first row, so while the reader is
+  // still at the top the section is the page the crumbs already name: measured on
+  // /post/yjango, "Archive > yjango学习观批判性学习 > yjango学习观批判性学习". The
+  // duplicate is dropped only at the top; scrolling on names the section reached.
+  'the breadcrumb does not repeat the article title as its section',
+  /section\.title !== detailTitle\(\)/.test(routeBreadcrumb),
+)
+check(
   'console article pages carry no export button of their own',
   !postView.includes('ArticleExportButton') && !noteView.includes('ArticleExportButton'),
 )

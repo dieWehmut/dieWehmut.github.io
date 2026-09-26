@@ -131,7 +131,11 @@ const crumbs = computed<Crumb[]>(() => {
   const siteCrumb = { label: siteProfile.title || 'Nexus', to: '/home' }
   const name = String(route.name || '')
   const section = readingPath.value
-  const sectionCrumb = !isMobile.value && section?.title
+  // An article's own title is its first heading, so while the reader is still at
+  // the top of the page the section crumb would name the page that the crumb
+  // before it already names. Keep the section crumb for the sections inside the
+  // article, where it is the only place the current one is written down.
+  const sectionCrumb = !isMobile.value && section?.title && section.title !== detailTitle()
     ? { label: section.title, sectionId: section.activeId }
     : null
 
