@@ -5,20 +5,33 @@
         <strong>{{ friends.length }} links</strong>
       </header>
       <div class="console-friends__rows">
-        <a
+        <div
           v-for="friend in friends"
           :key="friend.id"
           class="console-friends__row"
-          :href="friend.url"
-          target="_blank"
-          rel="noopener noreferrer"
         >
           <img v-if="friend.avatar" class="console-friends__avatar" :src="friend.avatar" alt="" loading="lazy" decoding="async" />
           <span v-else class="console-friends__avatar console-friends__avatar--fallback">{{ initials(friend.name) }}</span>
-          <strong>{{ friend.name }}</strong>
+          <strong>
+            <a
+              v-if="friendGithubUrl(friend)"
+              class="console-friends__name"
+              :href="friendGithubUrl(friend)"
+              target="_blank"
+              rel="noopener noreferrer"
+              :title="`GitHub · ${friend.name}`"
+            >{{ friend.name }}</a>
+            <template v-else>{{ friend.name }}</template>
+          </strong>
           <span>{{ friend.description }}</span>
-          <span>{{ friend.url }}</span>
-        </a>
+          <a
+            class="console-friends__site"
+            :href="friend.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            :title="friend.url"
+          >{{ friend.url }}</a>
+        </div>
       </div>
     </section>
 
@@ -37,6 +50,7 @@
 import { computed } from 'vue'
 import FriendCard from '../components/content/FriendCard.vue'
 import { friends } from '../data'
+import { friendGithubUrl } from '../utils/friendLinks'
 import { hiddenCardCount, limitCardGroup, overflowCountForItem } from '../utils/cardGroups'
 import { useDisplayModePreference } from '../composables/useDisplayModePreference'
 
@@ -93,10 +107,25 @@ function initials(name) {
 }
 
 .console-friends__row:hover,
-.console-friends__row:focus-visible {
+.console-friends__row:focus-within {
   border-color: var(--console-border-strong, var(--site-accent));
   color: var(--console-text, var(--site-text));
   background: var(--console-selection, transparent);
+  outline: none;
+}
+
+.console-friends__name,
+.console-friends__site {
+  color: inherit;
+  text-decoration: none;
+}
+
+.console-friends__name:hover,
+.console-friends__name:focus-visible,
+.console-friends__site:hover,
+.console-friends__site:focus-visible {
+  color: var(--console-accent, var(--site-accent));
+  text-decoration: underline;
   outline: none;
 }
 
@@ -117,7 +146,8 @@ function initials(name) {
 }
 
 .console-friends__row strong,
-.console-friends__row > span:not(.console-friends__avatar) {
+.console-friends__row > span:not(.console-friends__avatar),
+.console-friends__row > a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -128,7 +158,8 @@ function initials(name) {
   font-weight: 600;
 }
 
-.console-friends__row > span:not(.console-friends__avatar) {
+.console-friends__row > span:not(.console-friends__avatar),
+.console-friends__row > a {
   font-size: 0.78rem;
 }
 

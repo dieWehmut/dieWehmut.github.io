@@ -54,6 +54,8 @@ export interface FriendLink {
   name: string
   description: string
   url: string
+  /** Explicit GitHub profile; set it when the account cannot be inferred. */
+  github?: string
   avatar?: string
 }
 

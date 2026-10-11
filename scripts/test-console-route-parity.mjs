@@ -34,6 +34,7 @@ const consoleSelection = read('src/console/selection.ts')
 const rowNavigation = read('src/composables/useConsoleRowNavigation.ts')
 const resultNavigation = read('src/composables/useConsoleResultNavigation.ts')
 const friendsView = read('src/views/FriendsView.vue')
+const friendCard = read('src/components/content/FriendCard.vue')
 const scrollSpySidebar = read('src/components/system/ScrollSpySidebar.vue')
 const helpView = read('src/views/HelpView.vue')
 const panelView = read('src/components/console/ConsolePanelView.vue')
@@ -241,6 +242,15 @@ const checks = [
       && friendsView.includes('console-friends__avatar--fallback')
       && !friendsView.includes('<code>{{ friend.id }}</code>')
       && /\.console-friends__row \{[^}]*grid-template-columns: var\(--console-thumb/.test(friendsView),
+  ],
+  [
+    // The name is the friend's GitHub profile, so it cannot be nested inside a
+    // row-wide site anchor: both views keep the two destinations side by side.
+    'friend names open GitHub while the card and row keep the site link',
+    /class="console-friends__name"[\s\S]{0,200}?:href="friendGithubUrl\(friend\)"/.test(friendsView)
+      && /class="console-friends__site"[\s\S]{0,200}?:href="friend\.url"/.test(friendsView)
+      && /class="friend-card__name"[\s\S]{0,200}?:href="githubUrl"/.test(friendCard)
+      && /class="friend-card__site"[\s\S]{0,200}?:href="friend\.url"/.test(friendCard),
   ],
   [
     'the command reference is a routed page, not a dock panel',
