@@ -1,8 +1,9 @@
 import type { FriendLink } from '../../types/content'
 
-// The name on each card opens the friend's GitHub profile. `github` is only
-// needed when the account cannot be inferred from `url` (`<login>.github.io`)
-// or from the GitHub avatar URL — fill it in manually for those friends.
+// The name on each card opens the friend's GitHub profile, read from the site
+// URL (`<login>.github.io`) or from the GitHub avatar URL. Every friend below
+// resolves that way, so none needs the field; set `github` by hand only for a
+// friend whose account neither source names.
 export const friends: FriendLink[] = [
   {
     id: 'linca',
@@ -16,7 +17,6 @@ export const friends: FriendLink[] = [
     name: 'Je1ghtxyuN',
     description: 'SEU CS',
     url: 'https://je1ght.top',
-    github: 'https://github.com/Je1ghtxyuN',
     avatar: 'https://avatars.githubusercontent.com/Je1ghtxyuN',
   },
   {
@@ -24,7 +24,6 @@ export const friends: FriendLink[] = [
     name: 'AkiMisaka',
     description: '不是糖猫',
     url: 'https://blog.1343263.xyz',
-    github: 'https://github.com/asdetycv1zzc',
     avatar: 'https://avatars.githubusercontent.com/asdetycv1zzc',
   },
   {
@@ -38,7 +37,7 @@ export const friends: FriendLink[] = [
     id: 'ken1301225',
     name: 'ken1301225',
     description: 'Focusing on bandit algorithms and LLM and VLA inference acceleration',
-    url: 'https://ken1301225.github.io/',
+    url: 'https://blog.kennote.online/',
     avatar: 'https://avatars.githubusercontent.com/ken1301225',
   },
   {
