@@ -233,9 +233,12 @@ const commandGroups = computed(() => {
   min-width: 0;
 }
 
+/* Code reads as code in both shells, so this is not the console token: classic
+   mode has no `--console-font` to fall back from, and naming it here would make
+   the two modes disagree about the face a command name is set in. */
 .help-view__row code {
   color: var(--site-accent);
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   overflow-wrap: anywhere;
 }
 
@@ -249,7 +252,7 @@ const commandGroups = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .help-view__aside--console {

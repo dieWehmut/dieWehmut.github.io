@@ -6,7 +6,7 @@ const CARET_EVENTS = ['input', 'keyup', 'pointerup', 'select', 'scroll', 'focus'
 /**
  * A vim-style block caret for the console prompt.
  *
- * The browser's hairline caret is easy to lose in a monospace field, so it is
+ * The browser's hairline caret is easy to lose in a command field, so it is
  * hidden and a block is drawn over the cell the insertion point rests on. Both
  * the offset and the width are measured from the input's own resolved font, so
  * the block cannot drift out of step with a font change and no font declaration
@@ -52,7 +52,9 @@ export function useConsoleBlockCaret(inputRef: Ref<HTMLInputElement | null>, val
 
     caretGlyph.value = glyph
     // Past the last character there is no glyph to cover, but the cell still has
-    // a width: in a monospace field a stand-in advance is the same as any other.
+    // a width. A digit stands in for it: in a proportional face that is only an
+    // approximation of the next glyph's advance, which is the one place the block
+    // can be a little wider or narrower than the character about to land in it.
     caretWidth.value = textWidth(font, glyph || '0')
     // The first cell starts at the input's own content edge, which is where an
     // empty field wants the block — right where the leading `/` will be typed.

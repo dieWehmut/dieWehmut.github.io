@@ -73,7 +73,7 @@ const { isConsole } = useDisplayModePreference()
  */
 .about-layout--console .about-contact {
   margin-bottom: 20px;
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .about-layout--console .about-contact h2 {

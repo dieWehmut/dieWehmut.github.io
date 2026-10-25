@@ -257,7 +257,10 @@ html.sidebar-collapsed .desktop-layout__sidebar :deep(.nav-menu__item) {
 }
 
 .desktop-layout--console {
-  --console-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Console mode restyles the chrome — rules, radii, colour — but not the voice
+     the site speaks in. It reads in the same face as the classic shell, so
+     switching modes changes the frame rather than the typography. */
+  --console-font: var(--font-family-base);
   --console-bg: var(--site-bg);
   --console-surface: color-mix(in srgb, var(--site-bg) 90%, var(--site-text));
   /* The command input should read as the page's own paper rather than a raised

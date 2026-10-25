@@ -929,7 +929,7 @@ watch(isDetailRoute, (detail) => {
   display: grid;
   gap: 10px;
   color: var(--console-text, var(--site-text));
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .console-capture-group {
@@ -1127,7 +1127,7 @@ watch(isDetailRoute, (detail) => {
   padding: 5px 8px;
   border: 1px solid var(--console-border, var(--site-border));
   color: var(--console-muted, var(--site-muted));
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
   font-size: 0.76rem;
 }
 
@@ -1162,7 +1162,7 @@ watch(isDetailRoute, (detail) => {
   gap: 12px;
   min-height: 44px;
   color: var(--console-muted, var(--site-muted));
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .console-capture-empty code {
@@ -1651,7 +1651,7 @@ watch(isDetailRoute, (detail) => {
   border-radius: 0;
   background: var(--console-bg, var(--site-bg));
   box-shadow: none;
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .capture-delete-dialog--console .capture-delete-dialog__button {

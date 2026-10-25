@@ -15,7 +15,7 @@ html.console-mode-active .sakura-burst-overlay {
 
 .desktop-layout--console,
 .desktop-layout--console * {
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .desktop-layout--console .page-surface,

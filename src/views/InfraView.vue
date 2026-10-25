@@ -387,7 +387,7 @@ function serviceOverflowCount(item) {
   display: grid;
   gap: 10px;
   color: var(--console-text, var(--site-text));
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .console-infra__summary {

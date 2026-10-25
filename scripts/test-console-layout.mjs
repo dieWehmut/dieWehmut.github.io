@@ -200,6 +200,28 @@ check(
   'console typography uses neutral letter spacing',
   [...consoleShell.matchAll(/letter-spacing:\s*([^;]+);/g)].every((match) => match[1].trim() === '0'),
 )
+/**
+ * The two display modes are two frames around one page, not two typographic
+ * voices: console keeps the site's own reading face, so a mode switch moves the
+ * chrome and leaves the words alone. Every console font declaration therefore
+ * resolves through the shared site token rather than naming a stack of its own —
+ * `ui-monospace` was the one place console mode quietly spoke in a second voice.
+ */
+check(
+  'console mode reads in the classic shell font rather than a monospace stack',
+  /--console-font:\s*var\(--font-family-base\)/.test(consoleLayoutBlock)
+    && !/--console-font:[^;]*monospace/.test(desktopLayout),
+)
+check(
+  'no console font declaration falls back to a stack the classic shell does not use',
+  [...styleFiles(path.join(root, 'src'))].every((file) => {
+    const source = fs.readFileSync(file, 'utf8')
+    // `[^;{}]*` rather than `[^)]*`: the fallback is itself a `var()`, so the
+    // declaration ends one parenthesis deeper than a flat match would see.
+    return [...source.matchAll(/var\(--console-font([^;{}]*)/g)]
+      .every(([, tail]) => tail === ')' || tail === ', var(--font-family-base))')
+  }),
+)
 check(
   'console prompt caret and every option row share one left edge',
   /--console-prompt-indent:\s*34px/.test(consoleShell)

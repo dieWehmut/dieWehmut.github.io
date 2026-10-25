@@ -345,7 +345,7 @@ useConsoleResultNavigation(handleConsoleResultNavigation)
   gap: 10px;
   width: 100%;
   color: var(--console-text, var(--site-text));
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .console-tag-index__header {

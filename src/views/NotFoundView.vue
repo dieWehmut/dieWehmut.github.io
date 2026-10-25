@@ -29,7 +29,7 @@ const { isConsole } = useDisplayModePreference()
   display: grid;
   gap: 12px;
   color: var(--console-text, var(--site-text));
-  font-family: var(--console-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--console-font, var(--font-family-base));
 }
 
 .console-not-found__status {
