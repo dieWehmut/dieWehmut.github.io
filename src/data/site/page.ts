@@ -7,55 +7,51 @@ export const pages = ref<WebsiteEntry[]>([
     displayName: 'kotoba-hitomi',
     repoUrl: 'https://github.com/dieWehmut/kotoba-hitomi',
     date: '2025-04-25',
-    url: 'https://kotoba-hitomi.hc-dsw-nexus.me',
+    url: 'https://diewehmut.github.io/kotoba-hitomi/',
   },
   {
     name: 'nexus',
     displayName: 'nexus',
     repoUrl: 'https://github.com/dieWehmut/dieWehmut.github.io',
     date: '2025-08-26',
-    url: 'https://diesw.tech',
+    url: 'https://diewehmut.github.io/',
   },
   {
     name: 'korekushon',
     displayName: 'korekushon',
     repoUrl: 'https://github.com/dieWehmut/korekushon',
     date: '2025-10-09',
-    url: 'https://korekushon.hc-dsw-nexus.me',
-  },
-  {
-    name: 'inner',
-    displayName: 'inner',
-    repoUrl: 'https://github.com/dieWehmut/inner',
-    date: '2025-10-10',
-    url: 'https://inner.hc-dsw-nexus.me/',
+    url: 'https://diewehmut.github.io/korekushon/',
   },
   {
     name: 'ba-network',
     displayName: 'ba-network',
     repoUrl: 'https://github.com/dieWehmut/ba-network',
     date: '2025-10-30',
-    url: 'https://ba-network.hc-dsw-nexus.me',
+    url: 'https://diewehmut.github.io/BA-Network/',
   },
   {
     name: 'monogatari',
     displayName: 'monogatari',
     repoUrl: 'https://github.com/dieWehmut/monogatari',
     date: '2026-3-14',
-    url: 'https://diewehmut.github.io/monogatari',
+    url: 'https://diewehmut.github.io/monogatari/',
   },
-    {
+  {
     name: '408-quiz',
     displayName: '408-quiz',
     repoUrl: 'https://github.com/dieWehmut/408-quiz',
     date: '2026-9-10',
-    url: 'https://diewehmut.github.io/408-quiz',
+    url: 'https://diewehmut.github.io/408-quiz/',
   },
   {
     name: 'leereriss',
     displayName: 'leereriss',
     repoUrl: 'https://github.com/dieWehmut/LeereRiss',
     date: '2025-11-02',
+    // LeereRiss is a Unity project and has never published a GitHub Pages site,
+    // so this entry keeps its own host rather than pointing at a URL that would
+    // 404. Every other website here is served from diewehmut.github.io.
     url: 'https://leereriss.hc-dsw-nexus.me',
   },
   {
@@ -63,7 +59,7 @@ export const pages = ref<WebsiteEntry[]>([
     displayName: 'music-converter',
     repoUrl: 'https://github.com/dieWehmut/music-converter',
     date: '2025-11-13',
-    url: 'https://music-converter.hc-dsw-nexus.me',
+    url: 'https://diewehmut.github.io/music-converter/',
   },
   {
     name: 'Orchester',
@@ -92,6 +88,13 @@ export const pages = ref<WebsiteEntry[]>([
     repoUrl: 'https://github.com/dieWehmut/Vorlage',
     date: '2026-05-28',
     url: 'https://diewehmut.github.io/Vorlage/',
+  },
+  {
+    name: 'study-os',
+    displayName: 'study-os',
+    repoUrl: 'https://github.com/dieWehmut/study-os',
+    date: '2026-08-01',
+    url: 'https://diewehmut.github.io/study-os/',
   },
 ])
 
