@@ -44,6 +44,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # `pnpm run build` regenerates src/data/docs/generated.ts, and the
+          # generator dates each doc from the last commit that touched its file.
+          # The default shallow checkout holds a single commit, so every file
+          # would report the same date — the repository's tip — and the whole
+          # site would claim it was updated the moment the workflow ran.
+          fetch-depth: 0
 
       - name: Checkout assets repository
         env:

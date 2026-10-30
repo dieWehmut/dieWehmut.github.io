@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout site
         uses: actions/checkout@v4
+        with:
+          # The doc generator dates each file from its own last commit, which a
+          # single-commit shallow checkout cannot resolve — every doc would then
+          # report the repository's tip instead of its real update date.
+          fetch-depth: 0
 
       - name: Checkout assets repository
         env:
