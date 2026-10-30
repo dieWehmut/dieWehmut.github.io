@@ -22,9 +22,9 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "learning"
     ],
     "summary": "2026-09-21 | Monday\n知其人\n计算机科学 → 机器学习 → 深度学习 → 多模态信息融合 → 人类行为建模\n与\"教育学 → 学习心理学 → 学习方法\"不一样\n早期重点是AI 从知乎短视频到《学习观》2020年后精力转...",
-    "wordCount": 9151,
-    "readingMinutes": 23,
-    "updated": "2026/09/27 21:05",
+    "wordCount": 15603,
+    "readingMinutes": 40,
+    "updated": "2026/09/29 14:12",
     "path": "./posts/yjango.md"
   },
   {
@@ -137,7 +137,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "path": "./posts/Tauri.md"
   },
   {
-    "id": "ComputingMethod",
+    "id": "computingMethod",
     "type": "note",
     "title": "Computing Method Notes",
     "date": "2026-06-16",
@@ -149,10 +149,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 46098,
     "readingMinutes": 116,
     "updated": "2026/07/04 21:41",
-    "path": "./notes/ComputingMethod.md"
+    "path": "./notes/computingMethod.md"
   },
   {
-    "id": "TestSandkasten",
+    "id": "testSandkasten",
     "type": "post",
     "title": "Sandkasten 测试",
     "date": "2026-06-13",
@@ -165,10 +165,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "readingMinutes": 3,
     "updated": "2026/06/16 10:35",
     "codeRunner": true,
-    "path": "./posts/TestSandkasten.md"
+    "path": "./posts/testSandkasten.md"
   },
   {
-    "id": "Win",
+    "id": "win",
     "type": "post",
     "title": "Win控制机",
     "date": "2026-06-13",
@@ -179,10 +179,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 42,
     "readingMinutes": 1,
     "updated": "2026/07/10 20:28",
-    "path": "./posts/Win.md"
+    "path": "./posts/win.md"
   },
   {
-    "id": "GPT-Image2",
+    "id": "gpt-image2",
     "type": "note",
     "title": "gpt-image2笔记生图",
     "date": "2026-06-09",
@@ -194,7 +194,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 633,
     "readingMinutes": 2,
     "updated": "2026/07/04 21:41",
-    "path": "./notes/GPT-Image2.md"
+    "path": "./notes/gpt-image2.md"
   },
   {
     "id": "pve",
@@ -249,7 +249,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "path": "./posts/GoGolang.md"
   },
   {
-    "id": "Calculus",
+    "id": "calculus",
     "type": "note",
     "title": "Calculus Notes",
     "date": "2025-11-06",
@@ -261,10 +261,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 9155,
     "readingMinutes": 23,
     "updated": "2026/06/16 10:35",
-    "path": "./notes/Calculus.md"
+    "path": "./notes/calculus.md"
   },
   {
-    "id": "LinearAlgebra",
+    "id": "linearAlgebra",
     "type": "note",
     "title": "Linear Algebra Notes",
     "date": "2025-11-06",
@@ -276,10 +276,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 4786,
     "readingMinutes": 12,
     "updated": "2026/06/16 10:35",
-    "path": "./notes/LinearAlgebra.md"
+    "path": "./notes/linearAlgebra.md"
   },
   {
-    "id": "CognitiveScience",
+    "id": "cognitiveScience",
     "type": "note",
     "title": "Cognitive Science Notes",
     "date": "2025-06-16",
@@ -291,10 +291,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 11450,
     "readingMinutes": 29,
     "updated": "2026/09/03 10:57",
-    "path": "./notes/CognitiveScience.md"
+    "path": "./notes/cognitiveScience.md"
   },
   {
-    "id": "HighSchoolChemistry",
+    "id": "highSchoolChemistry",
     "type": "note",
     "title": "High School Chemistry Notes Summary",
     "date": "2024-06-09",
@@ -306,10 +306,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 4896,
     "readingMinutes": 13,
     "updated": "2026/06/16 10:35",
-    "path": "./notes/HighSchoolChemistry.md"
+    "path": "./notes/highSchoolChemistry.md"
   },
   {
-    "id": "HighSchoolPhysics",
+    "id": "highSchoolPhysics",
     "type": "note",
     "title": "High School Physics Notes Summary",
     "date": "2024-06-08",
@@ -321,10 +321,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 15480,
     "readingMinutes": 39,
     "updated": "2026/06/16 10:35",
-    "path": "./notes/HighSchoolPhysics.md"
+    "path": "./notes/highSchoolPhysics.md"
   },
   {
-    "id": "HighSchoolMaths",
+    "id": "highSchoolMaths",
     "type": "note",
     "title": "High School Maths Notes Summary",
     "date": "2024-06-07",
@@ -336,7 +336,7 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "wordCount": 19290,
     "readingMinutes": 49,
     "updated": "2026/06/16 10:35",
-    "path": "./notes/HighSchoolMaths.md"
+    "path": "./notes/highSchoolMaths.md"
   },
   {
     "id": "DeepLearning",

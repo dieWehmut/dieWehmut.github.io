@@ -1233,13 +1233,21 @@ function protectMathText(
   let cursor = 0
 
   const storeReplacement = (formula: string, displayMode: boolean, standalone = false) => {
-    const tag = displayMode && !options.displayAsInline ? 'div' : 'span'
+    // Block math uses a `<pre>` placeholder rather than `<div>` because of how
+    // Marked terminates HTML blocks. A `<div>` opens a type-6 block, which only
+    // ends at a blank line: everything up to that blank line is copied through
+    // raw, so the `$…$` on the line directly after a `$$…$$` block was emitted
+    // as literal text instead of being parsed. `<pre>` opens a type-1 block that
+    // ends at its own closing tag, so the next line is parsed normally — and
+    // unlike adding a blank line, this leaves list items tight and does not
+    // split one list into two.
+    const tag = displayMode && !options.displayAsInline ? 'pre' : 'span'
     const placeholder = `<${tag} data-md-math-placeholder="${replacements.length}"></${tag}>`
     const html = displayMode && !options.displayAsInline
       ? renderDisplayLatexBlock(formula)
       : renderInlineLatex(formula)
     replacements.push({ html, placeholder })
-    return tag === 'div' && !standalone ? `\n\n${placeholder}\n\n` : placeholder
+    return tag === 'pre' && !standalone ? `\n\n${placeholder}\n\n` : placeholder
   }
 
   while (cursor < source.length) {

@@ -13,6 +13,7 @@
     "runner:smoke": "node scripts/smoke-code-runner.mjs",
     "test:markdown-render": "node scripts/test-markdown-render.mjs",
     "test:math-delimiters": "node scripts/test-math-delimiters.mjs",
+    "test:math-placeholder": "node scripts/test-math-placeholder.mjs",
     "test:organize-doc-images": "node scripts/test-organize-doc-images.mjs",
     "test:doc-asset-layout": "node scripts/test-doc-asset-layout.mjs",
     "test:capture-gallery": "node scripts/test-capture-gallery.mjs",
