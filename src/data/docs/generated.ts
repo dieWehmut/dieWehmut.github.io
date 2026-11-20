@@ -51,10 +51,10 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
       "DigitalSignalProcessing",
       "Notes"
     ],
-    "summary": "or 数字信号处理 信号与系统\n导论\n信号\n反映信息的物理量,系统直接进行加工、变换以实现通信的对象，一般是随时间变化的有限的实值函数\n连续->模拟 离散->数字\n确定信号 随机信号\nalt text\n时域:以时间为自变量描述信号和系...",
-    "wordCount": 974,
-    "readingMinutes": 3,
-    "updated": "2026/09/14 21:51",
+    "summary": "导论\n信号\n信号（00.pdf，第 4 页）\n信号（00.pdf，第 5 页）\n信号（00.pdf，第 6 页）\n信号（00.pdf，第 7 页）\n信号（00.pdf，第 8 页）\n信号（00.pdf，第 9 页）\n信号处理与系统\n信...",
+    "wordCount": 7286,
+    "readingMinutes": 19,
+    "updated": "2026/11/20 17:51",
     "path": "./notes/DigitalSignalProcessing.md"
   },
   {

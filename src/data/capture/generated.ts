@@ -97,6 +97,8006 @@ export const generatedCaptureAssets: CaptureAsset[] = [
     "standalone": false
   },
   {
+    "id": "docs-DigitalSignalProcessing-02-s1-p004-s05",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p004-s05.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 4 页，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p004-s06",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p004-s06.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 4 页，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p005-s01",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p005-s01.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 5 页，第 1 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p005-s02",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p005-s02.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 5 页，第 2 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p005-s03",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p005-s03.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 5 页，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p005-s04",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p005-s04.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 5 页，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p005-s05",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p005-s05.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 5 页，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p005-s06",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p005-s06.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 5 页，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p006-s01",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p006-s01.webp",
+    "title": "斑点检测与滤波器响应（02-补充材料1.pdf，第 6 页，第 1 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p021.webp",
+    "title": "采样定理的实际应用（06.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p022.webp",
+    "title": "采样定理的实际应用（06.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p020.webp",
+    "title": "采样频率计算示例（06.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p032.webp",
+    "title": "参考书目与课件来源（00.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p033",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p033.webp",
+    "title": "参考书目与课件来源（00.pdf，第 33 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p014.webp",
+    "title": "参数学习与误差反向传播（02-补充材料3.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p015.webp",
+    "title": "参数学习与误差反向传播（02-补充材料3.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p018.webp",
+    "title": "残差网络（02-补充材料3.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p017.webp",
+    "title": "差分方程求解（03.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p018.webp",
+    "title": "差分方程求解（03.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p019.webp",
+    "title": "差分方程求解（03.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p020.webp",
+    "title": "差分方程求解（03.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p021.webp",
+    "title": "差分方程求解（03.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p026.webp",
+    "title": "尺度变换特性（05.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p027.webp",
+    "title": "尺度变换特性（05.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p028.webp",
+    "title": "尺度变换特性（05.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p006-s04",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p006-s04.webp",
+    "title": "尺度空间中的斑点检测（02-补充材料1.pdf，第 6 页，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p006-s05",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p006-s05.webp",
+    "title": "尺度空间中的斑点检测（02-补充材料1.pdf，第 6 页，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p052",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p052.webp",
+    "title": "冲激偶信号（01.pdf，第 52 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p053",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p053.webp",
+    "title": "冲激偶信号（01.pdf，第 53 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p054",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p054.webp",
+    "title": "冲激偶信号（01.pdf，第 54 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p055",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p055.webp",
+    "title": "冲激偶信号（01.pdf，第 55 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p056",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p056.webp",
+    "title": "冲激偶信号（01.pdf，第 56 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p057",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p057.webp",
+    "title": "冲激偶信号（01.pdf，第 57 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p032.webp",
+    "title": "冲激响应求解（03.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p035",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p035.webp",
+    "title": "冲激信号（01.pdf，第 35 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p036",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p036.webp",
+    "title": "冲激信号（01.pdf，第 36 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p037",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p037.webp",
+    "title": "冲激信号（01.pdf，第 37 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p038",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p038.webp",
+    "title": "冲激信号（01.pdf，第 38 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p058",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p058.webp",
+    "title": "冲激信号的展缩特性（01.pdf，第 58 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p059",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p059.webp",
+    "title": "冲激信号的展缩特性（01.pdf，第 59 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p022.webp",
+    "title": "初始松弛条件（03.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p002.webp",
+    "title": "从傅里叶级数到频谱密度（05.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p003.webp",
+    "title": "从傅里叶级数到频谱密度（05.pdf，第 3 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p004.webp",
+    "title": "从傅里叶级数到频谱密度（05.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p030.webp",
+    "title": "从数字信号到模拟信号（06.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p013.webp",
+    "title": "单边带调幅（07.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p014.webp",
+    "title": "单边带调幅（07.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p013.webp",
+    "title": "单边指数信号的频谱（05.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p015.webp",
+    "title": "单位冲激信号的频谱（05.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p034",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p034.webp",
+    "title": "单位阶跃信号（01.pdf，第 34 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p019.webp",
+    "title": "单位阶跃信号的频谱（05.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p024.webp",
+    "title": "动量因子（02-补充材料3.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p025.webp",
+    "title": "动量因子（02-补充材料3.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p026.webp",
+    "title": "动量因子（02-补充材料3.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p022.webp",
+    "title": "对称性（05.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p023.webp",
+    "title": "对称性（05.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p024.webp",
+    "title": "多层神经网络（02-补充材料2.pptx，第 24 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p025.webp",
+    "title": "多层神经网络（02-补充材料2.pptx，第 25 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p018.webp",
+    "title": "多分类感知机（02-补充材料2.pptx，第 18 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p019.webp",
+    "title": "多分类感知机（02-补充材料2.pptx，第 19 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p020.webp",
+    "title": "多分类感知机（02-补充材料2.pptx，第 20 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p037",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p037.webp",
+    "title": "非周期信号的能量谱密度（05.pdf，第 37 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p018.webp",
+    "title": "符号函数的频谱（05.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p021.webp",
+    "title": "复数（00.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p012.webp",
+    "title": "复指数载波调制（07.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p005.webp",
+    "title": "傅里叶变换的定义（05.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p006.webp",
+    "title": "傅里叶变换的定义（05.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p007.webp",
+    "title": "傅里叶变换的收敛条件（05.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p048",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p048.webp",
+    "title": "傅里叶变换的应用（05.pdf，第 48 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p038",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p038.webp",
+    "title": "傅里叶变换性质总结（05.pdf，第 38 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p010.webp",
+    "title": "傅里叶变换与傅里叶级数（05.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p008.webp",
+    "title": "傅里叶变换与傅里叶级数（05.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p009.webp",
+    "title": "傅里叶变换与傅里叶级数（05.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p011.webp",
+    "title": "傅里叶分析的发展与思路（04.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p012.webp",
+    "title": "傅里叶分析的发展与思路（04.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p013.webp",
+    "title": "傅里叶分析的发展与思路（04.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p014.webp",
+    "title": "傅里叶分析的发展与思路（04.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p029.webp",
+    "title": "傅里叶级数的对称特性（04.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p030.webp",
+    "title": "傅里叶级数的对称特性（04.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p031.webp",
+    "title": "傅里叶级数的对称特性（04.pdf，第 31 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p018.webp",
+    "title": "傅里叶级数的三角形式（04.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p019.webp",
+    "title": "傅里叶级数的三角形式（04.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p020.webp",
+    "title": "傅里叶级数的三角形式（04.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p025.webp",
+    "title": "傅里叶级数的收敛条件（04.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p026.webp",
+    "title": "傅里叶级数的收敛条件（04.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p021.webp",
+    "title": "傅里叶级数的指数形式（04.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p022.webp",
+    "title": "傅里叶级数的指数形式（04.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p023.webp",
+    "title": "傅里叶级数的指数形式（04.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p024.webp",
+    "title": "傅里叶级数的指数形式（04.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p033",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p033.webp",
+    "title": "傅里叶级数计算（04.pdf，第 33 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p034",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p034.webp",
+    "title": "傅里叶级数计算（04.pdf，第 34 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p035",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p035.webp",
+    "title": "傅里叶级数计算（04.pdf，第 35 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p045",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p045.webp",
+    "title": "傅里叶级数与傅里叶变换的关系（05.pdf，第 45 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p002.webp",
+    "title": "感知机背景与神经元（02-补充材料2.pptx，第 2 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p003.webp",
+    "title": "感知机背景与神经元（02-补充材料2.pptx，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p017.webp",
+    "title": "感知机流程（02-补充材料2.pptx，第 17 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p004.webp",
+    "title": "感知机模型（02-补充材料2.pptx，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p005.webp",
+    "title": "感知机模型（02-补充材料2.pptx，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p006.webp",
+    "title": "感知机模型（02-补充材料2.pptx，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p007.webp",
+    "title": "感知机模型（02-补充材料2.pptx，第 7 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p011.webp",
+    "title": "感知机损失函数（02-补充材料2.pptx，第 11 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p012.webp",
+    "title": "感知机损失函数（02-补充材料2.pptx，第 12 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p013.webp",
+    "title": "感知机学习算法（02-补充材料2.pptx，第 13 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p014.webp",
+    "title": "感知机学习算法（02-补充材料2.pptx，第 14 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p015.webp",
+    "title": "感知机学习算法（02-补充材料2.pptx，第 15 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p016.webp",
+    "title": "感知机训练示例（02-补充材料2.pptx，第 16 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p010.webp",
+    "title": "感知机原理（02-补充材料2.pptx，第 10 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p008.webp",
+    "title": "感知机原理（02-补充材料2.pptx，第 8 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p009.webp",
+    "title": "感知机原理（02-补充材料2.pptx，第 9 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p006-s02",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p006-s02.webp",
+    "title": "高斯差分近似（DoG）（02-补充材料1.pdf，第 6 页，第 2 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p006-s03",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p006-s03.webp",
+    "title": "高斯差分近似（DoG）（02-补充材料1.pdf，第 6 页，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p003-s03",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p003-s03.webp",
+    "title": "高斯拉普拉斯滤波器（LoG）（02-补充材料1.pdf，第 3 页，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p003-s04",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p003-s04.webp",
+    "title": "高斯拉普拉斯滤波器（LoG）（02-补充材料1.pdf，第 3 页，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p003-s05",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p003-s05.webp",
+    "title": "高斯拉普拉斯滤波器（LoG）（02-补充材料1.pdf，第 3 页，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p003-s06",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p003-s06.webp",
+    "title": "高斯拉普拉斯滤波器（LoG）（02-补充材料1.pdf，第 3 页，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p011.webp",
+    "title": "汇聚层（02-补充材料3.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p012.webp",
+    "title": "汇聚层（02-补充材料3.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p022.webp",
+    "title": "基本离散时间序列（01.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p023.webp",
+    "title": "基本离散时间序列（01.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p019.webp",
+    "title": "基本连续信号（01.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p020.webp",
+    "title": "基本连续信号（01.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p021.webp",
+    "title": "基本连续信号（01.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p042",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p042.webp",
+    "title": "基于冲激信号进行信号分解（01.pdf，第 42 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p015.webp",
+    "title": "基于初始条件求待定系数（03.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p010.webp",
+    "title": "基于三角函数族与指数函数族的分解（04.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p009.webp",
+    "title": "基于三角函数族与指数函数族的分解（04.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p024.webp",
+    "title": "激励接入瞬间的初始条件（03.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p032.webp",
+    "title": "吉布斯现象（04.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p060",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p060.webp",
+    "title": "级联与并联系统的冲激响应（02.pdf，第 60 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p061",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p061.webp",
+    "title": "级联与并联系统的冲激响应（02.pdf，第 61 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p062",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p062.webp",
+    "title": "级联与并联系统的冲激响应（02.pdf，第 62 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p010.webp",
+    "title": "记忆性（02.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p028.webp",
+    "title": "阶跃序列与指数序列的卷积和（02.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p029.webp",
+    "title": "阶跃序列与指数序列的卷积和（02.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p030.webp",
+    "title": "阶跃序列与指数序列的卷积和（02.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p031.webp",
+    "title": "阶跃序列与指数序列的卷积和（02.pdf，第 31 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p037",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p037.webp",
+    "title": "解卷积（02.pdf，第 37 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p003.webp",
+    "title": "卷积步长与零填充（02-补充材料3.pdf，第 3 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p004.webp",
+    "title": "卷积步长与零填充（02-补充材料3.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p005.webp",
+    "title": "卷积步长与零填充（02-补充材料3.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p010.webp",
+    "title": "卷积层（02-补充材料3.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p008.webp",
+    "title": "卷积层（02-补充材料3.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p009.webp",
+    "title": "卷积层（02-补充材料3.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p006.webp",
+    "title": "卷积的导数（02-补充材料3.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p007.webp",
+    "title": "卷积的导数（02-补充材料3.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p045",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p045.webp",
+    "title": "卷积的性质（02.pdf，第 45 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p025.webp",
+    "title": "卷积和（02.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p026.webp",
+    "title": "卷积和（02.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p034",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p034.webp",
+    "title": "卷积和的表格计算法（02.pdf，第 34 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p035",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p035.webp",
+    "title": "卷积和的表格计算法（02.pdf，第 35 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p036",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p036.webp",
+    "title": "卷积和的表格计算法（02.pdf，第 36 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p056",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p056.webp",
+    "title": "卷积和的性质（02.pdf，第 56 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p057",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p057.webp",
+    "title": "卷积和的性质（02.pdf，第 57 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p058",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p058.webp",
+    "title": "卷积和的性质（02.pdf，第 58 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p032.webp",
+    "title": "卷积和计算的补充说明（02.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p033",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p033.webp",
+    "title": "卷积和计算的补充说明（02.pdf，第 33 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p038",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p038.webp",
+    "title": "卷积积分（02.pdf，第 38 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p039",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p039.webp",
+    "title": "卷积积分（02.pdf，第 39 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p040",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p040.webp",
+    "title": "卷积积分计算示例（02.pdf，第 40 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p041",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p041.webp",
+    "title": "卷积积分计算示例（02.pdf，第 41 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p042",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p042.webp",
+    "title": "卷积积分计算示例（02.pdf，第 42 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p043",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p043.webp",
+    "title": "卷积积分计算示例（02.pdf，第 43 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p001",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p001.webp",
+    "title": "卷积与互相关（02-补充材料3.pdf，第 1 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p002.webp",
+    "title": "卷积与互相关（02-补充材料3.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p069",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p069.webp",
+    "title": "卷积与相关（02.pdf，第 69 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p070",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p070.webp",
+    "title": "卷积与相关（02.pdf，第 70 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p071",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p071.webp",
+    "title": "卷积与相关（02.pdf，第 71 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p011.webp",
+    "title": "可逆性（02.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p023.webp",
+    "title": "课程内容框架与目标（00.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p024.webp",
+    "title": "课程内容框架与目标（00.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p025.webp",
+    "title": "课程内容框架与目标（00.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p026.webp",
+    "title": "课程内容框架与目标（00.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p027.webp",
+    "title": "课程内容框架与目标（00.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p028.webp",
+    "title": "课程内容框架与目标（00.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p006-s06",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p006-s06.webp",
+    "title": "拉普拉斯金字塔与图像编码（02-补充材料1.pdf，第 6 页，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p007-s01",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p007-s01.webp",
+    "title": "拉普拉斯金字塔与图像编码（02-补充材料1.pdf，第 7 页，第 1 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p036",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p036.webp",
+    "title": "离散频谱特性（04.pdf，第 36 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p037",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p037.webp",
+    "title": "离散频谱特性（04.pdf，第 37 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p038",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p038.webp",
+    "title": "离散频谱特性（04.pdf，第 38 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p039",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p039.webp",
+    "title": "离散频谱特性（04.pdf，第 39 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p028.webp",
+    "title": "离散时间单位脉冲与单位阶跃（01.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p029.webp",
+    "title": "离散时间单位脉冲与单位阶跃（01.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p032.webp",
+    "title": "离散信号的差分和求和（01.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p060",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p060.webp",
+    "title": "离散信号的尺度变换（01.pdf，第 60 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p016.webp",
+    "title": "离散信号的翻转、时移、加和乘（01.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p017.webp",
+    "title": "离散信号的翻转、时移、加和乘（01.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p052",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p052.webp",
+    "title": "利用卷积特性简化运算（02.pdf，第 52 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p053",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p053.webp",
+    "title": "利用卷积特性简化运算（02.pdf，第 53 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p054",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p054.webp",
+    "title": "利用卷积特性简化运算（02.pdf，第 54 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p055",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p055.webp",
+    "title": "利用卷积特性简化运算（02.pdf，第 55 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p030.webp",
+    "title": "连续线性时不变系统的响应（03.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p031.webp",
+    "title": "连续线性时不变系统的响应（03.pdf，第 31 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p004-s01",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p004-s01.webp",
+    "title": "零交叉边缘检测（02-补充材料1.pdf，第 4 页，第 1 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p004-s02",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p004-s02.webp",
+    "title": "零交叉边缘检测（02-补充材料1.pdf，第 4 页，第 2 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p004-s03",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p004-s03.webp",
+    "title": "零交叉边缘检测（02-补充材料1.pdf，第 4 页，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p004-s04",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p004-s04.webp",
+    "title": "零交叉边缘检测（02-补充材料1.pdf，第 4 页，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p002-s03",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p002-s03.webp",
+    "title": "零交叉与拉普拉斯算子（02-补充材料1.pdf，第 2 页，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p002-s04",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p002-s04.webp",
+    "title": "零交叉与拉普拉斯算子（02-补充材料1.pdf，第 2 页，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p002-s05",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p002-s05.webp",
+    "title": "零交叉与拉普拉斯算子（02-补充材料1.pdf，第 2 页，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p002-s06",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p002-s06.webp",
+    "title": "零交叉与拉普拉斯算子（02-补充材料1.pdf，第 2 页，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p003-s01",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p003-s01.webp",
+    "title": "零交叉与拉普拉斯算子（02-补充材料1.pdf，第 3 页，第 1 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p003-s02",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p003-s02.webp",
+    "title": "零交叉与拉普拉斯算子（02-补充材料1.pdf，第 3 页，第 2 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p025.webp",
+    "title": "零输入响应与零状态响应（03.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p026.webp",
+    "title": "零输入响应与零状态响应（03.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p008.webp",
+    "title": "能量信号与功率信号（01.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p009.webp",
+    "title": "能量信号与功率信号（01.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p049",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p049.webp",
+    "title": "偶分量与奇分量（01.pdf，第 49 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p050",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p050.webp",
+    "title": "偶分量与奇分量（01.pdf，第 50 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p027.webp",
+    "title": "帕塞瓦尔定理（04.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p020.webp",
+    "title": "频分复用（07.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p021.webp",
+    "title": "频分复用（07.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p022.webp",
+    "title": "频分复用（07.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p030.webp",
+    "title": "频移特性与调制定理（05.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p031.webp",
+    "title": "频移特性与调制定理（05.pdf，第 31 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p036",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p036.webp",
+    "title": "频域卷积特性（05.pdf，第 36 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p033",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p033.webp",
+    "title": "频域微分特性（05.pdf，第 33 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p046",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p046.webp",
+    "title": "平移特性（02.pdf，第 46 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p031.webp",
+    "title": "其他基本离散时间序列（01.pdf，第 31 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p019.webp",
+    "title": "其他卷积方式（02-补充材料3.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p020.webp",
+    "title": "其他卷积方式（02-补充材料3.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p021.webp",
+    "title": "其他卷积方式（02-补充材料3.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p022.webp",
+    "title": "其他卷积方式（02-补充材料3.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p023.webp",
+    "title": "其他卷积方式（02-补充材料3.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p024.webp",
+    "title": "奇偶虚实性（05.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p025.webp",
+    "title": "奇偶虚实性（05.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p033",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p033.webp",
+    "title": "奇异信号（01.pdf，第 33 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p023.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p024.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p025.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p026.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p027.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p028.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p029.webp",
+    "title": "欠采样与频率混叠（06.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p010.webp",
+    "title": "求齐次解（03.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p011.webp",
+    "title": "求齐次解（03.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p008.webp",
+    "title": "求齐次解（03.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p009.webp",
+    "title": "求齐次解（03.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p012.webp",
+    "title": "求特解（03.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p013.webp",
+    "title": "求特解（03.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p014.webp",
+    "title": "求特解（03.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p072",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p072.webp",
+    "title": "神经网络中的卷积（02.pdf，第 72 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p073",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p073.webp",
+    "title": "神经网络中的卷积（02.pdf，第 73 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p074",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p074.webp",
+    "title": "神经网络中的卷积（02.pdf，第 74 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p017.webp",
+    "title": "时不变性（02.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p018.webp",
+    "title": "时不变性（02.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p023.webp",
+    "title": "时分复用（07.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p029.webp",
+    "title": "时移特性（05.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p017.webp",
+    "title": "时域、频域与频谱（00.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p018.webp",
+    "title": "时域、频域与频谱（00.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p019.webp",
+    "title": "时域、频域与频谱（00.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p020.webp",
+    "title": "时域、频域与频谱（00.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p010.webp",
+    "title": "时域采样的频域分析（06.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p011.webp",
+    "title": "时域采样的频域分析（06.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p012.webp",
+    "title": "时域采样的频域分析（06.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p006.webp",
+    "title": "时域采样的频域分析（06.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p007.webp",
+    "title": "时域采样的频域分析（06.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p008.webp",
+    "title": "时域采样的频域分析（06.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p009.webp",
+    "title": "时域采样的频域分析（06.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p016.webp",
+    "title": "时域采样定理（06.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p017.webp",
+    "title": "时域采样定理（06.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p032.webp",
+    "title": "时域积分与微分特性（05.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p034",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p034.webp",
+    "title": "时域卷积特性（05.pdf，第 34 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p035",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p035.webp",
+    "title": "时域卷积特性（05.pdf，第 35 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p016.webp",
+    "title": "时域与频域（04.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p017.webp",
+    "title": "时域与频域（04.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p051",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p051.webp",
+    "title": "实部分量与虚部分量（01.pdf，第 51 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p018.webp",
+    "title": "收发端相位不等的问题（07.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p019.webp",
+    "title": "收发端相位不等的问题（07.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p013.webp",
+    "title": "数字信号处理的发展历程（00.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p016.webp",
+    "title": "数字信号处理技术的应用（00.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p014.webp",
+    "title": "数字信号的优缺点（00.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p015.webp",
+    "title": "数字信号的优缺点（00.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p014.webp",
+    "title": "双边指数信号的频谱（05.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p004.webp",
+    "title": "通信的波段和频段（07.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p005.webp",
+    "title": "通信的波段和频段（07.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p002.webp",
+    "title": "通信系统与分类（07.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p003.webp",
+    "title": "通信系统与分类（07.pdf，第 3 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p015.webp",
+    "title": "同步解调（07.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p016.webp",
+    "title": "同步解调（07.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p017.webp",
+    "title": "同步解调（07.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p046",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p046.webp",
+    "title": "完备函数集（01.pdf，第 46 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p047",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p047.webp",
+    "title": "完备函数集（01.pdf，第 47 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p013.webp",
+    "title": "网络整体结构（02-补充材料3.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p007.webp",
+    "title": "微分方程求解（03.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p016.webp",
+    "title": "微分方程求解示例（03.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p049",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p049.webp",
+    "title": "微分与积分特性（02.pdf，第 49 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p050",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p050.webp",
+    "title": "微分与积分特性（02.pdf，第 50 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p051",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p051.webp",
+    "title": "微分与积分特性（02.pdf，第 51 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p013.webp",
+    "title": "稳定性（02.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p020",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p020.webp",
+    "title": "系统的单位脉冲响应（02.pdf，第 20 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p021.webp",
+    "title": "系统的单位脉冲响应（02.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p022.webp",
+    "title": "系统的单位脉冲响应（02.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p023.webp",
+    "title": "系统的单位脉冲响应（02.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p024.webp",
+    "title": "系统的单位脉冲响应（02.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p002.webp",
+    "title": "系统的分析与描述（02.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p005.webp",
+    "title": "系统的分析与描述（02.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p006.webp",
+    "title": "系统的分析与描述（02.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p007.webp",
+    "title": "系统的分析与描述（02.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p002.webp",
+    "title": "系统的数学模型（03.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p003.webp",
+    "title": "系统的数学模型（03.pdf，第 3 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p004.webp",
+    "title": "系统的数学模型（03.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p005.webp",
+    "title": "系统的数学模型（03.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p006.webp",
+    "title": "系统的数学模型（03.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p041",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p041.webp",
+    "title": "系统函数（04.pdf，第 41 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p042",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p042.webp",
+    "title": "系统函数（04.pdf，第 42 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p008.webp",
+    "title": "系统互联与方框图（02.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p009.webp",
+    "title": "系统互联与方框图（02.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p024.webp",
+    "title": "系统频谱分析（07.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p025.webp",
+    "title": "系统频谱分析（07.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p026.webp",
+    "title": "系统频谱分析（07.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p027.webp",
+    "title": "系统频谱分析（07.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p028.webp",
+    "title": "系统频谱分析（07.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p027.webp",
+    "title": "系统响应计算示例（03.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p028.webp",
+    "title": "系统响应计算示例（03.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p029.webp",
+    "title": "系统响应计算示例（03.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p014.webp",
+    "title": "线性（02.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p015.webp",
+    "title": "线性（02.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p016.webp",
+    "title": "线性（02.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p021.webp",
+    "title": "线性可分与逻辑运算（02-补充材料2.pptx，第 21 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p022.webp",
+    "title": "线性可分与逻辑运算（02-补充材料2.pptx，第 22 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p023.webp",
+    "title": "线性可分与逻辑运算（02-补充材料2.pptx，第 23 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p068",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p068.webp",
+    "title": "线性时不变系统的特性总结（02.pdf，第 68 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p021",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p021.webp",
+    "title": "线性特性（05.pdf，第 21 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p030.webp",
+    "title": "相互表示（01.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p006.webp",
+    "title": "信道传输与信号调制（07.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p007.webp",
+    "title": "信道传输与信号调制（07.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p008.webp",
+    "title": "信道传输与信号调制（07.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p004.webp",
+    "title": "信号（00.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p005.webp",
+    "title": "信号（00.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p006.webp",
+    "title": "信号（00.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p007.webp",
+    "title": "信号（00.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p008",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p008.webp",
+    "title": "信号（00.pdf，第 8 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p009.webp",
+    "title": "信号（00.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p022",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p022.webp",
+    "title": "信号变换（00.pdf，第 22 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p015.webp",
+    "title": "信号变换示例（01.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p002.webp",
+    "title": "信号采样的概念与过程（06.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p003.webp",
+    "title": "信号采样的概念与过程（06.pdf，第 3 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p004.webp",
+    "title": "信号采样的概念与过程（06.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p029.webp",
+    "title": "信号处理与人工智能（00.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p030.webp",
+    "title": "信号处理与人工智能（00.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p031.webp",
+    "title": "信号处理与人工智能（00.pdf，第 31 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p010.webp",
+    "title": "信号处理与系统（00.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p011.webp",
+    "title": "信号处理与系统（00.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-00-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/00-p012.webp",
+    "title": "信号处理与系统（00.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p012.webp",
+    "title": "信号的尺度变换（01.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p040",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p040.webp",
+    "title": "信号的积分（01.pdf，第 40 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p014.webp",
+    "title": "信号的加和乘（01.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p013.webp",
+    "title": "信号的频域采样（06.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p014",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p014.webp",
+    "title": "信号的频域采样（06.pdf，第 14 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p015",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p015.webp",
+    "title": "信号的频域采样（06.pdf，第 15 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p013",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p013.webp",
+    "title": "信号的时移（01.pdf，第 13 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p005.webp",
+    "title": "信号的时域采样（06.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p039",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p039.webp",
+    "title": "信号的微分（01.pdf，第 39 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p043",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p043.webp",
+    "title": "信号的向量表示（01.pdf，第 43 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p018",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p018.webp",
+    "title": "信号时域采样的恢复（06.pdf，第 18 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-06-p019",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/06-p019.webp",
+    "title": "信号时域采样的恢复（06.pdf，第 19 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p027.webp",
+    "title": "虚指数序列关于时间的周期性（01.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p024",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p024.webp",
+    "title": "虚指数序列频率振荡的周期性（01.pdf，第 24 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p025",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p025.webp",
+    "title": "虚指数序列频率振荡的周期性（01.pdf，第 25 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p026.webp",
+    "title": "虚指数序列频率振荡的周期性（01.pdf，第 26 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p043",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p043.webp",
+    "title": "一般周期信号（05.pdf，第 43 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p044",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p044.webp",
+    "title": "一般周期信号（05.pdf，第 44 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p001-s03",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p001-s03.webp",
+    "title": "一阶与二阶导数滤波器（02-补充材料1.pdf，第 1 页，第 3 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p001-s04",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p001-s04.webp",
+    "title": "一阶与二阶导数滤波器（02-补充材料1.pdf，第 1 页，第 4 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p001-s05",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p001-s05.webp",
+    "title": "一阶与二阶导数滤波器（02-补充材料1.pdf，第 1 页，第 5 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p001-s06",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p001-s06.webp",
+    "title": "一阶与二阶导数滤波器（02-补充材料1.pdf，第 1 页，第 6 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p002-s01",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p002-s01.webp",
+    "title": "一阶与二阶导数滤波器（02-补充材料1.pdf，第 2 页，第 1 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s1-p002-s02",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s1-p002-s02.webp",
+    "title": "一阶与二阶导数滤波器（02-补充材料1.pdf，第 2 页，第 2 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p010.webp",
+    "title": "因果信号与其他分类（01.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p012",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p012.webp",
+    "title": "因果性（02.pdf，第 12 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p065",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p065.webp",
+    "title": "用卷积分析稳定系统（02.pdf，第 65 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p066",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p066.webp",
+    "title": "用卷积分析稳定系统（02.pdf，第 66 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p067",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p067.webp",
+    "title": "用卷积分析稳定系统（02.pdf，第 67 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p063",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p063.webp",
+    "title": "用卷积分析因果系统（02.pdf，第 63 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p064",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p064.webp",
+    "title": "用卷积分析因果系统（02.pdf，第 64 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p047",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p047.webp",
+    "title": "展缩特性（02.pdf，第 47 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p048",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p048.webp",
+    "title": "展缩特性（02.pdf，第 48 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p044",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p044.webp",
+    "title": "正交函数与正交函数集（01.pdf，第 44 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p045",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p045.webp",
+    "title": "正交函数与正交函数集（01.pdf，第 45 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p041",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p041.webp",
+    "title": "正弦与余弦信号（05.pdf，第 41 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p042",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p042.webp",
+    "title": "正弦与余弦信号（05.pdf，第 42 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p010",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p010.webp",
+    "title": "正弦载波调幅（07.pdf，第 10 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p011",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p011.webp",
+    "title": "正弦载波调幅（07.pdf，第 11 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-07-p009",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/07-p009.webp",
+    "title": "正弦载波调幅（07.pdf，第 9 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p048",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p048.webp",
+    "title": "直流分量与交流分量（01.pdf，第 48 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p016.webp",
+    "title": "直流信号的频谱（05.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p017.webp",
+    "title": "直流信号的频谱（05.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p002",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p002.webp",
+    "title": "指数特征信号与正交函数族（04.pdf，第 2 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p003",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p003.webp",
+    "title": "指数特征信号与正交函数族（04.pdf，第 3 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p004.webp",
+    "title": "指数特征信号与正交函数族（04.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p005.webp",
+    "title": "指数特征信号与正交函数族（04.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-04-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/04-p006.webp",
+    "title": "指数特征信号与正交函数族（04.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-p027.webp",
+    "title": "指数序列的卷积和（02.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p046",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p046.webp",
+    "title": "周期矩形脉冲计算示例（05.pdf，第 46 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p004",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p004.webp",
+    "title": "周期信号（01.pdf，第 4 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p005",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p005.webp",
+    "title": "周期信号（01.pdf，第 5 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p006",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p006.webp",
+    "title": "周期信号（01.pdf，第 6 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-01-p007",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/01-p007.webp",
+    "title": "周期信号（01.pdf，第 7 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-05-p040",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/05-p040.webp",
+    "title": "周期信号的傅里叶变换（05.pdf，第 40 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-03-p023",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/03-p023.webp",
+    "title": "自由响应与强迫响应（03.pdf，第 23 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
     "id": "docs-notes-DigitalSignalProcessing-image",
     "image": "/capture-assets/docs/DigitalSignalProcessing/image.png",
     "title": "alt text",
@@ -380,6 +8380,366 @@ export const generatedCaptureAssets: CaptureAsset[] = [
     "id": "docs-DigitalSignalProcessing-image-15",
     "image": "/capture-assets/docs/DigitalSignalProcessing/image-15.png",
     "title": "alt text",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p026",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p026.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 26 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p027.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 27 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p028.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 28 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p029.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 29 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p030.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 30 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p031.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 31 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p032.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 32 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p033",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p033.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 33 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p034",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p034.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 34 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s2-p035",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s2-p035.webp",
+    "title": "BP 学习算法（02-补充材料2.pptx，第 35 张）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p027",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p027.webp",
+    "title": "Dropout（02-补充材料3.pdf，第 27 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p028",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p028.webp",
+    "title": "Dropout（02-补充材料3.pdf，第 28 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p029",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p029.webp",
+    "title": "Dropout（02-补充材料3.pdf，第 29 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p032",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p032.webp",
+    "title": "Leaky ReLU（02-补充材料3.pdf，第 32 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p016",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p016.webp",
+    "title": "LeNet（02-补充材料3.pdf，第 16 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p017",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p017.webp",
+    "title": "LeNet（02-补充材料3.pdf，第 17 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p030",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p030.webp",
+    "title": "ReLU 激活函数（02-补充材料3.pdf，第 30 页）",
+    "date": "2026-08-27",
+    "tags": [
+      "DigitalSignalProcessing",
+      "Notes"
+    ],
+    "summary": "",
+    "sourceRefs": [
+      {
+        "type": "note",
+        "id": "DigitalSignalProcessing",
+        "title": "Digital Signal Processing",
+        "url": "/note/DigitalSignalProcessing"
+      }
+    ],
+    "standalone": false
+  },
+  {
+    "id": "docs-DigitalSignalProcessing-02-s3-p031",
+    "image": "/capture-assets/docs/DigitalSignalProcessing/02-s3-p031.webp",
+    "title": "ReLU 激活函数（02-补充材料3.pdf，第 31 页）",
     "date": "2026-08-27",
     "tags": [
       "DigitalSignalProcessing",
