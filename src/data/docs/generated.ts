@@ -14,6 +14,21 @@ export type GeneratedDocMeta = {
 
 export const generatedDocMeta: GeneratedDocMeta[] = [
   {
+    "id": "DeepLearning",
+    "type": "note",
+    "title": "Deep Learning",
+    "date": "2026-11-20",
+    "tags": [
+      "DeepLearning",
+      "Notes"
+    ],
+    "summary": "第1讲：绪论\n课程内容、关系与目标\n课程内容、关系与目标（Lecture1-260825.pdf，第 3 页）\n课程内容、关系与目标（Lecture1-260825.pdf，第 4 页）\n课程内容、关系与目标（Lecture1-260...",
+    "wordCount": 13105,
+    "readingMinutes": 33,
+    "updated": "2026/11/21 00:03",
+    "path": "./notes/DeepLearning.md"
+  },
+  {
     "id": "yjango",
     "type": "post",
     "title": "yjango学习观批判性学习",
@@ -337,18 +352,6 @@ export const generatedDocMeta: GeneratedDocMeta[] = [
     "readingMinutes": 49,
     "updated": "2026/06/16 10:35",
     "path": "./notes/highSchoolMaths.md"
-  },
-  {
-    "id": "DeepLearning",
-    "type": "note",
-    "title": "DeepLearning",
-    "date": "",
-    "tags": [],
-    "summary": "",
-    "wordCount": 0,
-    "readingMinutes": 0,
-    "updated": "2026/09/03 10:57",
-    "path": "./notes/DeepLearning.md"
   }
 ] as GeneratedDocMeta[]
 
