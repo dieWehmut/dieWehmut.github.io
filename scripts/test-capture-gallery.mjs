@@ -3,6 +3,8 @@ import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import ts from 'typescript'
+import { createCaptureDataModule, parseCaptureDataModule } from './capture-data-module.mjs'
 
 /**
  * The capture generator serves the gallery from two sources: the references a
@@ -99,11 +101,37 @@ const run = spawnSync(process.execPath, [path.join(repoRoot, 'scripts', 'generat
 })
 
 const generated = fs.readFileSync(generatedPath, 'utf8')
+const rerun = spawnSync(process.execPath, [path.join(repoRoot, 'scripts', 'generate-capture.mjs')], {
+  cwd: root,
+  env: { ...process.env, DIESW_ASSETS_DIR: assetsDir },
+  encoding: 'utf8',
+})
+const regenerated = fs.readFileSync(generatedPath, 'utf8')
+const largeGallery = Array.from({ length: 2000 }, (_, index) => ({
+  id: `page-${index}`, image: `/capture-assets/docs/Large/page-${index}.webp`,
+  title: `Page ${index}`, date: '2026-11-20', tags: ['lecture'], summary: '',
+  sourceRefs: [{ type: index % 2 ? 'post' : 'note', id: `lecture-${index}`, title: `Lecture ${index}`, url: `/note/lecture-${index}` }],
+  standalone: false,
+}))
+const largePath = path.join(root, 'src', 'data', 'capture', 'large.ts')
+write(largePath, createCaptureDataModule(largeGallery))
+write(path.join(root, 'src', 'types', 'content.ts'), fs.readFileSync(path.join(repoRoot, 'src', 'types', 'content.ts'), 'utf8'))
+const program = ts.createProgram([largePath], {
+  noEmit: true, strict: true, skipLibCheck: true, types: [], target: ts.ScriptTarget.ES2022,
+  module: ts.ModuleKind.ESNext,
+})
+const largeDiagnostics = ts.getPreEmitDiagnostics(program)
 const images = [...generated.matchAll(/"image":\s*"([^"]+)"/g)].map((match) => match[1])
 const publicCopy = (name) => path.join(publicDir, 'docs', 'Gallery', name)
 
 const checks = [
   ['the generator succeeds on a docs-only checkout', run.status === 0],
+  ['the generated array uses contextual typing for large galleries', !generated.includes('as CaptureAsset[]')],
+  ['subsequent generation retains orphaned assets in the new format', rerun.status === 0
+    && regenerated.includes('/capture-assets/docs/Gallery/orphan.png')],
+  ['a 2,000-image gallery typechecks without an oversized union', largeDiagnostics.length === 0],
+  ['grouped gallery data round-trips in source order', JSON.stringify(parseCaptureDataModule(createCaptureDataModule(largeGallery))) === JSON.stringify(largeGallery)],
+  ['empty gallery modules remain readable', parseCaptureDataModule(createCaptureDataModule([])).length === 0],
   ['a referenced image is published', images.includes('/capture-assets/docs/Gallery/kept.png')
     && fs.existsSync(publicCopy('kept.png'))],
   // The whole point of the sweep: an entry the gallery still lists has to render,

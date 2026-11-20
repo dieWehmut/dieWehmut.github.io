@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import { createCaptureDataModule, parseCaptureDataModule } from './capture-data-module.mjs'
 import {
   documentAssetSourceCandidates,
   documentAssetUrl,
@@ -154,9 +155,7 @@ function loadManifest() {
 function loadExistingCaptureAssets() {
   if (!fs.existsSync(generatedPath)) return []
   const raw = fs.readFileSync(generatedPath, 'utf8')
-  const match = raw.match(/export const generatedCaptureAssets: CaptureAsset\[\] = ([\s\S]*?) as CaptureAsset\[\]/)
-  if (!match) return []
-  const data = JSON.parse(match[1])
+  const data = parseCaptureDataModule(raw)
   return Array.isArray(data) ? data : []
 }
 
@@ -320,8 +319,7 @@ function syncPublicAssetFolder(assetsDir, folder) {
 }
 
 function toTsModule(data) {
-  const serialized = JSON.stringify(data, null, 2)
-  return `import type { CaptureAsset } from '../../types/content'\n\nexport const generatedCaptureAssets: CaptureAsset[] = ${serialized} as CaptureAsset[]\n\nexport default generatedCaptureAssets\n`
+  return createCaptureDataModule(data)
 }
 
 async function main() {
