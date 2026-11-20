@@ -81,6 +81,9 @@ jobs:
       - name: Verify image annotation storage
         run: pnpm test:image-annotations
 
+      - name: Verify large screenshot galleries
+        run: pnpm test:capture-gallery
+
       # 调试时可开启，确认变量是否注入成功
       # - name: Debug env
       #   run: |
