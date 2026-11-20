@@ -146,6 +146,14 @@
   pointer-events: auto;
 }
 
+.image-annotation__inline {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
 .image-annotation__toolbar {
   position: fixed;
   z-index: 5;

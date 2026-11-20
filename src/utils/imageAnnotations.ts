@@ -13,6 +13,7 @@ export const MAX_IMAGE_ANNOTATIONS = 500
 export const MAX_STROKE_POINTS = 4000
 const memory = new Map<string, ImageAnnotation[]>()
 const unsaved = new Set<string>()
+const listeners = new Set<(key: string, items: ImageAnnotation[]) => void>()
 let database: Promise<IDBDatabase> | null = null
 
 export function annotationImageKey(src: string, base = document.baseURI): string {
@@ -64,13 +65,21 @@ export function imageAnnotationsAreTemporary(key: string): boolean {
   return unsaved.has(key)
 }
 
+export function subscribeImageAnnotations(listener: (key: string, items: ImageAnnotation[]) => void): () => void {
+  listeners.add(listener)
+  return () => { listeners.delete(listener) }
+}
+
 export async function readImageAnnotations(key: string): Promise<ImageAnnotation[]> {
-  if (unsaved.has(key)) return cachedImageAnnotations(key)
+  if (memory.has(key)) return cachedImageAnnotations(key)
   const db = await openDatabase()
+  if (memory.has(key)) return cachedImageAnnotations(key)
   return new Promise((resolve, reject) => {
     const request = db.transaction(STORE, 'readonly').objectStore(STORE).get(key)
     request.onerror = () => reject(request.error)
     request.onsuccess = () => {
+      // A drawing made while the initial read was pending must win over old disk data.
+      if (memory.has(key)) { resolve(cachedImageAnnotations(key)); return }
       const items = normalizeImageAnnotations(request.result?.items)
       memory.set(key, items)
       resolve(items)
@@ -82,6 +91,7 @@ export async function writeImageAnnotations(key: string, annotations: ImageAnnot
   const items = normalizeImageAnnotations(annotations)
   memory.set(key, items)
   unsaved.add(key)
+  for (const listener of listeners) listener(key, items)
   const db = await openDatabase()
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(STORE, 'readwrite')
