@@ -64,9 +64,226 @@
   user-select: none;
   touch-action: none;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  display: block;
+}
+
+.image-preview__surface {
+  position: relative;
+  line-height: 0;
   transform-origin: center;
   transition: transform 80ms ease-out;
   will-change: transform;
+}
+
+.image-preview.is-annotating .image-preview__surface {
+  transition: none;
+}
+
+.image-preview.is-annotating .image-preview__stage {
+  padding-top: 76px;
+  padding-bottom: 142px;
+}
+
+.image-preview.is-annotating .image-preview__image {
+  max-height: calc(100dvh - 218px);
+}
+
+.image-preview__zoom {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 4;
+  display: flex;
+  gap: 6px;
+}
+
+.image-preview__zoom button {
+  width: 36px;
+  height: 40px;
+  border: 1px solid #575963;
+  border-radius: 7px;
+  color: #fff;
+  background: #191b23;
+  font: 22px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.image-preview.is-annotating .image-preview__zoom {
+  left: 112px;
+}
+
+.image-preview__annotate {
+  position: fixed;
+  top: 18px;
+  right: 70px;
+  z-index: 4;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 20px;
+  background: #17191f;
+  color: #fff;
+  font: 600 14px/1.4 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.image-preview__annotate[aria-pressed="true"] {
+  color: var(--site-accent, #ef76b0);
+  border-color: currentColor;
+}
+
+.image-annotation__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.image-annotation__layer.is-drawing {
+  pointer-events: auto;
+}
+
+.image-annotation__toolbar {
+  position: fixed;
+  z-index: 5;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #454753;
+  border-radius: 14px;
+  background: #191b23;
+  color: #f5f5f7;
+  font: 13px/1.5 system-ui, sans-serif;
+  box-shadow: 0 12px 40px #0008;
+}
+
+.image-annotation__toolbar[hidden],
+.image-annotation__text-editor[hidden] {
+  display: none;
+}
+
+.image-annotation__toolbar button,
+.image-annotation__text-editor button {
+  min-height: 38px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: #2c2f3a;
+  color: #f5f5f7;
+  font: 600 13px/1.4 system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.image-annotation__toolbar button[aria-pressed="true"] {
+  border-color: var(--site-accent, #ef76b0);
+  color: var(--site-accent, #ef76b0);
+  background: #35303d;
+}
+
+.image-annotation__toolbar button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.image-annotation__toolbar button:focus-visible,
+.image-annotation__toolbar input:focus-visible,
+.image-preview__annotate:focus-visible,
+.image-annotation__text-editor :focus-visible {
+  outline: 2px solid var(--site-accent, #ef76b0);
+  outline-offset: 2px;
+}
+
+.image-annotation__toolbar input[type="color"] {
+  width: 38px;
+  height: 36px;
+  padding: 3px;
+  border: 1px solid #626573;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.image-annotation__size {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.image-annotation__size input {
+  width: 70px;
+  accent-color: var(--site-accent, #ef76b0);
+}
+
+.image-annotation__status {
+  flex-basis: 100%;
+  color: #bfc1cb;
+  text-align: center;
+  font-size: 12px;
+}
+
+.image-annotation__text-editor {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 6;
+  width: min(280px, calc(100vw - 24px));
+  padding: 8px;
+  border: 1px solid #777;
+  border-radius: 8px;
+  background: #191b23;
+  line-height: 1.5;
+}
+
+.image-annotation__text-editor textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 70px;
+  padding: 6px;
+  border: 1px solid #626573;
+  border-radius: 4px;
+  color: #fff;
+  background: #262932;
+  font: 16px/1.5 system-ui, sans-serif;
+  resize: vertical;
+}
+
+.image-annotation__text-editor > div {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.image-preview.is-annotating .image-preview__nav {
+  top: 18px;
+  bottom: auto;
+  width: 42px;
+  height: 40px;
+  padding: 0;
+  text-align: center;
+  font-size: 34px;
+  opacity: .85;
+}
+
+.image-preview.is-annotating .image-preview__nav--previous {
+  left: 18px;
+}
+
+.image-preview.is-annotating .image-preview__nav--next {
+  left: 64px;
+  right: auto;
 }
 
 .image-preview__nav {

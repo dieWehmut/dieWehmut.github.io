@@ -78,6 +78,9 @@ jobs:
       - name: Verify Pages deployment handoff
         run: pnpm test:pages-deploy
 
+      - name: Verify image annotation storage
+        run: pnpm test:image-annotations
+
       # 调试时可开启，确认变量是否注入成功
       # - name: Debug env
       #   run: |

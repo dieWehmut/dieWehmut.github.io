@@ -1,8 +1,12 @@
 import { retryPublicAssetImage } from './publicAssets'
+import { createImageAnnotationEditor } from './imageAnnotationEditor'
 
 let overlay: HTMLDivElement | null = null
 let stage: HTMLDivElement | null = null
 let previewImage: HTMLImageElement | null = null
+let surface: HTMLDivElement | null = null
+let annotations: ReturnType<typeof createImageAnnotationEditor> | null = null
+let previousFocus: HTMLElement | null = null
 let previousButton: HTMLButtonElement | null = null
 let nextButton: HTMLButtonElement | null = null
 let previousBodyOverflow = ''
@@ -21,7 +25,10 @@ export type ImagePreviewItem = {
 
 function closeImagePreview() {
   if (!overlay || !previewImage || !isOpen) return
+  annotations?.close()
   overlay.classList.remove('is-open')
+  overlay.inert = true
+  overlay.setAttribute('aria-hidden', 'true')
   previewImage.removeAttribute('src')
   previewImage.alt = ''
   document.body.style.overflow = previousBodyOverflow
@@ -29,6 +36,8 @@ function closeImagePreview() {
   currentIndex = 0
   resetZoom()
   isOpen = false
+  previousFocus?.focus({ preventScroll: true })
+  previousFocus = null
 }
 
 function stopPreviewKey(event: KeyboardEvent) {
@@ -37,6 +46,20 @@ function stopPreviewKey(event: KeyboardEvent) {
 }
 
 function onKeydown(event: KeyboardEvent) {
+  if (!isOpen) return
+  if (event.key === 'Tab' && overlay) {
+    const controls = Array.from(overlay.querySelectorAll<HTMLElement>('button,input,textarea'))
+      .filter((element) => !element.hasAttribute('disabled') && element.getClientRects().length)
+    const boundary = event.shiftKey ? controls[0] : controls.at(-1)
+    if (document.activeElement === boundary || document.activeElement === overlay) {
+      event.preventDefault()
+      ;(event.shiftKey ? controls.at(-1) : controls[0])?.focus()
+    }
+  }
+  if (annotations?.handleKeydown(event)) {
+    event.stopImmediatePropagation()
+    return
+  }
   if (event.key === 'Escape') {
     stopPreviewKey(event)
     closeImagePreview()
@@ -72,6 +95,8 @@ function ensureOverlay() {
   overlay.setAttribute('aria-modal', 'true')
   overlay.setAttribute('aria-label', 'Image preview')
   overlay.tabIndex = -1
+  overlay.inert = true
+  overlay.setAttribute('aria-hidden', 'true')
 
   stage = document.createElement('div')
   stage.className = 'image-preview__stage'
@@ -80,6 +105,9 @@ function ensureOverlay() {
   previewImage.className = 'image-preview__image'
   previewImage.alt = ''
   previewImage.draggable = false
+  surface = document.createElement('div')
+  surface.className = 'image-preview__surface'
+  surface.append(previewImage)
 
   previousButton = document.createElement('button')
   previousButton.className = 'image-preview__nav image-preview__nav--previous'
@@ -99,6 +127,17 @@ function ensureOverlay() {
   closeButton.setAttribute('aria-label', 'Close image preview')
   closeButton.textContent = 'x'
 
+  const zoom = document.createElement('div')
+  zoom.className = 'image-preview__zoom'
+  for (const [label, title, multiplier] of [['−', 'Zoom out image', 1 / 1.2], ['+', 'Zoom in image', 1.2]] as const) {
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.textContent = label
+    button.setAttribute('aria-label', title)
+    button.addEventListener('click', () => setScale(scale * multiplier))
+    zoom.append(button)
+  }
+
   overlay.addEventListener('click', onOverlayClick)
   overlay.addEventListener('wheel', onWheel, { passive: false })
   previewImage.addEventListener('pointerdown', onPointerDown)
@@ -111,8 +150,9 @@ function ensureOverlay() {
   closeButton.addEventListener('click', closeImagePreview)
   window.addEventListener('keydown', onKeydown)
 
-  stage.append(previewImage)
-  overlay.append(stage, previousButton, nextButton, closeButton)
+  stage.append(surface)
+  overlay.append(stage, previousButton, nextButton, closeButton, zoom)
+  annotations = createImageAnnotationEditor({ overlay, surface, image: previewImage, onModeChange: applyTransform })
   document.body.appendChild(overlay)
 }
 
@@ -122,7 +162,7 @@ function onPreviewImageError() {
 }
 
 function onOverlayClick(event: MouseEvent) {
-  if (!overlay || !stage) return
+  if (!overlay || !stage || !annotations?.allowsPan()) return
   if (event.target !== overlay && event.target !== stage) return
   if (previewItems.length <= 1) {
     closeImagePreview()
@@ -150,6 +190,9 @@ function setCurrentImage(index: number) {
   const item = previewItems[currentIndex]
   previewImage.src = item.src
   previewImage.alt = item.alt || ''
+  delete previewImage.dataset.publicAssetTried
+  delete previewImage.dataset.originalSrc
+  void annotations?.setImage(item.src)
   previousButton.hidden = previewItems.length <= 1
   nextButton.hidden = previewItems.length <= 1
   resetZoom()
@@ -187,19 +230,21 @@ function resetZoom() {
 }
 
 function applyTransform() {
-  if (!previewImage) return
-  previewImage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`
-  previewImage.style.cursor = scale > 1 ? 'grab' : 'zoom-in'
+  if (!previewImage || !surface) return
+  surface.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`
+  previewImage.style.cursor = annotations?.allowsPan() && scale > 1 ? 'grab' : 'zoom-in'
 }
 
 function onWheel(event: WheelEvent) {
   if (!isOpen) return
+  if ((event.target as Element)?.closest('.image-annotation__toolbar,.image-annotation__text-editor')) return
   event.preventDefault()
+  if (annotations?.isDrawing()) return
   setScale(scale * (event.deltaY > 0 ? 0.88 : 1.12))
 }
 
 function onPointerDown(event: PointerEvent) {
-  if (scale <= 1 || !previewImage) return
+  if (scale <= 1 || !previewImage || event.button !== 0 || !annotations?.allowsPan()) return
   event.preventDefault()
   previewImage.setPointerCapture(event.pointerId)
   previewImage.style.cursor = 'grabbing'
@@ -238,11 +283,16 @@ export function openImagePreviewGallery(items: ImagePreviewItem[], index = 0) {
   ensureOverlay()
   if (!overlay || !previewImage) return
 
-  if (!isOpen) previousBodyOverflow = document.body.style.overflow
+  if (!isOpen) {
+    previousBodyOverflow = document.body.style.overflow
+    previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
+  }
   previewItems = normalizedItems
   setCurrentImage(clamp(index, 0, previewItems.length - 1))
   document.body.style.overflow = 'hidden'
   overlay.classList.add('is-open')
+  overlay.inert = false
+  overlay.setAttribute('aria-hidden', 'false')
   overlay.focus()
   isOpen = true
 }
