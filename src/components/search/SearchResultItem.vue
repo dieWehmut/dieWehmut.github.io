@@ -418,7 +418,9 @@ function statusClass(url: string | undefined) {
 }
 
 .search-result-capture:hover .search-result-capture__media img,
-.search-result-capture:focus-visible .search-result-capture__media img {
+.search-result-capture:focus-visible .search-result-capture__media img,
+.search-result-capture:hover .search-result-capture__media :deep(.image-annotation__inline),
+.search-result-capture:focus-visible .search-result-capture__media :deep(.image-annotation__inline) {
   transform: scale(1.03);
 }
 

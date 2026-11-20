@@ -45,6 +45,8 @@ export function bindInlineImageAnnotations(root: HTMLElement): () => void {
     layer.style.width = `${Math.max(0, width)}px`
     layer.style.height = `${Math.max(0, height)}px`
     layer.style.borderRadius = style.borderRadius
+    layer.style.transition = style.transition
+    layer.style.transformOrigin = style.transformOrigin
     // Thumbnails use cover/contain, whereas document images use their natural proportions.
     // Match arbitrary object-position values as well as the default centered position.
     const naturalWidth = image.naturalWidth

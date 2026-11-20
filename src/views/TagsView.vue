@@ -613,7 +613,9 @@ ul {
 }
 
 .tag-card__capture-link:hover img,
-.tag-card__capture-link:focus-visible img {
+.tag-card__capture-link:focus-visible img,
+.tag-card__capture-link:hover :deep(.image-annotation__inline),
+.tag-card__capture-link:focus-visible :deep(.image-annotation__inline) {
   transform: scale(1.03);
 }
 

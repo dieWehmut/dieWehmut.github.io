@@ -626,7 +626,9 @@ watch(tag, loadCaptures)
 }
 
 .tag-detail__capture-media:hover img,
-.tag-detail__capture-media:focus-visible img {
+.tag-detail__capture-media:focus-visible img,
+.tag-detail__capture-media:hover :deep(.image-annotation__inline),
+.tag-detail__capture-media:focus-visible :deep(.image-annotation__inline) {
   transform: scale(1.03);
 }
 

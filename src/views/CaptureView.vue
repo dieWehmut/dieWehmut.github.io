@@ -1417,7 +1417,9 @@ watch(isDetailRoute, (detail) => {
 }
 
 .capture-grid[role="link"]:hover .capture-card__media img,
-.capture-grid[role="link"]:focus-visible .capture-card__media img {
+.capture-grid[role="link"]:focus-visible .capture-card__media img,
+.capture-grid[role="link"]:hover .capture-card__media :deep(.image-annotation__inline),
+.capture-grid[role="link"]:focus-visible .capture-card__media :deep(.image-annotation__inline) {
   transform: scale(1.03);
 }
 
