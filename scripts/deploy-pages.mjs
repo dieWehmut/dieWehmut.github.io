@@ -38,7 +38,7 @@ export async function deployPages({
   const redact = (value) => [token, oidcToken, idToken].filter(Boolean)
     .reduce((text, secret) => text.replaceAll(secret, '[redacted]'), String(value))
 
-  const request = async (url, options = {}, attempts = 4) => {
+  const request = async (url, options = {}, { attempts = 4, retryNotFound = false, label = 'GitHub Pages request' } = {}) => {
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       let response
       try {
@@ -49,20 +49,26 @@ export async function deployPages({
         })
       } catch (error) {
         if (attempt === attempts - 1) throw new Error(redact(error.message))
-        await sleep(1000 * 2 ** attempt)
+        await sleep(Math.min(5000, 1000 * 2 ** attempt))
         continue
       }
       if (response.ok) return response.status === 204 ? {} : response.json()
-      if ((response.status === 429 || response.status >= 500) && attempt < attempts - 1) {
-        await sleep(1000 * 2 ** attempt)
+      if ((response.status === 429 || response.status >= 500 || (retryNotFound && response.status === 404)) && attempt < attempts - 1) {
+        if (retryNotFound && response.status === 404) log(`${label}: not visible yet; retrying`)
+        await sleep(Math.min(5000, 1000 * 2 ** attempt))
         continue
       }
       const detail = await response.json().catch(() => ({}))
-      throw new Error(redact(`GitHub Pages request failed (${response.status}): ${detail.message || response.statusText}`))
+      throw new Error(redact(`${label} failed (${response.status}): ${detail.message || response.statusText}`))
     }
   }
 
-  const artifact = await request(`${base}/actions/artifacts/${artifactId}`)
+  // Upload finalization can precede REST indexing: the failed run returned 404
+  // immediately after upload, but the exact artifact became readable afterwards.
+  // Wait up to 112 seconds between attempts; keep all identity checks below.
+  const artifact = await request(`${base}/actions/artifacts/${artifactId}`, {}, {
+    attempts: 25, retryNotFound: true, label: 'Uploaded Pages artifact lookup',
+  })
   if (artifact.name !== 'github-pages' || artifact.expired
     || String(artifact.workflow_run?.id) !== String(runId)
     || artifact.workflow_run?.head_sha !== sha) {

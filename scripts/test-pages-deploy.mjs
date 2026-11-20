@@ -52,6 +52,27 @@ test('retries a temporary service error and still verifies the artifact identity
   assert.equal(h.requests[0].url, h.requests[1].url)
 })
 
+test('waits for the exact uploaded artifact to become visible after transient 404s', async () => {
+  const h = harness([new Response('{}', { status: 404 }), new Response('{}', { status: 404 }),
+    ok(artifact), ok({ value: 'oidc-secret' }), ok(deployment), ok({ status: 'succeed' })])
+  const delays = []
+  await deployPages({ ...h.options, sleep: async (delay) => delays.push(delay) })
+  assert.deepEqual(delays, [1000, 2000])
+  assert.equal(new Set(h.requests.slice(0, 3).map(request => request.url)).size, 1)
+  assert.match(h.logs[0], /artifact lookup: not visible yet/)
+  assert.equal(JSON.parse(h.requests[4].body).artifact_id, 123)
+})
+
+test('a permanently missing artifact stops after bounded retries before requesting OIDC', async () => {
+  const h = harness(Array.from({ length: 25 }, () => new Response('{}', { status: 404 })))
+  const delays = []
+  await assert.rejects(deployPages({ ...h.options, sleep: async (delay) => delays.push(delay) }), /artifact lookup failed \(404\)/)
+  assert.equal(h.requests.length, 25)
+  assert.equal(delays.reduce((total, delay) => total + delay, 0), 112000)
+  assert.ok(delays.every(delay => delay <= 5000))
+  assert.ok(h.requests.every(request => request.url.endsWith('/actions/artifacts/123')))
+})
+
 test('permission errors are terminal and redact credentials', async () => {
   const h = harness([new Response(JSON.stringify({ message: 'test-secret forbidden' }), { status: 403 })])
   await assert.rejects(deployPages(h.options), (error) => error.message.includes('403') && !error.message.includes('test-secret'))
